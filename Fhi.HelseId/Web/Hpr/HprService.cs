@@ -14,9 +14,9 @@ namespace Fhi.HelseId.Web.Hpr
         Task<Person?> HentPerson(string hprnummer);
 
         /// <summary>
-        /// Sjekker om personen har gyldig aktiv autorisasjon som Lege
+        /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene.  Default kategori er Lege
         /// </summary>
-        bool ErGyldigLege(Person person);
+        bool ErGyldig(Person person);
 
         void Close();
     }
@@ -55,7 +55,7 @@ namespace Fhi.HelseId.Web.Hpr
             if (hprnummer == HprnummerAdmin)
                 return true;
             var person = await HentFraHprRegister(hprnummer);
-            return person != null && ErGyldigLege(person);
+            return person != null && ErGyldig(person);
         }
 
         public async Task<Person?> HentPerson(string hprnummer)
@@ -96,9 +96,9 @@ namespace Fhi.HelseId.Web.Hpr
         }
 
         /// <summary>
-        /// Sjekker om personen har gyldig aktiv autorisasjon som Lege
+        /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene.  Default kategori er Lege
         /// </summary>
-        public bool ErGyldigLege(Person person)
+        public bool ErGyldig(Person person)
         {
             if (person == null)
                 return false;

@@ -3,7 +3,13 @@ using Fhi.HelseId.Common;
 
 namespace Fhi.HelseId.Api
 {
-    public class HelseIdApiKonfigurasjon : IAutentiseringkonfigurasjon
+    public interface IHelseIdFeatures
+    {
+        bool UseHprNumber { get;  }
+        bool UseHttps { get;  }
+    }
+
+    public class HelseIdApiKonfigurasjon : IAutentiseringkonfigurasjon, IHelseIdFeatures
     {
         public string Authority { get; set; } = "";
 

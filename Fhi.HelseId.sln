@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId", "Fhi.HelseId\Fhi.HelseId.csproj", "{77C0F2D9-7184-4BF5-9EF2-E9042789E032}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId", "Fhi.HelseId\Fhi.HelseId.csproj", "{77C0F2D9-7184-4BF5-9EF2-E9042789E032}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DCBAE3A1-3C8A-4562-B9C3-0CCE7E65E794}"
+	ProjectSection(SolutionItems) = preProject
+		Fhi.HelseId\readme.md = Fhi.HelseId\readme.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Common", "Fhi.HelseId.Common\Fhi.HelseId.Common.csproj", "{408E51B7-F10D-4EEB-B5EA-DDC1B41A04EC}"
 EndProject

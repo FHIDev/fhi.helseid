@@ -3,8 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Fhi.HelseId.Web
 {
+    public interface IHelseIdHprFeatures
+    {
+        bool UseHprNumber { get;  }
+    }
+
     [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-    public class HelseIdWebKonfigurasjon
+    public class HelseIdWebKonfigurasjon : IHelseIdHprFeatures
     {
         public bool AuthUse { get; set; } = true;
 

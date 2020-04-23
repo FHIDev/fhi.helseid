@@ -1,4 +1,5 @@
-﻿using Fhi.HelseId.Common.Identity;
+﻿using Fhi.HelseId.Api;
+using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Hpr;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -21,19 +22,19 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             return builder;
         }
 
-        public static (AuthorizationPolicy AuthPolicy,string PolicyName) AddHelseIdAuthorizationPolicy(this IServiceCollection services, bool useHpr, bool useHprNumber)
+        public static (AuthorizationPolicy AuthPolicy,string PolicyName) AddHelseIdAuthorizationPolicy(this IServiceCollection services, IHelseIdHprFeatures helseIdFeatures,IHprFeatureFlags hprFeatures)
         {
             var authenticatedHidUserPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .RequireClaim(IdentityClaims.SecurityLevel, SecurityLevel.Level4)
                 .Build();
-            if (useHprNumber)
+            if (helseIdFeatures.UseHprNumber)
             {
                 var hprNumberPolicy = new AuthorizationPolicyBuilder()
                     .Combine(authenticatedHidUserPolicy)
                     .RequireAssertion(context => context.User.HprNumber() != null)
                     .Build();
-                if (useHpr)
+                if (hprFeatures.UseHpr && hprFeatures.UseHprPolicy)
                 {
                     var policy = new AuthorizationPolicyBuilder()
                         .Combine(hprNumberPolicy);
