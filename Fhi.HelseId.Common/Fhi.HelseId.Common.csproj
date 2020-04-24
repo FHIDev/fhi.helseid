@@ -5,6 +5,16 @@
     <Nullable>enable</Nullable>
     <LangVersion>8</LangVersion>
     <Configurations>Debug;Release</Configurations>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
+    <Description>Felleskomponenter til bruk i FHI sin integrasjon med HelseId (Fhi.HelseId). </Description>
+    <PackageReleaseNotes>Første versjon </PackageReleaseNotes>
+    <RepositoryUrl>https://fhi.visualstudio.com/DefaultCollection/Fhi.Msis/_git/Fhi.HelseId</RepositoryUrl>
+    <dependencies>
+      <group targetFramework="netstandard2.0">
+      </group>
+    </dependencies>
   </PropertyGroup>
 
   <ItemGroup>
