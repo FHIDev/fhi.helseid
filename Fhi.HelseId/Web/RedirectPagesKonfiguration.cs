@@ -2,7 +2,15 @@
 
 namespace Fhi.HelseId.Web
 {
-    public class RedirectPagesKonfigurasjon
+    public interface IRedirectPagesKonfigurasjon
+    {
+        string Forbidden { get;  }
+        string LoggedOut { get;  }
+        string Error { get;  }
+        string Statuscode { get;  }
+    }
+
+    public class RedirectPagesKonfigurasjon : IRedirectPagesKonfigurasjon
     {
         public string Forbidden { get; set; } = "/Forbidden.html";
         public string LoggedOut{ get; set; } =  "/loggedout.html";
@@ -12,7 +20,7 @@ namespace Fhi.HelseId.Web
         public bool KonfigurasjonErGyldig()
         {
             return
-                new string[]
+                new[]
                 {
                     Forbidden,
                     LoggedOut,

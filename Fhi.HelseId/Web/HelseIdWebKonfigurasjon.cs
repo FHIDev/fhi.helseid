@@ -1,15 +1,28 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Fhi.HelseId.Common;
 
 namespace Fhi.HelseId.Web
 {
     public interface IHelseIdHprFeatures
     {
-        bool UseHprNumber { get;  }
+        bool UseHprNumber { get; }
     }
 
+    public interface IHelseIdWebKonfigurasjon : IAutentiseringkonfigurasjon, IHelseIdHprFeatures
+    {
+        bool UseHttps { get; }
+        string Authority { get; }
+        string ClientId { get; }
+        string ClientSecret { get; }
+        string[] Scopes { get; }
+        string AcrValues { get; }
+        bool Debug { get; }
+    }
+
+
     [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-    public class HelseIdWebKonfigurasjon : IHelseIdHprFeatures
+    public class HelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdWebKonfigurasjon
     {
         public bool AuthUse { get; set; } = true;
 

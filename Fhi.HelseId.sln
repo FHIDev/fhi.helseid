@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId", "Fhi.HelseId\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DCBAE3A1-3C8A-4562-B9C3-0CCE7E65E794}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		Fhi.HelseId\readme.md = Fhi.HelseId\readme.md
 	EndProjectSection
 EndProject

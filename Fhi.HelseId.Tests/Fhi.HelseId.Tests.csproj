@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>

@@ -4,6 +4,6 @@ namespace Fhi.HelseId.Common
 {
     public interface IAutentiseringkonfigurasjon
     {
-        bool AuthUse { get; set; }
+        public bool AuthUse { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Fhi.HelseId.Api
     {
 
         public static AuthenticationBuilder AddHelseIdJwtBearer(this AuthenticationBuilder authenticationBuilder,
-            HelseIdApiKonfigurasjon configAuth)
+            IHelseIdApiKonfigurasjon configAuth)
         {
             var builder = authenticationBuilder.AddJwtBearer(
                 options =>
@@ -37,7 +37,7 @@ namespace Fhi.HelseId.Api
             return builder;
         }
 
-        public static void AddHelseIdAuthorization(this IServiceCollection services, HelseIdApiKonfigurasjon configAuth)
+        public static void AddHelseIdAuthorization(this IServiceCollection services, IHelseIdApiKonfigurasjon configAuth)
         {
             services.AddAuthorization(
                 config =>

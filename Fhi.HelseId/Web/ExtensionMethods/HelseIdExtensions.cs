@@ -11,7 +11,9 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 {
     public static class HelseIdExtensions
     {
-        public static void DefaultHelseIdOptions(this CookieAuthenticationOptions options, HelseIdWebKonfigurasjon configAuth, RedirectPagesKonfigurasjon redirectPagesKonfigurasjon)
+        public static void DefaultHelseIdOptions(this CookieAuthenticationOptions options, 
+            IHelseIdWebKonfigurasjon configAuth, 
+            IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon)
         {
             options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
             options.SlidingExpiration = true;
@@ -23,7 +25,9 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             // This is because it overrides the events set here.
         }
 
-        public static void DefaultHelseIdOptions(this OpenIdConnectOptions options, HelseIdWebKonfigurasjon configAuth, RedirectPagesKonfigurasjon redirectPagesKonfigurasjon)
+        public static void DefaultHelseIdOptions(this OpenIdConnectOptions options, 
+            IHelseIdWebKonfigurasjon configAuth, 
+            IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon)
         {
             var acrValues = configAuth.AcrValues; // spesielt for id-porten, e.g. krever sikkerhetsnivå 4
             var hasAcrValues = !string.IsNullOrWhiteSpace(acrValues);

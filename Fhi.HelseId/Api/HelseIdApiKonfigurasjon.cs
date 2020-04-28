@@ -3,13 +3,21 @@ using Fhi.HelseId.Common;
 
 namespace Fhi.HelseId.Api
 {
-    public interface IHelseIdFeatures
+    public interface IHelseIdApiFeatures
     {
-        bool UseHprNumber { get;  }
+        public bool UseHttps { get; }
+        public bool AuthUse { get; }
+    }
+
+    public interface IHelseIdApiKonfigurasjon : IAutentiseringkonfigurasjon
+    {
+        string Authority { get;  }
+        string ApiName { get;  }
+        string ApiScope { get;  }
         bool UseHttps { get;  }
     }
 
-    public class HelseIdApiKonfigurasjon : IAutentiseringkonfigurasjon, IHelseIdFeatures
+    public class HelseIdApiKonfigurasjon :  IHelseIdApiFeatures, IHelseIdApiKonfigurasjon
     {
         public string Authority { get; set; } = "";
 
@@ -17,8 +25,6 @@ namespace Fhi.HelseId.Api
         public string ApiScope { get; set; } = "";
 
         public bool AuthUse { get; set; } = true;
-        public bool UseHprNumber { get; set; } = true;
-
         public bool UseHttps { get; set; } = true;
     }
 }
