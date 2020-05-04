@@ -29,7 +29,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             ILogger<AutomaticTokenManagementCookieEvents> logger,
             ISystemClock clock)
         {
-            _service = service;
+             _service = service;
             _options = options.Value;
             _logger = logger;
             _clock = clock;
@@ -94,6 +94,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                     }
                 }
             }
+            _logger.LogTrace("AutomaticTokenManagementCookieEvents: ValidatePrincipal finished");
         }
 
         public override async Task SigningOut(CookieSigningOutContext context)

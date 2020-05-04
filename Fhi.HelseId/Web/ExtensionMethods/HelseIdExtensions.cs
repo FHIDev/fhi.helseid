@@ -42,7 +42,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             options.Scope.Clear();
             //options.CorrelationCookie.SameSite = SameSiteMode.Lax;
             //options.NonceCookie.SameSite = SameSiteMode.Lax;
-            foreach (var scope in configAuth.Scopes)
+            foreach (var scope in configAuth.AllScopes)
             {
                 options.Scope.Add(scope.Trim());
             }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Fhi.HelseId.Common;
 
 namespace Fhi.HelseId.Web
@@ -15,14 +17,14 @@ namespace Fhi.HelseId.Web
         string Authority { get; }
         string ClientId { get; }
         string ClientSecret { get; }
-        string[] Scopes { get; }
         string AcrValues { get; }
         bool Debug { get; }
+        List<string> AllScopes { get; }
     }
 
 
     [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-    public class HelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdWebKonfigurasjon
+    public class HelseIdWebKonfigurasjon :  IHelseIdWebKonfigurasjon
     {
         public bool AuthUse { get; set; } = true;
 
@@ -39,5 +41,34 @@ namespace Fhi.HelseId.Web
         public string AcrValues { get; set; } = "";
 
         public bool Debug { get; set; } = false;
+
+        private List<string>? allScopes;
+
+
+        public List<string> AllScopes
+        {
+            get
+            {
+                if (allScopes == null)
+                {
+                    allScopes = new List<string>();
+                    allScopes.AddRange(fixedScopes);
+                    allScopes.AddRange(Scopes);
+                    allScopes = allScopes.Distinct().ToList();
+                }
+                return allScopes;
+            }
+        }
+        
+        private readonly List<string> fixedScopes = new List<string>
+        {
+            "openid",
+            "profile",
+            "offline_access",
+            "helseid://scopes/identity/pid",
+            "helseid://scopes/identity/pid_pseudonym",
+            "helseid://scopes/identity/security_level",
+            "helseid://scopes/hpr/hpr_number"
+        };
     }
 }

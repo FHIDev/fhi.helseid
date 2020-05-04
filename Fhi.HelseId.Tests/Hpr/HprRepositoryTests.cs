@@ -5,10 +5,10 @@ using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Hpr.Core;
 using HprServiceReference;
 using Microsoft.Extensions.Logging;
-using NUnit.Framework;
 using NSubstitute;
+using NUnit.Framework;
 
-namespace Fhi.Msis.Klinikermelding.Web.Api.Tests.Hpr
+namespace Fhi.HelseId.Tests.Hpr
 {
     public class HprRepositoryTests
     {

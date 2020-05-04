@@ -2,6 +2,7 @@
 using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Hpr;
+using Fhi.HelseId.Web.Services;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
@@ -23,8 +24,9 @@ namespace Fhi.HelseId.Tests
             var hprFeatures = Substitute.For<IHprFeatureFlags>();
             hprFeatures.UseHpr.Returns(useHpr);
             hprFeatures.UseHprPolicy.Returns(useHpr);
+            var wl = Substitute.For<IWhitelist>();
 
-            var sut = sc.AddHelseIdAuthorizationPolicy(helseIdFeatures, hprFeatures);
+            var sut = sc.AddHelseIdAuthorizationPolicy(helseIdFeatures, hprFeatures,wl);
 
             Assert.That(sut.PolicyName, Is.EqualTo(expectedPolicyName));
         }

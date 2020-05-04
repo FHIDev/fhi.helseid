@@ -31,7 +31,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
         public static (AuthorizationPolicy AuthPolicy, string PolicyName) AddHelseIdAuthorizationPolicy(this IServiceCollection services,
             IHelseIdHprFeatures helseIdFeatures,
-            IHprFeatureFlags hprFeatures)
+            IHprFeatureFlags hprFeatures,
+            IWhitelist whitelist)
         {
             var authenticatedHidUserPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
@@ -39,10 +40,11 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 .Build();
             if (helseIdFeatures.UseHprNumber)
             {
-                var hprNumberPolicy = new AuthorizationPolicyBuilder()
-                    .Combine(authenticatedHidUserPolicy)
-                    .RequireAssertion(context => context.User.HprNumber() != null)
-                    .Build();
+                var hprNumberPolicyBuilder = new AuthorizationPolicyBuilder()
+                    .Combine(authenticatedHidUserPolicy);
+                hprNumberPolicyBuilder.Requirements.Add(new HprAuthorizationRequirement());
+                var hprNumberPolicy= hprNumberPolicyBuilder.Build();
+
                 if (hprFeatures.UseHpr && hprFeatures.UseHprPolicy)
                 {
                     var policy = new AuthorizationPolicyBuilder()
@@ -97,21 +99,24 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         }
 
 
-        public static (bool Result,string PolicyName) AddHelseIdWebAuthentication(this IServiceCollection services,
+        public static (bool Result, string PolicyName) AddHelseIdWebAuthentication(this IServiceCollection services,
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
-            IHprFeatureFlags hprKonfigurasjon)
+            IHprFeatureFlags hprKonfigurasjon,
+            IWhitelist whitelist)
         {
             if (!helseIdKonfigurasjon.AuthUse)
-                return (false,"");
+                return (false, "");
             services.AddScoped<IHprFactory, HprFactory>();
             services.AddScoped<ICurrentUser, CurrentHttpUser>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            (var authorizeFilter, string policyName) = AddAuthentication(services,helseIdKonfigurasjon,redirectPagesKonfigurasjon,hprKonfigurasjon);
+            (var authorizeFilter, string policyName) = AddAuthentication(services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist);
             services.AddControllers(config => config.Filters.Add(authorizeFilter));
+            if (helseIdKonfigurasjon.UseHprNumber)
+                services.AddScoped<IAuthorizationHandler, HprAuthorizationHandler>();
             if (hprKonfigurasjon.UseHpr && hprKonfigurasjon.UseHprPolicy)
                 services.AddScoped<IAuthorizationHandler, LegeAuthorizationHandler>();
-            return (true,policyName);
+            return (true, policyName);
         }
 
         /// <summary>
@@ -120,7 +125,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         public static (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(IServiceCollection services,
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
-            IHprFeatureFlags hprKonfigurasjon)
+            IHprFeatureFlags hprKonfigurasjon,
+            IWhitelist whitelist)
         {
             const double tokenRefreshBeforeExpirationTime = 2;
 
@@ -135,9 +141,9 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 })
                 .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
 
-            (var authPolicy, string policyName) = services.AddHelseIdAuthorizationPolicy(helseIdKonfigurasjon, hprKonfigurasjon);
-           
-            return (new AuthorizeFilter(authPolicy),policyName);
+            (var authPolicy, string policyName) = services.AddHelseIdAuthorizationPolicy(helseIdKonfigurasjon, hprKonfigurasjon, whitelist);
+
+            return (new AuthorizeFilter(authPolicy), policyName);
         }
 
 
