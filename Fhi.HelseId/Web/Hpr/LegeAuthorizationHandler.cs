@@ -34,7 +34,7 @@ namespace Fhi.HelseId.Web.Hpr
             var hprNummer = currentUser.HprNumber();
             if (hprNummer == null)
             {
-                Logger.LogWarning("LegeAuthorizationHandler: Bruker {UserlogName} har ikke hprnummer. Info: {@User}", userlogName, context.User);
+                Logger.LogWarning("LegeAuthorizationHandler: Bruker {UserlogName} har ikke hprnummer.", userlogName);
                 SjekkWhitelist();
                 return;
             }
@@ -47,7 +47,7 @@ namespace Fhi.HelseId.Web.Hpr
             }
             else
             {
-                Logger.LogWarning("LegeAuthorizationHandler: Bruker {UserlogName} er ikke lege. Info: {@User}", userlogName, context.User);
+                Logger.LogWarning("LegeAuthorizationHandler: Bruker {UserlogName} er ikke lege.", userlogName);
                 SjekkWhitelist();
             }
 
@@ -55,8 +55,7 @@ namespace Fhi.HelseId.Web.Hpr
             {
                 if (whitelist.IsWhite(currentUser.PidPseudonym()))
                 {
-                    Logger.LogWarning("LegeAuthorizationHandler: Bruker {UserlogName} er whitelisted. Info: {@User}", userlogName,
-                        context.User);
+                    Logger.LogWarning("LegeAuthorizationHandler: Bruker {UserlogName} er whitelisted.", userlogName);
                     context.Succeed(requirement);
                     return;
                 }

@@ -24,7 +24,7 @@ namespace Fhi.HelseId.Web.Hpr
     public class HprService : IHprService
     {
         private readonly IHPR2ServiceChannel? serviceClient;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         private List<string> GodkjenteHelsepersonellkategorier { get; }
         
