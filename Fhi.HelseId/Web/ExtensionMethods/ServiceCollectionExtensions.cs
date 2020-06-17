@@ -49,7 +49,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 {
                     var policy = new AuthorizationPolicyBuilder()
                         .Combine(hprNumberPolicy);
-                    policy.Requirements.Add(new LegeAuthorizationRequirement());
+                    policy.Requirements.Add(new HprGodkjenningAuthorizationRequirement());
                     var legePolicy = policy.Build();
                     services.AddAuthorization(config =>
                     {
@@ -115,7 +115,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             if (helseIdKonfigurasjon.UseHprNumber)
                 services.AddScoped<IAuthorizationHandler, HprAuthorizationHandler>();
             if (hprKonfigurasjon.UseHpr && hprKonfigurasjon.UseHprPolicy)
-                services.AddScoped<IAuthorizationHandler, LegeAuthorizationHandler>();
+                services.AddScoped<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
             return (true, policyName);
         }
 

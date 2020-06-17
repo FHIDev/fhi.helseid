@@ -5,11 +5,11 @@
     <Nullable>enable</Nullable>
     <LangVersion>8</LangVersion>
     <Configurations>Debug;Release</Configurations>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
-    <FileVersion>1.2.1.0</FileVersion>
+    <AssemblyVersion>1.3.0.0</AssemblyVersion>
+    <FileVersion>1.3.0.0</FileVersion>
     <Description>FHI sin integrasjon med HelseId. Til bruk i .netcore3.1 WebAPI-prosjekter. </Description>
-    <Version>1.2.1</Version>
-    <PackageReleaseNotes>Whitelist</PackageReleaseNotes>
+    <Version>1.3.0</Version>
+    <PackageReleaseNotes>Støtte for multiple godkjenningskategorier</PackageReleaseNotes>
     <RepositoryUrl>https://fhi.visualstudio.com/DefaultCollection/Fhi.Msis/_git/Fhi.HelseId</RepositoryUrl>
     <dependencies>
       <group targetFramework="netcoreapp3.1">

@@ -373,3 +373,8 @@ MigrationBackup/
 .ionide/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Fhi.HelseId specifics
+
+package/
+

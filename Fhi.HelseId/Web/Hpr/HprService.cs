@@ -19,6 +19,9 @@ namespace Fhi.HelseId.Web.Hpr
         bool ErGyldig(Person person);
 
         void Close();
+        IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny);
+        IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste);
+        bool ErGyldigForKategorier(Person person, List<OId9060> koder);
     }
 
     public class HprService : IHprService
@@ -26,8 +29,8 @@ namespace Fhi.HelseId.Web.Hpr
         private readonly IHPR2ServiceChannel? serviceClient;
         private readonly ILogger logger;
 
-        private List<string> GodkjenteHelsepersonellkategorier { get; }
-        
+        private List<OId9060> GodkjenteHelsepersonellkategorier { get; }
+
 
         const string HprnummerAdmin = "000000000";
 
@@ -36,17 +39,19 @@ namespace Fhi.HelseId.Web.Hpr
         {
             this.logger = logger;
             serviceClient = helsepersonellFactory.ServiceProxy;
-
-            GodkjenteHelsepersonellkategorier = new List<string>
-            {
-                Kodekonstanter.OId9060Lege.ToString()
-            };
-
+            GodkjenteHelsepersonellkategorier = new List<OId9060>();
         }
 
-        public HprService LeggTilGodkjenteHelsepersonellkategorier(OId9060 ny)
+        public IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste)
         {
-            GodkjenteHelsepersonellkategorier.Add(ny.ToString());
+            foreach (var godkjent in liste.Godkjenninger)
+                LeggTilGodkjenteHelsepersonellkategori(godkjent);
+            return this;
+        }
+
+        public IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny)
+        {
+            GodkjenteHelsepersonellkategorier.Add(ny);
             return this;
         }
 
@@ -98,15 +103,21 @@ namespace Fhi.HelseId.Web.Hpr
         /// <summary>
         /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene.  Default kategori er Lege
         /// </summary>
-        public bool ErGyldig(Person person)
+        public bool ErGyldig(Person person) => ErGyldigForKategorier(person, GodkjenteHelsepersonellkategorier.ToArray());
+        
+        public bool ErGyldigForKategorier(Person person, params OId9060[] koder)
         {
             if (person == null)
                 return false;
 
-            return person.Godkjenninger.Any(g =>
-                GodkjenteHelsepersonellkategorier.Contains(g.Helsepersonellkategori.Verdi)
-                && g.Gyldig.Aktiv()
-                && !g.Suspensjonsperioder.Any(s => s.Periode.Aktiv()));
+            return person.Godkjenninger.Any(ErAktivGodkjenning);
+
+            bool ErAktivGodkjenning(Godkjenning g)
+            {
+                return koder.Select(x=>x.ToString()).Contains(g.Helsepersonellkategori.Verdi)
+                       && g.Gyldig.Aktiv()
+                       && !g.Suspensjonsperioder.Any(s => s.Periode.Aktiv());
+            }
         }
 
         public async void Close()

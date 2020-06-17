@@ -124,7 +124,7 @@ namespace Fhi.HelseId.Tests.Hpr
             channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
             var repositorySut = new HprService(factory, logger);
-            repositorySut.LeggTilGodkjenteHelsepersonellkategorier(Kodekonstanter.OId9060Sykepleier);
+            repositorySut.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             var result = await repositorySut.SjekkGodkjenning(hprnummer.ToString());
 
             Assert.That(result);
