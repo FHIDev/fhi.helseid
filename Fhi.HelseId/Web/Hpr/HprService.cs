@@ -21,7 +21,7 @@ namespace Fhi.HelseId.Web.Hpr
         void Close();
         IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny);
         IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste);
-        bool ErGyldigForKategorier(Person person, List<OId9060> koder);
+        bool ErGyldigForKategorier(Person person, params OId9060[] koder);
     }
 
     public class HprService : IHprService
