@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Fhi.HelseId.Common;
+using Fhi.HelseId.Common.Identity;
 
 namespace Fhi.HelseId.Web
 {
@@ -17,7 +18,7 @@ namespace Fhi.HelseId.Web
         string Authority { get; }
         string ClientId { get; }
         string ClientSecret { get; }
-        string AcrValues { get; }
+        string[] SecurityLevels { get; }
         bool Debug { get; }
         List<string> AllScopes { get; }
     }
@@ -38,7 +39,7 @@ namespace Fhi.HelseId.Web
         public string ClientSecret { get; set; } = "";
         public string[] Scopes { get; set; } = Array.Empty<string>();
 
-        public string AcrValues { get; set; } = "";
+        public string[] SecurityLevels { get; set; } = Array.Empty<string>();
 
         public bool Debug { get; set; } = false;
 

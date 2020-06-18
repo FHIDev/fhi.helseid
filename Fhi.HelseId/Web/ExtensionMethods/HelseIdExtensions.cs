@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
@@ -29,7 +30,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHelseIdWebKonfigurasjon configAuth, 
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon)
         {
-            var acrValues = configAuth.AcrValues; // spesielt for id-porten, e.g. krever sikkerhetsnivå 4
+            var acrValues = GetAcrValues(configAuth); // spesielt for id-porten, e.g. krever sikkerhetsnivå 4
             var hasAcrValues = !string.IsNullOrWhiteSpace(acrValues);
             options.Authority = configAuth.Authority;
             options.RequireHttpsMetadata = true;
@@ -65,6 +66,11 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 return Task.CompletedTask;
             };
             options.AccessDeniedPath = redirectPagesKonfigurasjon.Forbidden;
+
+            string GetAcrValues(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
+            {
+                return String.Join(' ',helseIdWebKonfigurasjon.SecurityLevels.Select(sl => $"Level{sl}"));
+            }
         }
 
 

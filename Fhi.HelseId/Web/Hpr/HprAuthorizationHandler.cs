@@ -17,12 +17,14 @@ namespace Fhi.HelseId.Web.Hpr
             this.whitelist = whitelist;
             Logger = logger;
         }
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, HprAuthorizationRequirement requirement)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var currentUser = context.User;
             var userlogName = currentUser.Name().ObfuscateName();
             Logger.LogTrace("HprAuthorizationHandler: Checking {Name} with {PidPs}", userlogName,currentUser.PidPseudonym());
-            if (currentUser.HprNumber()==null && !whitelist.IsWhite(currentUser.PidPseudonym()))
+            if (currentUser.HprNumber()==null && !whitelist.IsWhite(currentUser?.PidPseudonym() ?? ""))
             {
                 Logger.LogWarning("HprAuthorizationHandler: Failed");
                 context.Fail();

@@ -55,7 +55,7 @@ namespace Fhi.HelseId.Web.Hpr
 
             void SjekkWhitelist()
             {
-                if (whitelist.IsWhite(currentUser.PidPseudonym()))
+                if (whitelist.IsWhite(currentUser.PidPseudonym() ?? ""))
                 {
                     Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er whitelisted.", userlogName);
                     context.Succeed(requirement);

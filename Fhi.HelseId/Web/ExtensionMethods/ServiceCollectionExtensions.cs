@@ -32,11 +32,12 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         public static (AuthorizationPolicy AuthPolicy, string PolicyName) AddHelseIdAuthorizationPolicy(this IServiceCollection services,
             IHelseIdHprFeatures helseIdFeatures,
             IHprFeatureFlags hprFeatures,
+            IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon,
             IWhitelist whitelist)
         {
             var authenticatedHidUserPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .RequireClaim(IdentityClaims.SecurityLevel, SecurityLevel.Level4)
+                .RequireClaim(IdentityClaims.SecurityLevel, helseIdWebKonfigurasjon.SecurityLevels)
                 .Build();
             if (helseIdFeatures.UseHprNumber)
             {
@@ -126,7 +127,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHprFeatureFlags hprKonfigurasjon,
-            IWhitelist whitelist)
+            IWhitelist whitelist
+            )
         {
             const double tokenRefreshBeforeExpirationTime = 2;
 
@@ -141,7 +143,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 })
                 .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
 
-            (var authPolicy, string policyName) = services.AddHelseIdAuthorizationPolicy(helseIdKonfigurasjon, hprKonfigurasjon, whitelist);
+            (var authPolicy, string policyName) = services.AddHelseIdAuthorizationPolicy(helseIdKonfigurasjon, hprKonfigurasjon, helseIdKonfigurasjon, whitelist);
 
             return (new AuthorizeFilter(authPolicy), policyName);
         }

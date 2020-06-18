@@ -1,4 +1,5 @@
-﻿using Fhi.HelseId.Common.Identity;
+﻿using System.Linq;
+using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Hpr;
@@ -25,9 +26,9 @@ namespace Fhi.HelseId.Tests
             hprFeatures.UseHpr.Returns(useHpr);
             hprFeatures.UseHprPolicy.Returns(useHpr);
             var wl = Substitute.For<IWhitelist>();
+            var helseIdWebConfig = Substitute.For<IHelseIdWebKonfigurasjon>();
 
-            var sut = sc.AddHelseIdAuthorizationPolicy(helseIdFeatures, hprFeatures,wl);
-
+            var sut = sc.AddHelseIdAuthorizationPolicy(helseIdFeatures, hprFeatures, helseIdWebConfig, wl);
             Assert.That(sut.PolicyName, Is.EqualTo(expectedPolicyName));
         }
     }
