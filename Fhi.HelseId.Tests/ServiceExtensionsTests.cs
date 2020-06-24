@@ -12,7 +12,7 @@ namespace Fhi.HelseId.Tests
 {
     public class ServiceExtensionsTests
     {
-        [TestCase(true,true,Policies.LegePolicy)]
+        [TestCase(true,true,Policies.GodkjentHprKategoriPolicy)]
         [TestCase(true, false, Policies.HprNummer)]
         [TestCase(false, true, Policies.HidAuthenticated)]
         [TestCase(false, false, Policies.HidAuthenticated)]

@@ -26,7 +26,7 @@ namespace Fhi.HelseId.Web.Hpr
         {
             var currentUser = context.User;
             var userlogName = currentUser.Name().ObfuscateName();
-            Logger.LogTrace("LegeAuthorizationHandler: Checking {Name}", userlogName);
+            Logger.LogTrace("HprGodkjenningAuthorizationHandler: Checking {Name}", userlogName);
             if (!currentUser.Identity.IsAuthenticated)
             {
                 Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er ikke autentisiert", userlogName);
@@ -44,12 +44,12 @@ namespace Fhi.HelseId.Web.Hpr
             var erGodkjent = await hprRepository.SjekkGodkjenning(hprNummer);
             if (erGodkjent)
             {
-                Logger.LogTrace("HprGodkjenningAuthorizationHandler: {Name} autentisert som lege", userlogName);
+                Logger.LogTrace("HprGodkjenningAuthorizationHandler: {Name} autentisert", userlogName);
                 context.Succeed(requirement);
             }
             else
             {
-                Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er ikke lege.", userlogName);
+                Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er ikke godkjent.", userlogName);
                 SjekkWhitelist();
             }
 

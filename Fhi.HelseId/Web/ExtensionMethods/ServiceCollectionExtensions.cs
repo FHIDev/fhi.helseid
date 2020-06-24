@@ -51,15 +51,15 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     var policy = new AuthorizationPolicyBuilder()
                         .Combine(hprNumberPolicy);
                     policy.Requirements.Add(new HprGodkjenningAuthorizationRequirement());
-                    var legePolicy = policy.Build();
+                    var HprGodkjenningPolicy = policy.Build();
                     services.AddAuthorization(config =>
                     {
                         config.AddPolicy(Policies.HidAuthenticated, authenticatedHidUserPolicy);
                         config.AddPolicy(Policies.HprNummer, hprNumberPolicy);
-                        config.AddPolicy(Policies.LegePolicy, legePolicy);
-                        config.DefaultPolicy = legePolicy;
+                        config.AddPolicy(Policies.GodkjentHprKategoriPolicy, HprGodkjenningPolicy);
+                        config.DefaultPolicy = HprGodkjenningPolicy;
                     });
-                    return (legePolicy, Policies.LegePolicy);
+                    return (HprGodkjenningPolicy, Policies.GodkjentHprKategoriPolicy);
                 }
 
                 services.AddAuthorization(config =>

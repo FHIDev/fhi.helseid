@@ -35,6 +35,7 @@ namespace Fhi.HelseId.Tests.Hpr
             channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
             var repositorySut = new HprService(factory, logger);
+            repositorySut.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = await repositorySut.HentPerson(hprnummer.ToString());
 
             Assert.That(result, Is.Not.Null);
@@ -72,6 +73,7 @@ namespace Fhi.HelseId.Tests.Hpr
             channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
             var repositorySut = new HprService(factory, logger);
+            repositorySut.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = await repositorySut.SjekkGodkjenning(hprnummer.ToString());
 
             Assert.That(result, Is.False);
@@ -85,6 +87,7 @@ namespace Fhi.HelseId.Tests.Hpr
             channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
             var repositorySut = new HprService(factory, logger);
+            repositorySut.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = await repositorySut.SjekkGodkjenning(hprnummer.ToString());
 
             Assert.That(result, Is.False);
@@ -113,6 +116,7 @@ namespace Fhi.HelseId.Tests.Hpr
             channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
             var repositorySut = new HprService(factory, logger);
+            repositorySut.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = await repositorySut.SjekkGodkjenning(hprnummer.ToString());
 
             Assert.That(result, Is.False);

@@ -6,6 +6,6 @@ namespace Fhi.HelseId.Common.Identity
         public const string HidAuthenticated = nameof(HidAuthenticated);
         public const string ApiAccess = nameof(ApiAccess);
         public const string HprNummer = nameof(HprNummer);
-        public const string LegePolicy = nameof(LegePolicy);
+        public const string GodkjentHprKategoriPolicy = nameof(GodkjentHprKategoriPolicy);
     }
 }
