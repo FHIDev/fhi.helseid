@@ -101,7 +101,7 @@ namespace Fhi.HelseId.Web.Hpr
         }
 
         /// <summary>
-        /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene.  Default kategori er Lege
+        /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene. 
         /// </summary>
         public bool ErGyldig(Person person) => ErGyldigForKategorier(person, GodkjenteHelsepersonellkategorier.ToArray());
         

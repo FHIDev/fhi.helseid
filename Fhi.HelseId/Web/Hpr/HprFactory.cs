@@ -22,7 +22,9 @@ namespace Fhi.HelseId.Web.Hpr
 
     /// <summary>
     /// Lag subklasse og sett opp for injection
-    /// Legg til i denne listen de ekstra kategoriene utover Lege som er default godkjent
+    /// Legg til i denne listen de kategoriene som skal være godkjent
+    /// Mulige verdier finnes i filen Kodekonstaner.g.cs
+    /// Eks.: Verdi for Lege er:  Kodekonstanter.OId9060Lege
     /// </summary>
     public abstract class GodkjenteHprKategoriListe : IGodkjenteHprKategoriListe
     {
