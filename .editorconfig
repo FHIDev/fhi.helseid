@@ -1,0 +1,18 @@
+; Top-most EditorConfig file
+root = true
+
+[*.cs]
+indent_style = space
+indent_size = 4
+
+[*.csproj]
+indent_style = space
+indent_size = 2
+
+[*.props]
+indent_style = space
+indent_size = 2
+
+[*.yml]
+indent_style = space
+indent_size = 2

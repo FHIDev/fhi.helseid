@@ -69,7 +69,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             string GetAcrValues(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
             {
-                return String.Join(' ',helseIdWebKonfigurasjon.SecurityLevels.Select(sl => $"Level{sl}"));
+                return string.Join(' ',helseIdWebKonfigurasjon.SecurityLevels.Select(sl => $"Level{sl}"));
             }
         }
 

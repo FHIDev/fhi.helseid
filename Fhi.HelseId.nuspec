@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Fhi.HelseId</id>
+        <version>2.0.0-beta.1</version>
+        <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
+        <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
+        <license type="expression">MIT</license>
+        <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <releaseNotes>Initial release</releaseNotes>
+        <description>Authentication and authorization component for access to NHN HelseId</description>
+        <copyright>Copyright ©2020 Folkehelseinstituttet, Nasjonalt Helsenett NHN</copyright>
+
+        <!-- Tags appear in the gallery and can be used for tag searches -->
+        <tags>helseid, oauth</tags>
+        <dependencies/>
+     </metadata>
+
+    <files>
+        <file src="Fhi.HelseId\bin\release\netcoreapp3.1\Fhi.HelseId.dll" target="build\netcoreapp3.1\Fhi.HelseId.dll" />
+        <file src="Fhi.HelseId\bin\release\netcoreapp3.1\Fhi.HelseId.Common.dll" target="build\netcoreapp3.1\Fhi.HelseId.Common.dll" />
+    </files>
+</package>

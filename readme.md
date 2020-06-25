@@ -10,9 +10,9 @@ It also contains calls to the HPR register, so that you can use a health persons
 
 All features of the components can be controlled using featureflags from your configuration, either hardcoded or loaded from your appsettings.json.
 
-The component used the "Backend for Frontend" pattern, based off a  Authorization Code flow, for details see [here](https://www.nhn.no/helseid/grunnleggende-kunnskap/autentiseringsflyt-og-grant-types/)
+The component uses the "Backend for Frontend" pattern, based off a  Authorization Code flow, for details see [here](https://www.nhn.no/helseid/grunnleggende-kunnskap/autentiseringsflyt-og-grant-types/)
 
-The component require minimum .net core app 3.1. 
+The component requires minimum .net core app 3.1. 
 
 
 ## Access to HelseId
