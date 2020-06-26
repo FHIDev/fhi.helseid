@@ -16,7 +16,7 @@ The component requires minimum .net core app 3.1.
 
 ## Status
 
-Lastest CI build  
+![Lastest CI build](https://img.shields.io/github/workflow/status/folkehelseinstituttet/fhi.helseid/Fhi.HelseId.CI?style=plastic)
 
 Latest nuget package
 
