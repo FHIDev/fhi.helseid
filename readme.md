@@ -14,6 +14,13 @@ The component uses the "Backend for Frontend" pattern, based off a  Authorizatio
 
 The component requires minimum .net core app 3.1. 
 
+## Status
+
+Lastest CI build  
+
+Latest nuget package
+
+
 
 ## Access to HelseId
 
