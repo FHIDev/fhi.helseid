@@ -5,12 +5,19 @@
     <Nullable>enable</Nullable>
     <LangVersion>8</LangVersion>
     <Configurations>Debug;Release</Configurations>
-    <AssemblyVersion>1.4.1.0</AssemblyVersion>
-    <FileVersion>1.4.1.0</FileVersion>
-    <Description>FHI sin integrasjon med HelseId. Til bruk i .netcore3.1 WebAPI-prosjekter. </Description>
-    <Version>1.4.1</Version>
-    <PackageReleaseNotes>Støtte for flere sikkerhetsnivåer</PackageReleaseNotes>
-    <RepositoryUrl>https://fhi.visualstudio.com/DefaultCollection/Fhi.Msis/_git/Fhi.HelseId</RepositoryUrl>
+    <id>Fhi.HelseId</id>
+    <Version>2.0.0-beta.2</Version>
+    <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
+    <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageDescription>Authentication and authorization component for access to NHN HelseId</PackageDescription>
+    <PackageCopyright>Copyright ©2020 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
+    <!-- Tags appear in the gallery and can be used for tag searches -->
+    <tags>helseid, oauth</tags>
+    <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
     <dependencies>
       <group targetFramework="netcoreapp3.1">
       </group>
@@ -35,10 +42,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" Version="3.1.3" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Fhi.HelseId.Common\Fhi.HelseId.Common.csproj" />
   </ItemGroup>
 
 </Project>
