@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - feature/publish-package-to-nuget-org-via-github-actions
 jobs:
   publish:
     name: Build, pack & publish
