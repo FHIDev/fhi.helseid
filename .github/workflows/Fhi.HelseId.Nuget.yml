@@ -1,4 +1,4 @@
-name: publish to nuget
+name: Fhi.HelseId.Nuget
 on:
   push:
     branches:
@@ -6,7 +6,7 @@ on:
       - feature/publish-package-to-nuget-org-via-github-actions
 jobs:
   publish:
-    name: build, pack & publish
+    name: Build, pack & publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,12 +16,12 @@ jobs:
           dotnet-version: '3.1.x'
 
       # Publish
-      - name: publish on version change
+      - name: Publish on version change
         id: publish_nuget
         uses: rohith/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: Fhi.HelseId/Fhi.HelseId.csproj
+          PROJECT_FILE_PATH: /Fhi.HelseId/Fhi.HelseId.csproj
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Fhi.HelseId
