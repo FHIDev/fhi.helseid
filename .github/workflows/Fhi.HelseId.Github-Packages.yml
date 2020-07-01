@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SHA8: ${GITHUB_SHA::8}
+      NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     steps:
     - uses: actions/checkout@v1
@@ -41,4 +42,4 @@ jobs:
       run: dotnet pack --configuration Release Fhi.HelseId
 
     - name: Publish Package
-      run: dotnet nuget push Fhi.HelseId/bin/Release/*.nupkg --source https://nuget.pkg.github.com/folkehelseinstituttet/index.json  -ApiKey ${{secrets.GITHUB_TOKEN}}
+      run: dotnet nuget push Fhi.HelseId/bin/Release/*.nupkg --source https://nuget.pkg.github.com/folkehelseinstituttet/index.json  -ApiKey ${{ env.NUGET_AUTH_TOKEN }}
