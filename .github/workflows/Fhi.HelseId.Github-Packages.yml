@@ -13,7 +13,6 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      SHA8: ${GITHUB_SHA::8}
       NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     steps:
@@ -28,7 +27,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Prep Version String
-      run: echo ::set-env name=VERSION_NUMBER::$(echo 2.0.0-pr-$SHA8)
+      run: echo ::set-env name=VERSION_NUMBER::$(echo 2.0.0-pr-$(echo ${GITHUB_SHA} | cut -c1-8))
 
     - name: Define Package Name
       run: echo ::set-env name=PACKAGE_NAME::$"Fhi.HelseId/bin/Release/Fhi.HelseId.${{ env.VERSION_NUMBER }}.nupkg"
