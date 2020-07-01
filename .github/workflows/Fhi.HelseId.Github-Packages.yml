@@ -23,10 +23,10 @@ jobs:
         dotnet-version: 3.1.x
         source-url: https://nuget.pkg.github.com/folkehelseinstituttet/index.json
 
-    - name: Build
-      run: dotnet build --configuration Release
+    - name: Prepare GitHub Packages nuget source
+      run: dotnet nuget add source https://nuget.pkg.github.com/folkehelseinstituttet/index.json -n "GitHubPackages" -u folkehelseinstituttet -p ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Prep Version String
+    - name: Prepare Version String
       run: echo ::set-env name=VERSION_NUMBER::$(echo 2.0.0-pr-$(echo ${GITHUB_SHA} | cut -c1-8))
 
     - name: Define Package Name
@@ -37,8 +37,11 @@ jobs:
       with:
         version: ${{ env.VERSION_NUMBER }}
 
+    - name: Build
+      run: dotnet build --configuration Release
+
     - name: Pack
       run: dotnet pack --configuration Release Fhi.HelseId
 
     - name: Publish Package
-      run: dotnet nuget push Fhi.HelseId/bin/Release/*.nupkg --source https://nuget.pkg.github.com/folkehelseinstituttet/index.json
+      run: dotnet nuget push Fhi.HelseId/bin/Release/*.nupkg --source 'GitHubPackages'
