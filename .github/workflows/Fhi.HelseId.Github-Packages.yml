@@ -1,4 +1,4 @@
-name: Fhi.HelseId.Nuget
+name: Fhi.HelseId.Github-Packages
 on:
    pull_request:
     branches:
@@ -19,8 +19,6 @@ jobs:
       with:
         dotnet-version: 3.1.x
         source-url: https://nuget.pkg.github.com/folkehelseinstituttet/index.json
-      env:
-        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     - name: Build
       run: dotnet build --configuration Release
@@ -40,4 +38,4 @@ jobs:
       run: dotnet pack --configuration Release Fhi.HelseId
 
     - name: Publish Package
-      run: dotnet nuget push Fhi.HelseId/bin/Release/*.nupkg --source https://nuget.pkg.github.com/folkehelseinstituttet/index.json
+      run: dotnet nuget push Fhi.HelseId/bin/Release/*.nupkg --source https://nuget.pkg.github.com/folkehelseinstituttet/index.json  -ApiKey ${{secrets.GITHUB_TOKEN}}
