@@ -36,7 +36,8 @@ jobs:
     - name: Set Nuget Package Version
       uses: roryprimrose/set-vs-sdk-project-version@v1
       with:
-        version: ${{ env.VERSION_NUMBER }}
+        #version: ${{ env.VERSION_NUMBER }}
+        version: 2.0.0-pr-test-1
 
     - name: Build
       run: dotnet build --configuration Release
