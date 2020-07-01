@@ -27,7 +27,8 @@ jobs:
       run: dotnet nuget add source https://nuget.pkg.github.com/folkehelseinstituttet/index.json -n "GitHubPackages" -u folkehelseinstituttet -p ${{ secrets.GITHUB_TOKEN }}
 
     - name: Prepare Version String
-      run: echo ::set-env name=VERSION_NUMBER::$(echo 2.0.0-pr-$(echo ${GITHUB_SHA} | cut -c1-8))
+      run: echo ::set-env name=VERSION_NUMBER::$(echo 2.0.0-pr-$(echo ${GITHUB_SHA})).substring(8)
+      #run: echo ::set-env name=VERSION_NUMBER::$(echo 2.0.0-pr-$(echo ${GITHUB_SHA} | cut -c1-8))
 
     - name: Define Package Name
       run: echo ::set-env name=PACKAGE_NAME::$"Fhi.HelseId/bin/Release/Fhi.HelseId.${{ env.VERSION_NUMBER }}.nupkg"
