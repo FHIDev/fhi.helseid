@@ -12,7 +12,11 @@ All features of the components can be controlled using featureflags from your co
 
 The component uses the "Backend for Frontend" pattern, based off a  Authorization Code flow, for details see [here](https://www.nhn.no/helseid/grunnleggende-kunnskap/autentiseringsflyt-og-grant-types/)
 
-The component requires minimum .net core app 3.1. 
+The component requires minimum .NET Core app 3.1.
+
+## [Documentation](https://github.com/folkehelseinstituttet/fhi.helseid/wiki)
+
+## [Demo app](https://github.com/folkehelseinstituttet/fhi.helseid.demo)
 
 ## Status
 
@@ -21,16 +25,6 @@ Latest CI Build ![Lastest CI build](https://img.shields.io/github/workflow/statu
 Latest nuget package
 
 
-
 ## Access to HelseId
 
 You need to order access to HelseId.  For test contact [here](), and prod production contact [here]().
-
-
-
-
-
-
-
-
-
