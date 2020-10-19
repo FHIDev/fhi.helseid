@@ -16,6 +16,8 @@ namespace Fhi.HelseId.Common.Identity
             user.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
         public static string? PidPseudonym(this ClaimsPrincipal user) =>
             user.Claims.FirstOrDefault(x => x.Type == IdentityClaims.PidPseudonym)?.Value;
+        public static string? Pid(this ClaimsPrincipal user) =>
+            user.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
     }
 
 

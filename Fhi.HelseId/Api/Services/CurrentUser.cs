@@ -8,6 +8,8 @@ namespace Fhi.HelseId.Api.Services
         {
             string? Id { get; }
             string? HprNummer { get; }
+            string? Name { get; }
+            string? Pid { get; }
         }
 
         public class CurrentHttpUser : ICurrentUser
@@ -22,5 +24,7 @@ namespace Fhi.HelseId.Api.Services
 
             public string? Id => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
             public string? HprNummer => httpContext.User.Claims.FirstOrDefault(x => x.Type == HprClaims.HprNummer)?.Value;
-        }
+            public string? Name => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
+            public string? Pid => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
+    }
 }
