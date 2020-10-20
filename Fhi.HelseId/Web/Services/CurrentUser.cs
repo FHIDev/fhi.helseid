@@ -9,6 +9,7 @@ namespace Fhi.HelseId.Web.Services
         string? Name { get; }
         string? HprNummer { get; }
         string? PidPseudonym { get; }
+        string? Pid { get; }
     }
 
     public class CurrentHttpUser: ICurrentUser
@@ -25,6 +26,7 @@ namespace Fhi.HelseId.Web.Services
         public string? HprNummer => httpContext.User.HprNumber();
 
         public string? PidPseudonym => httpContext.User.PidPseudonym();
+        public string? Pid => httpContext.User.Pid();
 
     }
 }
