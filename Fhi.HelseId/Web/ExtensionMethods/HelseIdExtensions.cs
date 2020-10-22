@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Fhi.HelseId.Web.ExtensionMethods
 {
@@ -35,7 +39,12 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             options.Authority = configAuth.Authority;
             options.RequireHttpsMetadata = true;
             options.ClientId = configAuth.ClientId;
-            options.ClientSecret = configAuth.ClientSecret;
+
+            if (!string.IsNullOrEmpty(configAuth.ClientSecret))
+            {
+                options.ClientSecret = configAuth.ClientSecret;
+            }
+
             options.ResponseType = "code";
             options.TokenValidationParameters.ValidAudience = configAuth.ClientId;
             options.CallbackPath = "/signin-callback";
@@ -65,6 +74,18 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
                 return Task.CompletedTask;
             };
+
+            if (!string.IsNullOrEmpty(configAuth.JsonWebKeySecret) || !string.IsNullOrEmpty(configAuth.RsaKeySecret))
+            {
+
+                options.Events.OnAuthorizationCodeReceived = ctx =>
+                {       
+                    ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
+                    ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth);
+
+                    return Task.CompletedTask;
+                };
+            }
             options.AccessDeniedPath = redirectPagesKonfigurasjon.Forbidden;
 
             string GetAcrValues(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)

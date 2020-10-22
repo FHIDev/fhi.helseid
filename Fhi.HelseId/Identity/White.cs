@@ -5,5 +5,4 @@
         public string PidPseudonym { get; set; } = "";
         public string Name { get; set; } = "";
     }
-    
 }
