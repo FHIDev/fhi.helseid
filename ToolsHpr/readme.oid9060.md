@@ -10,4 +10,8 @@ python GenerateOid9060.py
 
 Det genereres da en ny fil Kodekonstanter.g.cs under folderen Fhi.HelseId\Web\Hpr\Core
 
+Seneste oppdatering:  25. Juni 2020
+
+
+
 
