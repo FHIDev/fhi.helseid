@@ -46,4 +46,4 @@ jobs:
       run: dotnet pack --configuration Release Fhi.HelseId
 
     - name: Publish Package
-      run: dotnet nuget push Fhi.HelseId/bin/Release/*.nupkg --source 'GitHubPackages'
+      run: dotnet nuget push */*.nupkg --source 'GitHubPackages'
