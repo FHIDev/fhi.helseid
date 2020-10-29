@@ -30,5 +30,11 @@ When you want to contribute code, we ask you to follow a few guidelines:
 * Follow the same code standard you see is already used.  
 * Try to add unit tests for your code.
 
+## Releasing new versions of the software
+
+The Fhi.HelseId library is packaged and released automatically from the 'master' branch to.
+A nuget package is built and pushed to Nuget.org if the version number of the Fhi.HelseId project changes.
+
+
 
     
