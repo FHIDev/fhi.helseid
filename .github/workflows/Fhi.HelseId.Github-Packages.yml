@@ -14,6 +14,7 @@ jobs:
     runs-on: windows-latest
     env:
       NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      VERSION_SHA: ${GITHUB_SHA::8}
 
     steps:
     - uses: actions/checkout@v1
@@ -24,20 +25,12 @@ jobs:
         source-url: https://nuget.pkg.github.com/folkehelseinstituttet/index.json
 
     - name: Prepare GitHub Packages nuget source
-      run: dotnet nuget add source https://nuget.pkg.github.com/folkehelseinstituttet/index.json -n "GitHubPackages" -u folkehelseinstituttet -p ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Prepare Version String
-      run: echo ::set-env name=VERSION_NUMBER::$(echo 2.0.0-pr-${GITHUB_SHA})
-      #run: echo ::set-env name=VERSION_NUMBER::$(echo 2.0.0-pr-$(echo ${GITHUB_SHA} | cut -c1-8))
-
-    - name: Define Package Name
-      run: echo ::set-env name=PACKAGE_NAME::$"Fhi.HelseId/bin/Release/Fhi.HelseId.${{ env.VERSION_NUMBER }}.nupkg"
+      run: dotnet nuget add source https://nuget.pkg.github.com/folkehelseinstituttet/index.json -n "GitHubPackages" -u folkehelseinstituttet -p $NUGET_AUTH_TOKEN
 
     - name: Set Nuget Package Version
       uses: roryprimrose/set-vs-sdk-project-version@v1
       with:
-        #version: ${{ env.VERSION_NUMBER }}
-        version: 2.0.0-pr-test-1
+        version: 2.0.0-pr-test-${{env.VERSION_SHA}}
 
     - name: Build
       run: dotnet build --configuration Release
