@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
@@ -154,20 +155,20 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
 
         /// <summary>
-        /// Determine the presiding policy from configuratin.
+        /// Determine the presiding policy from configuration.
         /// Will return Policies.HidAuthenticated if no other policies are configured.
         /// </summary>
         /// <param name="helseIdWebKonfigurasjon"></param>
         /// <param name="hprFeatureFlags"></param>
         /// <returns></returns>
         private static string DeterminePresidingPolicy(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon, IHprFeatureFlags hprFeatureFlags)
-        {
-            var presidingPolicyCollection = new List<KeyValuePair<bool, string>>();
-            presidingPolicyCollection.Add(new KeyValuePair<bool, string>(hprFeatureFlags.UseHprPolicy, Policies.GodkjentHprKategoriPolicy));
-            presidingPolicyCollection.Add(new KeyValuePair<bool, string>(helseIdWebKonfigurasjon.UseHprNumber, Policies.HprNummer));
-            presidingPolicyCollection.Add(new KeyValuePair<bool, string>(true, Policies.HidAuthenticated));
-            return presidingPolicyCollection.First(p => p.Key == true).Value;
-        }
-
+            => new []
+            {
+                new { PolicyActive = hprFeatureFlags.UseHprPolicy, Policy = Policies.GodkjentHprKategoriPolicy},
+                new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber, Policy = Policies.HprNummer },
+                new { PolicyActive = true, Policy = Policies.HidAuthenticated }
+            }
+            .ToList()
+            .First(p => p.PolicyActive).Policy;
     }
 }
