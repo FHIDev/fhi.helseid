@@ -80,7 +80,10 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         }
 
         public static void UseHelseIdProtectedPaths(this IApplicationBuilder app,
-            IHelseIdWebKonfigurasjon config, IRedirectPagesKonfigurasjon redirect, IReadOnlyCollection<PathString> excludeList)
+            IHelseIdWebKonfigurasjon config, 
+            IHprFeatureFlags hprFlags,
+            IRedirectPagesKonfigurasjon redirect, 
+            IReadOnlyCollection<PathString> excludeList)
         {
             if (!config.AuthUse)
                 return;
@@ -93,7 +96,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             };
             if (excludeList != null && excludeList.Any())
                 excluded.AddRange(excludeList);
-            app.UseProtectPaths(new ProtectPathsOptions(config.UseHprNumber ? Policies.HprNummer : Policies.HidAuthenticated, redirect.Forbidden)
+
+            app.UseProtectPaths(new ProtectPathsOptions(DeterminePresidingPolicy(config, hprFlags), redirect.Forbidden)
             {
                 Exclusions = excluded
             });
@@ -148,6 +152,22 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             return (new AuthorizeFilter(authPolicy), policyName);
         }
 
+
+        /// <summary>
+        /// Determine the presiding policy from configuratin.
+        /// Will return Policies.HidAuthenticated if no other policies are configured.
+        /// </summary>
+        /// <param name="helseIdWebKonfigurasjon"></param>
+        /// <param name="hprFeatureFlags"></param>
+        /// <returns></returns>
+        private static string DeterminePresidingPolicy(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon, IHprFeatureFlags hprFeatureFlags)
+        {
+            var presidingPolicyCollection = new List<KeyValuePair<bool, string>>();
+            presidingPolicyCollection.Add(new KeyValuePair<bool, string>(hprFeatureFlags.UseHprPolicy, Policies.GodkjentHprKategoriPolicy));
+            presidingPolicyCollection.Add(new KeyValuePair<bool, string>(helseIdWebKonfigurasjon.UseHprNumber, Policies.HprNummer));
+            presidingPolicyCollection.Add(new KeyValuePair<bool, string>(true, Policies.HidAuthenticated));
+            return presidingPolicyCollection.First(p => p.Key == true).Value;
+        }
 
     }
 }
