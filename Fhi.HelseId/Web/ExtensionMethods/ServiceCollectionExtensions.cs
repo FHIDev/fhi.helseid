@@ -164,7 +164,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         private static string DeterminePresidingPolicy(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon, IHprFeatureFlags hprFeatureFlags)
             => new []
             {
-                new { PolicyActive = hprFeatureFlags.UseHprPolicy, Policy = Policies.GodkjentHprKategoriPolicy},
+                new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber && hprFeatureFlags.UseHprPolicy, Policy = Policies.GodkjentHprKategoriPolicy},
                 new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber, Policy = Policies.HprNummer },
                 new { PolicyActive = true, Policy = Policies.HidAuthenticated }
             }
