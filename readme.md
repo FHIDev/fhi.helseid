@@ -20,9 +20,9 @@ The component requires minimum .NET Core app 3.1.
 
 ## Status
 
-Latest CI Build ![Lastest CI build](https://img.shields.io/github/workflow/status/folkehelseinstituttet/fhi.helseid/Fhi.HelseId.CI?style=plastic)
+Latest CI Build ![Latest CI build](https://img.shields.io/github/workflow/status/folkehelseinstituttet/fhi.helseid/Fhi.HelseId.CI?style=plastic)
 
-Latest nuget package
+Latest NuGet package [![NuGet Badge](https://buildstats.info/nuget/Fhi.HelseId)](https://www.nuget.org/packages/Fhi.HelseId/)
 
 
 ## Access to HelseId
