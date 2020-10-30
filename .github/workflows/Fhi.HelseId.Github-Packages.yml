@@ -22,10 +22,14 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: '%NUGET_AUTH_TOKEN%'
 
+    - name: Get short SHA
+        id: slug
+        run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+
     - name: Set Nuget Package Version
       uses: roryprimrose/set-vs-sdk-project-version@v1
       with:
-        version: 2.0.0-pr-test-${GITHUB_SHA::8}
+        version: 2.0.0-pr-test-${{ steps.slug.outputs.sha8 }}
 
     - name: Build
       run: dotnet build --configuration Release
