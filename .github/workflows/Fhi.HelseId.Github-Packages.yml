@@ -13,7 +13,6 @@ jobs:
 
     runs-on: windows-latest
     env:
-      NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       VERSION_SHA: ${GITHUB_SHA::8}
 
     steps:
@@ -25,7 +24,7 @@ jobs:
         source-url: https://nuget.pkg.github.com/folkehelseinstituttet/index.json
 
     - name: Prepare GitHub Packages nuget source
-      run: dotnet nuget add source https://nuget.pkg.github.com/folkehelseinstituttet/index.json -n "GitHubPackages" -u folkehelseinstituttet -p $NUGET_AUTH_TOKEN
+      run: dotnet nuget add source https://nuget.pkg.github.com/folkehelseinstituttet/index.json -n "GitHubPackages" -u folkehelseinstituttet -p ${{secrets.GH_PACKAGES_PUSH_API_KEY_HELSEID}}
 
     - name: Set Nuget Package Version
       uses: roryprimrose/set-vs-sdk-project-version@v1
