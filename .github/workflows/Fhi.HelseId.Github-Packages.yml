@@ -14,8 +14,6 @@ jobs:
     runs-on: windows-latest
     env:
       VERSION_SHA: ${GITHUB_SHA::8}
-      NUGET_AUTH_TOKEN: ${{secrets.GH_PACKAGES_PUSH_API_KEY_HELSEID}}
-
     steps:
     - uses: actions/checkout@v1
     - name: Setup Dotnet Core
@@ -23,9 +21,6 @@ jobs:
       with:
         dotnet-version: 3.1.x
         source-url: https://nuget.pkg.github.com/folkehelseinstituttet/index.json
-
-    - name: Prepare GitHub Packages nuget source
-      run: dotnet nuget add source https://nuget.pkg.github.com/folkehelseinstituttet/index.json -n "GitHubPackages" -u folkehelseinstituttet
 
     - name: Set Nuget Package Version
       uses: roryprimrose/set-vs-sdk-project-version@v1
@@ -39,4 +34,6 @@ jobs:
       run: dotnet pack --configuration Release Fhi.HelseId
 
     - name: Publish Package
-      run: dotnet nuget push **/*.nupkg --source 'GitHubPackages'
+      run: dotnet nuget push *.nupkg --no-symbols --skip-duplicate
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_PUSH_API_KEY_HELSEID }}
