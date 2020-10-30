@@ -11,9 +11,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
-    env:
-      VERSION_SHA: ${GITHUB_SHA::8}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - name: Setup Dotnet Core
@@ -27,7 +25,7 @@ jobs:
     - name: Set Nuget Package Version
       uses: roryprimrose/set-vs-sdk-project-version@v1
       with:
-        version: 2.0.0-pr-test-${{env.VERSION_SHA}}
+        version: 2.0.0-pr-test-${GITHUB_SHA::8}
 
     - name: Build
       run: dotnet build --configuration Release
