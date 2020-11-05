@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
+using Fhi.HelseId.Web.Services;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -32,18 +33,14 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
         public static void DefaultHelseIdOptions(this OpenIdConnectOptions options, 
             IHelseIdWebKonfigurasjon configAuth, 
-            IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon)
+            IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon, 
+            IHelseIdSecretHandler? secretHandler = null)
         {
             var acrValues = GetAcrValues(configAuth); // spesielt for id-porten, e.g. krever sikkerhetsnivå 4
             var hasAcrValues = !string.IsNullOrWhiteSpace(acrValues);
             options.Authority = configAuth.Authority;
             options.RequireHttpsMetadata = true;
             options.ClientId = configAuth.ClientId;
-
-            if (!string.IsNullOrEmpty(configAuth.ClientSecret))
-            {
-                options.ClientSecret = configAuth.ClientSecret;
-            }
 
             options.ResponseType = "code";
             options.TokenValidationParameters.ValidAudience = configAuth.ClientId;
@@ -75,18 +72,15 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 return Task.CompletedTask;
             };
 
-            if (!string.IsNullOrEmpty(configAuth.JsonWebKeySecret) || !string.IsNullOrEmpty(configAuth.RsaKeySecret))
-            {
-
-                options.Events.OnAuthorizationCodeReceived = ctx =>
-                {       
-                    ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
-                    ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth);
-
-                    return Task.CompletedTask;
-                };
-            }
             options.AccessDeniedPath = redirectPagesKonfigurasjon.Forbidden;
+
+            if(secretHandler == null)
+            {
+                // Defaults to Shared Secret to be backwards compatible
+                secretHandler = new HelseIdSharedSecretHandler();
+            }
+
+            secretHandler.AddSecretConfiguration(configAuth, options);
 
             string GetAcrValues(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
             {

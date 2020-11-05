@@ -15,23 +15,8 @@ namespace Fhi.HelseId.Common.Identity
 {
     public static class ClientAssertion
     {
-        public static string Generate(IHelseIdWebKonfigurasjon configAuth)
+        public static string Generate(IHelseIdWebKonfigurasjon configAuth, SecurityKey securityKey)
         {
-            SecurityKey securityKey;
-            if(!string.IsNullOrEmpty(configAuth.JsonWebKeySecret))
-            {
-                securityKey = new JsonWebKey(configAuth.JsonWebKeySecret);
-            }
-            else if(!string.IsNullOrEmpty(configAuth.RsaKeySecret))
-            {
-                var rsa = RSA.Create();
-                rsa.FromXmlString(configAuth.RsaKeySecret);
-                securityKey = new RsaSecurityKey(rsa);
-            }
-            else
-            {
-                throw new InvalidOperationException("Missing security key config!");
-            }
 
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512);
 
