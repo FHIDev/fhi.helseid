@@ -86,8 +86,9 @@ namespace Fhi.HelseId.Web.Services
 
         public class InvalidEnterpriseCertificateSecretException : Exception
         {
-            const string Message = "For enterprise certificates we expect secret in the format STORE:Thumbprint. For example: 'LocalMachine:1234567890'";
-            public InvalidEnterpriseCertificateSecretException(string secret) : base(Message)
+            private const string StandardMessage = "For enterprise certificates we expect secret in the format STORE:Thumbprint. For example: 'LocalMachine:1234567890'";
+
+            public InvalidEnterpriseCertificateSecretException(string secret) : base(StandardMessage)
             {
                 Secret = secret;
             }
