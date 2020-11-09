@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
@@ -80,7 +81,10 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         }
 
         public static void UseHelseIdProtectedPaths(this IApplicationBuilder app,
-            IHelseIdWebKonfigurasjon config, IRedirectPagesKonfigurasjon redirect, IReadOnlyCollection<PathString> excludeList)
+            IHelseIdWebKonfigurasjon config, 
+            IHprFeatureFlags hprFlags,
+            IRedirectPagesKonfigurasjon redirect, 
+            IReadOnlyCollection<PathString> excludeList)
         {
             if (!config.AuthUse)
                 return;
@@ -93,7 +97,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             };
             if (excludeList != null && excludeList.Any())
                 excluded.AddRange(excludeList);
-            app.UseProtectPaths(new ProtectPathsOptions(config.UseHprNumber ? Policies.HprNummer : Policies.HidAuthenticated, redirect.Forbidden)
+
+            app.UseProtectPaths(new ProtectPathsOptions(DeterminePresidingPolicy(config, hprFlags), redirect.Forbidden)
             {
                 Exclusions = excluded
             });
@@ -152,5 +157,21 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         }
 
 
+        /// <summary>
+        /// Determine the presiding policy from configuration.
+        /// Will return Policies.HidAuthenticated if no other policies are configured.
+        /// </summary>
+        /// <param name="helseIdWebKonfigurasjon"></param>
+        /// <param name="hprFeatureFlags"></param>
+        /// <returns></returns>
+        private static string DeterminePresidingPolicy(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon, IHprFeatureFlags hprFeatureFlags)
+            => new []
+            {
+                new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber && hprFeatureFlags.UseHprPolicy, Policy = Policies.GodkjentHprKategoriPolicy},
+                new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber, Policy = Policies.HprNummer },
+                new { PolicyActive = true, Policy = Policies.HidAuthenticated }
+            }
+            .ToList()
+            .First(p => p.PolicyActive).Policy;
     }
 }

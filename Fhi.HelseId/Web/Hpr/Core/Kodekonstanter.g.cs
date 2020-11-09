@@ -28,8 +28,6 @@ namespace Fhi.HelseId.Web.Hpr.Core
          public static  OId9060 OId9060HelsefagarbeiderBeskrivelse= new OId9060("Helsefagarbeider");
          public static  OId9060 OId9060Hjelpepleier= new OId9060("HP");
          public static  OId9060 OId9060HjelpepleierBeskrivelse= new OId9060("Hjelpepleier");
-         public static  OId9060 OId9060Helsesykepleier= new OId9060("HS");
-         public static  OId9060 OId9060HelsesykepleierBeskrivelse= new OId9060("Helsesykepleier");
          public static  OId9060 OId9060Jordmor= new OId9060("JO");
          public static  OId9060 OId9060JordmorBeskrivelse= new OId9060("Jordmor");
          public static  OId9060 OId9060Klinisk_ernæringsfysiolog= new OId9060("KE");
