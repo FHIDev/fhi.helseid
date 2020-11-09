@@ -36,7 +36,7 @@ namespace Fhi.HelseId.Common.Identity
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(new JwtSecurityToken(header, payload));
         }
-  
+
         private static JwtPayload CreatePayload(string clientId, string audience, List<Claim>? claims = null)
         {
             var payload = new JwtPayload(
@@ -62,64 +62,58 @@ namespace Fhi.HelseId.Common.Identity
         // We need to handle json objects ourself as this isn't directly supported by JwtSecurityHandler yet
         private static JwtPayload AddJsonToPayload(JwtPayload payload, IEnumerable<Claim> jsonClaims)
         {
-            try
+            var jsonTokens = jsonClaims.Select(x => new { x.Type, JsonValue = JRaw.Parse(x.Value) }).ToArray();
+
+            var jsonObjects = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Object).ToArray();
+            var jsonObjectGroups = jsonObjects.GroupBy(x => x.Type).ToArray();
+            foreach (var group in jsonObjectGroups)
             {
-                var jsonTokens = jsonClaims.Select(x => new { x.Type, JsonValue = JRaw.Parse(x.Value) }).ToArray();
-
-                var jsonObjects = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Object).ToArray();
-                var jsonObjectGroups = jsonObjects.GroupBy(x => x.Type).ToArray();
-                foreach (var group in jsonObjectGroups)
+                if (payload.ContainsKey(group.Key))
                 {
-                    if (payload.ContainsKey(group.Key))
-                    {
-                        throw new Exception(string.Format("Can't add two claims where one is a JSON object and the other is not a JSON object ({0})", group.Key));
-                    }
-
-                    if (group.Skip(1).Any())
-                    {
-                        // add as array
-                        payload.Add(group.Key, group.Select(x => x.JsonValue).ToArray());
-                    }
-                    else
-                    {
-                        // add just one
-                        payload.Add(group.Key, group.First().JsonValue);
-                    }
+                    throw new IncompatibleClaimTypesException(string.Format("Can't add two claims where one is a JSON object and the other is not a JSON object ({0})", group.Key));
                 }
 
-                var jsonArrays = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Array).ToArray();
-                var jsonArrayGroups = jsonArrays.GroupBy(x => x.Type).ToArray();
-                foreach (var group in jsonArrayGroups)
+                if (group.Skip(1).Any())
                 {
-                    if (payload.ContainsKey(group.Key))
-                    {
-                        throw new Exception(string.Format("Can't add two claims where one is a JSON array and the other is not a JSON array ({0})", group.Key));
-                    }
-
-                    var newArr = new List<JToken>();
-                    foreach (var arrays in group)
-                    {
-                        var arr = (JArray)arrays.JsonValue;
-                        newArr.AddRange(arr);
-                    }
-
-                    // add just one array for the group/key/claim type
-                    payload.Add(group.Key, newArr.ToArray());
+                    // add as array
+                    payload.Add(group.Key, group.Select(x => x.JsonValue).ToArray());
                 }
-
-                var unsupportedJsonTokens = jsonTokens.Except(jsonObjects).Except(jsonArrays);
-                var unsupportedJsonClaimTypes = unsupportedJsonTokens.Select(x => x.Type).Distinct();
-                if (unsupportedJsonClaimTypes.Any())
+                else
                 {
-                    throw new Exception(string.Format("Unsupported JSON type for claim types: {0}", unsupportedJsonClaimTypes.Aggregate((x, y) => x + ", " + y)));
+                    // add just one
+                    payload.Add(group.Key, group.First().JsonValue);
                 }
-
-                return payload;
             }
-            catch (Exception ex)
+
+            var jsonArrays = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Array).ToArray();
+            var jsonArrayGroups = jsonArrays.GroupBy(x => x.Type).ToArray();
+            foreach (var group in jsonArrayGroups)
             {
-                throw;
+                if (payload.ContainsKey(group.Key))
+                {
+                    throw new IncompatibleClaimTypesException(string.Format("Can't add two claims where one is a JSON array and the other is not a JSON array ({0})", group.Key));
+                }
+
+                var newArr = new List<JToken>();
+                foreach (var arrays in group)
+                {
+                    var arr = (JArray)arrays.JsonValue;
+                    newArr.AddRange(arr);
+                }
+
+                // add just one array for the group/key/claim type
+                payload.Add(group.Key, newArr.ToArray());
             }
+
+            var unsupportedJsonTokens = jsonTokens.Except(jsonObjects).Except(jsonArrays);
+            var unsupportedJsonClaimTypes = unsupportedJsonTokens.Select(x => x.Type).Distinct();
+            if (unsupportedJsonClaimTypes.Any())
+            {
+                var unsupportedClaimTypes = unsupportedJsonClaimTypes.Aggregate((x, y) => x + ", " + y);
+                throw new UnsupportedJsonClaimTypeException($"Unsupported JSON type for claim types: {unsupportedClaimTypes}");
+            }
+
+            return payload;
         }
 
         private static void UpdateJwtHeader(SecurityKey key, JwtHeader header)
@@ -178,6 +172,19 @@ namespace Fhi.HelseId.Common.Identity
             certificateChain.Build(cert);
             return certificateChain;
         }
-    }
 
+        public class UnsupportedJsonClaimTypeException : Exception
+        {
+            public UnsupportedJsonClaimTypeException(string message) : base(message)
+            {
+            }
+        }
+
+        public class IncompatibleClaimTypesException : Exception
+        {
+            public IncompatibleClaimTypesException(string message) : base(message)
+            {
+            }
+        }
+    }
 }

@@ -57,7 +57,7 @@ namespace Fhi.HelseId.Web.Services
             var secretParts = configAuth.ClientSecret.Split(':');
             if(secretParts.Length != 2)
             {
-                throw new Exception("For enterprise certificates we expect secret in the format STORE:Thumbprint. For example: 'LocalMachine:1234567890'");
+                throw new InvalidEnterpriseCertificateSecretException(configAuth.ClientSecret);
             }
 
             var storeLocation = (StoreLocation)Enum.Parse(typeof(StoreLocation), secretParts[0]);
@@ -82,6 +82,17 @@ namespace Fhi.HelseId.Web.Services
 
                 return Task.CompletedTask;
             };
+        }
+
+        public class InvalidEnterpriseCertificateSecretException : Exception
+        {
+            const string Message = "For enterprise certificates we expect secret in the format STORE:Thumbprint. For example: 'LocalMachine:1234567890'";
+            public InvalidEnterpriseCertificateSecretException(string secret) : base(Message)
+            {
+                Secret = secret;
+            }
+
+            public string Secret { get; }
         }
     }
 
