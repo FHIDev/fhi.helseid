@@ -123,6 +123,12 @@ namespace Fhi.HelseId.Common.Identity
                 var thumbprint = Base64Url.Encode(x509Key.Certificate.GetCertHash());
                 var x5c = GenerateX5c(x509Key.Certificate);
                 var pubKey = x509Key.PublicKey as RSA;
+
+                if(pubKey == null)
+                {
+                    throw new UnsupportedSigningKeyTypeException("Only certificates based on RSA keys are supported at the moment");
+                }
+
                 var parameters = pubKey.ExportParameters(false);
                 var exponent = Base64Url.Encode(parameters.Exponent);
                 var modulus = Base64Url.Encode(parameters.Modulus);
@@ -183,6 +189,13 @@ namespace Fhi.HelseId.Common.Identity
         public class IncompatibleClaimTypesException : Exception
         {
             public IncompatibleClaimTypesException(string message) : base(message)
+            {
+            }
+        }
+
+        public class UnsupportedSigningKeyTypeException : Exception
+        {
+            public UnsupportedSigningKeyTypeException(string message) : base(message)
             {
             }
         }
