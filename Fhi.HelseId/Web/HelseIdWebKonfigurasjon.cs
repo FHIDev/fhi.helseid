@@ -21,6 +21,8 @@ namespace Fhi.HelseId.Web
         string[] SecurityLevels { get; }
         bool Debug { get; }
         List<string> AllScopes { get; }
+        string JsonWebKeySecret { get; }
+        string RsaKeySecret { get; }
     }
 
 
@@ -60,7 +62,10 @@ namespace Fhi.HelseId.Web
                 return allScopes;
             }
         }
-        
+
+        public string JsonWebKeySecret { get; set; } = "";
+        public string RsaKeySecret { get; set; } = "";
+
         private readonly List<string> fixedScopes = new List<string>
         {
             "openid",

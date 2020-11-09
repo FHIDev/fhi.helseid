@@ -109,14 +109,16 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHprFeatureFlags hprKonfigurasjon,
-            IWhitelist whitelist)
+            IWhitelist whitelist,
+            IHelseIdSecretHandler? secretHandler = null)
         {
             if (!helseIdKonfigurasjon.AuthUse)
                 return (false, "");
             services.AddScoped<IHprFactory, HprFactory>();
             services.AddScoped<ICurrentUser, CurrentHttpUser>();
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            (var authorizeFilter, string policyName) = AddAuthentication(services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist);
+            (var authorizeFilter, string policyName) = AddAuthentication(services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler);
             services.AddControllers(config => config.Filters.Add(authorizeFilter));
             if (helseIdKonfigurasjon.UseHprNumber)
                 services.AddScoped<IAuthorizationHandler, HprAuthorizationHandler>();
@@ -132,7 +134,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHprFeatureFlags hprKonfigurasjon,
-            IWhitelist whitelist
+            IWhitelist whitelist,
+            IHelseIdSecretHandler? secretHandler = null
             )
         {
             const double tokenRefreshBeforeExpirationTime = 2;
@@ -144,7 +147,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 })
                 .AddOpenIdConnect(HelseIdContext.Scheme, options =>
                 {
-                    options.DefaultHelseIdOptions(helseIdKonfigurasjon, redirectPagesKonfigurasjon);
+                    options.DefaultHelseIdOptions(helseIdKonfigurasjon, redirectPagesKonfigurasjon, secretHandler);
                 })
                 .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
 
