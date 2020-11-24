@@ -120,6 +120,16 @@ namespace Fhi.HelseId.Web.Hpr
             }
         }
 
+        public async Task<IEnumerable<string>> HentGodkjenninger(string hprnummer)
+        {
+            var person = await HentPerson(hprnummer);
+            if (person==null)
+                return new List<string>();
+            var godkjenninger = person.Godkjenninger.Where(o => ErGyldig(person));
+            return new List<string>();
+        }
+
+
         public async void Close()
         {
             if (serviceClient != null)

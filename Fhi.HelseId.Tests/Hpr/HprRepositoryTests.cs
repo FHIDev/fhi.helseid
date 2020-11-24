@@ -137,6 +137,27 @@ namespace Fhi.HelseId.Tests.Hpr
             Assert.That(result);
         }
 
+        [Test]
+        public async Task AtFLereGodkjenningerKanLesesFraPerson()
+        {
+            const int hprnummer = 123456789;
+            var person = new TestPersonMedFlereGodkjenninger(hprnummer);
+            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+
+            var repositorySut = new HprService(factory, logger);
+            repositorySut.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            repositorySut.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+
+            bool result = await repositorySut.SjekkGodkjenning(hprnummer.ToString());
+
+            Assert.That(result);
+
+            var godkjenninger = await repositorySut.HentGodkjenninger(hprnummer.ToString());
+
+            Assert.That(godkjenninger.Count, Is.EqualTo(2));
+
+        }
+
 
 
 
@@ -179,6 +200,41 @@ namespace Fhi.HelseId.Tests.Hpr
                     Helsepersonellkategori = new Kode {Verdi = "SP"},
                     Gyldig = new Periode {Fra = DateTime.Today.AddDays(-1), Til = null},
                     Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
+                }
+
+            };
+        }
+    }
+
+    internal class TestPersonMedFlereGodkjenninger : Person
+    {
+        internal TestPersonMedFlereGodkjenninger(int hprnummer)
+        {
+            HPRNummer = hprnummer;
+            FysiskeAdresser =
+                new[] { new FysiskAdresse { Gateadresse = "Hovedgata 23", Postkode = "1234", Poststed = "Oslo" } };
+            Godkjenninger = new[]
+            {
+                new Godkjenning
+                {
+                    Autorisasjon = new Kode {Aktiv = true,},
+                    Helsepersonellkategori = new Kode {Verdi = "SP"},
+                    Gyldig = new Periode {Fra = DateTime.Today.AddDays(-1), Til = null},
+                    Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
+                },
+                new Godkjenning
+                {
+                    Autorisasjon = new Kode {Aktiv = true,},
+                    Helsepersonellkategori = new Kode {Verdi = "LE"},
+                    Gyldig = new Periode {Fra = DateTime.Today.AddDays(-1), Til = null},
+                    Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
+                },
+                new Godkjenning  // Som ikke er gyldig i perioden
+                {
+                Autorisasjon = new Kode {Aktiv = true,},
+                Helsepersonellkategori = new Kode {Verdi = "XX"},
+                Gyldig = new Periode {Fra = DateTime.Today.AddDays(1), Til = null},
+                Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
                 }
 
             };
