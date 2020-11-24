@@ -120,7 +120,7 @@ namespace Fhi.HelseId.Altinn
 
                 if (certs.Count <= 0)
                 {
-                    throw new Exception(
+                    throw new AltinnException(
                         $"Could not find the enterprise certificate with thumbprint {AuthenticationCertificateThumbprint}"
                     );
                 }
@@ -128,7 +128,7 @@ namespace Fhi.HelseId.Altinn
                 return certs[0];
             }
 
-            throw new InvalidOperationException(
+            throw new AltinnException(
                 $"Either {nameof(AuthenticationCertificatePath)} or {nameof(AuthenticationCertificateThumbprint)} must be set"
             );
         }
