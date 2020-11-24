@@ -13,7 +13,7 @@ namespace Fhi.HelseId.Altinn
     public class AltinnServiceOwnerClient : IAltinnServiceOwnerClient
     {
         private readonly HttpClient httpClient;
-
+        
         public AltinnServiceOwnerClient(HttpClient httpClient)
         {
             this.httpClient = httpClient;
@@ -58,9 +58,11 @@ namespace Fhi.HelseId.Altinn
 
         public IAsyncEnumerable<Organization> GetOrganizationsOfTypes(CancellationToken cancellationToken = default, params string[] types)
         {
+            const int take = 1000; // Maximum page size for organization responses in Altinn
+
             return GetAllThroughPaging(
                 async (skip, take) => await GetOrganizationsOfTypes(types, skip, take, cancellationToken),
-                1000);
+                take);
         }
 
         private async Task<Organization[]> GetOrganizationsOfTypes(string[] types, int skip, int take, CancellationToken cancellationToken = default)
@@ -72,9 +74,11 @@ namespace Fhi.HelseId.Altinn
 
         public IAsyncEnumerable<Organization> GetOrganizationsNotOfTypes(CancellationToken cancellationToken = default, params string[] types)
         {
+            const int take = 1000; // Maximum page size for organization responses in Altinn
+
             return GetAllThroughPaging(
                    async (skip, take) => await GetOrganizationsNotOfTypes(types, skip, take, cancellationToken),
-                   1000);
+                   take);
         }
 
         private async Task<Organization[]> GetOrganizationsNotOfTypes(string[] types, int skip, int take, CancellationToken cancellationToken = default)
@@ -96,9 +100,11 @@ namespace Fhi.HelseId.Altinn
         }
         public IAsyncEnumerable<Reportee> GetReportees(string subject, string serviceCode, int serviceEditionCode, CancellationToken cancellationToken = default)
         {
+            const int take = 1000; // Maximum page size for reportee responses in Altinn
+
             return GetAllThroughPaging(
                       async (skip, take) => await GetReportees(subject, serviceCode, serviceEditionCode, skip, take, cancellationToken),
-                      1000);
+                      take);
         }
 
         public async Task<Reportee[]?> GetReportees(string subject, string serviceCode, int serviceEditionCode, int skip, int take, CancellationToken cancellationToken = default)
@@ -116,9 +122,11 @@ namespace Fhi.HelseId.Altinn
 
         public IAsyncEnumerable<Right> GetRights(string subject, string reportee, CancellationToken cancellationToken = default)
         {
+            const int take = 50; // Maximum page size for rights responses in Altinn
+            
             return GetAllThroughPaging(
                       async (skip, take) => (await GetRights(subject, reportee, skip, take, cancellationToken)).Rights,
-                      50);
+                      take);
         }
 
         public async Task<RightsResponse> GetRights(string subject, string reportee, int skip, int take, CancellationToken cancellationToken = default)
@@ -165,8 +173,5 @@ namespace Fhi.HelseId.Altinn
             }
             while (page.Length > 0);
         }
-
     }
-
-
 }
