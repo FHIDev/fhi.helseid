@@ -56,20 +56,11 @@ namespace Fhi.HelseId.Altinn
             }
         }
 
-        public async IAsyncEnumerable<Organization> GetOrganizationsOfTypes([EnumeratorCancellation] CancellationToken cancellationToken = default, params string[] types)
+        public IAsyncEnumerable<Organization> GetOrganizationsOfTypes(CancellationToken cancellationToken = default, params string[] types)
         {
-            int skip = 0, take = 1000, taken = 1000;
-
-            while (taken > 0)
-            {
-                var orgs = await GetOrganizationsOfTypes(types, skip, take, cancellationToken);
-                taken = orgs.Length;
-                skip += taken;
-                foreach (var org in orgs)
-                {
-                    yield return org;
-                }
-            }
+            return GetAllThroughPaging(
+                async (skip, take) => await GetOrganizationsOfTypes(types, skip, take, cancellationToken),
+                1000);
         }
 
         private async Task<Organization[]> GetOrganizationsOfTypes(string[] types, int skip, int take, CancellationToken cancellationToken = default)
@@ -79,20 +70,11 @@ namespace Fhi.HelseId.Altinn
             return await DeserializeIfSuccessful<Organization[]>(response);
         }
 
-        public async IAsyncEnumerable<Organization> GetOrganizationsNotOfTypes([EnumeratorCancellation] CancellationToken cancellationToken = default, params string[] types)
+        public IAsyncEnumerable<Organization> GetOrganizationsNotOfTypes(CancellationToken cancellationToken = default, params string[] types)
         {
-            int skip = 0, take = 1000, taken = 1000;
-
-            while (taken > 0)
-            {
-                var orgs = await GetOrganizationsNotOfTypes(types, skip, take, cancellationToken);
-                taken = orgs.Length;
-                skip += taken;
-                foreach (var org in orgs)
-                {
-                    yield return org;
-                }
-            }
+            return GetAllThroughPaging(
+                   async (skip, take) => await GetOrganizationsNotOfTypes(types, skip, take, cancellationToken),
+                   1000);
         }
 
         private async Task<Organization[]> GetOrganizationsNotOfTypes(string[] types, int skip, int take, CancellationToken cancellationToken = default)
@@ -112,25 +94,11 @@ namespace Fhi.HelseId.Altinn
 
             return await DeserializeIfSuccessful<Organization>(response);
         }
-        public async IAsyncEnumerable<Reportee> GetReportees(string subject, string serviceCode, int serviceEditionCode, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<Reportee> GetReportees(string subject, string serviceCode, int serviceEditionCode, CancellationToken cancellationToken = default)
         {
-            int skip = 0, take = 1000, taken = 1000;
-
-            while (taken > 0)
-            {
-                var reportees = await GetReportees(subject, serviceCode, serviceEditionCode, skip, take, cancellationToken);
-                if (reportees == null)
-                {
-                    yield break;
-                }
-
-                taken = reportees.Length;
-                skip += taken;
-                foreach (var reportee in reportees)
-                {
-                    yield return reportee;
-                }
-            }
+            return GetAllThroughPaging(
+                      async (skip, take) => await GetReportees(subject, serviceCode, serviceEditionCode, skip, take, cancellationToken),
+                      1000);
         }
 
         public async Task<Reportee[]?> GetReportees(string subject, string serviceCode, int serviceEditionCode, int skip, int take, CancellationToken cancellationToken = default)
@@ -146,20 +114,11 @@ namespace Fhi.HelseId.Altinn
             return reportees;
         }
 
-        public async IAsyncEnumerable<Right> GetRights(string subject, string reportee, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<Right> GetRights(string subject, string reportee, CancellationToken cancellationToken = default)
         {
-            int skip = 0, take = 50, taken = 50;
-
-            while (taken > 0)
-            {
-                var rights = await GetRights(subject, reportee, skip, take, cancellationToken);
-                taken = rights.Rights.Length;
-                skip += taken;
-                foreach (var right in rights.Rights)
-                {
-                    yield return right;
-                }
-            }
+            return GetAllThroughPaging(
+                      async (skip, take) => (await GetRights(subject, reportee, skip, take, cancellationToken)).Rights,
+                      50);
         }
 
         public async Task<RightsResponse> GetRights(string subject, string reportee, int skip, int take, CancellationToken cancellationToken = default)
@@ -182,8 +141,32 @@ namespace Fhi.HelseId.Altinn
         {
             var rights = GetRights(subject, reportee, cancellationToken);
 
-            // Don't care about the Altinn rights read/write/archiveread/archivedelete - as long as there is one, we consider it granted
-            return await rights.AnyAsync(r => r.ServiceCode == serviceCode && r.ServiceEditionCode == serviceEditionCode); 
+            return await rights.AnyAsync(r => r.ServiceCode == serviceCode && r.ServiceEditionCode == serviceEditionCode); // Don't care about the Altinn rights read/write/archiveread/archivedelete
         }
+
+        private async IAsyncEnumerable<T> GetAllThroughPaging<T>(Func<int, int, Task<T[]?>> getPage, int take)
+        {
+            int skip = 0;
+            T[]? page;
+
+            do
+            {
+                page = await getPage(skip, take);
+                if (page == null)
+                {
+                    yield break;
+                }
+
+                skip += page.Length;
+                foreach (var item in page)
+                {
+                    yield return item;
+                }
+            }
+            while (page.Length > 0);
+        }
+
     }
+
+
 }
