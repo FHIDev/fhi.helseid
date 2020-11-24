@@ -109,24 +109,23 @@ namespace Fhi.HelseId.Web.Hpr
         {
             if (person == null)
                 return false;
-
-            return person.Godkjenninger.Any(ErAktivGodkjenning);
-
-            bool ErAktivGodkjenning(Godkjenning g)
-            {
-                return koder.Select(x=>x.ToString()).Contains(g.Helsepersonellkategori.Verdi)
-                       && g.Gyldig.Aktiv()
-                       && !g.Suspensjonsperioder.Any(s => s.Periode.Aktiv());
-            }
+            return person.Godkjenninger.Any(g=>ErAktivGodkjenning(g,koder));
         }
 
-        public async Task<IEnumerable<string>> HentGodkjenninger(string hprnummer)
+        private bool ErAktivGodkjenning(Godkjenning g, params OId9060[] koder)
+        {
+            return koder.Select(x => x.ToString()).Contains(g.Helsepersonellkategori.Verdi)
+                   && g.Gyldig.Aktiv()
+                   && !g.Suspensjonsperioder.Any(s => s.Periode.Aktiv());
+        }
+
+        public async Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer, params OId9060[] koder)
         {
             var person = await HentPerson(hprnummer);
             if (person==null)
-                return new List<string>();
-            var godkjenninger = person.Godkjenninger.Where(o => ErGyldig(person));
-            return new List<string>();
+                return new List<OId9060>();
+            var godkjenninger = person.Godkjenninger.Where(o => ErAktivGodkjenning(o,koder));
+            return Kodekonstanter.KodeList.Where(o=>godkjenninger.FirstOrDefault(x=>x.Helsepersonellkategori.Verdi==o.Value)!=null);
         }
 
 

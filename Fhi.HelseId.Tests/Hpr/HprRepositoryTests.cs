@@ -150,16 +150,20 @@ namespace Fhi.HelseId.Tests.Hpr
 
             bool result = await repositorySut.SjekkGodkjenning(hprnummer.ToString());
 
-            Assert.That(result);
+            Assert.That(result,"Hprnummer ikke godkjent");
 
-            var godkjenninger = await repositorySut.HentGodkjenninger(hprnummer.ToString());
+            var godkjenninger = await repositorySut.HentGodkjenninger(hprnummer.ToString(), Kodekonstanter.OId9060Sykepleier, Kodekonstanter.OId9060Lege);
 
-            Assert.That(godkjenninger.Count, Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(godkjenninger.Count, Is.EqualTo(2), "Antall godkjenninger ble galt");
+                Assert.That(godkjenninger, Does.Contain(Kodekonstanter.OId9060Sykepleier));
+                Assert.That(godkjenninger, Does.Contain(Kodekonstanter.OId9060Lege));
+                Assert.That(godkjenninger, Does.Not.Contain(Kodekonstanter.OId9060Jordmor));
+            });
+
 
         }
-
-
-
 
         private Person CreateStubPersonAnnet(int hpr)
         {

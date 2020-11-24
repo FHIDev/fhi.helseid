@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Fhi.HelseId.Common;
-using Fhi.HelseId.Common.Identity;
 
 namespace Fhi.HelseId.Web
 {
@@ -21,6 +20,8 @@ namespace Fhi.HelseId.Web
         string[] SecurityLevels { get; }
         bool Debug { get; }
         List<string> AllScopes { get; }
+        string JsonWebKeySecret { get; }
+        string RsaKeySecret { get; }
     }
 
 
@@ -60,7 +61,10 @@ namespace Fhi.HelseId.Web
                 return allScopes;
             }
         }
-        
+
+        public string JsonWebKeySecret { get; set; } = "";
+        public string RsaKeySecret { get; set; } = "";
+
         private readonly List<string> fixedScopes = new List<string>
         {
             "openid",
