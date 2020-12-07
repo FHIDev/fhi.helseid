@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Hpr.Core;
@@ -45,9 +44,7 @@ namespace Fhi.HelseId.Tests.Hpr
                 Assert.That(result.FysiskeAdresser.Length, Is.EqualTo(1));
                 Assert.That(result.FysiskeAdresser[0].Gateadresse, Is.EqualTo(person.FysiskeAdresser[0].Gateadresse));
             });
-
         }
-
 
         [Test]
         public async Task AtPersonErLege()
@@ -62,14 +59,13 @@ namespace Fhi.HelseId.Tests.Hpr
             var result = await repositorySut.SjekkGodkjenning(hprnummer.ToString());
 
             Assert.That(result);
-
         }
 
         [Test]
         public async Task AtPersonIkkeErLege()
         {
             const int hprnummer = 123456789;
-            var person = CreateStubPersonAnnet(hprnummer);
+            var person = StubPersonAnnet.CreateStubPersonAnnet(hprnummer);
             channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
             var repositorySut = new HprService(factory, logger);
@@ -150,7 +146,7 @@ namespace Fhi.HelseId.Tests.Hpr
 
             bool result = await repositorySut.SjekkGodkjenning(hprnummer.ToString());
 
-            Assert.That(result,"Hprnummer ikke godkjent");
+            Assert.That(result, "Hprnummer ikke godkjent");
 
             var godkjenninger = await repositorySut.HentGodkjenninger(hprnummer.ToString(), Kodekonstanter.OId9060Sykepleier, Kodekonstanter.OId9060Lege);
 
@@ -161,141 +157,6 @@ namespace Fhi.HelseId.Tests.Hpr
                 Assert.That(godkjenninger, Does.Contain(Kodekonstanter.OId9060Lege));
                 Assert.That(godkjenninger, Does.Not.Contain(Kodekonstanter.OId9060Jordmor));
             });
-
-
-        }
-
-        private Person CreateStubPersonAnnet(int hpr)
-        {
-            var person = new Person
-            {
-                HPRNummer = hpr,
-                FysiskeAdresser =
-                    new[] { new FysiskAdresse { Gateadresse = "Hovedgata 23", Postkode = "1234", Poststed = "Oslo" } },
-                Godkjenninger = new[]
-                {
-                    new Godkjenning
-                    {
-                        Autorisasjon = new Kode {Aktiv = true, },
-                        Helsepersonellkategori = new Kode {Verdi= "XX"},
-                        Gyldig = new Periode { Fra = DateTime.Today.AddDays(-1), Til=null},
-                        Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
-                    },
-
-                }
-            };
-            return person;
-        }
-
-    }
-
-    internal class TestSykePleier : Person
-    {
-        internal TestSykePleier(int hprnummer)
-        {
-            HPRNummer = hprnummer;
-            FysiskeAdresser =
-                new[] { new FysiskAdresse { Gateadresse = "Hovedgata 23", Postkode = "1234", Poststed = "Oslo" } };
-            Godkjenninger = new[]
-            {
-                new Godkjenning
-                {
-                    Autorisasjon = new Kode {Aktiv = true,},
-                    Helsepersonellkategori = new Kode {Verdi = "SP"},
-                    Gyldig = new Periode {Fra = DateTime.Today.AddDays(-1), Til = null},
-                    Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
-                }
-
-            };
         }
     }
-
-    internal class TestPersonMedFlereGodkjenninger : Person
-    {
-        internal TestPersonMedFlereGodkjenninger(int hprnummer)
-        {
-            HPRNummer = hprnummer;
-            FysiskeAdresser =
-                new[] { new FysiskAdresse { Gateadresse = "Hovedgata 23", Postkode = "1234", Poststed = "Oslo" } };
-            Godkjenninger = new[]
-            {
-                new Godkjenning
-                {
-                    Autorisasjon = new Kode {Aktiv = true,},
-                    Helsepersonellkategori = new Kode {Verdi = "SP"},
-                    Gyldig = new Periode {Fra = DateTime.Today.AddDays(-1), Til = null},
-                    Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
-                },
-                new Godkjenning
-                {
-                    Autorisasjon = new Kode {Aktiv = true,},
-                    Helsepersonellkategori = new Kode {Verdi = "LE"},
-                    Gyldig = new Periode {Fra = DateTime.Today.AddDays(-1), Til = null},
-                    Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
-                },
-                new Godkjenning  // Som ikke er gyldig i perioden
-                {
-                Autorisasjon = new Kode {Aktiv = true,},
-                Helsepersonellkategori = new Kode {Verdi = "XX"},
-                Gyldig = new Periode {Fra = DateTime.Today.AddDays(1), Til = null},
-                Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
-                }
-
-            };
-        }
-    }
-
-
-    internal class TestLege : Person
-    {
-        internal TestLege(int hprnummer)
-        {
-            HPRNummer = hprnummer;
-            FysiskeAdresser =
-                new[] { new FysiskAdresse { Gateadresse = "Hovedgata 23", Postkode = "1234", Poststed = "Oslo" } };
-            Godkjenninger = new[]
-            {
-                new Godkjenning
-                {
-                    Autorisasjon = new Kode {Aktiv = true,},
-                    Helsepersonellkategori = new Kode {Verdi = "LE"},
-                    Gyldig = new Periode {Fra = DateTime.Today.AddDays(-1), Til = null},
-                    Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
-                }
-
-            };
-        }
-
-        internal TestLege Suspender()
-        {
-            var suspensjonsperiode = new Suspensjonsperiode { Periode = new Periode { Fra = DateTime.Today.AddDays(-1), Til = null } };
-            Godkjenninger[0].Suspensjonsperioder = new[] { suspensjonsperiode };
-            return this;
-        }
-
-        internal TestLege EndreTilUgyldig()
-        {
-            Godkjenninger[0].Gyldig = new Periode { Fra = DateTime.Today.AddDays(1), Til = null };
-            return this;
-        }
-
-        internal TestLege SuspenderTillegg()
-        {
-            var godkjenninger = Godkjenninger.ToList();
-            var suspensjonsperiode = new Suspensjonsperiode { Periode = new Periode { Fra = DateTime.Today.AddDays(-1), Til = null } };
-            godkjenninger.Add(new Godkjenning
-            {
-                Autorisasjon = new Kode { Aktiv = true, },
-                Helsepersonellkategori = new Kode { Verdi = "LE" },
-                Gyldig = new Periode { Fra = DateTime.Today.AddDays(-1), Til = null },
-                Suspensjonsperioder = new[] { suspensjonsperiode }
-            });
-            return this;
-        }
-
-    }
-
-
-
-
 }
