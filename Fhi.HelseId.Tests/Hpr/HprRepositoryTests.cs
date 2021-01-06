@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Hpr.Core;
@@ -36,7 +37,6 @@ namespace Fhi.HelseId.Tests.Hpr
             var repositorySut = new HprService(factory, logger);
             repositorySut.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = await repositorySut.HentPerson(hprnummer.ToString());
-
             Assert.That(result, Is.Not.Null);
             Assert.Multiple(() =>
             {
@@ -134,7 +134,7 @@ namespace Fhi.HelseId.Tests.Hpr
         }
 
         [Test]
-        public async Task AtFLereGodkjenningerKanLesesFraPerson()
+        public async Task AtFlereGodkjenningerKanLesesFraPerson()
         {
             const int hprnummer = 123456789;
             var person = new TestPersonMedFlereGodkjenninger(hprnummer);
@@ -148,7 +148,10 @@ namespace Fhi.HelseId.Tests.Hpr
 
             Assert.That(result, "Hprnummer ikke godkjent");
 
-            var godkjenninger = await repositorySut.HentGodkjenninger(hprnummer.ToString(), Kodekonstanter.OId9060Sykepleier, Kodekonstanter.OId9060Lege);
+            repositorySut.LeggTilGodkjenteHelsepersonellKategoriListe(new List<OId9060>
+                {Kodekonstanter.OId9060Sykepleier, Kodekonstanter.OId9060Lege});
+
+            var godkjenninger = await repositorySut.HentGodkjenninger(hprnummer.ToString());
 
             Assert.Multiple(() =>
             {
