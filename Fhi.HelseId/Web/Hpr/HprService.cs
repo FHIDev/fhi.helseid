@@ -33,7 +33,7 @@ namespace Fhi.HelseId.Web.Hpr
 
 
         const string HprnummerAdmin = "000000000";
-
+        public string LastErrorMessage { get; private set; } = "";
 
         public HprService(IHprFactory helsepersonellFactory, ILogger logger)
         {
@@ -74,7 +74,9 @@ namespace Fhi.HelseId.Web.Hpr
         {
             if (serviceClient == null)
             {
-                logger.LogError("Kunne ikke skape connection til Hpr register");
+                var msg = "Kunne ikke skape connection til Hpr register";
+                LastErrorMessage = msg;
+                logger.LogError(msg);
                 return null;
             }
 
@@ -85,7 +87,9 @@ namespace Fhi.HelseId.Web.Hpr
             }
             catch (System.ServiceModel.CommunicationException e)
             {
-                logger.LogError(e, "CommunicationException i aksess til Hpr register. ");
+                var msg = "CommunicationException i aksess til Hpr register. ";
+                LastErrorMessage = msg;
+                logger.LogError(e, msg);
                 return null;
             }
 #pragma warning disable 168
@@ -94,7 +98,9 @@ namespace Fhi.HelseId.Web.Hpr
 #pragma warning restore 168
             {
                 //Hvis ekstern service kaster exception returneres null. Eksemplvis mottar vi også en exception hvis fnr ikke finnes.
-                logger.LogError(e, "Feil i aksess til Hpr register. (Obs: Mottar også en exception hvis fnr ikke finnes)");
+                var msg = "Feil i aksess til Hpr register. (Obs: Mottar også en exception hvis fnr ikke finnes)";
+                LastErrorMessage = msg;
+                logger.LogError(e, msg);
                 return null;
             }
 #pragma warning restore CA1031 // Do not catch general exception types
