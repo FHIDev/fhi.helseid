@@ -44,7 +44,13 @@ namespace Fhi.HelseId.Web.Hpr
 
         public IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste)
         {
-            foreach (var godkjent in liste.Godkjenninger)
+            LeggTilGodkjenteHelsepersonellKategoriListe(liste.Godkjenninger);
+            return this;
+        }
+
+        public IHprService LeggTilGodkjenteHelsepersonellKategoriListe(IEnumerable<OId9060> liste)
+        {
+            foreach (var godkjent in liste)
                 LeggTilGodkjenteHelsepersonellkategori(godkjent);
             return this;
         }
@@ -115,16 +121,25 @@ namespace Fhi.HelseId.Web.Hpr
         {
             if (person == null)
                 return false;
-
-            return person.Godkjenninger.Any(ErAktivGodkjenning);
-
-            bool ErAktivGodkjenning(Godkjenning g)
-            {
-                return koder.Select(x=>x.ToString()).Contains(g.Helsepersonellkategori.Verdi)
-                       && g.Gyldig.Aktiv()
-                       && !g.Suspensjonsperioder.Any(s => s.Periode.Aktiv());
-            }
+            return person.Godkjenninger.Any(g=>ErAktivGodkjenning(g,koder));
         }
+
+        private bool ErAktivGodkjenning(Godkjenning g, params OId9060[] koder)
+        {
+            return koder.Select(x => x.ToString()).Contains(g.Helsepersonellkategori.Verdi)
+                   && g.Gyldig.Aktiv()
+                   && !g.Suspensjonsperioder.Any(s => s.Periode.Aktiv());
+        }
+
+        public async Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer)
+        {
+            var person = await HentPerson(hprnummer);
+            if (person==null)
+                return new List<OId9060>();
+            var godkjenninger = person.Godkjenninger.Where(o => ErAktivGodkjenning(o,GodkjenteHelsepersonellkategorier.ToArray()));
+            return Kodekonstanter.KodeList.Where(o=>godkjenninger.FirstOrDefault(x=>x.Helsepersonellkategori.Verdi==o.Value)!=null);
+        }
+
 
         public async void Close()
         {
