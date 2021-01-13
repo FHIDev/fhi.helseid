@@ -22,6 +22,9 @@ namespace Fhi.HelseId.Web.Hpr
         IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny);
         IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste);
         bool ErGyldigForKategorier(Person person, params OId9060[] koder);
+        string LastErrorMessage { get; }
+        Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer);
+        IEnumerable<OId9060> HentGodkjenninger(Person? person);
     }
 
     public class HprService : IHprService
@@ -93,7 +96,7 @@ namespace Fhi.HelseId.Web.Hpr
             }
             catch (System.ServiceModel.CommunicationException e)
             {
-                var msg = "CommunicationException i aksess til Hpr register. ";
+                var msg = "CommunicationException i aksess til Hpr register. "+e;
                 LastErrorMessage = msg;
                 logger.LogError(e, msg);
                 return null;
@@ -134,10 +137,17 @@ namespace Fhi.HelseId.Web.Hpr
         public async Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer)
         {
             var person = await HentPerson(hprnummer);
-            if (person==null)
+            return HentGodkjenninger(person);
+        }
+
+        public IEnumerable<OId9060> HentGodkjenninger(Person? person)
+        {
+            if (person == null)
                 return new List<OId9060>();
-            var godkjenninger = person.Godkjenninger.Where(o => ErAktivGodkjenning(o,GodkjenteHelsepersonellkategorier.ToArray()));
-            return Kodekonstanter.KodeList.Where(o=>godkjenninger.FirstOrDefault(x=>x.Helsepersonellkategori.Verdi==o.Value)!=null);
+            var godkjenninger =
+                person.Godkjenninger.Where(o => ErAktivGodkjenning(o, GodkjenteHelsepersonellkategorier.ToArray()));
+            return Kodekonstanter.KodeList.Where(o =>
+                godkjenninger.FirstOrDefault(x => x.Helsepersonellkategori.Verdi == o.Value) != null);
         }
 
 
