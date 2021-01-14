@@ -161,5 +161,23 @@ namespace Fhi.HelseId.Tests.Hpr
                 Assert.That(godkjenninger, Does.Not.Contain(Kodekonstanter.OId9060Jordmor));
             });
         }
+
+
+        [Test]
+        public async Task AtViKanLeggeTilKategorierUtenDuplikater()
+        {
+            const int hprnummer = 123456789;
+            var person = new TestPersonMedFlereGodkjenninger(hprnummer);
+            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            var service = new HprService(factory, logger);
+            service.LeggTilAlleKategorier();
+            var godkjenninger1 = await service.HentGodkjenninger(hprnummer.ToString());
+            service.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            service.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            var godkjenninger2 = await service.HentGodkjenninger(hprnummer.ToString());
+            Assert.That(godkjenninger1.Count, Is.EqualTo(godkjenninger2.Count()));
+            Assert.That(godkjenninger2.Count, Is.EqualTo(2));
+
+        }
     }
 }
