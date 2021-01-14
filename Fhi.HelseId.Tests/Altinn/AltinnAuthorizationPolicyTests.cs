@@ -15,12 +15,11 @@ namespace Fhi.HelseId.Tests.Altinn
 {
     public class AltinnAuthorizationPolicyTests
     {
-        private string subjectWithAuthorization;
-        private string organizationForWhichSubjectIsAuthorized;
-        private string authorizingServiceCode;
-        private int authorizingServiceEditionCode;
-        private FakeAltinnServiceOwnerClient altinn;
-        private IAuthorizationService authorizationService;
+        private readonly string authorizingServiceCode;
+        private readonly int authorizingServiceEditionCode;
+        private readonly string subjectWithAuthorization;
+        private readonly string organizationForWhichSubjectIsAuthorized;
+        private readonly IAuthorizationService authorizationService;
 
         /// <summary>
         /// Simple fake service that reports that a given subject has access for a given organization.
@@ -91,12 +90,12 @@ namespace Fhi.HelseId.Tests.Altinn
             }
         }
 
-        [SetUp]
-        public void SetUp()
+        public AltinnAuthorizationPolicyTests()
         {
+            authorizingServiceCode = "1234";
+            authorizingServiceEditionCode = 1;
             subjectWithAuthorization = "01010101010";
             organizationForWhichSubjectIsAuthorized = "987654321";
-
 
             var services = new ServiceCollection();
             services.AddAuthorization();
