@@ -25,6 +25,7 @@ namespace Fhi.HelseId.Web.Hpr
         string LastErrorMessage { get; }
         Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer);
         IEnumerable<OId9060> HentGodkjenninger(Person? person);
+        IHprService LeggTilAlleKategorier();
     }
 
     public class HprService : IHprService
@@ -64,6 +65,12 @@ namespace Fhi.HelseId.Web.Hpr
             return this;
         }
 
+        public IHprService LeggTilAlleKategorier()
+        {
+            LeggTilGodkjenteHelsepersonellKategoriListe(Kodekonstanter.KodeList);
+            return this;
+        }
+
         public async Task<bool> SjekkGodkjenning(string hprnummer)
         {
             if (hprnummer == HprnummerAdmin)
@@ -83,7 +90,7 @@ namespace Fhi.HelseId.Web.Hpr
         {
             if (serviceClient == null)
             {
-                var msg = "Kunne ikke skape connection til Hpr register";
+                const string msg = "Kunne ikke skape connection til Hpr register";
                 LastErrorMessage = msg;
                 logger.LogError(msg);
                 return null;
@@ -107,7 +114,7 @@ namespace Fhi.HelseId.Web.Hpr
 #pragma warning restore 168
             {
                 //Hvis ekstern service kaster exception returneres null. Eksemplvis mottar vi også en exception hvis fnr ikke finnes.
-                var msg = "Feil i aksess til Hpr register. (Obs: Mottar også en exception hvis fnr ikke finnes)";
+                const string msg = "Feil i aksess til Hpr register. (Obs: Mottar også en exception hvis fnr ikke finnes)";
                 LastErrorMessage = msg;
                 logger.LogError(e, msg);
                 return null;
@@ -139,6 +146,8 @@ namespace Fhi.HelseId.Web.Hpr
             var person = await HentPerson(hprnummer);
             return HentGodkjenninger(person);
         }
+
+        
 
         public IEnumerable<OId9060> HentGodkjenninger(Person? person)
         {
