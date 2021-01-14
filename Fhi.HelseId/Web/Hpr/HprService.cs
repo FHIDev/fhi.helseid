@@ -170,9 +170,8 @@ namespace Fhi.HelseId.Web.Hpr
 
     }
 
-    public static class HprExtensionMethods
+    public static partial class HprExtensionMethods
     {
-        public static bool Aktiv(this Periode periode) => periode.Fra < DateTime.Now && (periode.Til == null || periode.Til > DateTime.Now);
     }
 
 }
