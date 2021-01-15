@@ -22,6 +22,10 @@ namespace Fhi.HelseId.Web.Hpr
         IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny);
         IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste);
         bool ErGyldigForKategorier(Person person, params OId9060[] koder);
+        string LastErrorMessage { get; }
+        Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer);
+        IEnumerable<OId9060> HentGodkjenninger(Person? person);
+        IHprService LeggTilAlleKategorier();
     }
 
     public class HprService : IHprService
@@ -33,7 +37,7 @@ namespace Fhi.HelseId.Web.Hpr
 
 
         const string HprnummerAdmin = "000000000";
-
+        public string LastErrorMessage { get; private set; } = "";
 
         public HprService(IHprFactory helsepersonellFactory, ILogger logger)
         {
@@ -61,6 +65,12 @@ namespace Fhi.HelseId.Web.Hpr
             return this;
         }
 
+        public IHprService LeggTilAlleKategorier()
+        {
+            LeggTilGodkjenteHelsepersonellKategoriListe(Kodekonstanter.KodeList);
+            return this;
+        }
+
         public async Task<bool> SjekkGodkjenning(string hprnummer)
         {
             if (hprnummer == HprnummerAdmin)
@@ -80,7 +90,9 @@ namespace Fhi.HelseId.Web.Hpr
         {
             if (serviceClient == null)
             {
-                logger.LogError("Kunne ikke skape connection til Hpr register");
+                const string msg = "Kunne ikke skape connection til Hpr register";
+                LastErrorMessage = msg;
+                logger.LogError(msg);
                 return null;
             }
 
@@ -91,7 +103,9 @@ namespace Fhi.HelseId.Web.Hpr
             }
             catch (System.ServiceModel.CommunicationException e)
             {
-                logger.LogError(e, "CommunicationException i aksess til Hpr register. ");
+                var msg = "CommunicationException i aksess til Hpr register. "+e;
+                LastErrorMessage = msg;
+                logger.LogError(e, msg);
                 return null;
             }
 #pragma warning disable 168
@@ -100,7 +114,9 @@ namespace Fhi.HelseId.Web.Hpr
 #pragma warning restore 168
             {
                 //Hvis ekstern service kaster exception returneres null. Eksemplvis mottar vi også en exception hvis fnr ikke finnes.
-                logger.LogError(e, "Feil i aksess til Hpr register. (Obs: Mottar også en exception hvis fnr ikke finnes)");
+                const string msg = "Feil i aksess til Hpr register. (Obs: Mottar også en exception hvis fnr ikke finnes)";
+                LastErrorMessage = msg;
+                logger.LogError(e, msg);
                 return null;
             }
 #pragma warning restore CA1031 // Do not catch general exception types
@@ -128,10 +144,19 @@ namespace Fhi.HelseId.Web.Hpr
         public async Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer)
         {
             var person = await HentPerson(hprnummer);
-            if (person==null)
+            return HentGodkjenninger(person);
+        }
+
+        
+
+        public IEnumerable<OId9060> HentGodkjenninger(Person? person)
+        {
+            if (person == null)
                 return new List<OId9060>();
-            var godkjenninger = person.Godkjenninger.Where(o => ErAktivGodkjenning(o,GodkjenteHelsepersonellkategorier.ToArray()));
-            return Kodekonstanter.KodeList.Where(o=>godkjenninger.FirstOrDefault(x=>x.Helsepersonellkategori.Verdi==o.Value)!=null);
+            var godkjenninger =
+                person.Godkjenninger.Where(o => ErAktivGodkjenning(o, GodkjenteHelsepersonellkategorier.ToArray()));
+            return Kodekonstanter.KodeList.Where(o =>
+                godkjenninger.FirstOrDefault(x => x.Helsepersonellkategori.Verdi == o.Value) != null);
         }
 
 
@@ -145,9 +170,8 @@ namespace Fhi.HelseId.Web.Hpr
 
     }
 
-    public static class HprExtensionMethods
+    public static partial class HprExtensionMethods
     {
-        public static bool Aktiv(this Periode periode) => periode.Fra < DateTime.Now && (periode.Til == null || periode.Til > DateTime.Now);
     }
 
 }
