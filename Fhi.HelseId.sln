@@ -25,6 +25,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{01EA8EA1
 		ToolsHpr\readme.oid9060.md = ToolsHpr\readme.oid9060.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.AltInn", "Fhi.HelseId.Altinn\Fhi.HelseId.AltInn.csproj", "{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Altinn.Tests", "Fhi.HelseId.Altinn.Tests\Fhi.HelseId.Altinn.Tests.csproj", "{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{7ED5EF48-028C-4AB2-A26E-55BD6B20B9EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ED5EF48-028C-4AB2-A26E-55BD6B20B9EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ED5EF48-028C-4AB2-A26E-55BD6B20B9EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

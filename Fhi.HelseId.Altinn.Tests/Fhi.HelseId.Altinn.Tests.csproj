@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fhi.HelseId\Fhi.HelseId.csproj" />
+    <ProjectReference Include="..\Fhi.HelseId.AltInn\Fhi.HelseId.AltInn.csproj" />
   </ItemGroup>
 
   <ItemGroup>

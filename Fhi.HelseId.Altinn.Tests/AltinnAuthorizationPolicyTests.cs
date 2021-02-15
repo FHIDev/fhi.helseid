@@ -1,17 +1,16 @@
-﻿using Fhi.HelseId.Altinn;
-using Fhi.HelseId.Altinn.Authorization;
-using Fhi.HelseId.Api;
-using Fhi.HelseId.Common.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Fhi.HelseId.AltInn;
+using Fhi.HelseId.Altinn.Authorization;
+using Fhi.HelseId.Common.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 
-namespace Fhi.HelseId.Tests.Altinn
+namespace Fhi.HelseId.Altinn.Tests
 {
     public class AltinnAuthorizationPolicyTests
     {
