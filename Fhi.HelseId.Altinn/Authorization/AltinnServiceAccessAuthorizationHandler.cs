@@ -1,9 +1,7 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using Fhi.HelseId.AltInn;
 
 namespace Fhi.HelseId.AltInn.Authorization
 {
