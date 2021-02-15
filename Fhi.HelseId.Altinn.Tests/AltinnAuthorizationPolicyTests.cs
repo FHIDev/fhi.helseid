@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Fhi.HelseId.AltInn;
 using Fhi.HelseId.Altinn.Authorization;
-using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

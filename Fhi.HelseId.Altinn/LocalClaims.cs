@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 
-namespace Fhi.HelseId.Common.Identity
+namespace Fhi.HelseId.AltInn
 {
     /// <summary>
     /// Adds local claims for supporting various application-local aspects of authorization, e.g. Altinn authorization.
