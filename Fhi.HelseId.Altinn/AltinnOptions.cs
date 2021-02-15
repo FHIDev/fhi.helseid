@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Fhi.HelseId.Altinn
+namespace Fhi.HelseId.AltInn
 {
     /// <summary>
     /// Configuration options for <see cref="AltinnServiceOwnerClient"/>.

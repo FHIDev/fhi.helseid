@@ -1,4 +1,4 @@
-﻿using Fhi.HelseId.Altinn.Authorization;
+﻿using Fhi.HelseId.AltInn.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 

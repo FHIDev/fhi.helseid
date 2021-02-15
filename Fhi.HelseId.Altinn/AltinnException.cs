@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Fhi.HelseId.Altinn
+namespace Fhi.HelseId.AltInn
 {
     [Serializable]
     public class AltinnException : Exception

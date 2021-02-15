@@ -1,4 +1,4 @@
-﻿namespace Fhi.HelseId.Altinn
+﻿namespace Fhi.HelseId.AltInn
 {
     public class RightsResponse
     {

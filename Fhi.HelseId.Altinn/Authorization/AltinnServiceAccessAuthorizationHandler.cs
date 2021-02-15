@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Fhi.HelseId.AltInn;
 
-namespace Fhi.HelseId.Altinn.Authorization
+namespace Fhi.HelseId.AltInn.Authorization
 {
     /// <summary>
     /// Handler for Altinn service authorization requirements. The handler verifies against Altinn that the user has
