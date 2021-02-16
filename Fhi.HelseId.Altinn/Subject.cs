@@ -1,4 +1,4 @@
-﻿namespace Fhi.HelseId.AltInn
+﻿namespace Fhi.HelseId.Altinn
 {
     public class Subject
     {

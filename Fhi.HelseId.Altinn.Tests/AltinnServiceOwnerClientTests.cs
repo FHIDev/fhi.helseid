@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Fhi.HelseId.AltInn.Tests
+namespace Fhi.HelseId.Altinn.Tests
 {
     [Ignore("Requires setup")]
     public class AltinnServiceOwnerClientTests

@@ -1,8 +1,8 @@
-﻿using Fhi.HelseId.AltInn.Authorization;
+﻿using Fhi.HelseId.Altinn.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Fhi.HelseId.AltInn
+namespace Fhi.HelseId.Altinn
 {
     public static class HelseIdOptionsExtensions
     {

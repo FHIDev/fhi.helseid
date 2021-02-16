@@ -1,4 +1,4 @@
-﻿# Information on Fhi.HelseId.AltInn
+﻿# Information on Fhi.HelseId.Altinn
 
 This is a seperate package for access to HelseId and Altinn. 
 It is meant to be used together with Fhi.HelseId, but is technically independent.

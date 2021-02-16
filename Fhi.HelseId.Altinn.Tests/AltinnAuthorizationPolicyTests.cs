@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using Fhi.HelseId.AltInn.Authorization;
+using Fhi.HelseId.Altinn.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace Fhi.HelseId.AltInn.Tests
+namespace Fhi.HelseId.Altinn.Tests
 {
     public class AltinnAuthorizationPolicyTests
     {

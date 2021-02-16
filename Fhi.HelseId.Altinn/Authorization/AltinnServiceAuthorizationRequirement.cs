@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Fhi.HelseId.AltInn.Authorization
+namespace Fhi.HelseId.Altinn.Authorization
 {  /// <summary>
    /// Authorization requirement specifying that access should be verified against the given Altinn service.
    /// </summary>

@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>8</LangVersion>
     <Configurations>Debug;Release</Configurations>
-    <id>Fhi.HelseId.AltInn</id>
+    <id>Fhi.HelseId.Altinn</id>
     <Version>2.4.0</Version>
     <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
@@ -13,7 +13,7 @@
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
-    <PackageDescription>Support component for Fhi.HelseId to access AltInn</PackageDescription>
+    <PackageDescription>Support component for Fhi.HelseId to access Altinn</PackageDescription>
     <PackageCopyright>Copyright ©2020 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
     <!-- Tags appear in the gallery and can be used for tag searches -->
     <tags>helseid, oauth</tags>

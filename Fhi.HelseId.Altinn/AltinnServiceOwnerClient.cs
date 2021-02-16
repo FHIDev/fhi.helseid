@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fhi.HelseId.AltInn
+namespace Fhi.HelseId.Altinn
 {
     public class AltinnServiceOwnerClient : IAltinnServiceOwnerClient
     {

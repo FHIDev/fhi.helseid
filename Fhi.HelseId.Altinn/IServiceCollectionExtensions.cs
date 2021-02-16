@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fhi.HelseId.AltInn
+namespace Fhi.HelseId.Altinn
 {
     public static class IServiceCollectionExtensions
     {
