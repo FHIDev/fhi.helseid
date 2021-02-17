@@ -1,13 +1,12 @@
-﻿using Fhi.HelseId.Altinn;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
-namespace Fhi.HelseId.Tests.Altinn
+namespace Fhi.HelseId.Altinn.Tests
 {
     [Ignore("Requires setup")]
     public class AltinnServiceOwnerClientTests
