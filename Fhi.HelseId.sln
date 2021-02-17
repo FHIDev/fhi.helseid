@@ -25,9 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{01EA8EA1
 		ToolsHpr\readme.oid9060.md = ToolsHpr\readme.oid9060.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Altinn", "Fhi.HelseId.AltInn\Fhi.HelseId.Altinn.csproj", "{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Altinn", "Fhi.HelseId.Altinn\Fhi.HelseId.Altinn.csproj", "{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Altinn.Tests", "Fhi.HelseId.AltInn.Tests\Fhi.HelseId.Altinn.Tests.csproj", "{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Altinn.Tests", "Fhi.HelseId.Altinn.Tests\Fhi.HelseId.Altinn.Tests.csproj", "{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
