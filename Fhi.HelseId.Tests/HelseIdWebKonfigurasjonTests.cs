@@ -12,7 +12,7 @@ namespace Fhi.HelseId.Tests
 
 
         [Test]
-        public void HelseIdConfigurationTest()
+        public void HelseIdWebConfigurationTest()
         {
             var sut = Config?.GetWebKonfigurasjon();
             Assert.That(sut, Is.Not.Null, "Can't load appsettings.test.json");
@@ -33,7 +33,7 @@ namespace Fhi.HelseId.Tests
         public void Init() => Init("clientappsettings.test.json");
 
         [Test]
-        public void HelseIdConfigurationTest()
+        public void HelseIdWorkerConfigurationTest()
         {
             var sut = Config?.GetWorkerKonfigurasjon();
             Assert.That(sut, Is.Not.Null, $"Can't load {ConfigFilename}");

@@ -5,19 +5,19 @@ namespace Fhi.HelseId.Common
 {
     public static class ConfigurationExtensions
     {
-        public static T GetConfig<T>(this IConfigurationRoot root,string name)
+        public static T GetConfig<T>(this IConfiguration root,string name)
         {
             var section = root.GetSection(name);
             var config =  section.Get<T>();
             return config;
         }
 
-        public static HelseIdWebKonfigurasjon GetWebKonfigurasjon(this IConfigurationRoot root) =>
+        public static HelseIdWebKonfigurasjon GetWebKonfigurasjon(this IConfiguration root) =>
             root.GetConfig<HelseIdWebKonfigurasjon>(nameof(HelseIdWebKonfigurasjon));
-        public static HelseIdApiKonfigurasjon GetApiKonfigurasjon(this IConfigurationRoot root) =>
+        public static HelseIdApiKonfigurasjon GetApiKonfigurasjon(this IConfiguration root) =>
             root.GetConfig<HelseIdApiKonfigurasjon>(nameof(HelseIdApiKonfigurasjon));
 
-        public static HelseIdWorkerKonfigurasjon GetWorkerKonfigurasjon(this IConfigurationRoot root) =>
+        public static HelseIdWorkerKonfigurasjon GetWorkerKonfigurasjon(this IConfiguration root) =>
             root.GetConfig<HelseIdWorkerKonfigurasjon>(nameof(HelseIdWorkerKonfigurasjon));
 
 

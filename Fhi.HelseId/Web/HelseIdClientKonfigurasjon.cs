@@ -53,16 +53,4 @@ namespace Fhi.HelseId.Web
         public string JsonWebKeySecret { get; set; } = "";
         public string RsaKeySecret { get; set; } = "";
     }
-
-    public class HelseIdWorkerKonfigurasjon : HelseIdClientKonfigurasjon
-    {
-        public HelseIdApiKonfigurasjon[] Apis { get; set; } = Array.Empty<HelseIdApiKonfigurasjon>();
-    }
-
-    public class HelseIdApiKonfigurasjon
-    {
-        public string Name { get; set; } = "";
-        public string Url { get; set; } = "";
-        public string Scope { get; set; } = "";
-    }
 }
