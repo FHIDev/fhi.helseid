@@ -44,7 +44,7 @@ namespace Fhi.HelseId.Tests
                 Assert.That(sut?.AuthUse, Is.True, "2");
                 Assert.That(sut?.UseHttps, Is.True, "3");
                 Assert.That(sut?.ClientId.Length, Is.GreaterThan(1));
-                Assert.That(sut?.AllScopes.Count, Is.GreaterThanOrEqualTo(4), "4");
+                Assert.That(sut?.AllScopes.Count, Is.GreaterThanOrEqualTo(1), "4");
                 Assert.That(sut?.Apis.Length, Is.EqualTo(1), "5");
             });
             var api = sut?.Apis[0];
