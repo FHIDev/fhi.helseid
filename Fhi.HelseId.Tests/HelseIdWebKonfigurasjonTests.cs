@@ -1,5 +1,6 @@
 ﻿using Fhi.HelseId.Common;
 using Fhi.HelseId.Web;
+using Fhi.HelseId.Worker;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 

@@ -1,4 +1,5 @@
-﻿using Fhi.HelseId.Web;
+﻿using Fhi.HelseId.Api;
+using Fhi.HelseId.Web;
 using Microsoft.Extensions.Configuration;
 
 namespace Fhi.HelseId.Common
@@ -17,9 +18,7 @@ namespace Fhi.HelseId.Common
         public static HelseIdApiKonfigurasjon GetApiKonfigurasjon(this IConfiguration root) =>
             root.GetConfig<HelseIdApiKonfigurasjon>(nameof(HelseIdApiKonfigurasjon));
 
-        public static HelseIdWorkerKonfigurasjon GetWorkerKonfigurasjon(this IConfiguration root) =>
-            root.GetConfig<HelseIdWorkerKonfigurasjon>(nameof(HelseIdWorkerKonfigurasjon));
-
+        
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
+using Fhi.HelseId.Common;
 
-namespace Fhi.HelseId.Web
+namespace Fhi.HelseId.Worker
 {
     public class HelseIdApiKonfigurasjon
     {

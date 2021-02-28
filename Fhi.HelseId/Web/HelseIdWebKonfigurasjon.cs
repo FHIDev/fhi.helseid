@@ -37,6 +37,8 @@ namespace Fhi.HelseId.Web
             {
                 var list =  new List<string>
                 {
+                    "openid",
+                    "profile",
                     "helseid://scopes/identity/pid",
                     "helseid://scopes/identity/pid_pseudonym",
                     "helseid://scopes/identity/security_level",

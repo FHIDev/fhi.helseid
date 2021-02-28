@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fhi.HelseId.Web
+namespace Fhi.HelseId.Common
 {
     public interface IHelseIdClientKonfigurasjon
     {
@@ -45,8 +45,6 @@ namespace Fhi.HelseId.Web
 
         protected virtual IEnumerable<string> FixedScopes => new List<string>
         {
-            "openid",
-            "profile",
             "offline_access"
         };
 
