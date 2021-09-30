@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -104,27 +106,43 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             });
         }
 
-
-        public static (bool Result, string PolicyName) AddHelseIdWebAuthentication(this IServiceCollection services,
+        public static IMvcBuilder AddHelseIdWebAuthentication(this IServiceCollection services,
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHprFeatureFlags hprKonfigurasjon,
             IWhitelist whitelist,
-            IHelseIdSecretHandler? secretHandler = null)
+            IHelseIdSecretHandler? secretHandler = null,
+            Action<MvcOptions>? configureMvc = null)
         {
-            if (!helseIdKonfigurasjon.AuthUse)
-                return (false, "");
-            services.AddScoped<IHprFactory, HprFactory>();
-            services.AddScoped<ICurrentUser, CurrentHttpUser>();
+            if (helseIdKonfigurasjon.AuthUse)
+            {
+                services.AddScoped<IHprFactory, HprFactory>();
+                services.AddScoped<ICurrentUser, CurrentHttpUser>();
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            (var authorizeFilter, string policyName) = AddAuthentication(services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler);
-            services.AddControllers(config => config.Filters.Add(authorizeFilter));
-            if (helseIdKonfigurasjon.UseHprNumber)
-                services.AddScoped<IAuthorizationHandler, HprAuthorizationHandler>();
-            if (hprKonfigurasjon.UseHpr && hprKonfigurasjon.UseHprPolicy)
-                services.AddScoped<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
-            return (true, policyName);
+                JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            }
+
+            (var authorizeFilter, string policyName) = Fhi.HelseId.Web.ExtensionMethods.ServiceCollectionExtensions.AddAuthentication(
+                services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler);
+            var mvcBuilder = services.AddControllers(config =>
+            {
+                if (helseIdKonfigurasjon.AuthUse)
+                {
+                    config.Filters.Add(authorizeFilter);
+                }
+
+                configureMvc?.Invoke(config);
+            });
+
+            if (helseIdKonfigurasjon.AuthUse)
+            {
+                if (helseIdKonfigurasjon.UseHprNumber)
+                    services.AddScoped<IAuthorizationHandler, HprAuthorizationHandler>();
+                if (hprKonfigurasjon.UseHpr && hprKonfigurasjon.UseHprPolicy)
+                    services.AddScoped<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
+            }
+
+            return mvcBuilder;
         }
 
         /// <summary>
