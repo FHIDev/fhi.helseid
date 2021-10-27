@@ -106,13 +106,14 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             });
         }
 
-        public static IMvcBuilder AddHelseIdWebAuthentication(this IServiceCollection services,
+        private static (string PolicyName, IMvcBuilder MvcBuilder) AddHelseIdWebAuthenticationInternal(
+            this IServiceCollection services,
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHprFeatureFlags hprKonfigurasjon,
             IWhitelist whitelist,
-            IHelseIdSecretHandler? secretHandler = null,
-            Action<MvcOptions>? configureMvc = null)
+            IHelseIdSecretHandler? secretHandler,
+            Action<MvcOptions>? configureMvc)
         {
             if (helseIdKonfigurasjon.AuthUse)
             {
@@ -142,7 +143,37 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     services.AddScoped<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
             }
 
+            return (policyName, mvcBuilder);;            
+        }
+
+        public static IMvcBuilder AddHelseIdWebAuthentication(this IServiceCollection services,
+            IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
+            IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
+            IHprFeatureFlags hprKonfigurasjon,
+            IWhitelist whitelist,
+            IHelseIdSecretHandler? secretHandler,
+            Action<MvcOptions>? configureMvc)
+        {
+            (string policyName, IMvcBuilder mvcBuilder) = services.AddHelseIdWebAuthenticationInternal(
+                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler, configureMvc
+            );
+            
             return mvcBuilder;
+        }
+
+        [Obsolete("Use AddHelseIdWebAuthentication() overload that returns IMvcBuilder")]
+        public static (bool Result, string PolicyName) AddHelseIdWebAuthentication(this IServiceCollection services,
+            IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
+            IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
+            IHprFeatureFlags hprKonfigurasjon,
+            IWhitelist whitelist,
+            IHelseIdSecretHandler? secretHandler = null)
+        {
+            (string policyName, IMvcBuilder mvcBuilder) = services.AddHelseIdWebAuthenticationInternal(
+                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler, null
+            );
+
+            return (true, policyName);
         }
 
         /// <summary>
