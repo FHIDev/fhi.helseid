@@ -18,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fhi.HelseId.Worker\Fhi.HelseId.Worker.csproj" />
     <ProjectReference Include="..\Fhi.HelseId\Fhi.HelseId.csproj" />
   </ItemGroup>
 

@@ -6,17 +6,18 @@
     <LangVersion>8</LangVersion>
     <Configurations>Debug;Release</Configurations>
     <id>Fhi.HelseId</id>
-    <Version>3.3.1</Version>
+    <Version>3.4.0-beta01</Version>
     <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
+    <Copyright>(c) 2021 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Allow AddHelseIdWebAuthentication() to customize AddControllers() and return IMvcBuilder. Allow merging of scopes</PackageReleaseNotes>
+    <PackageReleaseNotes>Improving support for testing</PackageReleaseNotes>
     <PackageDescription>Authentication and authorization component for access to NHN HelseId</PackageDescription>
     <PackageCopyright>Copyright ©2020 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
     <!-- Tags appear in the gallery and can be used for tag searches -->
-    <tags>helseid, oauth</tags>
+    <Tags>helseid, oauth</Tags>
     <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
     <dependencies>
       <group targetFramework="netcoreapp3.1">
