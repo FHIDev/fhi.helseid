@@ -43,6 +43,13 @@ namespace Fhi.HelseId.TestSupport.Config
             TestContext.Out.WriteLine($"ClientId is: {HelseIdWorkerKonfigurasjonUnderTest.ClientId}");
         }
 
+        [Test]
+        public void ThatAuthUseIsTrue()
+        {
+            Guard();
+            Assert.That(HelseIdWorkerKonfigurasjonUnderTest.AuthUse, "AuthUse should be true, but is false");
+        }
+
 
         protected override void Guard()
         {

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Id>Fhi.HelseId.TestSupport</Id>
-    <Version>1.0.0-beta.1</Version>
+    <Version>1.0.0-beta.3</Version>
     <IsPackable>true</IsPackable>
     <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
     <Copyright>(c) 2021 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
@@ -29,6 +29,7 @@
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="Fhi.HelseId" Version="3.4.0-beta01" />
     <PackageReference Include="Fhi.HelseId.Worker" Version="1.0.0-beta.2" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
   </ItemGroup>
 
 </Project>
