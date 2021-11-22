@@ -23,8 +23,8 @@ namespace Fhi.HelseId.TestSupport.Config
             const int maxScopeLengthInHelseId = 600;
             Guard();
             string scopes = string.Join(',', HelseIdWorkerKonfigurasjonUnderTest.AllScopes);
-            Assert.That(scopes.Length, Is.LessThanOrEqualTo(maxScopeLengthInHelseId), $"Combined scopes have a maximum length of 600 - including separators, this is {scopes.Length}");
-            TestContext.Out.WriteLine($"Total length of scopes is {scopes.Length}");
+            Assert.That(scopes.Length, Is.LessThanOrEqualTo(maxScopeLengthInHelseId), $"{ConfigFile}: Combined scopes have a maximum length of 600 - including separators, this is {scopes.Length}");
+            TestContext.Out.WriteLine($"{ConfigFile}: Total length of scopes is {scopes.Length}");
         }
 
         [Test]
@@ -32,14 +32,14 @@ namespace Fhi.HelseId.TestSupport.Config
         {
             Guard();
             Assert.That(HelseIdWorkerKonfigurasjonUnderTest.Authority, Does.EndWith("connect/token"),
-                $"An Worker configuration should have the authority url with suffix 'connect/token', but is {HelseIdWorkerKonfigurasjonUnderTest.Authority}.");
+                $"{ConfigFile}: An Worker configuration should have the authority url with suffix 'connect/token', but is {HelseIdWorkerKonfigurasjonUnderTest.Authority}.");
         }
 
         [Test]
         public void ThatClientIdIsSet()
         {
             Guard();
-            Assert.That(HelseIdWorkerKonfigurasjonUnderTest.ClientId.Length, Is.GreaterThan(0), "ClientId is not set");
+            Assert.That(HelseIdWorkerKonfigurasjonUnderTest.ClientId.Length, Is.GreaterThan(0), $"{ConfigFile}: ClientId is not set");
             TestContext.Out.WriteLine($"ClientId is: {HelseIdWorkerKonfigurasjonUnderTest.ClientId}");
         }
 
@@ -47,13 +47,13 @@ namespace Fhi.HelseId.TestSupport.Config
         public void ThatAuthUseIsTrue()
         {
             Guard();
-            Assert.That(HelseIdWorkerKonfigurasjonUnderTest.AuthUse, "AuthUse should be true, but is false");
+            Assert.That(HelseIdWorkerKonfigurasjonUnderTest.AuthUse, $"{ConfigFile} AuthUse should be true, but is false");
         }
 
 
         protected override void Guard()
         {
-            Assert.That(HelseIdWorkerKonfigurasjonUnderTest, Is.Not.Null, "No config section named 'HelseIdWorkerKonfigurasjon' found, or derived");
+            Assert.That(HelseIdWorkerKonfigurasjonUnderTest, Is.Not.Null, $"{ConfigFile}: No config section named 'HelseIdWorkerKonfigurasjon' found, or derived");
         }
     }
 }

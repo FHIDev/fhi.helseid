@@ -27,7 +27,7 @@ namespace Fhi.HelseId.TestSupport.Config
             const int maxScopeLengthInHelseId = 600;
             Guard();
             string scopes = HelseIdApiKonfigurasjonUnderTest.ApiScope;
-            Assert.That(scopes.Length, Is.LessThanOrEqualTo(maxScopeLengthInHelseId),$"Combined scopes have a maximum length of 600 - including separators, this is {scopes.Length}");
+            Assert.That(scopes.Length, Is.LessThanOrEqualTo(maxScopeLengthInHelseId),$"Combined scopes in {ConfigFile} have a maximum length of 600 - including separators, this is {scopes.Length}");
         }
 
         [Test]
@@ -35,12 +35,12 @@ namespace Fhi.HelseId.TestSupport.Config
         {
             Guard();
             Assert.That(HelseIdApiKonfigurasjonUnderTest.Authority, Does.EndWith(".nhn.no/"),
-                $"An API should use the authority url without any suffixes.");
+                $"{ConfigFile}: An API should use the authority url without any suffixes.");
         }
 
         protected sealed override void Guard()
         {
-            Assert.That(HelseIdApiKonfigurasjonUnderTest, Is.Not.Null, "No config section named 'HelseIdApiKonfigurasjon' found, or derived");
+            Assert.That(HelseIdApiKonfigurasjonUnderTest, Is.Not.Null, $"{ConfigFile}: No config section named 'HelseIdApiKonfigurasjon' found, or derived");
         }
 
     }
