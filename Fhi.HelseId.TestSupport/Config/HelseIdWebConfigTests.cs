@@ -6,7 +6,7 @@ namespace Fhi.HelseId.TestSupport.Config
 {
     public abstract class HelseIdWebConfigTests : HelseIdClientBased
     {
-        protected HelseIdWebConfigTests(string file, bool test) : base(file, test) 
+        protected HelseIdWebConfigTests(string file, bool test, AppSettingsUsage useOfAppsettings) : base(file, test,useOfAppsettings) 
             => HelseIdWebKonfigurasjonUnderTest = Config.GetSection(nameof(Web.HelseIdWebKonfigurasjon)).Get<Web.HelseIdWebKonfigurasjon>();
         protected Web.HelseIdWebKonfigurasjon HelseIdWebKonfigurasjonUnderTest { get; }
 

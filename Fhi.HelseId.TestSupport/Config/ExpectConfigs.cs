@@ -17,7 +17,7 @@ namespace Fhi.HelseId.TestSupport.Config
         readonly IConfigurationSection section;
         readonly T? config;
 
-        protected ExpectConfigs(string file, string configNameOf) : base(file)
+        protected ExpectConfigs(string file, string configNameOf, AppSettingsUsage useOfAppsettings) : base(file, useOfAppsettings)
         {
             this.configNameOf = configNameOf;
             section = Config.GetSection(configNameOf);
@@ -56,9 +56,9 @@ namespace Fhi.HelseId.TestSupport.Config
     /// </summary>
     public abstract class ExpectHelseIdApiConfig : ExpectConfigs<HelseIdApiKonfigurasjon>
     {
-        protected ExpectHelseIdApiConfig(string filename): base(filename,nameof(HelseIdApiKonfigurasjon))
+        protected ExpectHelseIdApiConfig(string filename, AppSettingsUsage useOfAppsettings) : base(filename, nameof(HelseIdApiKonfigurasjon),useOfAppsettings)
         {
-            
+
         }
     }
 
@@ -77,7 +77,7 @@ namespace Fhi.HelseId.TestSupport.Config
     /// </summary>
     public abstract class ExpectHelseIdWorkerConfig : ExpectConfigs<HelseIdWorkerKonfigurasjon>
     {
-        protected ExpectHelseIdWorkerConfig(string filename) : base(filename, nameof(HelseIdWorkerKonfigurasjon))
+        protected ExpectHelseIdWorkerConfig(string filename, AppSettingsUsage useOfAppsettings) : base(filename, nameof(HelseIdWorkerKonfigurasjon),useOfAppsettings)
         {
 
         }

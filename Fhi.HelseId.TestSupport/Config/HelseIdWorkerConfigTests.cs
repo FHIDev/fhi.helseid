@@ -8,7 +8,7 @@ namespace Fhi.HelseId.TestSupport.Config
 
     public abstract class HelseIdClientBased : BaseConfigTests
     {
-        protected HelseIdClientBased(string configFile, bool test) : base(configFile, test)
+        protected HelseIdClientBased(string configFile, bool test, AppSettingsUsage useOfAppsettings) : base(configFile, test,useOfAppsettings)
         {
         }
 
@@ -45,7 +45,7 @@ namespace Fhi.HelseId.TestSupport.Config
 
     public abstract class HelseIdWorkerConfigTests : HelseIdClientBased
     {
-        protected HelseIdWorkerConfigTests(string file, bool test) : base(file, test)
+        protected HelseIdWorkerConfigTests(string file, bool test, AppSettingsUsage useOfAppsettings) : base(file, test,useOfAppsettings)
         {
             HelseIdWorkerKonfigurasjonUnderTest = Config.GetSection(nameof(HelseIdWorkerKonfigurasjon))
                 .Get<HelseIdWorkerKonfigurasjon>();

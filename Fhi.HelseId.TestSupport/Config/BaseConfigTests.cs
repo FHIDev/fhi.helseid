@@ -6,18 +6,14 @@ namespace Fhi.HelseId.TestSupport.Config
 {
     public abstract class BaseConfigTests : SetupBaseConfigTests
     {
-        private readonly bool test;
+        protected bool IsTest { get; }
 
-        protected bool IsTest => test;
-
-        protected BaseConfigTests(string configFile, bool test) : base(configFile)
+        protected BaseConfigTests(string configFile, bool test, AppSettingsUsage useOfAppsettings) : base(configFile, useOfAppsettings)
         {
-            this.test = test;
+            IsTest = test;
         }
 
         protected abstract HelseIdCommonKonfigurasjon HelseIdKonfigurasjonUnderTest { get; }
-
-
 
         [Test]
         public void AuthorityConfigurationTest()
@@ -25,9 +21,8 @@ namespace Fhi.HelseId.TestSupport.Config
             const string testAuthorityUrl = "https://helseid-sts.test.nhn.no/";
             const string authorityUrl = "https://helseid-sts.nhn.no/";
             Guard();
-            var authority = test ? testAuthorityUrl : authorityUrl;
+            var authority = IsTest ? testAuthorityUrl : authorityUrl;
             Assert.That(HelseIdKonfigurasjonUnderTest.Authority, Does.StartWith(authority), $"Wrong authority found: {HelseIdKonfigurasjonUnderTest.Authority}. Only possible with {testAuthorityUrl} for test, and {authorityUrl} for production");
-
         }
     }
 }

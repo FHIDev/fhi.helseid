@@ -9,7 +9,7 @@ namespace Fhi.HelseId.TestSupport.Config
     {
         private readonly bool test;
 
-        protected HelseIdApiConfigTests(string file,bool test) : base(file,test)
+        protected HelseIdApiConfigTests(string file,bool test, AppSettingsUsage useOfAppsettings) : base(file,test,useOfAppsettings)
         {
             this.test = test;
             HelseIdApiKonfigurasjonUnderTest = Config.GetSection(nameof(HelseIdApiKonfigurasjon))
