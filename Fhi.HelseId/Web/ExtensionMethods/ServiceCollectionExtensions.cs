@@ -147,7 +147,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     services.AddScoped<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
             }
 
-            return (policyName, mvcBuilder);;            
+            return (policyName, mvcBuilder);        
         }
 
         public static IMvcBuilder AddHelseIdWebAuthentication(this IServiceCollection services,
