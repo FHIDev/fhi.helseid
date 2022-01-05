@@ -8,6 +8,7 @@ namespace Fhi.HelseId.Common
     {
         bool AuthUse { get; set; }
         bool UseHttps { get; set; }
+        bool RewriteRedirectUriHttps { get; set; }
         string Authority { get; set; }
         string ClientId { get; set; }
         string ClientSecret { get; set; }
@@ -23,6 +24,7 @@ namespace Fhi.HelseId.Common
         protected List<string>? AllTheScopes { get; private set; }
         public bool AuthUse { get; set; } = true;
         public bool UseHttps { get; set; } = true;
+        public bool RewriteRedirectUriHttps { get; set; } = false;
         public string Authority { get; set; } = "";
         public string ClientId { get; set; } = "";
         public string ClientSecret { get; set; } = "";
