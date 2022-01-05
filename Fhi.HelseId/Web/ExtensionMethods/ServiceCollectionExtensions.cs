@@ -10,6 +10,7 @@ using Fhi.HelseId.Web.Middleware;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -113,7 +114,9 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHprFeatureFlags hprKonfigurasjon,
             IWhitelist whitelist,
             IHelseIdSecretHandler? secretHandler,
-            Action<MvcOptions>? configureMvc)
+            Action<MvcOptions>? configureMvc,
+            Action<CookieAuthenticationOptions>? configureCookieAuthentication = null,
+            Action<OpenIdConnectOptions>? configureOpenIdConnect = null)
         {
             if (helseIdKonfigurasjon.AuthUse)
             {
@@ -124,7 +127,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             }
 
             (var authorizeFilter, string policyName) = Fhi.HelseId.Web.ExtensionMethods.ServiceCollectionExtensions.AddAuthentication(
-                services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler);
+                services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, 
+                secretHandler, configureCookieAuthentication, configureOpenIdConnect);
             var mvcBuilder = services.AddControllers(config =>
             {
                 if (helseIdKonfigurasjon.AuthUse)
@@ -152,10 +156,13 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHprFeatureFlags hprKonfigurasjon,
             IWhitelist whitelist,
             IHelseIdSecretHandler? secretHandler,
-            Action<MvcOptions>? configureMvc)
+            Action<MvcOptions>? configureMvc,
+            Action<CookieAuthenticationOptions>? configureCookieAuthentication = null,
+            Action<OpenIdConnectOptions>? configureOpenIdConnect = null)
         {
             (string policyName, IMvcBuilder mvcBuilder) = services.AddHelseIdWebAuthenticationInternal(
-                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler, configureMvc
+                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, 
+                secretHandler, configureMvc, configureCookieAuthentication, configureOpenIdConnect
             );
             
             return mvcBuilder;
@@ -170,7 +177,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHelseIdSecretHandler? secretHandler = null)
         {
             (string policyName, IMvcBuilder mvcBuilder) = services.AddHelseIdWebAuthenticationInternal(
-                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler, null
+                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler, null, null
             );
 
             return (true, policyName);
@@ -184,8 +191,9 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHprFeatureFlags hprKonfigurasjon,
             IWhitelist whitelist,
-            IHelseIdSecretHandler? secretHandler = null
-            )
+            IHelseIdSecretHandler? secretHandler = null,
+            Action<CookieAuthenticationOptions>? configureCookieAuthentication = null,
+            Action<OpenIdConnectOptions>? configureOpenIdConnect = null)
         {
             const double tokenRefreshBeforeExpirationTime = 2;
 
@@ -193,10 +201,14 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 .AddCookie(options =>
                 {
                     options.DefaultHelseIdOptions(helseIdKonfigurasjon, redirectPagesKonfigurasjon);
+
+                    configureCookieAuthentication?.Invoke(options);
                 })
                 .AddOpenIdConnect(HelseIdContext.Scheme, options =>
                 {
                     options.DefaultHelseIdOptions(helseIdKonfigurasjon, redirectPagesKonfigurasjon, secretHandler);
+
+                    configureOpenIdConnect?.Invoke(options);
                 })
                 .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
 
