@@ -48,6 +48,7 @@ namespace Fhi.HelseId.Tests
                 Assert.That(sut?.Apis.Length, Is.EqualTo(1), "5");
             });
             var api = sut?.Apis[0];
+            Assert.That(api, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(api.Name, Is.EqualTo("Personoppslag"));

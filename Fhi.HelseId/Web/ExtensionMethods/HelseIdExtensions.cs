@@ -69,6 +69,16 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     ctx.ProtocolMessage.AcrValues = acrValues;
                 }
 
+                if (configAuth.RewriteRedirectUriHttps)
+                {
+                    // Rewrite Redirect Uri to use https in case e.g. running from container
+                    var builder = new UriBuilder(ctx.ProtocolMessage.RedirectUri)
+                    {
+                        Scheme = "https"
+                    };
+                    ctx.ProtocolMessage.RedirectUri = builder.ToString();
+                }
+
                 return Task.CompletedTask;
             };
 
