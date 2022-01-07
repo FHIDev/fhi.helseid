@@ -74,7 +74,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     // Rewrite Redirect Uri to use https in case e.g. running from container
                     var builder = new UriBuilder(ctx.ProtocolMessage.RedirectUri)
                     {
-                        Scheme = "https"
+                        Scheme = "https",
+                        Port = -1
                     };
                     ctx.ProtocolMessage.RedirectUri = builder.ToString();
                 }
