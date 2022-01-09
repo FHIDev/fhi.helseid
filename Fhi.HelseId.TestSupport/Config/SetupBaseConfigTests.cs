@@ -8,9 +8,10 @@ namespace Fhi.HelseId.TestSupport.Config
     {
         public enum AppSettingsUsage
         {
-            AppSettingsIsProd,
-            AppSettingsIsBaseOnly,
-            AppSettingsIsTestWhenDev
+            AppSettingsIsProd,  // appsettings.prod exist and is merged with appsettings.json
+            AppSettingsIsBaseOnly, // No seperate prod exist, appsettings.json is production, but when anything else is specified, merge is to happen
+            AppSettingsIsTestWhenDev, // When developing, appsettings is development,  require seperate prod
+            AppSettingsIsExplicit // Use only the specified appsettings.
         }
         protected string ConfigFile { get; }
 
@@ -31,11 +32,17 @@ namespace Fhi.HelseId.TestSupport.Config
             var c = new ConfigurationBuilder()
                 .SetBasePath(outputPath)
                 .AddJsonFile(ConfigFile, optional: true);
-            if (!ConfigIsAppsettings)
+            if (!ConfigIsAppsettings && ShouldAddAppsettingsJson())
             {
                 c.AddJsonFile(Path.Combine(outputPath, "appsettings.json"));
             }
             return c.Build();
+        }
+
+        private bool ShouldAddAppsettingsJson()
+        {
+            var result = UseOfAppsettings != AppSettingsUsage.AppSettingsIsExplicit;
+            return result;
         }
     }
 }
