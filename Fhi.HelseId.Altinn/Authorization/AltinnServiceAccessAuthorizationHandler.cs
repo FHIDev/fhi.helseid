@@ -35,7 +35,7 @@ namespace Fhi.HelseId.Altinn.Authorization
                 context.Fail();
             }
 
-            var hasDelegation = await serviceOwnerClient.HasDelegation(subject, reportee, requirement.AltinnServiceCode, requirement.AltinnServiceEditionCode);
+            var hasDelegation = await serviceOwnerClient.HasDelegation(subject!, reportee!, requirement.AltinnServiceCode, requirement.AltinnServiceEditionCode);
             if (!hasDelegation)
             {
                 context.Fail();
