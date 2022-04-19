@@ -32,6 +32,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Altinn.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Worker", "Fhi.HelseId.Worker\Fhi.HelseId.Worker.csproj", "{FAE53477-A2FF-4D33-855D-8B81328FAAFF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{62DC297D-5B06-4E8E-B693-6A386015DE8B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A6F5B018-08C3-4F6D-BEC7-D7412D39D9BF}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\Fhi.HelseId.AltInn.Nuget = .github\workflows\Fhi.HelseId.AltInn.Nuget
+		.github\workflows\Fhi.HelseId.CI.yml = .github\workflows\Fhi.HelseId.CI.yml
+		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +76,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{01EA8EA1-FBAA-493B-9E21-08F5DD60BBD4} = {DCBAE3A1-3C8A-4562-B9C3-0CCE7E65E794}
+		{62DC297D-5B06-4E8E-B693-6A386015DE8B} = {DCBAE3A1-3C8A-4562-B9C3-0CCE7E65E794}
+		{A6F5B018-08C3-4F6D-BEC7-D7412D39D9BF} = {62DC297D-5B06-4E8E-B693-6A386015DE8B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86F7821B-A993-418C-A722-A7F42928741A}
