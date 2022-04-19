@@ -44,6 +44,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.TestSupport", "Fhi.HelseId.TestSupport\Fhi.HelseId.TestSupport.csproj", "{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Worker.Tests", "Fhi.HelseId.Worker.Tests\Fhi.HelseId.Worker.Tests.csproj", "{66218DF3-B80B-4899-A2BE-4527D4B4CE6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +74,14 @@ Global
 		{FAE53477-A2FF-4D33-855D-8B81328FAAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAE53477-A2FF-4D33-855D-8B81328FAAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAE53477-A2FF-4D33-855D-8B81328FAAFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66218DF3-B80B-4899-A2BE-4527D4B4CE6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66218DF3-B80B-4899-A2BE-4527D4B4CE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66218DF3-B80B-4899-A2BE-4527D4B4CE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66218DF3-B80B-4899-A2BE-4527D4B4CE6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Id>Fhi.HelseId.TestSupport</Id>
+    <Version>1.0.0-beta.8</Version>
+    <IsPackable>true</IsPackable>
+    <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
+    <Copyright>(c) 2021 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
+    <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>Beta release of base classes for testing an implementation using Fhi.HelseId</PackageReleaseNotes>
+    <PackageDescription>Base classes for testing an implementation using Fhi.HelseId</PackageDescription>
+    <PackageCopyright>Copyright ©2021 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
+    <Nullable>enable</Nullable>
+    <LangVersion>8</LangVersion>
+    <tags>helseid, oauth</tags>
+    <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
+    <dependencies>
+      <group targetFramework="netcoreapp3.1">
+      </group>
+    </dependencies>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="Fhi.HelseId" Version="3.4.0-beta01" />
+    <PackageReference Include="Fhi.HelseId.Worker" Version="1.0.0-beta.2" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
+  </ItemGroup>
+
+</Project>
