@@ -13,6 +13,7 @@ namespace Fhi.HelseId.Web
     public interface IHelseIdWebKonfigurasjon : IAutentiseringkonfigurasjon, IHelseIdHprFeatures
     {
         bool UseHttps { get; }
+        bool RewriteRedirectUriHttps { get; }
         string Authority { get; }
         string ClientId { get; }
         string ClientSecret { get; }

@@ -36,8 +36,6 @@ namespace Fhi.HelseId.Api
             return builder;
         }
 
-        
-
         /// <summary>
         /// This adds policies for requiring caller to be an user with an authenticated Identity.  Note that this might also be something else than HelseId, and might be confusing.
         /// This policy can not be used with Worker processes.
@@ -82,8 +80,6 @@ namespace Fhi.HelseId.Api
                 }
             );
         }
-
-
 
     }
 }

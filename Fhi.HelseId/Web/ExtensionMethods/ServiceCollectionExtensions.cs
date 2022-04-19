@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Runtime.InteropServices;
+using Fhi.HelseId.Api;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
@@ -17,9 +17,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
-
 namespace Fhi.HelseId.Web.ExtensionMethods
 {
+
     public static class ServiceCollectionExtensions
     {
         public static AuthenticationBuilder AddHelseIdAuthentication(this IServiceCollection services)
@@ -54,15 +54,15 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     var policy = new AuthorizationPolicyBuilder()
                         .Combine(hprNumberPolicy);
                     policy.Requirements.Add(new HprGodkjenningAuthorizationRequirement());
-                    var HprGodkjenningPolicy = policy.Build();
+                    var hprGodkjenningPolicy = policy.Build();
                     services.AddAuthorization(config =>
                     {
                         config.AddPolicy(Policies.HidAuthenticated, authenticatedHidUserPolicy);
                         config.AddPolicy(Policies.HprNummer, hprNumberPolicy);
-                        config.AddPolicy(Policies.GodkjentHprKategoriPolicy, HprGodkjenningPolicy);
-                        config.DefaultPolicy = HprGodkjenningPolicy;
+                        config.AddPolicy(Policies.GodkjentHprKategoriPolicy, hprGodkjenningPolicy);
+                        config.DefaultPolicy = hprGodkjenningPolicy;
                     });
-                    return (HprGodkjenningPolicy, Policies.GodkjentHprKategoriPolicy);
+                    return (hprGodkjenningPolicy, Policies.GodkjentHprKategoriPolicy);
                 }
 
                 services.AddAuthorization(config =>
@@ -113,7 +113,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHprFeatureFlags hprKonfigurasjon,
             IWhitelist whitelist,
             IHelseIdSecretHandler? secretHandler,
-            Action<MvcOptions>? configureMvc)
+            Action<MvcOptions>? configureMvc,
+            ConfigureAuthentication? configureAuthentication = null)
         {
             if (helseIdKonfigurasjon.AuthUse)
             {
@@ -124,7 +125,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             }
 
             (var authorizeFilter, string policyName) = Fhi.HelseId.Web.ExtensionMethods.ServiceCollectionExtensions.AddAuthentication(
-                services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler);
+                services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, 
+                secretHandler, configureAuthentication);
             var mvcBuilder = services.AddControllers(config =>
             {
                 if (helseIdKonfigurasjon.AuthUse)
@@ -143,7 +145,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     services.AddScoped<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
             }
 
-            return (policyName, mvcBuilder);;            
+            return (policyName, mvcBuilder);        
         }
 
         public static IMvcBuilder AddHelseIdWebAuthentication(this IServiceCollection services,
@@ -152,10 +154,12 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHprFeatureFlags hprKonfigurasjon,
             IWhitelist whitelist,
             IHelseIdSecretHandler? secretHandler,
-            Action<MvcOptions>? configureMvc)
+            Action<MvcOptions>? configureMvc,
+            ConfigureAuthentication? configureAuthentication = null)
         {
             (string policyName, IMvcBuilder mvcBuilder) = services.AddHelseIdWebAuthenticationInternal(
-                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler, configureMvc
+                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, 
+                secretHandler, configureMvc, configureAuthentication
             );
             
             return mvcBuilder;
@@ -170,7 +174,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHelseIdSecretHandler? secretHandler = null)
         {
             (string policyName, IMvcBuilder mvcBuilder) = services.AddHelseIdWebAuthenticationInternal(
-                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler, null
+                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler, null, null
             );
 
             return (true, policyName);
@@ -184,8 +188,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHprFeatureFlags hprKonfigurasjon,
             IWhitelist whitelist,
-            IHelseIdSecretHandler? secretHandler = null
-            )
+            IHelseIdSecretHandler? secretHandler = null,
+            ConfigureAuthentication? configureAuthentication = null)
         {
             const double tokenRefreshBeforeExpirationTime = 2;
 
@@ -193,10 +197,14 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 .AddCookie(options =>
                 {
                     options.DefaultHelseIdOptions(helseIdKonfigurasjon, redirectPagesKonfigurasjon);
+
+                    configureAuthentication?.ConfigureCookieAuthentication?.Invoke(options);
                 })
                 .AddOpenIdConnect(HelseIdContext.Scheme, options =>
                 {
                     options.DefaultHelseIdOptions(helseIdKonfigurasjon, redirectPagesKonfigurasjon, secretHandler);
+
+                    configureAuthentication?.ConfigureOpenIdConnect?.Invoke(options);
                 })
                 .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
 
