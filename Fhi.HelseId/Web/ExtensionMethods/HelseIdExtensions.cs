@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Fhi.HelseId.Web.Services;
-using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Fhi.HelseId.Web.ExtensionMethods
 {
@@ -85,11 +81,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             options.AccessDeniedPath = redirectPagesKonfigurasjon.Forbidden;
 
-            if(secretHandler == null)
-            {
-                // Defaults to Shared Secret to be backwards compatible
-                secretHandler = new HelseIdSharedSecretHandler();
-            }
+            secretHandler ??= new HelseIdSharedSecretHandler();
 
             secretHandler.AddSecretConfiguration(configAuth, options);
 

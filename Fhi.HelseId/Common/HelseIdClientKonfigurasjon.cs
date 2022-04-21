@@ -19,13 +19,18 @@ namespace Fhi.HelseId.Common
         string RsaKeySecret { get; set; }
     }
 
-    public abstract class HelseIdClientKonfigurasjon : IHelseIdClientKonfigurasjon
+    public abstract class HelseIdCommonKonfigurasjon
     {
-        protected List<string>? AllTheScopes { get; private set; }
+        public string Authority { get; set; } = "";
         public bool AuthUse { get; set; } = true;
         public bool UseHttps { get; set; } = true;
+    }
+
+    public abstract class HelseIdClientKonfigurasjon : HelseIdCommonKonfigurasjon, IHelseIdClientKonfigurasjon
+    {
+        protected List<string>? AllTheScopes { get; private set; }
+       
         public bool RewriteRedirectUriHttps { get; set; } = false;
-        public string Authority { get; set; } = "";
         public string ClientId { get; set; } = "";
         public string ClientSecret { get; set; } = "";
         public string[] Scopes { get; set; } = Array.Empty<string>();

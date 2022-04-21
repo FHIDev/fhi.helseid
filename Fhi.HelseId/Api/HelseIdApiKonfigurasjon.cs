@@ -34,15 +34,10 @@ namespace Fhi.HelseId.Api
         bool RequireContextIdentity { get;  }
     }
 
-    public class HelseIdApiKonfigurasjon :  IHelseIdApiFeatures, IHelseIdApiKonfigurasjon
+    public class HelseIdApiKonfigurasjon : HelseIdCommonKonfigurasjon, IHelseIdApiFeatures, IHelseIdApiKonfigurasjon
     {
-        public string Authority { get; set; } = "";
-
         public string ApiName { get; set; } = "";
         public string ApiScope { get; set; } = "";
-
-        public bool AuthUse { get; set; } = true;
-        public bool UseHttps { get; set; } = true;
 
         public bool RequireContextIdentity { get; set; } = false;
     }

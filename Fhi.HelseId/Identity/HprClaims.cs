@@ -19,6 +19,4 @@ namespace Fhi.HelseId.Common.Identity
         public static string? Pid(this ClaimsPrincipal user) =>
             user.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
     }
-
-
 }
