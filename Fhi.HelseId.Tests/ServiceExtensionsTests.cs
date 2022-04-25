@@ -14,8 +14,8 @@ namespace Fhi.HelseId.Tests
     {
         [TestCase(true,true,Policies.GodkjentHprKategoriPolicy)]
         [TestCase(true, false, Policies.HprNummer)]
-        [TestCase(false, true, Policies.HidAuthenticated)]
-        [TestCase(false, false, Policies.HidAuthenticated)]
+        [TestCase(false, true, Policies.HidOrApi)]
+        [TestCase(false, false, Policies.HidOrApi)]
         public void ThatAddingAuthorizationPoliciesHonourFeatureflags(bool useHprNumber, bool useHpr,
             string expectedPolicyName)
         {

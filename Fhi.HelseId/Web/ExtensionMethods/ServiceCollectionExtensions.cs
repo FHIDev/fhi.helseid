@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Fhi.HelseId.Api;
+using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Identity;
+using Fhi.HelseId.Web.Handlers;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Fhi.HelseId.Web.Middleware;
@@ -38,14 +40,19 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon,
             IWhitelist whitelist)
         {
-            var authenticatedHidUserPolicy = new AuthorizationPolicyBuilder()
+            var authenticatedPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .RequireClaim(IdentityClaims.SecurityLevel, helseIdWebKonfigurasjon.SecurityLevels)
                 .Build();
+
+            var hidOrApiPolicy = new AuthorizationPolicyBuilder()
+                .Combine(authenticatedPolicy)
+                .AddRequirements(new SecurityLevelOrApiRequirement())
+                .Build();
+
             if (helseIdFeatures.UseHprNumber)
             {
                 var hprNumberPolicyBuilder = new AuthorizationPolicyBuilder()
-                    .Combine(authenticatedHidUserPolicy);
+                    .Combine(hidOrApiPolicy);
                 hprNumberPolicyBuilder.Requirements.Add(new HprAuthorizationRequirement());
                 var hprNumberPolicy= hprNumberPolicyBuilder.Build();
 
@@ -57,7 +64,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     var hprGodkjenningPolicy = policy.Build();
                     services.AddAuthorization(config =>
                     {
-                        config.AddPolicy(Policies.HidAuthenticated, authenticatedHidUserPolicy);
+                        config.AddPolicy(Policies.HidOrApi, hidOrApiPolicy);
                         config.AddPolicy(Policies.HprNummer, hprNumberPolicy);
                         config.AddPolicy(Policies.GodkjentHprKategoriPolicy, hprGodkjenningPolicy);
                         config.DefaultPolicy = hprGodkjenningPolicy;
@@ -67,7 +74,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
                 services.AddAuthorization(config =>
                 {
-                    config.AddPolicy(Policies.HidAuthenticated, authenticatedHidUserPolicy);
+                    config.AddPolicy(Policies.HidOrApi, hidOrApiPolicy);
                     config.AddPolicy(Policies.HprNummer, hprNumberPolicy);
                     config.DefaultPolicy = hprNumberPolicy;
                 });
@@ -76,10 +83,10 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             services.AddAuthorization(config =>
             {
-                config.AddPolicy(Policies.HidAuthenticated, authenticatedHidUserPolicy);
-                config.DefaultPolicy = authenticatedHidUserPolicy;
+                config.AddPolicy(Policies.HidOrApi, hidOrApiPolicy);
+                config.DefaultPolicy = hidOrApiPolicy;
             });
-            return (authenticatedHidUserPolicy, Policies.HidAuthenticated);
+            return (hidOrApiPolicy, Policies.HidOrApi);
         }
 
         public static void UseHelseIdProtectedPaths(this IApplicationBuilder app,
@@ -116,16 +123,18 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             Action<MvcOptions>? configureMvc,
             ConfigureAuthentication? configureAuthentication = null)
         {
+            services.AddSingleton(helseIdKonfigurasjon);
             if (helseIdKonfigurasjon.AuthUse)
             {
+                services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
                 services.AddScoped<IHprFactory, HprFactory>();
                 services.AddScoped<ICurrentUser, CurrentHttpUser>();
 
                 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             }
 
-            (var authorizeFilter, string policyName) = Fhi.HelseId.Web.ExtensionMethods.ServiceCollectionExtensions.AddAuthentication(
-                services, helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, 
+            (var authorizeFilter, string policyName) = services.AddAuthentication(
+                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, 
                 secretHandler, configureAuthentication);
             var mvcBuilder = services.AddControllers(config =>
             {
@@ -183,7 +192,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         /// <summary>
         /// Normally used by AddHelseIdWebAuthentication
         /// </summary>
-        public static (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(IServiceCollection services,
+        public static (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(this IServiceCollection services,
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHprFeatureFlags hprKonfigurasjon,
@@ -216,7 +225,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
         /// <summary>
         /// Determine the presiding policy from configuration.
-        /// Will return Policies.HidAuthenticated if no other policies are configured.
+        /// Will return Policies.Authenticated if no other policies are configured.
         /// </summary>
         /// <param name="helseIdWebKonfigurasjon"></param>
         /// <param name="hprFeatureFlags"></param>
@@ -226,7 +235,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             {
                 new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber && hprFeatureFlags.UseHprPolicy, Policy = Policies.GodkjentHprKategoriPolicy},
                 new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber, Policy = Policies.HprNummer },
-                new { PolicyActive = true, Policy = Policies.HidAuthenticated }
+                new { PolicyActive = true, Policy = Policies.HidOrApi },
+                new { PolicyActive = true, Policy = Policies./*Hid*/Authenticated }
             }
             .ToList()
             .First(p => p.PolicyActive).Policy;
