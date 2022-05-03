@@ -6,7 +6,7 @@ namespace Fhi.HelseId.Worker
     {
         public static Uri ToUri(string baseadress)
         {
-            return new Uri(baseadress.TrimEnd('/'));
+            return new Uri(baseadress);
         }
     }
 }
