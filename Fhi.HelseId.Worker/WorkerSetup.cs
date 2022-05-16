@@ -53,7 +53,7 @@ namespace Fhi.HelseId.Worker
         {
             services.AddClientAccessTokenClient(api.Name, api.Name, configureClient: client =>
             {
-                client.BaseAddress = new Uri(api.Url.TrimEnd('/'));
+                client.BaseAddress = new Uri(api.Url);
 
             });
         }
@@ -62,7 +62,7 @@ namespace Fhi.HelseId.Worker
         {
             services.AddHttpClient(api.Name, client =>
             {
-                client.BaseAddress = new Uri(api.Url.TrimEnd('/'));
+                client.BaseAddress = new Uri(api.Url);
             });
         }
     }

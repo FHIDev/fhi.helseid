@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
 using Fhi.HelseId.Api.Authorization;
@@ -60,5 +61,45 @@ namespace Fhi.HelseId.Api.ExtensionMethods
                     options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
             return true;
         }
+
+        public static IServiceCollection ConfigureAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
+        {
+            foreach (var api in apis)
+            {
+                if (api.AuthUse)
+                    ConfigureApiServices(services, api);
+                else
+                    ConfigureApiServicesNoAuth(services, api);
+            }
+
+            return services;
+        }
+
+        private static IHttpClientBuilder ConfigureApiServices(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
+        {
+            return services.AddUserAccessTokenClient(api.Name, client =>
+                {
+                    client.BaseAddress = api.Uri;
+                    client.Timeout = TimeSpan.FromMinutes(10);
+                })
+                .AddHttpMessageHandler<AuthHeaderHandler>();
+        }
+
+        private static IHttpClientBuilder ConfigureApiServicesNoAuth(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
+        {
+            return services.AddHttpClient(api.Name, client =>
+            {
+                client.BaseAddress = api.Uri;
+                client.Timeout = TimeSpan.FromMinutes(10);
+            });
+        }
+
+
+
+
+
+
+
+
     }
 }
