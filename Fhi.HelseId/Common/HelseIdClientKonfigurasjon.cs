@@ -19,13 +19,6 @@ namespace Fhi.HelseId.Common
         string RsaKeySecret { get; set; }
     }
 
-    public abstract class HelseIdCommonKonfigurasjon
-    {
-        public string Authority { get; set; } = "";
-        public bool AuthUse { get; set; } = true;
-        public bool UseHttps { get; set; } = true;
-    }
-
     public abstract class HelseIdClientKonfigurasjon : HelseIdCommonKonfigurasjon, IHelseIdClientKonfigurasjon
     {
         protected List<string>? AllTheScopes { get; private set; }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fhi.HelseId.Worker
+namespace Fhi.HelseId.Common
 {
     public class BaseAddressUtil
     {
