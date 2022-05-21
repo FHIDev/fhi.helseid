@@ -17,6 +17,9 @@ namespace Fhi.HelseId.Api.ExtensionMethods
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Use this for setting up ingoing api authentication (with an access token)
+        /// </summary>
         public static void AddHelseIdApiAuthentication(this IServiceCollection services,
             IHelseIdApiKonfigurasjon config)
         {
@@ -62,6 +65,9 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             return true;
         }
 
+        /// <summary>
+        /// Use this for either User or Client credentials
+        /// </summary>
         public static IServiceCollection ConfigureAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
         {
             foreach (var api in apis)
@@ -72,6 +78,20 @@ namespace Fhi.HelseId.Api.ExtensionMethods
                     ConfigureApiServicesNoAuth(services, api);
             }
 
+            return services;
+        }
+        /// <summary>
+        /// Use this for Apis that need to send access tokens onwards
+        /// </summary>
+        public static IServiceCollection ConfigureAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
+        {
+            foreach (var api in apis)
+            {
+                if (api.AuthUse)
+                    ConfigureApiServicesInApis(services, api);
+                else
+                    ConfigureApiServicesNoAuth(services, api);
+            }
             return services;
         }
 
@@ -92,6 +112,16 @@ namespace Fhi.HelseId.Api.ExtensionMethods
                 client.BaseAddress = api.Uri;
                 client.Timeout = TimeSpan.FromMinutes(10);
             });
+        }
+
+        private static IHttpClientBuilder ConfigureApiServicesInApis(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
+        {
+            services.AddScoped<AuthHeaderHandlerForApi>();
+            return services.AddHttpClient(api.Name, client =>
+            {
+                client.BaseAddress = api.Uri;
+                client.Timeout = TimeSpan.FromMinutes(10);
+            }).AddHttpMessageHandler<AuthHeaderHandlerForApi>();
         }
 
 
