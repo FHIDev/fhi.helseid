@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="5.2.0" />
     <PackageReference Include="IdentityModel.AspNetCore" Version="3.0.0" />
-    <PackageReference Include="Fhi.HelseId" Version="3.4.0-beta.4" />
+    <PackageReference Include="Fhi.HelseId" Version="3.4.0-beta.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 

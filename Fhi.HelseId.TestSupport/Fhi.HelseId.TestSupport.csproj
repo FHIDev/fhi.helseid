@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="Fhi.HelseId" Version="3.4.0-beta01" />
+    <PackageReference Include="Fhi.HelseId" Version="3.4.0-beta.6" />
     <PackageReference Include="Fhi.HelseId.Worker" Version="1.0.0-beta.2" />
     <PackageReference Include="morelinq" Version="3.3.2" />
   </ItemGroup>
