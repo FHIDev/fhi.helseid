@@ -123,7 +123,7 @@ namespace Fhi.HelseId.Altinn.Tests
             );
 
             var authorizationResult = await authorizationService.AuthorizeAsync(principal, "Altinn");
-            Assert.IsTrue(authorizationResult.Succeeded);
+            Assert.That(authorizationResult.Succeeded, Is.True);
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace Fhi.HelseId.Altinn.Tests
             principal.AddLocalIdentityWithClaims(new Claim(LocalClaims.AppLocalOrganization, organizationForWhichSubjectIsAuthorized));
 
             var authorizationResult = await authorizationService.AuthorizeAsync(principal, "Altinn");
-            Assert.IsTrue(authorizationResult.Succeeded);
+            Assert.That(authorizationResult.Succeeded, Is.True);
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace Fhi.HelseId.Altinn.Tests
                 ));
 
             var authorizationResult = await authorizationService.AuthorizeAsync(principal, "Altinn");
-            Assert.IsFalse(authorizationResult.Succeeded);
+            Assert.That(authorizationResult.Succeeded, Is.False);
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace Fhi.HelseId.Altinn.Tests
                 ));
 
             var authorizationResult = await authorizationService.AuthorizeAsync(principal, "Altinn");
-            Assert.IsFalse(authorizationResult.Succeeded);
+            Assert.That(authorizationResult.Succeeded, Is.False);
         }
 
         [Test]
@@ -188,7 +188,7 @@ namespace Fhi.HelseId.Altinn.Tests
                 ));
 
             var authorizationResult = await authorizationService.AuthorizeAsync(principal, "Altinn");
-            Assert.IsFalse(authorizationResult.Succeeded);
+            Assert.That(authorizationResult.Succeeded, Is.False);
         }
     }
 }

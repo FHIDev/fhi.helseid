@@ -5,6 +5,10 @@ root = true
 indent_style = space
 indent_size = 4
 
+
+[*.cs]
+dotnet_diagnostic.CS1591.severity = none
+
 [*.csproj]
 indent_style = space
 indent_size = 2
@@ -15,4 +19,4 @@ indent_size = 2
 
 [*.yml]
 indent_style = space
-indent_size = 2
+indent_size = 2  

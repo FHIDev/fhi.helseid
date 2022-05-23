@@ -81,10 +81,11 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             return services;
         }
         /// <summary>
-        /// Use this for Apis that need to send access tokens onwards
+        /// Use this for Apis that need to send access tokens onwards. Registers HttpClients in the HttpClientFactory with an appropriate authenticationhandler
         /// </summary>
         public static IServiceCollection ConfigureAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
         {
+            services.AddScoped<AuthHeaderHandlerForApi>();
             foreach (var api in apis)
             {
                 if (api.AuthUse)
@@ -116,7 +117,6 @@ namespace Fhi.HelseId.Api.ExtensionMethods
 
         private static IHttpClientBuilder ConfigureApiServicesInApis(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
         {
-            services.AddScoped<AuthHeaderHandlerForApi>();
             return services.AddHttpClient(api.Name, client =>
             {
                 client.BaseAddress = api.Uri;
