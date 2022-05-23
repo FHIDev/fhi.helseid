@@ -80,21 +80,6 @@ namespace Fhi.HelseId.Api.ExtensionMethods
 
             return services;
         }
-        /// <summary>
-        /// Use this for Apis that need to send access tokens onwards. Registers HttpClients in the HttpClientFactory with an appropriate authenticationhandler
-        /// </summary>
-        public static IServiceCollection ConfigureAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
-        {
-            services.AddScoped<AuthHeaderHandlerForApi>();
-            foreach (var api in apis)
-            {
-                if (api.AuthUse)
-                    ConfigureApiServicesInApis(services, api);
-                else
-                    ConfigureApiServicesNoAuth(services, api);
-            }
-            return services;
-        }
 
         private static IHttpClientBuilder ConfigureApiServices(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
         {
