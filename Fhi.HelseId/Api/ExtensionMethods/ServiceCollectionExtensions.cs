@@ -86,6 +86,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
         /// </summary>
         public static IServiceCollection ConfigureAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
         {
+            services.AddScoped<AuthHeaderHandlerForApi>();
             foreach (var api in apis)
             {
                 if (api.AuthUse)
