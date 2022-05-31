@@ -6,7 +6,7 @@
     <LangVersion>8</LangVersion>
     <Configurations>Debug;Release</Configurations>
     <id>Fhi.HelseId</id>
-    <Version>3.4.0-beta.10</Version>
+    <Version>3.4.0-beta.11</Version>
     <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
     <Copyright>(c) 2020-2022 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
