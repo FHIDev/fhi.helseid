@@ -18,15 +18,11 @@ namespace Fhi.HelseId.Api.Handlers
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context, SecurityLevelOrApiRequirement requirement)
         {
-            var scopeClaim = (context.User.FindFirst(c => c.Type.ToLowerInvariant() == "scope"));
-            
-            if (scopeClaim != null)
+            var scopeClaims = context.User.FindAll("scope");
+
+            if(scopeClaims.Any(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Value, _configAuth.ApiScope)))
             {
-                var scopes = scopeClaim.Value.ToLowerInvariant().Split(" ");
-                if (scopes.Contains(_configAuth.ApiScope))
-                {
-                    context.Succeed(requirement);
-                }
+                context.Succeed(requirement);
             }
 
             return Task.CompletedTask;
