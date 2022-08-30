@@ -14,16 +14,19 @@ The component uses the "Backend for Frontend" pattern, based off an Authorizatio
 
 The component requires minimum .NET Core app 3.1.
 
-## [Documentation](https://github.com/folkehelseinstituttet/fhi.helseid/wiki)
+## [Documentation wiki](https://github.com/folkehelseinstituttet/fhi.helseid/wiki)
 
-## [Demo app](https://github.com/folkehelseinstituttet/fhi.helseid.demo)
+## [Demo app repo](https://github.com/folkehelseinstituttet/fhi.helseid.demo)
 
 ## Status
 
 Latest CI Build ![Latest CI build](https://img.shields.io/github/workflow/status/folkehelseinstituttet/fhi.helseid/Fhi.HelseId.CI?style=plastic)
 
-Latest NuGet package [![NuGet Badge](https://buildstats.info/nuget/Fhi.HelseId)](https://www.nuget.org/packages/Fhi.HelseId/)
+Latest Fhi.HelseId NuGet package [![NuGet Badge](https://buildstats.info/nuget/Fhi.HelseId)](https://www.nuget.org/packages/Fhi.HelseId/)
 
+Latest Fhi.HelseId.Worker  NuGet package [![NuGet Badge](https://buildstats.info/nuget/Fhi.HelseId.Worker)](https://www.nuget.org/packages/Fhi.HelseId.Worker/)
+
+Latest Fhi.HelseId.TestSupport NuGet package [![NuGet Badge](https://buildstats.info/nuget/Fhi.HelseId.TestSupport)](https://www.nuget.org/packages/Fhi.HelseId.TestSupport/)
 
 ## Access to HelseId
 
