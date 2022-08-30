@@ -51,7 +51,7 @@ namespace Fhi.HelseId.Worker
 
         public void ConfigureService(IServiceCollection services, HelseIdApiKonfigurasjon api)
         {
-            services.AddClientAccessTokenClient(api.Name, api.Name, configureClient: client =>
+            services.AddClientAccessTokenHttpClient(api.Name, api.Name, configureClient: client =>
             {
                 client.BaseAddress = new Uri(api.Url);
 

@@ -25,11 +25,10 @@ public class AuthenticationService : IAuthenticationService
 
     private readonly string jwkPrivateKey;
 
-    public AuthenticationService(string appsettings)
+    public AuthenticationService(HelseIdWorkerKonfigurasjon config, string key)
     {
-        var c = new WorkerConfig(appsettings);
-        Config = c.WorkerKonfigurasjon;
-        jwkPrivateKey = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "inttest_jwk.json"));
+        Config = config;
+        jwkPrivateKey = key;
     }
 
     public string AccessToken { get; private set; } = "";
