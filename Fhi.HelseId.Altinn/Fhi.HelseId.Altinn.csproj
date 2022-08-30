@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <LangVersion>8</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release</Configurations>
     <id>Fhi.HelseId.Altinn</id>
     <Version>3.0.0</Version>
@@ -19,17 +19,17 @@
     <tags>helseid, oauth</tags>
     <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
     <dependencies>
-      <group targetFramework="netcoreapp3.1">
+      <group targetFramework="net6.0">
       </group>
     </dependencies>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.18" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" Version="3.1.9" />
-    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" Version="6.0.8" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.10.0" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Fhi.HelseId.Worker;
 using NUnit.Framework;
-using MoreLinq;
 
 namespace Fhi.HelseId.TestSupport.Config
 {
