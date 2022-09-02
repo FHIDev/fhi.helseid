@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+
 namespace Fhi.HelseId.Api.ExtensionMethods
 {
     public static class ServiceCollectionExtensions
@@ -99,7 +100,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
 
         private static IHttpClientBuilder ConfigureApiServices(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
         {
-            return services.AddUserAccessTokenClient(api.Name, client =>
+            return services.AddUserAccessTokenHttpClient(api.Name, configureClient:client =>
                 {
                     client.BaseAddress = api.Uri;
                     client.Timeout = TimeSpan.FromMinutes(10);
