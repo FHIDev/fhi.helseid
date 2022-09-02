@@ -21,29 +21,26 @@ public interface IAuthenticationService
 
 public class AuthenticationService : IAuthenticationService
 {
-    public HelseIdWorkerKonfigurasjon Config { get; }
+    public HelseIdClientCredentialsConfiguration Config { get; }
 
-    private readonly string jwkPrivateKey;
-
-    public AuthenticationService(HelseIdWorkerKonfigurasjon config, string key)
+    
+    public AuthenticationService(HelseIdClientCredentialsConfiguration config)
     {
         Config = config;
-        jwkPrivateKey = key;
     }
 
     public string AccessToken { get; private set; } = "";
 
     public async Task SetupToken()
     {
-        const string scopes =
-            "fhi:lmr.grunndata/all fhi:lmr.meldingsformidler/all fhi:lmr.meldingsmottak/all fhi:lmr.utleveringslager/all fhi:lmr.pasientregister/all fhi:lmr.rekvirentregister/all fhi:lmr.varseltjeneste/all fhi:lmr.logging/read fhi:personoppslag/api";
         var c = new HttpClient();
         var cctr = new ClientCredentialsTokenRequest
         {
             Address = Config.Authority,
             ClientId = Config.ClientId,
             GrantType = OidcConstants.GrantTypes.ClientCredentials,
-            Scope = scopes,
+            ClientCredentialStyle = ClientCredentialStyle.PostBody,
+            Scope = Config.Scopes,
             ClientAssertion = new ClientAssertion
             {
                 Type = OidcConstants.ClientAssertionTypes.JwtBearer,
@@ -71,7 +68,7 @@ public class AuthenticationService : IAuthenticationService
     }
     private SigningCredentials GetClientAssertionSigningCredentials()
     {
-        var securityKey = new JsonWebKey(jwkPrivateKey);
+        var securityKey = new JsonWebKey(Config.PrivateKey);
         return new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
     }
 }

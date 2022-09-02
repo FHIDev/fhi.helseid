@@ -9,7 +9,7 @@ namespace Fhi.HelseId.Worker
         public string Url { get; set; } = "";
         public string Scope { get; set; } = "";
 
-        public Uri Uri => new Uri(Url);
+        public Uri Uri => new(Url);
     }
 
     public class HelseIdWorkerKonfigurasjon : HelseIdClientKonfigurasjon

@@ -1,5 +1,3 @@
-using NUnit.Framework;
-
 namespace Fhi.HelseId.Worker.Tests
 {
     public class HelseIdClientKonfigurasjonTests : BaseConfigTests

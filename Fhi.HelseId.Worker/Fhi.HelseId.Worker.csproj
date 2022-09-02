@@ -6,7 +6,7 @@
     <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release</Configurations>
     <id>Fhi.HelseId.Worker</id>
-    <Version>2.0.0-alpha.1</Version>
+    <Version>2.0.0-alpha.6</Version>
     <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
     <Copyright>(c) 2021-2022 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
@@ -22,6 +22,11 @@
       <group targetFramework="net6.0">
       </group>
     </dependencies>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>

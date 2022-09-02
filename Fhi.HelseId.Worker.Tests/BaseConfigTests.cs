@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using NUnit.Framework;
 
 namespace Fhi.HelseId.Worker.Tests
 {
