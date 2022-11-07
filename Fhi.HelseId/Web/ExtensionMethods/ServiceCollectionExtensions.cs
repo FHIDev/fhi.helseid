@@ -126,6 +126,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             services.AddSingleton(helseIdKonfigurasjon);
             if (helseIdKonfigurasjon.AuthUse)
             {
+                services.AddMemoryCache();
                 services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
                 services.AddScoped<IHprFactory, HprFactory>();
                 services.AddScoped<ICurrentUser, CurrentHttpUser>();
