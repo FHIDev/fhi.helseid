@@ -3,16 +3,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Api.Handlers
 {
     public class ApiScopeHandler : AuthorizationHandler<SecurityLevelOrApiRequirement>
     {
         private readonly IHelseIdApiKonfigurasjon _configAuth;
+        private readonly ILogger<ApiScopeHandler> _logger;
 
-        public ApiScopeHandler(IHelseIdApiKonfigurasjon configAuth)
+        public ApiScopeHandler(IHelseIdApiKonfigurasjon configAuth,ILogger<ApiScopeHandler> logger)
         {
             _configAuth = configAuth;
+            _logger = logger;
         }
 
         protected override Task HandleRequirementAsync(
@@ -24,6 +27,11 @@ namespace Fhi.HelseId.Api.Handlers
             {
                 context.Succeed(requirement);
             }
+            else
+            {
+                _logger.LogError($"Fhi.HelseId.Api.Handlers.{nameof(ApiScopeHandler)}: Missing or invalid scope, access denied",scopeClaims);
+            }
+                
 
             return Task.CompletedTask;
         }
