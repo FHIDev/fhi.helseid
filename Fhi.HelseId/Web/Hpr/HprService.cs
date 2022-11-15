@@ -99,7 +99,7 @@ namespace Fhi.HelseId.Web.Hpr
                 .SetAbsoluteExpiration(TimeSpan.FromSeconds(cacheTidISekunder));
 
             _memoryCache.Set(cacheKey, personFraRegister, cacheEntryOptions);
-            _logger.LogDebug("Person med Hpr-nummer {HprNummer} lagt til i cache i {CacheTid} sekunder", hprnummer, cacheTidISekunder);
+            _logger.LogDebug("Person med Hpr-nummer {HprNummer} hentet fra register og lagt til i cache i {CacheTid} sekunder", hprnummer, cacheTidISekunder);
 
             return personFraRegister;
         }
