@@ -10,12 +10,12 @@ namespace Fhi.HelseId.Api.Handlers
     public class ApiScopeHandler : AuthorizationHandler<SecurityLevelOrApiRequirement>
     {
         private readonly IHelseIdApiKonfigurasjon _configAuth;
-        private readonly ILogger<ApiScopeHandler> _logger;
+        private readonly ILogger<ApiScopeHandler> logger;
 
         public ApiScopeHandler(IHelseIdApiKonfigurasjon configAuth, ILogger<ApiScopeHandler> logger)
         {
             _configAuth = configAuth;
-            _logger = logger;
+            this.logger = logger;
         }
 
         protected override Task HandleRequirementAsync(
@@ -29,8 +29,7 @@ namespace Fhi.HelseId.Api.Handlers
             }
             else
             {
-                string scopeHandler = nameof(ApiScopeHandler);
-                _logger.LogError("Fhi.HelseId.Api.Handlers.{scopeHandler}: Missing or invalid scope ({scopeClaims}), access denied", scopeClaims,scopeHandler);
+                logger.LogError($"Fhi.HelseId.Api.Handlers.{nameof(ApiScopeHandler)}: Missing or invalid scope, access denied", scopeClaims);
             }
 
             return Task.CompletedTask;

@@ -4,15 +4,7 @@ public partial class HelseIdClientCredentialsConfiguration
 {
     public string Authority => authority;
     public string ClientId => clientId;
-    public string Scopes
-    {
-        get
-        {
-            if (scopes == null)
-                return "";
-            return string.Join(" ", scopes);
-        }
-    }
+    public string Scopes => scopes == null ? "" : string.Join(" ", scopes);
 
     public string PrivateKey => privateJwk;
 
