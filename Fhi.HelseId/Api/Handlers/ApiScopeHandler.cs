@@ -23,7 +23,7 @@ namespace Fhi.HelseId.Api.Handlers
         {
             var scopeClaims = context.User.FindAll("scope");
 
-            if(scopeClaims.Any(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Value, _configAuth.ApiScope)))
+            if (scopeClaims.Any(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Value, _configAuth.ApiScope)))
             {
                 context.Succeed(requirement);
             }

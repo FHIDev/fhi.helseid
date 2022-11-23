@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ServiceModel;
 using Fhi.HelseId.Web.Hpr.Core;
 using HprServiceReference;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -41,15 +42,17 @@ namespace Fhi.HelseId.Web.Hpr
     public class HprFactory : IHprFactory
     {
         private readonly IGodkjenteHprKategoriListe godkjenninger;
+        private readonly IMemoryCache memoryCache;
         private readonly ILogger<HprFactory> logger;
         public IHPR2ServiceChannel? ServiceProxy { get; }
 
-        public HprFactory(IOptions<HprKonfigurasjon> hprKonfigurasjon, IGodkjenteHprKategoriListe godkjenninger, ILogger<HprFactory> logger)
+        public HprFactory(IOptions<HprKonfigurasjon> hprKonfigurasjon, IGodkjenteHprKategoriListe godkjenninger, IMemoryCache memoryCache, ILogger<HprFactory> logger)
         {
             this.godkjenninger = godkjenninger;
+            this.memoryCache = memoryCache;
             this.logger = logger;
             var config = hprKonfigurasjon.Value;
-            this.logger.LogDebug("Access til HPR: {Url}", config.Url);
+            this.logger.LogDebug("Oppsett til HPR: {Url}", config.Url);
             if (!config.UseHpr)
             {
                 this.logger.LogInformation("HprFactory: Hpr er avslått, se konfigurasjon");
@@ -69,7 +72,7 @@ namespace Fhi.HelseId.Web.Hpr
         }
 
 
-        public IHprService CreateHprService() => new HprService(this, logger).LeggTilGodkjenteHelsepersonellkategorier(godkjenninger);
+        public IHprService CreateHprService() => new HprService(this, memoryCache, logger).LeggTilGodkjenteHelsepersonellkategorier(godkjenninger);
 
         [Obsolete("Use CreateHprService")]
         public IHprService CreateHprRepository() => CreateHprService();

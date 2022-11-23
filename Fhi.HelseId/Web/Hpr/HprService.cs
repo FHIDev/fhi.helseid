@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Web.Hpr.Core;
 using HprServiceReference;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Web.Hpr
@@ -30,8 +31,9 @@ namespace Fhi.HelseId.Web.Hpr
 
     public class HprService : IHprService
     {
-        private readonly IHPR2ServiceChannel? serviceClient;
-        private readonly ILogger logger;
+        private readonly IHPR2ServiceChannel? _serviceClient;
+        private readonly ILogger _logger;
+        private readonly IMemoryCache _memoryCache;
 
         private List<OId9060> GodkjenteHelsepersonellkategorier { get; }
 
@@ -39,10 +41,11 @@ namespace Fhi.HelseId.Web.Hpr
         const string HprnummerAdmin = "000000000";
         public string LastErrorMessage { get; private set; } = "";
 
-        public HprService(IHprFactory helsepersonellFactory, ILogger logger)
+        public HprService(IHprFactory helsepersonellFactory, IMemoryCache memoryCache, ILogger logger)
         {
-            this.logger = logger;
-            serviceClient = helsepersonellFactory.ServiceProxy;
+            _logger = logger;
+            _memoryCache = memoryCache;
+            _serviceClient = helsepersonellFactory.ServiceProxy;
             GodkjenteHelsepersonellkategorier = new List<OId9060>();
         }
 
@@ -75,37 +78,52 @@ namespace Fhi.HelseId.Web.Hpr
         {
             if (hprnummer == HprnummerAdmin)
                 return true;
-            var person = await HentFraHprRegister(hprnummer);
+            var person = await HentPerson(hprnummer);
             return person != null && ErGyldig(person);
         }
 
         public async Task<Person?> HentPerson(string hprnummer)
         {
-            var person = await HentFraHprRegister(hprnummer);
-            return person;
-        }
+            var cacheKey = $"fhi-helseid-{hprnummer}";
 
+            if (_memoryCache.TryGetValue(cacheKey, out Person person))
+            {
+                _logger.LogDebug("Person med Hpr-nummer {HprNummer} hentet fra cache", hprnummer);
+                return person;
+            }
+
+            var personFraRegister = await HentFraHprRegister(hprnummer);
+
+            var cacheTidISekunder = 600;
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromSeconds(cacheTidISekunder));
+
+            _memoryCache.Set(cacheKey, personFraRegister, cacheEntryOptions);
+            _logger.LogDebug("Person med Hpr-nummer {HprNummer} hentet fra register og lagt til i cache i {CacheTid} sekunder", hprnummer, cacheTidISekunder);
+
+            return personFraRegister;
+        }
 
         private async Task<Person?> HentFraHprRegister(string hprnummer)
         {
-            if (serviceClient == null)
+            if (_serviceClient == null)
             {
                 const string msg = "Kunne ikke skape connection til Hpr register";
                 LastErrorMessage = msg;
-                logger.LogError(msg);
+                _logger.LogError(msg);
                 return null;
             }
 
             try
             {
-                var person = await serviceClient.HentPersonAsync(Convert.ToInt32(hprnummer), null);
+                var person = await _serviceClient.HentPersonAsync(Convert.ToInt32(hprnummer), null);
                 return person;
             }
             catch (System.ServiceModel.CommunicationException e)
             {
                 var msg = "CommunicationException i aksess til Hpr register. "+e;
                 LastErrorMessage = msg;
-                logger.LogError(e, msg);
+                _logger.LogError(e, msg);
                 return null;
             }
 #pragma warning disable 168
@@ -116,7 +134,7 @@ namespace Fhi.HelseId.Web.Hpr
                 //Hvis ekstern service kaster exception returneres null. Eksemplvis mottar vi også en exception hvis fnr ikke finnes.
                 const string msg = "Feil i aksess til Hpr register. (Obs: Mottar også en exception hvis fnr ikke finnes)";
                 LastErrorMessage = msg;
-                logger.LogError(e, msg);
+                _logger.LogError(e, msg);
                 return null;
             }
 #pragma warning restore CA1031 // Do not catch general exception types
@@ -147,8 +165,6 @@ namespace Fhi.HelseId.Web.Hpr
             return HentGodkjenninger(person);
         }
 
-        
-
         public IEnumerable<OId9060> HentGodkjenninger(Person? person)
         {
             if (person == null)
@@ -159,19 +175,13 @@ namespace Fhi.HelseId.Web.Hpr
                 godkjenninger.FirstOrDefault(x => x.Helsepersonellkategori.Verdi == o.Value) != null);
         }
 
-
         public async void Close()
         {
-            if (serviceClient != null)
+            if (_serviceClient != null)
             {
-                if (serviceClient is HPR2ServiceClient client) await client.CloseAsync();
+                if (_serviceClient is HPR2ServiceClient client) await client.CloseAsync();
             }
         }
 
     }
-
-    public static partial class HprExtensionMethods
-    {
-    }
-
 }
