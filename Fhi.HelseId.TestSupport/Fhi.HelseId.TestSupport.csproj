@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Id>Fhi.HelseId.TestSupport</Id>
-    <Version>2.0.0-alpha.7</Version>
+    <Version>2.0.0</Version>
     <IsPackable>true</IsPackable>
     <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
     <Copyright>(c) 2021-2022 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
@@ -11,7 +11,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Beta release of base classes for testing an implementation using Fhi.HelseId</PackageReleaseNotes>
+    <PackageReleaseNotes>Release of base classes for testing an implementation using Fhi.HelseId</PackageReleaseNotes>
     <PackageDescription>Base classes for testing an implementation using Fhi.HelseId</PackageDescription>
     <PackageCopyright>Copyright ©2021-2022 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
     <Nullable>enable</Nullable>
