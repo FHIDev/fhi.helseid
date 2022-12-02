@@ -34,6 +34,7 @@ namespace Fhi.HelseId.TestSupport.Config
                 case SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsProd:
                     helseIdWorkerConfigurasjonForProduction = new HelseIdWorkerClientIds("appsettings.json", useOfAppsettings).HelseIdWorkerKonfigurasjonUnderTest;
                     break;
+                case SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsExplicit:
                 case SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsTestWhenDev:
                     break;
                 case SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsBaseOnly:
@@ -67,7 +68,8 @@ namespace Fhi.HelseId.TestSupport.Config
         [Test]
         public void ThatClientIdForProductionIsDifferentThanTest()
         {
-            if (useOfAppsettings==SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsTestWhenDev)
+            if (useOfAppsettings==SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsTestWhenDev ||
+                useOfAppsettings == SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsExplicit)
             {
                 Assert.Inconclusive("No way to tell");
                 return;
@@ -79,7 +81,8 @@ namespace Fhi.HelseId.TestSupport.Config
         [Test]
         public void ThatClientSecretForProductionIsDifferentThanTest()
         {
-            if (useOfAppsettings == SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsTestWhenDev)
+            if (useOfAppsettings == SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsTestWhenDev ||
+                useOfAppsettings == SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsExplicit)
             {
                 Assert.Inconclusive("No way to tell");
                 return;
