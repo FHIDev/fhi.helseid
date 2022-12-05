@@ -216,7 +216,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
                     configureAuthentication?.ConfigureOpenIdConnect?.Invoke(options);
                 })
-                .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
+                .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime)); // For å kunne ha en lengre sesjon, håndterer refresh token
 
             (var authPolicy, string policyName) = services.AddHelseIdAuthorizationPolicy(helseIdKonfigurasjon, hprKonfigurasjon, helseIdKonfigurasjon, whitelist);
 
@@ -237,7 +237,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber && hprFeatureFlags.UseHprPolicy, Policy = Policies.GodkjentHprKategoriPolicy},
                 new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber, Policy = Policies.HprNummer },
                 new { PolicyActive = true, Policy = Policies.HidOrApi },
-                new { PolicyActive = true, Policy = Policies./*Hid*/Authenticated }
+                new { PolicyActive = true, Policy = Policies.Authenticated }
             }
             .ToList()
             .First(p => p.PolicyActive).Policy;

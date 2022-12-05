@@ -51,6 +51,18 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             services.AddHelseIdApiAuthentication(config);
         }
 
+        public static bool AddHelseIdAuthorizationControllers(this IServiceCollection services,
+            IAutentiseringkonfigurasjon config)
+        {
+            #pragma warning disable CS0618 // Type or member is obsolete
+            return services.SetupHelseIdAuthorizationControllers(config);
+            #pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        /// <summary>
+        /// Use this for either User or Client credentials
+        /// </summary>
+        [Obsolete("Use AddHelseIdAuthorizationControllers() instead")]
         public static bool SetupHelseIdAuthorizationControllers(this IServiceCollection services,
             IAutentiseringkonfigurasjon config)
         {
@@ -66,17 +78,15 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             return true;
         }
 
-        /// <summary>
-        /// Use this for either User or Client credentials
-        /// </summary>
+        [Obsolete("Use ... instead")]
         public static IServiceCollection ConfigureAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
         {
             foreach (var api in apis)
             {
                 if (api.AuthUse)
-                    ConfigureApiServices(services, api);
+                    AddHelseIdApiServices(services, api);
                 else
-                    ConfigureApiServicesNoAuth(services, api);
+                    AddHelseIdApiServicesNoAuth(services, api);
             }
 
             return services;
@@ -85,22 +95,30 @@ namespace Fhi.HelseId.Api.ExtensionMethods
         /// <summary>
         /// Use this for Apis that need to send access tokens onwards
         /// </summary>
+        public static IServiceCollection AddHelseIdAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
+        {
+            #pragma warning disable CS0618 // Type or member is obsolete
+            return services.ConfigureAuthenticationServicesForApis(apis);
+            #pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        [Obsolete("Use AddHelseIdAuthenticationServicesForApis() instead")]
         public static IServiceCollection ConfigureAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
         {
             services.AddScoped<AuthHeaderHandlerForApi>();
             foreach (var api in apis)
             {
                 if (api.AuthUse)
-                    ConfigureApiServicesInApis(services, api);
+                    AddHelseIdApiServicesForApi(services, api);
                 else
-                    ConfigureApiServicesNoAuth(services, api);
+                    AddHelseIdApiServicesNoAuth(services, api);
             }
             return services;
         }
 
-        private static IHttpClientBuilder ConfigureApiServices(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
+        private static IHttpClientBuilder AddHelseIdApiServices(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
         {
-            return services.AddUserAccessTokenHttpClient(api.Name, configureClient:client =>
+            return services.AddUserAccessTokenHttpClient(api.Name, configureClient: client =>
                 {
                     client.BaseAddress = api.Uri;
                     client.Timeout = TimeSpan.FromMinutes(10);
@@ -108,7 +126,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
                 .AddHttpMessageHandler<AuthHeaderHandler>();
         }
 
-        private static IHttpClientBuilder ConfigureApiServicesNoAuth(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
+        private static IHttpClientBuilder AddHelseIdApiServicesNoAuth(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
         {
             return services.AddHttpClient(api.Name, client =>
             {
@@ -117,7 +135,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             });
         }
 
-        private static IHttpClientBuilder ConfigureApiServicesInApis(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
+        private static IHttpClientBuilder AddHelseIdApiServicesForApi(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
         {
             return services.AddHttpClient(api.Name, client =>
             {
@@ -125,13 +143,5 @@ namespace Fhi.HelseId.Api.ExtensionMethods
                 client.Timeout = TimeSpan.FromMinutes(10);
             }).AddHttpMessageHandler<AuthHeaderHandlerForApi>();
         }
-
-
-
-
-
-
-
-
     }
 }
