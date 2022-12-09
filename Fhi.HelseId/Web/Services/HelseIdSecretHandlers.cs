@@ -9,6 +9,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Security.KeyVault.Secrets;
+using System.Runtime.Serialization;
 
 namespace Fhi.HelseId.Web.Services
 {
@@ -61,6 +62,11 @@ namespace Fhi.HelseId.Web.Services
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
+                if (ctx.TokenEndpointRequest == null)
+                {
+                    throw new InvalidOperationException($"{nameof(ctx.TokenEndpointRequest)} cannot be null");
+                }
+
                 ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
                 ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth, jwkSecurityKey);
 
@@ -68,11 +74,16 @@ namespace Fhi.HelseId.Web.Services
             };
         }
 
-        public class InvalidAzureKeyVaultSettingsException: Exception
+        [Serializable]
+        public class InvalidAzureKeyVaultSettingsException : Exception
         {
             private const string StandardMessage = "For Azure Key Vaule Secret we expect ClientSecret in the format <name of secret>;<uri to vault>. For example: 'MySecret;https://<your-unique-key-vault-name>.vault.azure.net/'";
 
             public InvalidAzureKeyVaultSettingsException() : base(StandardMessage)
+            {
+            }
+
+            protected InvalidAzureKeyVaultSettingsException(SerializationInfo info, StreamingContext context) : base(info, context)
             {
             }
         }
