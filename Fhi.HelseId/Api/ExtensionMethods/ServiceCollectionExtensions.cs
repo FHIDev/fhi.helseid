@@ -44,26 +44,17 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             }
         }
 
-        [Obsolete("Use AddHelseIdApiAuthentication() instead")]
+        [Obsolete("Use AddHelseIdApiAuthentication() instead", true)]
         public static void ConfigureHelseIdApiAuthentication(this IServiceCollection services,
             IHelseIdApiKonfigurasjon config, IConfigurationSection configAuthSection)
         {
-            services.AddHelseIdApiAuthentication(config);
-        }
-
-        public static bool AddHelseIdAuthorizationControllers(this IServiceCollection services,
-            IAutentiseringkonfigurasjon config)
-        {
-            #pragma warning disable CS0618 // Type or member is obsolete
-            return services.SetupHelseIdAuthorizationControllers(config);
-            #pragma warning restore CS0618 // Type or member is obsolete
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Use this for either User or Client credentials
         /// </summary>
-        [Obsolete("Use AddHelseIdAuthorizationControllers() instead")]
-        public static bool SetupHelseIdAuthorizationControllers(this IServiceCollection services,
+        public static bool AddHelseIdAuthorizationControllers(this IServiceCollection services,
             IAutentiseringkonfigurasjon config)
         {
             if (!config.AuthUse)
@@ -78,8 +69,14 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             return true;
         }
 
-        [Obsolete("Use ... instead")]
-        public static IServiceCollection ConfigureAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
+        [Obsolete("Use AddHelseIdAuthorizationControllers() instead", true)]
+        public static bool SetupHelseIdAuthorizationControllers(this IServiceCollection services,
+            IAutentiseringkonfigurasjon config)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IServiceCollection AddHelseIdAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
         {
             foreach (var api in apis)
             {
@@ -92,18 +89,16 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             return services;
         }
 
+        [Obsolete("Use AddHelseIdAuthenticationServices() instead", true)]
+        public static IServiceCollection ConfigureAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Use this for Apis that need to send access tokens onwards
         /// </summary>
         public static IServiceCollection AddHelseIdAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
-        {
-            #pragma warning disable CS0618 // Type or member is obsolete
-            return services.ConfigureAuthenticationServicesForApis(apis);
-            #pragma warning restore CS0618 // Type or member is obsolete
-        }
-
-        [Obsolete("Use AddHelseIdAuthenticationServicesForApis() instead")]
-        public static IServiceCollection ConfigureAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
         {
             services.AddScoped<AuthHeaderHandlerForApi>();
             foreach (var api in apis)
@@ -114,6 +109,12 @@ namespace Fhi.HelseId.Api.ExtensionMethods
                     AddHelseIdApiServicesNoAuth(services, api);
             }
             return services;
+        }
+
+        [Obsolete("Use AddHelseIdAuthenticationServicesForApis() instead")]
+        public static IServiceCollection ConfigureAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
+        {
+            throw new NotImplementedException();
         }
 
         private static IHttpClientBuilder AddHelseIdApiServices(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
