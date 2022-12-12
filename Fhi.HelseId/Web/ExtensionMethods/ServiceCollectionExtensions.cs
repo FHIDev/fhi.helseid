@@ -54,7 +54,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 var hprNumberPolicyBuilder = new AuthorizationPolicyBuilder()
                     .Combine(hidOrApiPolicy);
                 hprNumberPolicyBuilder.Requirements.Add(new HprAuthorizationRequirement());
-                var hprNumberPolicy= hprNumberPolicyBuilder.Build();
+                var hprNumberPolicy = hprNumberPolicyBuilder.Build();
 
                 if (hprFeatures.UseHpr && hprFeatures.UseHprPolicy)
                 {
@@ -90,9 +90,9 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         }
 
         public static void UseHelseIdProtectedPaths(this IApplicationBuilder app,
-            IHelseIdWebKonfigurasjon config, 
+            IHelseIdWebKonfigurasjon config,
             IHprFeatureFlags hprFlags,
-            IRedirectPagesKonfigurasjon redirect, 
+            IRedirectPagesKonfigurasjon redirect,
             IReadOnlyCollection<PathString> excludeList)
         {
             if (!config.AuthUse)
@@ -113,8 +113,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             });
         }
 
-        private static (string PolicyName, IMvcBuilder MvcBuilder) AddHelseIdWebAuthenticationInternal(
-            this IServiceCollection services,
+        public static IMvcBuilder AddHelseIdWebAuthentication(this IServiceCollection services,
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHprFeatureFlags hprKonfigurasjon,
@@ -135,7 +134,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             }
 
             (var authorizeFilter, string policyName) = services.AddAuthentication(
-                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, 
+                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist,
                 secretHandler, configureAuthentication);
             var mvcBuilder = services.AddControllers(config =>
             {
@@ -155,27 +154,10 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     services.AddScoped<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
             }
 
-            return (policyName, mvcBuilder);        
-        }
-
-        public static IMvcBuilder AddHelseIdWebAuthentication(this IServiceCollection services,
-            IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
-            IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
-            IHprFeatureFlags hprKonfigurasjon,
-            IWhitelist whitelist,
-            IHelseIdSecretHandler? secretHandler,
-            Action<MvcOptions>? configureMvc,
-            ConfigureAuthentication? configureAuthentication = null)
-        {
-            (string policyName, IMvcBuilder mvcBuilder) = services.AddHelseIdWebAuthenticationInternal(
-                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, 
-                secretHandler, configureMvc, configureAuthentication
-            );
-            
             return mvcBuilder;
         }
 
-        [Obsolete("Use AddHelseIdWebAuthentication() overload that returns IMvcBuilder")]
+        [Obsolete("Use AddHelseIdWebAuthentication() overload that returns IMvcBuilder", true)]
         public static (bool Result, string PolicyName) AddHelseIdWebAuthentication(this IServiceCollection services,
             IHelseIdWebKonfigurasjon helseIdKonfigurasjon,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
@@ -183,11 +165,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             IWhitelist whitelist,
             IHelseIdSecretHandler? secretHandler = null)
         {
-            (string policyName, IMvcBuilder mvcBuilder) = services.AddHelseIdWebAuthenticationInternal(
-                helseIdKonfigurasjon, redirectPagesKonfigurasjon, hprKonfigurasjon, whitelist, secretHandler, null, null
-            );
-
-            return (true, policyName);
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -232,7 +210,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         /// <param name="hprFeatureFlags"></param>
         /// <returns></returns>
         private static string DeterminePresidingPolicy(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon, IHprFeatureFlags hprFeatureFlags)
-            => new []
+            => new[]
             {
                 new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber && hprFeatureFlags.UseHprPolicy, Policy = Policies.GodkjentHprKategoriPolicy},
                 new { PolicyActive = helseIdWebKonfigurasjon.UseHprNumber, Policy = Policies.HprNummer },
