@@ -22,7 +22,7 @@ namespace Fhi.HelseId.TestSupport.Config
             const string authorityUrl = "https://helseid-sts.nhn.no/";
             Guard();
             var authority = IsTest ? testAuthorityUrl : authorityUrl;
-            Assert.That(HelseIdKonfigurasjonUnderTest.Authority, Does.StartWith(authority), $"Wrong authority found: {HelseIdKonfigurasjonUnderTest.Authority}. Only possible with {testAuthorityUrl} for test, and {authorityUrl} for production");
+            Assert.That(HelseIdKonfigurasjonUnderTest.Authority, Does.StartWith(authority), $"Wrong authority found: {HelseIdKonfigurasjonUnderTest.Authority} in {ConfigFile}. Only possible with {testAuthorityUrl} for test, and {authorityUrl} for production");
         }
     }
 }
