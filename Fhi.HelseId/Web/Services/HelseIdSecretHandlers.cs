@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Security.KeyVault.Secrets;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using System.Web;
 
 namespace Fhi.HelseId.Web.Services
 {
@@ -164,4 +167,52 @@ namespace Fhi.HelseId.Web.Services
         }
     }
 
+    public class HelseIdSelvbetjeningSecretHandler : IHelseIdSecretHandler
+    {
+        public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
+        {
+            var selvbetjeningJson = File.ReadAllText(configAuth.ClientSecret);
+
+            var selvbetjeningConfig = JsonSerializer.Deserialize<SelvbetjeningConfig>(selvbetjeningJson);
+            var jwk = HttpUtility.UrlDecode(selvbetjeningConfig.PrivateJwk);
+
+            var jwkSecurityKey = new JsonWebKey(jwk);
+
+            options.Events.OnAuthorizationCodeReceived = ctx =>
+            {
+                ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
+                ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth, jwkSecurityKey);
+
+                return Task.CompletedTask;
+            };
+        }
+
+        public class SelvbetjeningConfig
+        {
+            [JsonPropertyName("clientName")]
+            public string? ClientName { get; set; }
+            [JsonPropertyName("authority")]
+            public string? Authority { get; set; }
+            [JsonPropertyName("clientId")]
+            public string? ClientId { get; set; }
+            [JsonPropertyName("grantTypes")]
+            public string[]? GrantTypes { get; set; }
+            [JsonPropertyName("scopes")]
+            public string[]? Scopes { get; set; }
+            [JsonPropertyName("redirectUris")]
+            public string[]? RedirectUris { get; set; }
+            [JsonPropertyName("postLogoutRedirectUris")]
+            public object[]? PostLogoutRedirectUris { get; set; }
+            [JsonPropertyName("secretType")]
+            public string? SecretType { get; set; }
+            [JsonPropertyName("rsaPrivateKey")]
+            public string? RsaPrivateKey { get; set; }
+            [JsonPropertyName("rsaKeySizeBits")]
+            public int RsaKeySizeBits { get; set; }
+            [JsonPropertyName("privateJwk")]
+            public string? PrivateJwk { get; set; }
+            [JsonPropertyName("pkceRequired")]
+            public bool PkceRequired { get; set; }
+        }
+    }
 }
