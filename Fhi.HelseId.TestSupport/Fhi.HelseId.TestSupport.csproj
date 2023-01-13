@@ -31,7 +31,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Fhi.HelseId" Version="4.0.0-alpha.3" />
+    <PackageReference Include="Fhi.HelseId" Version="4.1.0" />
     <PackageReference Include="Fhi.HelseId.Worker" Version="2.0.0-alpha.6" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="morelinq" Version="3.3.2" />
