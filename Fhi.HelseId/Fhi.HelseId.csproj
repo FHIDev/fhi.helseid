@@ -48,7 +48,7 @@
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" Version="7.0.3" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.10.0" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
