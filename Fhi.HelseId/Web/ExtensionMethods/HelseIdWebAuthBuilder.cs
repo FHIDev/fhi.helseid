@@ -29,7 +29,7 @@ public class HelseIdWebAuthBuilder
     public IHelseIdWebKonfigurasjon HelseIdWebKonfigurasjon { get; }
     private readonly IConfigurationSection? helseIdKonfigurasjonSeksjon;
     private readonly IConfigurationSection? redirectSection;
-    private readonly RedirectPagesKonfigurasjon redirectPagesKonfigurasjon;
+    public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; }
 
     public HelseIdWebAuthBuilder(IConfiguration configuration, IServiceCollection services)
     {
@@ -40,7 +40,7 @@ public class HelseIdWebAuthBuilder
             throw new ConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         HelseIdWebKonfigurasjon = helseIdKonfigurasjonSeksjon.Get<HelseIdWebKonfigurasjon>();
         redirectSection = Configuration.GetSection(nameof(RedirectPagesKonfigurasjon));
-        redirectPagesKonfigurasjon = redirectSection?.Get<RedirectPagesKonfigurasjon>()??new RedirectPagesKonfigurasjon();
+        RedirectPagesKonfigurasjon = redirectSection?.Get<RedirectPagesKonfigurasjon>()??new RedirectPagesKonfigurasjon();
         
     }
 
@@ -122,19 +122,19 @@ public class HelseIdWebAuthBuilder
         AddHelseIdAuthentication(services)
             .AddCookie(options =>
             {
-                options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, redirectPagesKonfigurasjon);
+                options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon);
 
                 configureAuthentication?.ConfigureCookieAuthentication?.Invoke(options);
             })
             .AddOpenIdConnect(HelseIdContext.Scheme, options =>
             {
-                options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, redirectPagesKonfigurasjon, secretHandler);
+                options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon, secretHandler);
 
                 configureAuthentication?.ConfigureOpenIdConnect?.Invoke(options);
             })
             .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
 
-        (var authPolicy, string policyName) = AddHelseIdAuthorizationPolicy(services);
+        (var authPolicy, string policyName) = AddHelseIdAuthorizationPolicy();
 
         return (new AuthorizeFilter(authPolicy), policyName);
     }
@@ -148,21 +148,21 @@ public class HelseIdWebAuthBuilder
         var excluded = overrideDefaults ? new List<PathString>() : new List<PathString>
         {
             "/favicon.ico",
-            redirectPagesKonfigurasjon.Forbidden,
-            redirectPagesKonfigurasjon.LoggedOut,
-            redirectPagesKonfigurasjon.Statuscode
+            RedirectPagesKonfigurasjon.Forbidden,
+            RedirectPagesKonfigurasjon.LoggedOut,
+            RedirectPagesKonfigurasjon.Statuscode
         };
         if (excludeList.Any())
             excluded.AddRange(excludeList);
 
-        app.UseProtectPaths(new ProtectPathsOptions(DeterminePresidingPolicy(), redirectPagesKonfigurasjon.Forbidden)
+        app.UseProtectPaths(new ProtectPathsOptions(DeterminePresidingPolicy(), RedirectPagesKonfigurasjon.Forbidden)
         {
             Exclusions = excluded
         });
     }
     
 
-    public  (AuthorizationPolicy AuthPolicy, string PolicyName) AddHelseIdAuthorizationPolicy(IServiceCollection services)
+    public  (AuthorizationPolicy AuthPolicy, string PolicyName) AddHelseIdAuthorizationPolicy()
     {
         var authenticatedPolicy = new AuthorizationPolicyBuilder()
             .RequireAuthenticatedUser()
