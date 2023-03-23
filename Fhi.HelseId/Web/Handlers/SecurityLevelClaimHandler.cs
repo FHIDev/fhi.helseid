@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Fhi.HelseId.Api;
 using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +8,11 @@ namespace Fhi.HelseId.Web.Handlers
 {
     public class SecurityLevelClaimHandler : AuthorizationHandler<SecurityLevelOrApiRequirement>
     {
-        private readonly IHelseIdWebKonfigurasjon _configAuth;
+        private readonly IHelseIdWebKonfigurasjon configAuth;
 
         public SecurityLevelClaimHandler(IHelseIdWebKonfigurasjon configAuth)
         {
-            _configAuth = configAuth;
+            this.configAuth = configAuth;
         }
 
         protected override Task HandleRequirementAsync(
@@ -26,7 +22,7 @@ namespace Fhi.HelseId.Web.Handlers
 
             if (securityLevelClaim != null)
             {
-                if (_configAuth.SecurityLevels.Any(sl => sl.ToLowerInvariant() == securityLevelClaim.Value.ToLowerInvariant()))
+                if (configAuth.SecurityLevels.Any(sl => sl.ToLowerInvariant() == securityLevelClaim.Value.ToLowerInvariant()))
                 {
                     context.Succeed(requirement);
                 }

@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Web.Hpr
 {
+    /// <summary>
+    /// Handler for å sjekke HprNummer i HelseId. Slås på med UseHprNumber
+    /// </summary>
     public class HprAuthorizationHandler : AuthorizationHandler<HprAuthorizationRequirement>
     {
         private readonly IWhitelist whitelist;
@@ -26,7 +29,7 @@ namespace Fhi.HelseId.Web.Hpr
             Logger.LogTrace("HprAuthorizationHandler: Checking {Name} with {PidPs}", userlogName,currentUser.PidPseudonym());
             if (currentUser.HprNumber()==null && !whitelist.IsWhite(currentUser?.PidPseudonym() ?? ""))
             {
-                Logger.LogWarning("HprAuthorizationHandler: Failed");
+                Logger.LogWarning("HprAuthorizationHandler: Failed. No HprNumber");
                 context.Fail();
                
             } else
