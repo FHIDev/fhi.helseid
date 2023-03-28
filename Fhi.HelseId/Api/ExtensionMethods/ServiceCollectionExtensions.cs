@@ -69,14 +69,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             return true;
         }
 
-        [Obsolete("Use AddHelseIdAuthorizationControllers() instead", true)]
-        public static bool SetupHelseIdAuthorizationControllers(this IServiceCollection services,
-            IAutentiseringkonfigurasjon config)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static IServiceCollection AddHelseIdAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
+       public static IServiceCollection AddHelseIdAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
         {
             foreach (var api in apis)
             {

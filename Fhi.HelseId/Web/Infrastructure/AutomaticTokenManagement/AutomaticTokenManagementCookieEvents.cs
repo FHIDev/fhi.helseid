@@ -85,7 +85,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 
                         var newExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
                         context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
-
+                        _logger.LogTrace($"SignInAsync now as it expires at: {newExpiresAt}");
                         await context.HttpContext.SignInAsync(context.Principal, context.Properties);
                     }
                     finally

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Web.Middleware
 {
@@ -15,13 +16,15 @@ namespace Fhi.HelseId.Web.Middleware
     public class ProtectPaths
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ProtectPaths> logger;
         private readonly string _policyName;
         private readonly List<PathString> _excludedPaths;
         private readonly string _accessDeniedPath;
 
-        public ProtectPaths(RequestDelegate next, ProtectPathsOptions options)
+        public ProtectPaths(RequestDelegate next, ProtectPathsOptions options,ILogger<ProtectPaths> logger)
         {
             _next = next;
+            this.logger = logger;
             _policyName = options.Policy;
             _excludedPaths = options.Exclusions ?? new List<PathString>();
             _accessDeniedPath = options.AccessDeniedPath;
@@ -31,18 +34,22 @@ namespace Fhi.HelseId.Web.Middleware
             IAuthorizationService authorizationService)
         {
             var path = httpContext.Request.Path;
-            if (!_excludedPaths.Any(p => path.StartsWithSegments(p)))
+            logger.LogTrace($"ProtectedPaths: Checking path: {path}");
+            if (!_excludedPaths.Any(path.StartsWithSegments))
             {
                 if (!httpContext.User.Identity.IsAuthenticated)
                 {
+                    
                     var redirectUri = httpContext.Request.GetEncodedPathAndQuery();
                     await httpContext.ChallengeAsync(new AuthenticationProperties { RedirectUri = redirectUri });
+                    logger.LogTrace("ProtectedPaths:User is not authenticated, ChallengeAsync called");
                     return;
                 }
 
                 var authorizationResult = await authorizationService.AuthorizeAsync(httpContext.User, null, _policyName);
                 if (!authorizationResult.Succeeded)
                 {
+                    logger.LogTrace($"ProtectedPaths: Auth failed");
                     httpContext.Response.Redirect(_accessDeniedPath);
                     return;
                 }

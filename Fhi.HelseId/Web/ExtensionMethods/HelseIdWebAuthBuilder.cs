@@ -58,6 +58,7 @@ public class HelseIdWebAuthBuilder
     {
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
+            services.AddHttpContextAccessor();
             if (redirectSection != null)
                 services.Configure<RedirectPagesKonfigurasjon>(redirectSection);
             services.AddScoped<IGodkjenteHprKategoriListe, NoHprApprovals>();
@@ -84,6 +85,7 @@ public class HelseIdWebAuthBuilder
         
         var mvcBuilder = services.AddControllers(config =>
         {
+            //Unsure about this
             if (HelseIdWebKonfigurasjon.AuthUse)
             {
                 config.Filters.Add(authorizeFilter);
@@ -148,9 +150,12 @@ public class HelseIdWebAuthBuilder
         var excluded = overrideDefaults ? new List<PathString>() : new List<PathString>
         {
             "/favicon.ico",
+            RedirectPagesKonfigurasjon.Error,
             RedirectPagesKonfigurasjon.Forbidden,
             RedirectPagesKonfigurasjon.LoggedOut,
-            RedirectPagesKonfigurasjon.Statuscode
+            RedirectPagesKonfigurasjon.Statuscode,
+            "/Account/Login",
+            "/Account/Logout"
         };
         if (excludeList.Any())
             excluded.AddRange(excludeList);
@@ -172,7 +177,7 @@ public class HelseIdWebAuthBuilder
             .Combine(authenticatedPolicy)
             .AddRequirements(new SecurityLevelOrApiRequirement())
             .Build();
-
+        hidOrApiPolicy = authenticatedPolicy;
         if (HelseIdWebKonfigurasjon.UseHprNumber)
         {
             var hprNumberPolicyBuilder = new AuthorizationPolicyBuilder()
