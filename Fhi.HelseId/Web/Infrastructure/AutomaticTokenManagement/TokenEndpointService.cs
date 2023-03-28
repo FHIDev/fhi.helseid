@@ -36,13 +36,14 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         {
             var oidcOptions = await GetOidcOptionsAsync();
             var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
-            logger.LogTrace("TokenEndPoint: RefreshTokenAsync");
+            logger.LogTrace($"TokenEndPoint: RefreshTokenAsync. TokenEndpoint: {configuration.TokenEndpoint} ClientId: {oidcOptions.ClientId} ClientSecret: {oidcOptions.ClientSecret}");
             return await tokenClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
                 Address = configuration.TokenEndpoint,
 
                 ClientId = oidcOptions.ClientId,
-                ClientSecret = oidcOptions.ClientSecret,
+                //ClientAssertion = oidcOptions.ClientAsser
+                // ClientSecret = oidcOptions.ClientSecret,
                 RefreshToken = refreshToken
             });
         }

@@ -19,6 +19,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         private readonly AutomaticTokenManagementOptions _options;
         private readonly ILogger _logger;
         private readonly ISystemClock _clock;
+        private readonly IHelseIdWebKonfigurasjon config;
 
         private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests =
             new ConcurrentDictionary<string, bool>();
@@ -27,12 +28,13 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             TokenEndpointService service,
             IOptions<AutomaticTokenManagementOptions> options,
             ILogger<AutomaticTokenManagementCookieEvents> logger,
-            ISystemClock clock)
+            ISystemClock clock,IHelseIdWebKonfigurasjon config)
         {
              _service = service;
             _options = options.Value;
             _logger = logger;
             _clock = clock;
+            this.config = config;
         }
 
         public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
@@ -63,8 +65,9 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 
             var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
             var dtRefresh = dtExpires.Subtract(_options.RefreshBeforeExpiration);
-
-            if (dtRefresh < _clock.UtcNow)
+            _logger.LogTrace(
+                $"ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {_options.RefreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {_clock.UtcNow}");
+            if (config.UseApis && dtRefresh < _clock.UtcNow)
             {
                 var shouldRefresh = PendingRefreshTokenRequests.TryAdd(refreshToken.Value, true);
                 if (shouldRefresh)

@@ -145,7 +145,7 @@ public class HelseIdWebAuthBuilder
     public void UseHelseIdProtectedPaths(IApplicationBuilder app,
         IReadOnlyCollection<PathString> excludeList, bool overrideDefaults = false)
     {
-        if (!HelseIdWebKonfigurasjon.AuthUse)
+        if (!HelseIdWebKonfigurasjon.AuthUse || !HelseIdWebKonfigurasjon.UseProtectedPaths)
             return;
         var excluded = overrideDefaults ? new List<PathString>() : new List<PathString>
         {

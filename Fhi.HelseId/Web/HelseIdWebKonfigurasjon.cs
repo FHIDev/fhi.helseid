@@ -20,7 +20,9 @@ namespace Fhi.HelseId.Web
     {
 
         string[] SecurityLevels { get; }
-
+        bool UseProtectedPaths { get; set; }
+        RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; set; }
+        bool UseApis { get; set; }
     }
 
 
@@ -58,6 +60,12 @@ namespace Fhi.HelseId.Web
         public string HprPassword { get; set; } = "";
 
         public string HprUrl { get; set; } = "";
+
+        public bool UseProtectedPaths { get; set; } = false;
+
+        public bool UseApis { get; set; } = false;
+
+        public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; set; } = new();
 
         public int Validate()
         {
