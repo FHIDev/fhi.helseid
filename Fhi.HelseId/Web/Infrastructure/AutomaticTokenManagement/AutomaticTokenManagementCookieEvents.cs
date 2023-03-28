@@ -21,8 +21,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         private readonly ISystemClock _clock;
         private readonly IHelseIdWebKonfigurasjon config;
 
-        private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests =
-            new ConcurrentDictionary<string, bool>();
+        private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests = new();
 
         public AutomaticTokenManagementCookieEvents(
             TokenEndpointService service,

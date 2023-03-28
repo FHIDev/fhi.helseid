@@ -4,6 +4,7 @@ using IdentityModel;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -17,12 +18,14 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         private readonly IAuthenticationSchemeProvider schemeProvider;
         private readonly HttpClient tokenClient;
         private readonly ILogger<TokenEndpointService> logger;
+        private readonly AuthorizationCodeReceivedContext? authorizationCodeReceivedContext;
 
         public TokenEndpointService(
             IOptions<AutomaticTokenManagementOptions> managementOptions,
             IOptionsSnapshot<OpenIdConnectOptions> oidcOptions,
             IAuthenticationSchemeProvider schemeProvider,
             HttpClient tokenClient,
+            IHttpContextAccessor httpContextAccessor,
             ILogger<TokenEndpointService> logger)
         {
             this.managementOptions = managementOptions.Value;
@@ -30,6 +33,10 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             this.schemeProvider = schemeProvider;
             this.tokenClient = tokenClient;
             this.logger = logger;
+            authorizationCodeReceivedContext =
+                httpContextAccessor.HttpContext?.Items[
+                        "Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectMiddleware.AuthorizationCodeReceivedContext"]
+                    as AuthorizationCodeReceivedContext;
         }
 
         public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
@@ -37,13 +44,16 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             var oidcOptions = await GetOidcOptionsAsync();
             var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
             logger.LogTrace($"TokenEndPoint: RefreshTokenAsync. TokenEndpoint: {configuration.TokenEndpoint} ClientId: {oidcOptions.ClientId} ClientSecret: {oidcOptions.ClientSecret}");
+            var clientAssertion = authorizationCodeReceivedContext?.TokenEndpointRequest?.ClientAssertion;
+            if (clientAssertion == null)
+            {
+                logger.LogWarning("TokenEndPoint: RevokeTokenAsync. ClientAssertion is null");
+            }
             return await tokenClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
                 Address = configuration.TokenEndpoint,
-
                 ClientId = oidcOptions.ClientId,
-                //ClientAssertion = oidcOptions.ClientAsser
-                // ClientSecret = oidcOptions.ClientSecret,
+                ClientAssertion = new ClientAssertion { Value = clientAssertion, Type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer },
                 RefreshToken = refreshToken
             });
         }
@@ -53,11 +63,16 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             var oidcOptions = await GetOidcOptionsAsync();
             var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
             logger.LogTrace("TokenEndPoint: RevokeTokenAsync");
+            var clientAssertion = authorizationCodeReceivedContext?.TokenEndpointRequest?.ClientAssertion;
+            if (clientAssertion == null)
+            {
+                logger.LogWarning("TokenEndPoint: RevokeTokenAsync. ClientAssertion is null");
+            }
             return await tokenClient.RevokeTokenAsync(new TokenRevocationRequest
             {
                 Address = configuration.AdditionalData[OidcConstants.Discovery.RevocationEndpoint].ToString(),
                 ClientId = oidcOptions.ClientId,
-                ClientSecret = oidcOptions.ClientSecret,
+                ClientAssertion = new ClientAssertion{ Value=clientAssertion, Type= IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer},
                 Token = refreshToken,
                 TokenTypeHint = OidcConstants.TokenTypes.RefreshToken
             });
