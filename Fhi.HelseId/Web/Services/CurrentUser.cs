@@ -10,6 +10,9 @@ namespace Fhi.HelseId.Web.Services
         string? HprNummer { get; }
         string? PidPseudonym { get; }
         string? Pid { get; }
+        string? SecurityLevel { get; }
+        string? AssuranceLevel { get; }
+        string? Network { get; }
     }
 
     public class CurrentHttpUser: ICurrentUser
@@ -27,6 +30,10 @@ namespace Fhi.HelseId.Web.Services
 
         public string? PidPseudonym => httpContext.User.PidPseudonym();
         public string? Pid => httpContext.User.Pid();
+
+        public string? SecurityLevel => httpContext.User.SecurityLevel();
+        public string? AssuranceLevel => httpContext.User.AssuranceLevel();
+        public string? Network => httpContext.User.Network();
 
     }
 }

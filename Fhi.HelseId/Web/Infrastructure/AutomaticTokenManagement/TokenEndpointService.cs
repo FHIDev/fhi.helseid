@@ -34,9 +34,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             this.tokenClient = tokenClient;
             this.logger = logger;
             authorizationCodeReceivedContext =
-                httpContextAccessor.HttpContext?.Items[
-                        "Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectMiddleware.AuthorizationCodeReceivedContext"]
-                    as AuthorizationCodeReceivedContext;
+                httpContextAccessor.HttpContext?.Features.Get<AuthorizationCodeReceivedContext>();
         }
 
         public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)

@@ -9,7 +9,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Security.KeyVault.Secrets;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Web;
@@ -21,7 +20,10 @@ namespace Fhi.HelseId.Web.Services
         void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options);
     }
 
-    public class HelseIdJwkSecretHandler : IHelseIdSecretHandler
+    /// <summary>
+    /// Used when you have the Jwk in a file. The file should contain the Jwk as a string. The ClientSecret property should contain the file name
+    /// </summary>
+    public class HelseIdJwkFileSecretHandler : IHelseIdSecretHandler
     {
         public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
@@ -38,6 +40,30 @@ namespace Fhi.HelseId.Web.Services
         }
     }
 
+    /// <summary>
+    /// The ClientSecret property should contain the Jwk private key as a string
+    /// </summary>
+    public class HelseIdJwkSecretHandler : IHelseIdSecretHandler
+    {
+        public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
+        {
+            var jwkSecurityKey = new JsonWebKey(configAuth.ClientSecret);
+
+            options.Events.OnAuthorizationCodeReceived = ctx =>
+            {
+                ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
+                ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth, jwkSecurityKey);
+
+                return Task.CompletedTask;
+            };
+        }
+    }
+
+
+
+    /// <summary>
+    /// For Azure Key Vault Secret we expect ClientSecret in the format 'name of secret;uri to vault'. For example: 'MySecret;https://your-unique-key-vault-name.vault.azure.net/'
+    /// </summary>
     public class HelseIdJwkAzureKeyVaultSecretHandler : IHelseIdSecretHandler
     {
         public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
@@ -75,20 +101,6 @@ namespace Fhi.HelseId.Web.Services
 
                 return Task.CompletedTask;
             };
-        }
-
-        [Serializable]
-        public class InvalidAzureKeyVaultSettingsException : Exception
-        {
-            private const string StandardMessage = "For Azure Key Vaule Secret we expect ClientSecret in the format <name of secret>;<uri to vault>. For example: 'MySecret;https://<your-unique-key-vault-name>.vault.azure.net/'";
-
-            public InvalidAzureKeyVaultSettingsException() : base(StandardMessage)
-            {
-            }
-
-            protected InvalidAzureKeyVaultSettingsException(SerializationInfo info, StreamingContext context) : base(info, context)
-            {
-            }
         }
     }
 
@@ -167,6 +179,9 @@ namespace Fhi.HelseId.Web.Services
         }
     }
 
+    /// <summary>
+    /// For selvbetjening we expect ClientSecret to be a path to a file containing the full downloaded configuration file, including the private key in JWK format
+    /// </summary>
     public class HelseIdSelvbetjeningSecretHandler : IHelseIdSecretHandler
     {
         public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)

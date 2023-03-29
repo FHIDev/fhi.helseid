@@ -24,7 +24,7 @@ namespace Fhi.HelseId.Api.Services
             }
 
             public string? Id => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
-            public string? HprNummer => httpContext.User.Claims.FirstOrDefault(x => x.Type == HprClaims.HprNummer)?.Value;
+            public string? HprNummer => httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;
             public string? Name => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
             public string? Pid => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
             public string? PidPseudonym => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.PidPseudonym)?.Value;

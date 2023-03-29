@@ -30,7 +30,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         public static void DefaultHelseIdOptions(this OpenIdConnectOptions options, 
             IHelseIdWebKonfigurasjon configAuth, 
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon, 
-            IHelseIdSecretHandler? secretHandler = null)
+            IHelseIdSecretHandler secretHandler)
         {
             var acrValues = GetAcrValues(configAuth); // spesielt for id-porten, e.g. krever sikkerhetsnivå 4
             var hasAcrValues = !string.IsNullOrWhiteSpace(acrValues);
@@ -80,8 +80,6 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             };
 
             options.AccessDeniedPath = redirectPagesKonfigurasjon.Forbidden;
-
-            secretHandler ??= new HelseIdSharedSecretHandler();
 
             secretHandler.AddSecretConfiguration(configAuth, options);
 

@@ -28,9 +28,9 @@ public class HelseIdWebAuthBuilder
     private IConfiguration Configuration { get; }
     public IHelseIdWebKonfigurasjon HelseIdWebKonfigurasjon { get; }
     private readonly IConfigurationSection? helseIdKonfigurasjonSeksjon;
-    private readonly IConfigurationSection? redirectSection;
     public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; }
-
+    public IHelseIdSecretHandler SecretHandler { get; set; }
+    
     public HelseIdWebAuthBuilder(IConfiguration configuration, IServiceCollection services)
     {
         this.services = services;
@@ -39,9 +39,8 @@ public class HelseIdWebAuthBuilder
         if (helseIdKonfigurasjonSeksjon == null)
             throw new ConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         HelseIdWebKonfigurasjon = helseIdKonfigurasjonSeksjon.Get<HelseIdWebKonfigurasjon>();
-        redirectSection = Configuration.GetSection(nameof(RedirectPagesKonfigurasjon));
-        RedirectPagesKonfigurasjon = redirectSection?.Get<RedirectPagesKonfigurasjon>()??new RedirectPagesKonfigurasjon();
-        
+        RedirectPagesKonfigurasjon = HelseIdWebKonfigurasjon.RedirectPagesKonfigurasjon;
+        SecretHandler = new HelseIdSharedSecretHandler(); // Default
     }
 
     /// <summary>
@@ -59,8 +58,7 @@ public class HelseIdWebAuthBuilder
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
             services.AddHttpContextAccessor();
-            if (redirectSection != null)
-                services.Configure<RedirectPagesKonfigurasjon>(redirectSection);
+            
             services.AddScoped<IGodkjenteHprKategoriListe, NoHprApprovals>();
             if (HelseIdWebKonfigurasjon.UseHprPolicy)
                 services.AddSingleton<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
@@ -81,7 +79,7 @@ public class HelseIdWebAuthBuilder
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
-        (var authorizeFilter, string policyName) = AddAuthentication( secretHandler, configureAuthentication);
+        (var authorizeFilter, string policyName) = AddAuthentication( configureAuthentication);
         
         var mvcBuilder = services.AddControllers(config =>
         {
@@ -116,9 +114,7 @@ public class HelseIdWebAuthBuilder
     }
 
 
-    protected virtual (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(
-        IHelseIdSecretHandler? secretHandler = null,
-        ConfigureAuthentication? configureAuthentication = null)
+    protected virtual (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(ConfigureAuthentication? configureAuthentication = null)
     {
         const double tokenRefreshBeforeExpirationTime = 2;
         AddHelseIdAuthentication(services)
@@ -130,7 +126,7 @@ public class HelseIdWebAuthBuilder
             })
             .AddOpenIdConnect(HelseIdContext.Scheme, options =>
             {
-                options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon, secretHandler);
+                options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon, SecretHandler);
 
                 configureAuthentication?.ConfigureOpenIdConnect?.Invoke(options);
             })
@@ -141,29 +137,36 @@ public class HelseIdWebAuthBuilder
         return (new AuthorizeFilter(authPolicy), policyName);
     }
 
-
+    /// <summary>
+    /// Add this to the services section, used to trigger the authentication login process for files and endpoints that are otherwise not protected. Enable this by setting UseProtectedPaths. 
+    /// </summary>
+    /// <param name="app"></param>
+    /// <param name="excludeList"></param>
+    /// <param name="overrideDefaults"></param>
     public void UseHelseIdProtectedPaths(IApplicationBuilder app,
         IReadOnlyCollection<PathString> excludeList, bool overrideDefaults = false)
     {
-        if (!HelseIdWebKonfigurasjon.AuthUse || !HelseIdWebKonfigurasjon.UseProtectedPaths)
-            return;
-        var excluded = overrideDefaults ? new List<PathString>() : new List<PathString>
-        {
-            "/favicon.ico",
-            RedirectPagesKonfigurasjon.Error,
-            RedirectPagesKonfigurasjon.Forbidden,
-            RedirectPagesKonfigurasjon.LoggedOut,
-            RedirectPagesKonfigurasjon.Statuscode,
-            "/Account/Login",
-            "/Account/Logout"
-        };
+        if (!HelseIdWebKonfigurasjon.AuthUse || !HelseIdWebKonfigurasjon.UseProtectedPaths) return;
+        var excluded = overrideDefaults
+            ? new List<PathString>()
+            : new List<PathString>
+            {
+                "/favicon.ico",
+                RedirectPagesKonfigurasjon.Error,
+                RedirectPagesKonfigurasjon.Forbidden,
+                RedirectPagesKonfigurasjon.LoggedOut,
+                RedirectPagesKonfigurasjon.Statuscode,
+                "/Account/Login",
+                "/Account/Logout"
+            };
         if (excludeList.Any())
             excluded.AddRange(excludeList);
 
-        app.UseProtectPaths(new ProtectPathsOptions(DeterminePresidingPolicy(), RedirectPagesKonfigurasjon.Forbidden)
-        {
-            Exclusions = excluded
-        });
+        app.UseProtectPaths(
+            new ProtectPathsOptions(DeterminePresidingPolicy(), RedirectPagesKonfigurasjon.Forbidden)
+            {
+                Exclusions = excluded
+            });
     }
     
 
