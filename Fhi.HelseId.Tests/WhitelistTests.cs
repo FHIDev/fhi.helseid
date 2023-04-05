@@ -29,7 +29,6 @@ namespace Fhi.HelseId.Tests
                 Assert.That(whitelist.IsWhite(user!.PidPseudonym!));
                 Assert.That(whitelist.NameOf(user), Is.EqualTo("Arne"));
             });
-
         }
 
         [Test]
