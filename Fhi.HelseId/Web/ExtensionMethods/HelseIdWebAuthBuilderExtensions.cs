@@ -1,14 +1,18 @@
 ﻿using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Builder;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
 
 public static class HelseIdWebAuthBuilderExtensions
 {
+    public static HelseIdWebAuthBuilder AuthBuilder { get; private set; }
+
     public static HelseIdWebAuthBuilder AddHelseIdWebAuthentication(this WebApplicationBuilder builder)
     {
-        var authBuilder = new HelseIdWebAuthBuilder(builder.Configuration, builder.Services);
-        return authBuilder;
+        AuthBuilder = new HelseIdWebAuthBuilder(builder.Configuration, builder.Services);
+        return AuthBuilder;
     }
 
     /// <summary>
@@ -64,5 +68,6 @@ public static class HelseIdWebAuthBuilderExtensions
         return authBuilder;
     }
 
-
+    public static void UseHelseIdProtectedPaths(this IApplicationBuilder app) => AuthBuilder.UseHelseIdProtectedPaths(app);
+    public static void UseHelseIdProtectedPaths(this IApplicationBuilder app,IReadOnlyCollection<PathString> excludeList, bool overrideDefaults = false) => AuthBuilder.UseHelseIdProtectedPaths(app,excludeList,overrideDefaults);
 }

@@ -169,6 +169,8 @@ public class HelseIdWebAuthBuilder
             });
     }
 
+    public void UseHelseIdProtectedPaths(IApplicationBuilder app) => UseHelseIdProtectedPaths(app, new List<PathString>());
+
     /// <summary>
     /// Adds Authorization, replaces services.AddAuthorization()
     /// </summary>
