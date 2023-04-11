@@ -30,7 +30,7 @@ public class HelseIdWebAuthBuilder
     private readonly IConfigurationSection? helseIdKonfigurasjonSeksjon;
     public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; }
     public IHelseIdSecretHandler SecretHandler { get; set; }
-    
+
     public HelseIdWebAuthBuilder(IConfiguration configuration, IServiceCollection services)
     {
         this.services = services;
@@ -46,25 +46,22 @@ public class HelseIdWebAuthBuilder
     /// <summary>
     /// Add this to the services section
     /// </summary>
-    /// <param name="secretHandler">Default is ClientSecrets, add another if different, see wiki</param>
     /// <param name="configureMvc"></param>
     /// <param name="configureAuthentication"></param>
     /// <returns></returns>
-    public IMvcBuilder AddHelseIdWebAuthentication(
-        IHelseIdSecretHandler? secretHandler = null,
+    public IMvcBuilder? AddHelseIdWebAuthentication(
         Action<MvcOptions>? configureMvc = null,
         ConfigureAuthentication? configureAuthentication = null)
     {
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
             services.AddHttpContextAccessor();
-            
             services.AddScoped<IGodkjenteHprKategoriListe, NoHprApprovals>();
             if (HelseIdWebKonfigurasjon.UseHprPolicy)
                 services.AddSingleton<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
             else if (HelseIdWebKonfigurasjon.UseHprNumber)
                 services.AddSingleton<IAuthorizationHandler, HprAuthorizationHandler>();
-                              
+
             services.AddSingleton<IWhitelist>(HelseIdWebKonfigurasjon.Whitelist);
             services.AddSingleton<IAutentiseringkonfigurasjon>(HelseIdWebKonfigurasjon);
             services.AddSingleton(HelseIdWebKonfigurasjon);
@@ -73,15 +70,24 @@ public class HelseIdWebAuthBuilder
             services.AddScoped<IHprFactory, HprFactory>();
             services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
             services.AddScoped<ICurrentUser, CurrentHttpUser>();
-            
-            
-
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
-        (var authorizeFilter, string policyName) = AddAuthentication( configureAuthentication);
-        
-        var mvcBuilder = services.AddControllers(config =>
+        (var authorizeFilter, string policyName) = AddAuthentication(configureAuthentication);
+
+         AddControllers(configureMvc, authorizeFilter);
+
+        return MvcBuilder;
+    }
+
+    /// <summary>
+    /// This property is set by the AddControllers method
+    /// </summary>
+    public IMvcBuilder? MvcBuilder { get; private set; }
+
+    public HelseIdWebAuthBuilder AddControllers(Action<MvcOptions>? configureMvc, AuthorizeFilter authorizeFilter)
+    {
+        MvcBuilder = services.AddControllers(config =>
         {
             //Unsure about this
             if (HelseIdWebKonfigurasjon.AuthUse)
@@ -91,19 +97,13 @@ public class HelseIdWebAuthBuilder
 
             configureMvc?.Invoke(config);
         });
-
-        if (HelseIdWebKonfigurasjon.AuthUse)
-        {
-            if (HelseIdWebKonfigurasjon.UseHprNumber)
-                services.AddScoped<IAuthorizationHandler, HprAuthorizationHandler>();
-            if (HelseIdWebKonfigurasjon.UseHprPolicy)
-                services.AddScoped<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
-        }
-
-        return mvcBuilder;
+        return this;
     }
 
-    private  AuthenticationBuilder AddHelseIdAuthentication(IServiceCollection services)
+    /// <summary>
+    /// Add Authentication to the services section
+    /// </summary>
+    private AuthenticationBuilder AddHelseIdAuthentication()
     {
         var builder = services.AddAuthentication(options =>
         {
@@ -117,7 +117,7 @@ public class HelseIdWebAuthBuilder
     protected virtual (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(ConfigureAuthentication? configureAuthentication = null)
     {
         const double tokenRefreshBeforeExpirationTime = 2;
-        AddHelseIdAuthentication(services)
+        AddHelseIdAuthentication()
             .AddCookie(options =>
             {
                 options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon);
@@ -138,7 +138,7 @@ public class HelseIdWebAuthBuilder
     }
 
     /// <summary>
-    /// Add this to the services section, used to trigger the authentication login process for files and endpoints that are otherwise not protected. Enable this by setting UseProtectedPaths. 
+    /// Add this to the app section, used to trigger the authentication login process for files and endpoints that are otherwise not protected. Enable this by setting UseProtectedPaths. 
     /// </summary>
     /// <param name="app"></param>
     /// <param name="excludeList"></param>
@@ -168,9 +168,12 @@ public class HelseIdWebAuthBuilder
                 Exclusions = excluded
             });
     }
-    
 
-    public  (AuthorizationPolicy AuthPolicy, string PolicyName) AddHelseIdAuthorizationPolicy()
+    /// <summary>
+    /// Adds Authorization, replaces services.AddAuthorization()
+    /// </summary>
+    /// <returns></returns>
+    public (AuthorizationPolicy AuthPolicy, string PolicyName) AddHelseIdAuthorizationPolicy()
     {
         var authenticatedPolicy = new AuthorizationPolicyBuilder()
             .RequireAuthenticatedUser()

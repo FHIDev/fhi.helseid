@@ -61,7 +61,7 @@ namespace Fhi.HelseId.Web
 
         public string HprUrl { get; set; } = "";
 
-        public bool UseProtectedPaths { get; set; } = false;
+        public bool UseProtectedPaths { get; set; } = true;
 
         public bool UseApis { get; set; } = false;
 

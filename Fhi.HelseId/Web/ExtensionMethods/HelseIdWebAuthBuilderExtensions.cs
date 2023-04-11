@@ -56,10 +56,11 @@ public static class HelseIdWebAuthBuilderExtensions
 
     /// <summary>
     /// End a fluent series with this to create the authentication handlers. It returns the builder which can be further used later if needed, otherwise ignore the return.
+    /// This sets up authentication and authorization services, and adds the controllers. You still need to call app.UseAuthentication() and app.UseAuthorization() to enable the middleware.
     /// </summary>
     public static HelseIdWebAuthBuilder Build(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.AddHelseIdWebAuthentication(new HelseIdSharedSecretHandler());
+        authBuilder.AddHelseIdWebAuthentication();
         return authBuilder;
     }
 
