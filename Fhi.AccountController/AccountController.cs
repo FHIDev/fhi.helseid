@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-using System.Runtime.InteropServices;
-using Fhi.HelseId.Common.Identity;
+﻿using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -61,6 +59,11 @@ namespace Fhi.AuthControllers
                     RedirectUri = RedirectConfig.LoggedOut,
                 });
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            }
+            else
+            {
+                logger.LogTrace("Account: Not using authentication, just directing you");
+                HttpContext.Response.Redirect("/");
             }
         }
 

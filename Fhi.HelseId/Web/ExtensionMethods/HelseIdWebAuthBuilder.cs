@@ -75,7 +75,7 @@ public class HelseIdWebAuthBuilder
 
         (var authorizeFilter, string policyName) = AddAuthentication(configureAuthentication);
 
-         AddControllers(configureMvc, authorizeFilter);
+        AddControllers(configureMvc, authorizeFilter);
 
         return MvcBuilder;
     }
@@ -242,6 +242,50 @@ public class HelseIdWebAuthBuilder
             }
             .ToList()
             .First(p => p.PolicyActive).Policy;
+
+    /// <summary>
+    /// Use this to add the HelseId Api access token handling to the app.
+    /// </summary>
+    public HelseIdWebAuthBuilder AddOutgoingApiServices()
+    {
+        services.AddTransient<AuthHeaderHandler>();
+        return this;
+       
+    }
+
+    public HelseIdWebAuthBuilder WithHttpClients()
+    {
+        foreach (var api in HelseIdWebKonfigurasjon.Apis)
+        {
+            if (HelseIdWebKonfigurasjon.AuthUse && HelseIdWebKonfigurasjon.UseApis)
+                AddHelseIdApiServices(api);
+            else
+                AddHelseIdApiServicesNoAuth(api);
+        }
+        return this;
+    }
+
+
+    private IHttpClientBuilder AddHelseIdApiServices(IApiOutgoingKonfigurasjon api)
+    {
+        return services.AddUserAccessTokenHttpClient(api.Name, configureClient: client =>
+            {
+                client.BaseAddress = api.Uri;
+                client.Timeout = TimeSpan.FromMinutes(10);
+            })
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+    }
+
+    private IHttpClientBuilder AddHelseIdApiServicesNoAuth(IApiOutgoingKonfigurasjon api)
+    {
+        return services.AddHttpClient(api.Name, client =>
+        {
+            client.BaseAddress = api.Uri;
+            client.Timeout = TimeSpan.FromMinutes(10);
+        });
+    }
+
+
 }
 
 public class NoHprApprovals : GodkjenteHprKategoriListe

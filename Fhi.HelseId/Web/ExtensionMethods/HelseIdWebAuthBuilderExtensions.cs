@@ -70,4 +70,6 @@ public static class HelseIdWebAuthBuilderExtensions
 
     public static void UseHelseIdProtectedPaths(this IApplicationBuilder app) => AuthBuilder.UseHelseIdProtectedPaths(app);
     public static void UseHelseIdProtectedPaths(this IApplicationBuilder app,IReadOnlyCollection<PathString> excludeList, bool overrideDefaults = false) => AuthBuilder.UseHelseIdProtectedPaths(app,excludeList,overrideDefaults);
+    
+    
 }

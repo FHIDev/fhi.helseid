@@ -1,40 +1,57 @@
 ﻿using System;
 
-namespace Fhi.HelseId.Common
+namespace Fhi.HelseId.Common;
+
+/// <summary>
+/// Use this for an outgoing API configuration. Version 3 and 4
+/// </summary>
+public class HelseIdApiOutgoingKonfigurasjon : HelseIdCommonKonfigurasjon, IApiOutgoingKonfigurasjon
 {
-    [Obsolete("Use for now until replaced")]
-    public class HelseIdApiKonfigurasjonOutgoing : HelseIdCommonKonfigurasjon
-    {
-        public string Name { get; set; } = "";
-        public string ApiUrl { get; set; } = "";
-        public string Scope { get; set; } = "";
-        public string ProxyUrl { get; set; } = "";
-        public bool UseProxy { get; set; } = false;
-        public Uri ApiUri => BaseAddressUtil.ToUri(ApiUrl);
-        public Uri? ProxyUri => UseProxy ? new Uri(ProxyUrl) : null;
+    public string Name { get; set; } = "";
+    public string Url { get; set; } = "";
 
-        public string ClientId { get; set; } = "";
-        public string ClientSecret { get; set; } = "";
-    }
+    public string Scope { get; set; } = "";
+    public Uri Uri => new(Url);
+}
 
-    /// <summary>
-    /// Use this for an outgoing API configuration. 
-    /// </summary>
-    public class HelseIdApiOutgoingKonfigurasjon : HelseIdCommonKonfigurasjon
-    {
-        public string Name { get; set; } = "";
-        public string Url { get; set; } = "";
 
-        public string Scope { get; set; } = "";
-        public Uri Uri => new Uri(Url);
-    }
+/// <summary>
+/// This is the schema for the appsetting for outgoing APIs. Version 3 and 4
+/// </summary>
+public class HelseIdApiOutgoingKonfigurasjoner : IOutgoingApis
+{
+    public IApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<IApiOutgoingKonfigurasjon>();
+}
 
-    /// <summary>
-    /// This is the schema for the appsetting for outgoing APIs.
-    /// </summary>
-    public class HelseIdApiOutgoingKonfigurasjoner
-    {
-        public HelseIdApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<HelseIdApiOutgoingKonfigurasjon>();
-    }
+public interface IApiOutgoingKonfigurasjon
+{
+    string Name { get; set; }
+    string Url { get; set; }
+    string Scope { get; set; }
+    Uri Uri { get; }
+}
 
+/// <summary>
+/// This is the schema for the appsetting for outgoing APIs. Version 5
+/// </summary>
+public class ApiOutgoingKonfigurasjon : IApiOutgoingKonfigurasjon
+{
+    public string Name { get; set; } = "";
+    public string Url { get; set; } = "";
+
+    public string Scope { get; set; } = "";
+    public Uri Uri => new(Url);
+}
+
+public interface IOutgoingApis
+{
+    IApiOutgoingKonfigurasjon[] Apis { get; set; }
+}
+
+/// <summary>
+/// This is a list of Outgoing Apis.  Version 5
+/// </summary>
+public class OutgoingApis : IOutgoingApis
+{
+    public IApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<IApiOutgoingKonfigurasjon>();
 }
