@@ -1,6 +1,6 @@
 ﻿namespace Fhi.HelseId.Refit
 {
-    public class Class1
+    public static class Extensions
     {
 
     }
