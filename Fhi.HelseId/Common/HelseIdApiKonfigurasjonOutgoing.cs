@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Fhi.HelseId.Common;
 
@@ -54,4 +56,32 @@ public interface IOutgoingApis
 public class OutgoingApis : IOutgoingApis
 {
     public IApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<IApiOutgoingKonfigurasjon>();
+
+    public Uri UriToApiByName(string name)
+    {
+        var url = Apis.FirstOrDefault(o => o.Name == name)?.Url ?? throw new InvalidApiNameException(name); ;
+        return new Uri(url);
+    }
+}
+
+
+[Serializable]
+public class InvalidApiNameException : Exception
+{
+    //
+    // For guidelines regarding the creation of new exception types, see
+    //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
+    // and
+    //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
+    //
+
+    public InvalidApiNameException() { }
+    public InvalidApiNameException(string message) : base(message) { }
+    public InvalidApiNameException(string message, Exception inner) : base(message, inner) { }
+
+    protected InvalidApiNameException(
+        SerializationInfo info,
+        StreamingContext context) : base(info, context)
+    {
+    }
 }
