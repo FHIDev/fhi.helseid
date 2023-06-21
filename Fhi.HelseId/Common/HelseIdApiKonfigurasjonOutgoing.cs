@@ -13,6 +13,9 @@ public class HelseIdApiOutgoingKonfigurasjon : HelseIdCommonKonfigurasjon, IApiO
     public string Url { get; set; } = "";
 
     public string Scope { get; set; } = "";
+    
+    [System.Text.Json.Serialization.JsonIgnore]
+    [Newtonsoft.Json.JsonIgnore]
     public Uri Uri => new(Url);
 }
 
@@ -22,7 +25,7 @@ public class HelseIdApiOutgoingKonfigurasjon : HelseIdCommonKonfigurasjon, IApiO
 /// </summary>
 public class HelseIdApiOutgoingKonfigurasjoner : IOutgoingApis
 {
-    public IApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<IApiOutgoingKonfigurasjon>();
+    public ApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<ApiOutgoingKonfigurasjon>();
 }
 
 public interface IApiOutgoingKonfigurasjon
@@ -42,12 +45,15 @@ public class ApiOutgoingKonfigurasjon : IApiOutgoingKonfigurasjon
     public string Url { get; set; } = "";
 
     public string Scope { get; set; } = "";
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    [Newtonsoft.Json.JsonIgnore]
     public Uri Uri => new(Url);
 }
 
 public interface IOutgoingApis
 {
-    IApiOutgoingKonfigurasjon[] Apis { get; set; }
+    ApiOutgoingKonfigurasjon[] Apis { get; set; }
 }
 
 /// <summary>
@@ -55,7 +61,7 @@ public interface IOutgoingApis
 /// </summary>
 public class OutgoingApis : IOutgoingApis
 {
-    public IApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<IApiOutgoingKonfigurasjon>();
+    public ApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<ApiOutgoingKonfigurasjon>();
 
     public Uri UriToApiByName(string name)
     {
