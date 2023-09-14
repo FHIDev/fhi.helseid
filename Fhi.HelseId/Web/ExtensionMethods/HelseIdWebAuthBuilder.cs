@@ -257,7 +257,7 @@ public class HelseIdWebAuthBuilder
     {
         foreach (var api in HelseIdWebKonfigurasjon.Apis)
         {
-            if (HelseIdWebKonfigurasjon.AuthUse && HelseIdWebKonfigurasjon.UseApis)
+            if (HelseIdWebKonfigurasjon is { AuthUse: true, UseApis: true })
                 AddHelseIdApiServices(api);
             else
                 AddHelseIdApiServicesNoAuth(api);

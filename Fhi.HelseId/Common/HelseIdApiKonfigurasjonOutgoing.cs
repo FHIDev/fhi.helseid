@@ -25,7 +25,12 @@ public class HelseIdApiOutgoingKonfigurasjon : HelseIdCommonKonfigurasjon, IApiO
 /// </summary>
 public class HelseIdApiOutgoingKonfigurasjoner : IOutgoingApis
 {
-    public ApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<ApiOutgoingKonfigurasjon>();
+    public IApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<IApiOutgoingKonfigurasjon>();
+    public Uri UriToApiByName(string name)
+    {
+        var url = Apis.FirstOrDefault(o => o.Name == name)?.Url ?? throw new InvalidApiNameException(name); ;
+        return new Uri(url);
+    }
 }
 
 public interface IApiOutgoingKonfigurasjon
@@ -53,22 +58,19 @@ public class ApiOutgoingKonfigurasjon : IApiOutgoingKonfigurasjon
 
 public interface IOutgoingApis
 {
-    ApiOutgoingKonfigurasjon[] Apis { get; set; }
+    IApiOutgoingKonfigurasjon[] Apis { get; set; }
+    Uri UriToApiByName(string name);
 }
 
 /// <summary>
 /// This is a list of Outgoing Apis.  Version 5
 /// </summary>
-public class OutgoingApis : IOutgoingApis
-{
-    public ApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<ApiOutgoingKonfigurasjon>();
+//public class OutgoingApis : IOutgoingApis
+//{
+//    public IApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<IApiOutgoingKonfigurasjon>();
 
-    public Uri UriToApiByName(string name)
-    {
-        var url = Apis.FirstOrDefault(o => o.Name == name)?.Url ?? throw new InvalidApiNameException(name); ;
-        return new Uri(url);
-    }
-}
+    
+//}
 
 
 [Serializable]
