@@ -24,6 +24,8 @@ namespace Fhi.HelseId.Tests
                 Assert.That(sut.Whitelist, Is.Not.Null);
                 Assert.That(sut.Whitelist.Count, Is.EqualTo(0));
             });
+            Assert.That(sut.Apis, Is.Not.Null);
+            Assert.That(sut.Apis.Length, Is.EqualTo(2));
         }
     }
 

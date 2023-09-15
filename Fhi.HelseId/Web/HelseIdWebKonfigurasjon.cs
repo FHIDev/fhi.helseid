@@ -21,7 +21,7 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     string[] SecurityLevels { get; }
     bool UseProtectedPaths { get; set; }
     RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; set; }
-    IApiOutgoingKonfigurasjon[] Apis { get; set; }
+    ApiOutgoingKonfigurasjon[] Apis { get; set; }
     bool UseApis { get; set; }
 }
 
@@ -72,7 +72,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
         throw new NotImplementedException();
     }
 
-    public IApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<IApiOutgoingKonfigurasjon>();
+    public ApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<ApiOutgoingKonfigurasjon>();
 
     public Uri UriToApiByName(string name)
     {
