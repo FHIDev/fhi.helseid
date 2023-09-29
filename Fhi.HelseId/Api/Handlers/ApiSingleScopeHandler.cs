@@ -7,12 +7,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Api.Handlers
 {
-    public class ApiScopeHandler : AuthorizationHandler<SecurityLevelOrApiRequirement>
+    /// <summary>
+    /// This scope handler expects a single scope in the configuration, and should not be set if there are multiple scopes
+    /// </summary>
+    public class ApiSingleScopeHandler : AuthorizationHandler<SecurityLevelOrApiRequirement>
     {
         private readonly IHelseIdApiKonfigurasjon _configAuth;
-        private readonly ILogger<ApiScopeHandler> logger;
+        private readonly ILogger<ApiSingleScopeHandler> logger;
 
-        public ApiScopeHandler(IHelseIdApiKonfigurasjon configAuth, ILogger<ApiScopeHandler> logger)
+        public ApiSingleScopeHandler(IHelseIdApiKonfigurasjon configAuth, ILogger<ApiSingleScopeHandler> logger)
         {
             _configAuth = configAuth;
             this.logger = logger;
@@ -29,7 +32,7 @@ namespace Fhi.HelseId.Api.Handlers
             }
             else
             {
-                logger.LogError($"Fhi.HelseId.Api.Handlers.{nameof(ApiScopeHandler)}: Missing or invalid scope, access denied", scopeClaims);
+                logger.LogError($"Fhi.HelseId.Api.Handlers.{nameof(ApiSingleScopeHandler)}: Missing or invalid scope, access denied", scopeClaims);
             }
 
             return Task.CompletedTask;

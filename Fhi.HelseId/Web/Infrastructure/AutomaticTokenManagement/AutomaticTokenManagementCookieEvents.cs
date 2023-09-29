@@ -38,7 +38,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 
         public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
-            _logger.LogTrace("AutomaticTokenManagementCookieEvents: ValidatePrincipal");
+            _logger.LogTrace("{class}:{method} - Starting checking token and possible refresh", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
             await _options.CookieEvents.ValidatePrincipal(context);
 
             var tokens = context.Properties.GetTokens()?.ToList();
@@ -66,36 +66,48 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             var dtRefresh = dtExpires.Subtract(_options.RefreshBeforeExpiration);
             _logger.LogTrace(
                 $"ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {_options.RefreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {_clock.UtcNow}");
-            if (config.UseApis && dtRefresh < _clock.UtcNow)
+            if (config.UseApis)
             {
-                var shouldRefresh = PendingRefreshTokenRequests.TryAdd(refreshToken.Value, true);
-                if (shouldRefresh)
+                if (dtRefresh < _clock.UtcNow)
                 {
-                    try
+                    var shouldRefresh = PendingRefreshTokenRequests.TryAdd(refreshToken.Value, true);
+                    if (shouldRefresh)
                     {
-                        var response = await _service.RefreshTokenAsync(refreshToken.Value);
-
-                        if (response.IsError)
+                        try
                         {
-                            _logger.LogTrace("Error refreshing token: {error}", response.Error);
-                            context.RejectPrincipal();
-                            return;
+                            var response = await _service.RefreshTokenAsync(refreshToken.Value);
+
+                            if (response.IsError)
+                            {
+                                _logger.LogTrace("Error refreshing token: {error}", response.Error);
+                                context.RejectPrincipal();
+                                return;
+                            }
+
+                            context.Properties.UpdateTokenValue("access_token", response.AccessToken);
+                            context.Properties.UpdateTokenValue("refresh_token", response.RefreshToken);
+
+                            var newExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
+                            context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
+                            _logger.LogTrace($"SignInAsync now as it expires at: {newExpiresAt}");
+                            await context.HttpContext.SignInAsync(context.Principal, context.Properties);
                         }
-
-                        context.Properties.UpdateTokenValue("access_token", response.AccessToken);
-                        context.Properties.UpdateTokenValue("refresh_token", response.RefreshToken);
-
-                        var newExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
-                        context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
-                        _logger.LogTrace($"SignInAsync now as it expires at: {newExpiresAt}");
-                        await context.HttpContext.SignInAsync(context.Principal, context.Properties);
-                    }
-                    finally
-                    {
-                        PendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
+                        finally
+                        {
+                            PendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
+                        }
                     }
                 }
+                else
+                {
+                    _logger.LogTrace("{class}:{method} -: No need to refresh token yet.", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
+                }
             }
+            else
+            {
+                _logger.LogTrace("{class}:{method} - No Apis in configuration",nameof(AutomaticTokenManagementCookieEvents),nameof(ValidatePrincipal));
+            }
+
             _logger.LogTrace("AutomaticTokenManagementCookieEvents: ValidatePrincipal finished");
         }
 

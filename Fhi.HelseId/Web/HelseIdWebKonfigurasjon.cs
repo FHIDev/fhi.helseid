@@ -22,7 +22,7 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     bool UseProtectedPaths { get; set; }
     RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; set; }
     ApiOutgoingKonfigurasjon[] Apis { get; set; }
-    bool UseApis { get; set; }
+    bool UseApis { get; }
 }
 
 
@@ -63,7 +63,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
 
     public bool UseProtectedPaths { get; set; } = true;
 
-    public bool UseApis { get; set; } = false;
+    public bool UseApis => Apis.Any();
 
     public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; set; } = new();
 

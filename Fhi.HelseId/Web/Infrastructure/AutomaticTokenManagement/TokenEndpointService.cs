@@ -39,18 +39,18 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 
         public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
         {
-            var oidcOptions = await GetOidcOptionsAsync();
-            var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
-            logger.LogTrace($"TokenEndPoint: RefreshTokenAsync. TokenEndpoint: {configuration.TokenEndpoint} ClientId: {oidcOptions.ClientId} ClientSecret: {oidcOptions.ClientSecret}");
+            var oidcOptions2 = await GetOidcOptionsAsync();
+            var configuration = await oidcOptions2.ConfigurationManager.GetConfigurationAsync(default);
+            logger.LogTrace($"TokenEndPointService:RefreshTokenAsync. TokenEndpoint: {configuration.TokenEndpoint} ClientId: {oidcOptions2.ClientId} ClientSecret: {oidcOptions2.ClientSecret}");
             var clientAssertion = authorizationCodeReceivedContext?.TokenEndpointRequest?.ClientAssertion;
             if (clientAssertion == null)
             {
-                logger.LogWarning("TokenEndPoint: RevokeTokenAsync. ClientAssertion is null");
+                logger.LogWarning("{class}:{method} - ClientAssertion is null",nameof(TokenEndpointService),nameof(RefreshTokenAsync));
             }
             return await tokenClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
                 Address = configuration.TokenEndpoint,
-                ClientId = oidcOptions.ClientId,
+                ClientId = oidcOptions2.ClientId,
                 ClientAssertion = new ClientAssertion { Value = clientAssertion, Type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer },
                 RefreshToken = refreshToken
             });

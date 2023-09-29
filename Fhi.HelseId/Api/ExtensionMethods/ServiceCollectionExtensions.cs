@@ -20,6 +20,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
     {
         /// <summary>
         /// Use this for setting up ingoing api authentication (with an access token)
+        /// This extension enables multiple scopes defined in the configuration by one handler, and single scope by another
         /// </summary>
         public static void AddHelseIdApiAuthentication(this IServiceCollection services,
             IHelseIdApiKonfigurasjon config)
@@ -29,7 +30,10 @@ namespace Fhi.HelseId.Api.ExtensionMethods
 
             if (config.AuthUse)
             {
-                services.AddSingleton<IAuthorizationHandler, ApiScopeHandler>();
+                if (config.ApiScope.Contains(',')) // We know there are multiple scopes if a komma is present
+                    services.AddSingleton<IAuthorizationHandler, ApiMultiScopeHandler>();
+                else
+                    services.AddSingleton<IAuthorizationHandler, ApiSingleScopeHandler>();
                 services.AddScoped<ICurrentUser, CurrentHttpUser>();
                 services.AddScoped<IAccessTokenProvider, HttpContextAccessTokenProvider>();
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Fhi.HelseId.Web.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Common
 {
@@ -17,17 +18,24 @@ namespace Fhi.HelseId.Common
     public class AuthHeaderHandler : DelegatingHandler
     {
         private readonly IHttpContextAccessor contextAccessor;
-        public AuthHeaderHandler(IHttpContextAccessor contextAccessor)
+        private readonly ILogger<AuthHeaderHandler> logger;
+
+        public AuthHeaderHandler(IHttpContextAccessor contextAccessor,ILogger<AuthHeaderHandler> logger)
         {
             this.contextAccessor = contextAccessor;
+            this.logger = logger;
         }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var ctx = contextAccessor.HttpContext;
             if (ctx == null)
                 throw new NoContextException();
-            var token = ctx.GetUserAccessTokenAsync(cancellationToken: cancellationToken);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await token);
+            var token = await ctx.GetUserAccessTokenAsync(cancellationToken: cancellationToken);
+            if (token == null)
+            {
+                logger.LogError("No access token found in context. Make sure you have added the AddTokenManagement() to your Startup.cs");
+            }
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
     }
