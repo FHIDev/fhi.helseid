@@ -18,6 +18,7 @@ namespace Fhi.HelseId.Api.Handlers
         {
             _configAuth = configAuth;
             this.logger = logger;
+            logger.LogTrace("Fhi.HelseId.Api.Handlers.{class}: Enabled for {requirement}", nameof(ApiMultiScopeHandler), nameof(SecurityLevelOrApiRequirement));
         }
 
         protected override Task HandleRequirementAsync(
