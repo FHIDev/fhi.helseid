@@ -1,32 +1,36 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Http;
 
 namespace Fhi.HelseId.Api.Services
 {
-        public interface ICurrentUser
+    public interface ICurrentUser
+    {
+        string? Id { get; }
+        string? HprNummer { get; }
+        string? Name { get; }
+        string? Pid { get; }
+        public string? PidPseudonym { get; }
+        public IEnumerable<string> Scopes { get; }
+    }
+
+    public class CurrentHttpUser : ICurrentUser
+    {
+        private readonly HttpContext httpContext;
+
+        public CurrentHttpUser(IHttpContextAccessor httpContextAccessor)
         {
-            string? Id { get; }
-            string? HprNummer { get; }
-            string? Name { get; }
-            string? Pid { get; }
-            public string? PidPseudonym { get; }
+            httpContext = httpContextAccessor.HttpContext!;
         }
 
-        public class CurrentHttpUser : ICurrentUser
-        {
-            private readonly HttpContext httpContext;
+        public string? Id => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
+        public string? HprNummer => httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;
+        public string? Name => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
+        public string? Pid => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
+        public string? PidPseudonym => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.PidPseudonym)?.Value;
+        public IEnumerable<string> Scopes => httpContext.User.FindAll("scope").Select(o => o.Value);
 
-            public CurrentHttpUser(IHttpContextAccessor httpContextAccessor)
-            {
-                httpContext = httpContextAccessor.HttpContext;
-
-            }
-
-            public string? Id => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
-            public string? HprNummer => httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;
-            public string? Name => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
-            public string? Pid => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
-            public string? PidPseudonym => httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.PidPseudonym)?.Value;
     }
 }

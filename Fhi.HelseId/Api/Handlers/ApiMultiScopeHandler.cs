@@ -52,7 +52,7 @@ namespace Fhi.HelseId.Api.Handlers
             }
             else
             {
-                logger.LogError($"Fhi.HelseId.Api.Handlers.{nameof(ApiMultiScopeHandler)}: Missing or invalid scope, access denied", scopeClaims);
+                logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiMultiScopeHandler}: Missing or invalid scope {scopeClaims}, access denied", nameof(ApiMultiScopeHandler),string.Join(',',scopeClaims));
             }
 
             return Task.CompletedTask;

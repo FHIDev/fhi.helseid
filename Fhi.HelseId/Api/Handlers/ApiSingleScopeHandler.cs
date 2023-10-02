@@ -25,7 +25,7 @@ namespace Fhi.HelseId.Api.Handlers
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context, SecurityLevelOrApiRequirement requirement)
         {
-            var scopeClaims = context.User.FindAll("scope");
+            var scopeClaims = context.User.FindAll("scope").ToList();
 
             if (scopeClaims.Any(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Value, _configAuth.ApiScope)))
             {
@@ -33,7 +33,7 @@ namespace Fhi.HelseId.Api.Handlers
             }
             else
             {
-                logger.LogError($"Fhi.HelseId.Api.Handlers.{nameof(ApiSingleScopeHandler)}: Missing or invalid scope, access denied", scopeClaims);
+                logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiMultiScopeHandler}: Missing or invalid scope {scopeClaims}, access denied", nameof(ApiMultiScopeHandler), string.Join(',', scopeClaims));
             }
 
             return Task.CompletedTask;
