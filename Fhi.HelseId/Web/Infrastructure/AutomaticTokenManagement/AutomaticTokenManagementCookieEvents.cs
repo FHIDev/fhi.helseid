@@ -63,14 +63,15 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             }
 
             var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
-            var dtRefresh = dtExpires.Subtract(_options.RefreshBeforeExpiration);
+            var dtRefresh = dtExpires.Subtract(_options.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
             _logger.LogTrace(
-                $"ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {_options.RefreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {_clock.UtcNow}");
+                $"ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {_options.RefreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {_clock.UtcNow}, refresh_token: {refreshToken.Value}");
             if (config.UseApis)
             {
                 if (dtRefresh < _clock.UtcNow)
                 {
                     var shouldRefresh = PendingRefreshTokenRequests.TryAdd(refreshToken.Value, true);
+                    _logger.LogTrace("{class}:{method} - Should refresh: {shouldRefresh}, No Of tokens in PendingRefreshTokenRequests {count} ", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),shouldRefresh,PendingRefreshTokenRequests.Count);
                     if (shouldRefresh)
                     {
                         try
@@ -79,23 +80,28 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 
                             if (response.IsError)
                             {
-                                _logger.LogTrace("Error refreshing token: {error}", response.Error);
+                                _logger.LogTrace("Error refreshing token: {error}, {errordesc}\n{json}", response.Error, response.ErrorDescription, response.Json);
                                 context.RejectPrincipal();
                                 return;
                             }
 
                             context.Properties.UpdateTokenValue("access_token", response.AccessToken);
                             context.Properties.UpdateTokenValue("refresh_token", response.RefreshToken);
-
+                            _logger.LogTrace("{class}.{method} - Refresh tokens: Current {current}, New {new}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),refreshToken.Value,response.RefreshToken);
                             var newExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
                             context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
                             _logger.LogTrace($"SignInAsync now as it expires at: {newExpiresAt}");
-                            await context.HttpContext.SignInAsync(context.Principal, context.Properties);
+                            context.ShouldRenew = true;
+                           // await context.HttpContext.SignInAsync(context.Principal, context.Properties);
                         }
                         finally
                         {
                             PendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
                         }
+                    }
+                    else
+                    {
+                        _logger.LogTrace("{class}:{method} -: Refresh token already requested, value {refreshtoken}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),refreshToken.Value);
                     }
                 }
                 else
@@ -108,7 +114,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                 _logger.LogTrace("{class}:{method} - No Apis in configuration",nameof(AutomaticTokenManagementCookieEvents),nameof(ValidatePrincipal));
             }
 
-            _logger.LogTrace("AutomaticTokenManagementCookieEvents: ValidatePrincipal finished");
+            _logger.LogTrace("{class}:{method} finished", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
         }
 
         public override async Task SigningOut(CookieSigningOutContext context)

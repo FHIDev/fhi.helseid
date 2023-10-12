@@ -30,13 +30,24 @@ namespace Fhi.HelseId.Common
             var ctx = contextAccessor.HttpContext;
             if (ctx == null)
                 throw new NoContextException();
+            logger.LogTrace("{class}.{method} - Starting", nameof(AuthHeaderHandler), nameof(SendAsync));
             var token = await ctx.GetUserAccessTokenAsync(cancellationToken: cancellationToken);
             if (token == null)
             {
-                logger.LogError("No access token found in context. Make sure you have added the AddTokenManagement() to your Startup.cs");
+                logger.LogError("{class}.{method} No access token found in context. Make sure you have added the AddTokenManagement() to your Startup.cs", nameof(AuthHeaderHandler), nameof(SendAsync));
+            }
+            else
+            {
+               logger.LogTrace("{class}.{method} - Found access token in context (hash:{hash})", nameof(AuthHeaderHandler), nameof(SendAsync),token.GetHashCode());
             }
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogError("{class}.{method} Request to {url} failed with status code {statusCode}", nameof(AuthHeaderHandler), nameof(SendAsync),request.RequestUri, response.StatusCode);
+            }
+
+            return response;
         }
     }
 

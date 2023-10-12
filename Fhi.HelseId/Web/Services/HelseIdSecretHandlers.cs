@@ -38,6 +38,7 @@ namespace Fhi.HelseId.Web.Services
                 return Task.CompletedTask;
             };
         }
+
     }
 
     /// <summary>
@@ -45,10 +46,14 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkSecretHandler : IHelseIdSecretHandler
     {
+        private JsonWebKey jwkSecurityKey;
+        private IHelseIdWebKonfigurasjon configAuth;
+
+
         public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            var jwkSecurityKey = new JsonWebKey(configAuth.ClientSecret);
-
+            jwkSecurityKey = new JsonWebKey(configAuth.ClientSecret);
+            this.configAuth = configAuth;
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
                 ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
@@ -57,6 +62,8 @@ namespace Fhi.HelseId.Web.Services
                 return Task.CompletedTask;
             };
         }
+
+        public string GenerateClientAssertion => ClientAssertion.Generate(configAuth, jwkSecurityKey);
     }
 
 
