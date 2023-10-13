@@ -23,6 +23,14 @@ namespace Fhi.HelseId.Web.Infrastructure
                 throw new NoTokenException("Missing identity token");
             return ret;
         }
+
+        public static async Task<string> RefreshToken(this HttpContext ctx)
+        {
+            var ret = await ctx.GetTokenAsync("refresh_token");
+            if (ret == null)
+                throw new NoTokenException("Missing refresh token");
+            return ret;
+        }
     }
 
     [Serializable]

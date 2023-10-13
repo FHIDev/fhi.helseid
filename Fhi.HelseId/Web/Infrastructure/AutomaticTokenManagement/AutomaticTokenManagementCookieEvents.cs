@@ -20,6 +20,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         private readonly ILogger _logger;
         private readonly ISystemClock _clock;
         private readonly IHelseIdWebKonfigurasjon config;
+        private readonly IRefreshTokenReporter refreshTokenReporter;
 
         private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests = new();
 
@@ -27,13 +28,15 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             TokenEndpointService service,
             IOptions<AutomaticTokenManagementOptions> options,
             ILogger<AutomaticTokenManagementCookieEvents> logger,
-            ISystemClock clock,IHelseIdWebKonfigurasjon config)
+            ISystemClock clock,IHelseIdWebKonfigurasjon config,
+            IRefreshTokenReporter refreshTokenReporter)
         {
              _service = service;
             _options = options.Value;
             _logger = logger;
             _clock = clock;
             this.config = config;
+            this.refreshTokenReporter = refreshTokenReporter;
         }
 
         public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
@@ -61,7 +64,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                 _logger.LogTrace("No expires_at value found in cookie properties.");
                 return;
             }
-
+            refreshTokenReporter.AddIfNotExist(refreshToken.Value, "", "", "ValidatePrincipal");
             var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
             var dtRefresh = dtExpires.Subtract(_options.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
             _logger.LogTrace(
@@ -81,10 +84,11 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                             if (response.IsError)
                             {
                                 _logger.LogTrace("Error refreshing token: {error}, {errordesc}\n{json}", response.Error, response.ErrorDescription, response.Json);
+                                refreshTokenReporter.Dump();
                                 context.RejectPrincipal();
                                 return;
                             }
-
+                            refreshTokenReporter.Add(refreshToken.Value,response.RefreshToken,response.AccessToken, "ValidatePrincipal-l.91");
                             context.Properties.UpdateTokenValue("access_token", response.AccessToken);
                             context.Properties.UpdateTokenValue("refresh_token", response.RefreshToken);
                             _logger.LogTrace("{class}.{method} - Refresh tokens: Current {current}, New {new}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),refreshToken.Value,response.RefreshToken);
@@ -92,7 +96,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                             context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
                             _logger.LogTrace($"SignInAsync now as it expires at: {newExpiresAt}");
                             context.ShouldRenew = true;
-                           // await context.HttpContext.SignInAsync(context.Principal, context.Properties);
+                            await context.HttpContext.SignInAsync(context.Principal, context.Properties);
                         }
                         finally
                         {
@@ -119,7 +123,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 
         public override async Task SigningOut(CookieSigningOutContext context)
         {
-            _logger.LogTrace("AutomaticTokenManagementCookieEvents: SigningOut");
+            _logger.LogTrace("{class}:{method}: SigningOut", nameof(AutomaticTokenManagementCookieEvents), nameof(SigningOut));
             await _options.CookieEvents.SigningOut(context);
 
             if (_options.RevokeRefreshTokenOnSignout == false) return;
@@ -177,11 +181,13 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 
         public override Task SignedIn(CookieSignedInContext context)
         {
+            _logger.LogTrace("{class}:{method}", nameof(AutomaticTokenManagementCookieEvents), nameof(SignedIn));
             return _options.CookieEvents.SignedIn(context);
         }
 
         public override Task SigningIn(CookieSigningInContext context)
         {
+            _logger.LogTrace("{class}:{method}", nameof(AutomaticTokenManagementCookieEvents), nameof(SigningIn));
             return _options.CookieEvents.SigningIn(context);
         }
     }
