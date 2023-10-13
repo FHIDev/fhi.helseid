@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Fhi.HelseId.Web.Infrastructure;
+using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -19,11 +20,13 @@ namespace Fhi.HelseId.Common
     {
         private readonly IHttpContextAccessor contextAccessor;
         private readonly ILogger<AuthHeaderHandler> logger;
+        private readonly IRefreshTokenStore refreshTokenStore;
 
-        public AuthHeaderHandler(IHttpContextAccessor contextAccessor,ILogger<AuthHeaderHandler> logger)
+        public AuthHeaderHandler(IHttpContextAccessor contextAccessor,ILogger<AuthHeaderHandler> logger, IRefreshTokenStore refreshTokenStore)
         {
             this.contextAccessor = contextAccessor;
             this.logger = logger;
+            this.refreshTokenStore = refreshTokenStore;
         }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -32,6 +35,8 @@ namespace Fhi.HelseId.Common
                 throw new NoContextException();
             logger.LogTrace("{class}.{method} - Starting", nameof(AuthHeaderHandler), nameof(SendAsync));
             var token = await ctx.GetUserAccessTokenAsync(cancellationToken: cancellationToken);
+            if (refreshTokenStore.GetLatestToken!=null && !string.IsNullOrEmpty(refreshTokenStore.GetLatestToken.AccessToken) && refreshTokenStore.GetLatestToken.AccessToken != token)
+                token = refreshTokenStore.GetLatestToken.AccessToken;
             if (token == null)
             {
                 logger.LogError("{class}.{method} No access token found in context. Make sure you have added the AddTokenManagement() to your Startup.cs", nameof(AuthHeaderHandler), nameof(SendAsync));

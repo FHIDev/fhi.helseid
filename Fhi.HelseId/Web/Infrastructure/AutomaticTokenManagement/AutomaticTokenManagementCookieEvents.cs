@@ -20,7 +20,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         private readonly ILogger _logger;
         private readonly ISystemClock _clock;
         private readonly IHelseIdWebKonfigurasjon config;
-        private readonly IRefreshTokenReporter refreshTokenReporter;
+        private readonly IRefreshTokenStore refreshTokenStore;
 
         private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests = new();
 
@@ -29,14 +29,14 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             IOptions<AutomaticTokenManagementOptions> options,
             ILogger<AutomaticTokenManagementCookieEvents> logger,
             ISystemClock clock,IHelseIdWebKonfigurasjon config,
-            IRefreshTokenReporter refreshTokenReporter)
+            IRefreshTokenStore refreshTokenStore)
         {
              _service = service;
             _options = options.Value;
             _logger = logger;
             _clock = clock;
             this.config = config;
-            this.refreshTokenReporter = refreshTokenReporter;
+            this.refreshTokenStore = refreshTokenStore;
         }
 
         public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
@@ -64,34 +64,49 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                 _logger.LogTrace("No expires_at value found in cookie properties.");
                 return;
             }
-            refreshTokenReporter.AddIfNotExist(refreshToken.Value, "", "", "ValidatePrincipal");
             var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
+            refreshTokenStore.AddIfNotExist(refreshToken.Value, "", dtExpires, "", "ValidatePrincipal");
+            var rfValue = refreshToken.Value;
+            if (!refreshTokenStore.IsLatest(rfValue))
+            {
+                var latesttoken = refreshTokenStore.GetLatestToken;
+                rfValue = latesttoken.CurrentToken;
+                dtExpires = latesttoken.ExpireAt;
+                _logger.LogTrace("{class}:{method} - Using latest token {token} expires at {expires}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),rfValue,dtExpires);
+            }
+            else
+            {
+                _logger.LogTrace("{class}:{method} - Using current token {token} expires at {expires}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),rfValue,dtExpires);
+            }
+            
             var dtRefresh = dtExpires.Subtract(_options.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
             _logger.LogTrace(
-                $"ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {_options.RefreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {_clock.UtcNow}, refresh_token: {refreshToken.Value}");
+                $"ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {_options.RefreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {_clock.UtcNow}, refresh_token: {refreshToken.Value}, NoOfTokensInStore {refreshTokenStore.RefreshTokens.Count}");
             if (config.UseApis)
             {
                 if (dtRefresh < _clock.UtcNow)
                 {
-                    var shouldRefresh = PendingRefreshTokenRequests.TryAdd(refreshToken.Value, true);
+                    var shouldRefresh = PendingRefreshTokenRequests.TryAdd(rfValue, true);
                     _logger.LogTrace("{class}:{method} - Should refresh: {shouldRefresh}, No Of tokens in PendingRefreshTokenRequests {count} ", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),shouldRefresh,PendingRefreshTokenRequests.Count);
                     if (shouldRefresh)
                     {
                         try
                         {
-                            var response = await _service.RefreshTokenAsync(refreshToken.Value);
+
+                            var response = await _service.RefreshTokenAsync(rfValue);
 
                             if (response.IsError)
                             {
                                 _logger.LogTrace("Error refreshing token: {error}, {errordesc}\n{json}", response.Error, response.ErrorDescription, response.Json);
-                                refreshTokenReporter.Dump();
+                                refreshTokenStore.Dump();
                                 context.RejectPrincipal();
                                 return;
                             }
-                            refreshTokenReporter.Add(refreshToken.Value,response.RefreshToken,response.AccessToken, "ValidatePrincipal-l.91");
+                            var dtExpiresNew = DateTimeOffset.Now.AddSeconds(response.ExpiresIn);
+                            refreshTokenStore.Add(rfValue, response.RefreshToken, dtExpiresNew, response.AccessToken, "ValidatePrincipal-l.91");
                             context.Properties.UpdateTokenValue("access_token", response.AccessToken);
                             context.Properties.UpdateTokenValue("refresh_token", response.RefreshToken);
-                            _logger.LogTrace("{class}.{method} - Refresh tokens: Current {current}, New {new}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),refreshToken.Value,response.RefreshToken);
+                            _logger.LogTrace("{class}.{method} - Refresh tokens: Current {current}, New {new}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), rfValue, response.RefreshToken);
                             var newExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
                             context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
                             _logger.LogTrace($"SignInAsync now as it expires at: {newExpiresAt}");
@@ -100,7 +115,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                         }
                         finally
                         {
-                            PendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
+                            PendingRefreshTokenRequests.TryRemove(rfValue, out _);
                         }
                     }
                     else

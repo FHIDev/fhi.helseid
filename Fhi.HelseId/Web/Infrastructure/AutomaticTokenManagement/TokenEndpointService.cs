@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
@@ -58,7 +59,8 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                 ClientCredentialStyle = ClientCredentialStyle.PostBody,
             });
             var response = await tokenClient.RequestRefreshTokenAsync(refreshToken);
-            //response.HttpResponse.EnsureSuccessStatusCode();
+            var tokenResponseJson = JsonConvert.SerializeObject(response);
+            logger.LogTrace("{class}.{method} : refreshtoken: {json}", nameof(TokenEndpointService), nameof(RefreshTokenAsync), tokenResponseJson);
             if (response.IsError)
             {
                 logger.LogError($"TokenEndPointService:RefreshTokenAsync. Error: {response.Error} ErrorDescription: {response.ErrorDescription}");
