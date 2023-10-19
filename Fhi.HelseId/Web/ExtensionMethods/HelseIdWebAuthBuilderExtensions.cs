@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
 
@@ -9,9 +11,21 @@ public static class HelseIdWebAuthBuilderExtensions
 {
     public static HelseIdWebAuthBuilder AuthBuilder { get; private set; }
 
+    /// <summary>
+    /// Use this when working with Minimal app
+    /// </summary>
     public static HelseIdWebAuthBuilder AddHelseIdWebAuthentication(this WebApplicationBuilder builder)
     {
         AuthBuilder = new HelseIdWebAuthBuilder(builder.Configuration, builder.Services);
+        return AuthBuilder;
+    }
+
+    /// <summary>
+    /// Use this when working with legacy non-minimal app
+    /// </summary>
+    public static HelseIdWebAuthBuilder AddHelseIdWebAuthentication(this IServiceCollection services,IConfiguration config)
+    {
+        AuthBuilder = new HelseIdWebAuthBuilder(config, services);
         return AuthBuilder;
     }
 
