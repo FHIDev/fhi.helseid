@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.AuthControllers</id>
-    <Version>1.0.0-beta.5</Version>
+    <Version>1.0.0-beta.6</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
@@ -25,7 +25,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fhi.HelseId" Version="5.0.0-beta.3" />
+    <PackageReference Include="Fhi.HelseId" Version="5.0.0-beta.41" />
   </ItemGroup>
 
   <ItemGroup>
