@@ -71,6 +71,8 @@ public class HelseIdWebAuthBuilder
             services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
             services.AddScoped<ICurrentUser, CurrentHttpUser>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddSingleton<IRefreshTokenStore, RefreshTokenStore>();
+            services.AddSingleton(SecretHandler);
         }
 
         (var authorizeFilter, string policyName) = AddAuthentication(configureAuthentication);
