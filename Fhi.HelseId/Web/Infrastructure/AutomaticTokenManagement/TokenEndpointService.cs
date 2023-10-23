@@ -21,7 +21,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         private readonly HttpClient httpClient;
         private readonly ILogger<TokenEndpointService> logger;
         private readonly AuthorizationCodeReceivedContext? authorizationCodeReceivedContext;
-        private readonly HelseIdJwkSecretHandler? secretHandler;
+        private readonly IHelseIdSecretHandler? secretHandler;
 
         public TokenEndpointService(
             IOptions<AutomaticTokenManagementOptions> managementOptions,
@@ -32,7 +32,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             ILogger<TokenEndpointService> logger,
             IHelseIdSecretHandler secretHandler)
         {
-            this.secretHandler = secretHandler as HelseIdJwkSecretHandler;
+            this.secretHandler = secretHandler ; //as HelseIdJwkSecretHandler;
             this.managementOptions = managementOptions.Value;
             this.oidcOptions = oidcOptions;
             this.schemeProvider = schemeProvider;
@@ -46,7 +46,6 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         {
             var oidcOptions2 = await GetOidcOptionsAsync();
             var configuration = await oidcOptions2.ConfigurationManager.GetConfigurationAsync(default);
-            //var clientAssertion = authorizationCodeReceivedContext?.TokenEndpointRequest?.ClientAssertion;
             var clientAssertion = secretHandler?.GenerateClientAssertion;
             logger.LogTrace(
                 $"TokenEndPointService:RefreshTokenAsync. TokenEndpointAddress: {configuration.TokenEndpoint} ClientId: {oidcOptions2.ClientId} ClientAssertion: {clientAssertion}");
