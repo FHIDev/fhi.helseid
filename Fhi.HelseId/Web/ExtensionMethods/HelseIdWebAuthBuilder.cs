@@ -53,9 +53,9 @@ public class HelseIdWebAuthBuilder
         Action<MvcOptions>? configureMvc = null,
         ConfigureAuthentication? configureAuthentication = null)
     {
+        services.AddHttpContextAccessor();
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
-            services.AddHttpContextAccessor();
             services.AddScoped<IGodkjenteHprKategoriListe, NoHprApprovals>();
             if (HelseIdWebKonfigurasjon.UseHprPolicy)
                 services.AddSingleton<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();

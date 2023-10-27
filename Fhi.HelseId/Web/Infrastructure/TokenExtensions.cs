@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
+using Azure;
 
 namespace Fhi.HelseId.Web.Infrastructure
 {
@@ -11,27 +12,26 @@ namespace Fhi.HelseId.Web.Infrastructure
         public static async  Task<string> AccessToken(this HttpContext ctx)
         {
             var ret =  await ctx.GetTokenAsync("access_token");
-            if (ret == null)
-                throw new NoTokenException("Missing access token");
-            return ret;
+            return ret ?? throw new NoTokenException("Missing access token");
         }
 
         public static async Task<string> IdentityToken(this HttpContext ctx)
         {
             var ret =  await ctx.GetTokenAsync("id_token");
-            if (ret == null)
-                throw new NoTokenException("Missing identity token");
-            return ret;
+            return ret ?? throw new NoTokenException("Missing identity token");
         }
 
         public static async Task<string> RefreshToken(this HttpContext ctx)
         {
             var ret = await ctx.GetTokenAsync("refresh_token");
-            if (ret == null)
-                throw new NoTokenException("Missing refresh token");
-            return ret;
+            return ret ?? throw new NoTokenException("Missing refresh token");
         }
+
+        
     }
+
+
+
 
     [Serializable]
     public class NoTokenException : Exception

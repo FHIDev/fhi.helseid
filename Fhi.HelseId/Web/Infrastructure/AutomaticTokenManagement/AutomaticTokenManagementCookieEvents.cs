@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Fhi.HelseId.Api.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         private readonly ISystemClock _clock;
         private readonly IHelseIdWebKonfigurasjon config;
         private readonly IRefreshTokenStore refreshTokenStore;
+        private readonly ICurrentUser user;
 
         private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests = new();
 
@@ -29,7 +31,8 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             IOptions<AutomaticTokenManagementOptions> options,
             ILogger<AutomaticTokenManagementCookieEvents> logger,
             ISystemClock clock,IHelseIdWebKonfigurasjon config,
-            IRefreshTokenStore refreshTokenStore)
+            IRefreshTokenStore refreshTokenStore,
+            ICurrentUser user)
         {
              _service = service;
             _options = options.Value;
@@ -37,6 +40,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             _clock = clock;
             this.config = config;
             this.refreshTokenStore = refreshTokenStore;
+            this.user = user;
         }
 
         public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
@@ -47,32 +51,33 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             var tokens = context.Properties.GetTokens()?.ToList();
             if (tokens == null || !tokens.Any())
             {
-                _logger.LogTrace("No tokens found in cookie properties. SaveTokens must be enabled for automatic token refresh.");
+                _logger.LogError("{class}:{method} -No tokens found in cookie properties. SaveTokens must be enabled for automatic token refresh.", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
                 return;
             }
 
             var refreshToken = tokens.SingleOrDefault(t => t.Name == OpenIdConnectParameterNames.RefreshToken);
             if (refreshToken == null)
             {
-                _logger.LogTrace("No refresh token found in cookie properties. A refresh token must be requested and SaveTokens must be enabled.");
+                _logger.LogError("{class}:{method} -No refresh token found in cookie properties. A refresh token must be requested and SaveTokens must be enabled.", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
                 return;
             }
 
             var expiresAt = tokens.SingleOrDefault(t => t.Name == "expires_at");
             if (expiresAt == null)
             {
-                _logger.LogTrace("No expires_at value found in cookie properties.");
+                _logger.LogError("{class}:{method} -No expires_at value found in cookie properties.", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
                 return;
             }
             var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
-            refreshTokenStore.AddIfNotExist(refreshToken.Value, "", dtExpires, "", "ValidatePrincipal");
             var rfValue = refreshToken.Value;
-            if (!refreshTokenStore.IsLatest(rfValue))
+            refreshTokenStore.AddIfNotExist(rfValue, null,user);
+
+            if (false && !refreshTokenStore.IsLatest(rfValue,user))
             {
-                var latesttoken = refreshTokenStore.GetLatestToken;
-                rfValue = latesttoken.CurrentToken;
-                dtExpires = latesttoken.ExpireAt;
-                _logger.LogTrace("{class}:{method} - Using latest token {token} expires at {expires}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),rfValue,dtExpires);
+                //var latesttoken = refreshTokenStore.GetLatestToken;
+                //rfValue = latesttoken.CurrentToken;
+                //dtExpires = latesttoken.ExpireAt;
+                //_logger.LogTrace("{class}:{method} - Using latest token {token} expires at {expires}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),rfValue,dtExpires);
             }
             else
             {
@@ -92,9 +97,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                     {
                         try
                         {
-
                             var response = await _service.RefreshTokenAsync(rfValue);
-
                             if (response.IsError)
                             {
                                 _logger.LogTrace("Error refreshing token: {error}, {errordesc}\n{json}", response.Error, response.ErrorDescription, response.Json);
@@ -102,14 +105,10 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
                                 context.RejectPrincipal();
                                 return;
                             }
-                            var dtExpiresNew = DateTimeOffset.Now.AddSeconds(response.ExpiresIn);
-                            refreshTokenStore.Add(rfValue, response.RefreshToken, dtExpiresNew, response.AccessToken, "ValidatePrincipal-l.91");
-                            context.Properties.UpdateTokenValue("access_token", response.AccessToken);
-                            context.Properties.UpdateTokenValue("refresh_token", response.RefreshToken);
+                            refreshTokenStore.Add(rfValue, response, user);
+                            var newExpiresAt = context.UpdateTokens(response);
+                            _logger.LogTrace("{class}.{method} - SignInAsync now as it expires at: {newExpiresAt}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), newExpiresAt);
                             _logger.LogTrace("{class}.{method} - Refresh tokens: Current {current}, New {new}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), rfValue, response.RefreshToken);
-                            var newExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
-                            context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
-                            _logger.LogTrace($"SignInAsync now as it expires at: {newExpiresAt}");
                             context.ShouldRenew = true;
                             await context.HttpContext.SignInAsync(context.Principal, context.Properties);
                         }

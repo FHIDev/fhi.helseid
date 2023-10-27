@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+using Fhi.HelseId.Web.Infrastructure;
 using Microsoft.AspNetCore.Http;
 
 // Code based on https://github.com/HelseID/HelseID.Samples/tree/master/HelseId.Core.BFF.Sample, originally written by Magnus Bjerke Vik 
@@ -46,7 +46,7 @@ namespace Fhi.HelseId.Api.Authorization
                 var httpContext = httpContextAccessor.HttpContext;
                 if (httpContext != null)
                 {
-                    cachedAccessToken = await httpContext.GetTokenAsync("access_token");
+                    cachedAccessToken = await httpContext.AccessToken();
                 }
             }
 
