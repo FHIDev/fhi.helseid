@@ -1,13 +1,10 @@
-﻿using Azure;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Fhi.HelseId.Web.Services;
 using IdentityModel.Client;
-using Azure.Core;
-using Newtonsoft.Json;
-using Fhi.HelseId.Api.Services;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
@@ -46,9 +43,12 @@ public class RefreshTokenStore : IRefreshTokenStore
             AccessToken = tokenResponse?.AccessToken ?? "",
             Source = $"{source},l.{lineNumber}",
             ExpireAt = dtExpiresNew,
-            PidPseudonym = user.PidPseudonym,
-            NameObfuscated = user.Name?[..5] ?? ""
+            PidPseudonym = user?.PidPseudonym??"",
         };
+        if (user?.Name != null)
+        {
+            newRefreshToken.NameObfuscated = user.Name is { Length: > 5 } ? user.Name[..5] : user.Name;
+        }
         newRefreshToken.AccessTokenHash = newRefreshToken.AccessToken.GetHashCode();
         RefreshTokens.Add(newRefreshToken);
 
@@ -56,7 +56,7 @@ public class RefreshTokenStore : IRefreshTokenStore
 
     public void AddIfNotExist(string previousToken, TokenResponse? tokenResponse, ICurrentUser user, [CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0)
     {
-        if (!RefreshTokens.Exists(o => o.PreviousToken == previousToken))
+        if (!RefreshTokens.Exists(o => o.PreviousToken == previousToken && o.PidPseudonym==user.PidPseudonym))
         {
             Add(previousToken, tokenResponse, user, source, lineNumber);
         }

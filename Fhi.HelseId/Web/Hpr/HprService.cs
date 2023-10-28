@@ -19,7 +19,7 @@ namespace Fhi.HelseId.Web.Hpr
         /// </summary>
         bool ErGyldig(Person person);
 
-        void Close();
+        Task Close();
         IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny);
         IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste);
         bool ErGyldigForKategorier(Person person, params OId9060[] koder);
@@ -175,12 +175,9 @@ namespace Fhi.HelseId.Web.Hpr
                 godkjenninger.FirstOrDefault(x => x.Helsepersonellkategori.Verdi == o.Value) != null);
         }
 
-        public async void Close()
+        public async Task Close()
         {
-            if (_serviceClient != null)
-            {
-                if (_serviceClient is HPR2ServiceClient client) await client.CloseAsync();
-            }
+            if (_serviceClient is HPR2ServiceClient client) await client.CloseAsync();
         }
 
     }

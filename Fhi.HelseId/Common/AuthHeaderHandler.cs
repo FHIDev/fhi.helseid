@@ -4,9 +4,9 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Fhi.HelseId.Api.Services;
 using Fhi.HelseId.Web.Infrastructure;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
+using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -36,9 +36,7 @@ namespace Fhi.HelseId.Common
         }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var ctx = contextAccessor.HttpContext;
-            if (ctx == null)
-                throw new NoContextException();
+            var ctx = contextAccessor.HttpContext ?? throw new NoContextException();
             logger.LogTrace("{class}.{method} - Starting", nameof(AuthHeaderHandler), nameof(SendAsync));
             var token = await ctx.GetUserAccessTokenAsync(cancellationToken: cancellationToken);
 
@@ -76,9 +74,7 @@ namespace Fhi.HelseId.Common
         }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var ctx = contextAccessor.HttpContext;
-            if (ctx == null)
-                throw new NoContextException();
+            var ctx = contextAccessor.HttpContext ?? throw new NoContextException();
             var token = await ctx.AccessToken();
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer",  token);
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);

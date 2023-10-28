@@ -30,11 +30,11 @@ namespace Fhi.HelseId.Api.ExtensionMethods
 
             if (config.AuthUse)
             {
+                services.AddScoped<ICurrentUser, CurrentHttpUser>();
                 if (config.ApiScope.Contains(',')) // We know there are multiple scopes if a komma is present
                     services.AddSingleton<IAuthorizationHandler, ApiMultiScopeHandler>();
                 else
                     services.AddSingleton<IAuthorizationHandler, ApiSingleScopeHandler>();
-                services.AddScoped<ICurrentUser, CurrentHttpUser>();
                 services.AddScoped<IAccessTokenProvider, HttpContextAccessTokenProvider>();
 
                 services

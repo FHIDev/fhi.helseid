@@ -1,39 +1,49 @@
 ﻿using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
 
-namespace Fhi.HelseId.Web.Services
+namespace Fhi.HelseId.Web.Services;
+
+/// <summary>
+/// For Web backend
+/// </summary>
+public interface ICurrentUser
 {
-    public interface ICurrentUser
+    string? Id { get; }
+    string? Name { get; }
+    string? HprNummer { get; }
+    string? PidPseudonym { get; }
+    string? Pid { get; }
+    string? SecurityLevel { get; }
+    string? AssuranceLevel { get; }
+    string? Network { get; }
+}
+
+/// <summary>
+/// For Web backend
+/// </summary>
+public class CurrentHttpUser : ICurrentUser
+{
+    public CurrentHttpUser(IHttpContextAccessor httpContextAccessor)
     {
-        string? Id { get; }
-        string? Name { get; }
-        string? HprNummer { get; }
-        string? PidPseudonym { get; }
-        string? Pid { get; }
-        string? SecurityLevel { get; }
-        string? AssuranceLevel { get; }
-        string? Network { get; }
+        var httpContext = httpContextAccessor.HttpContext!;
+        Id = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
+        HprNummer = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;
+        Name = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
+        Pid = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
+        PidPseudonym = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.PidPseudonym)?.Value;
+        SecurityLevel = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.SecurityLevel)?.Value;
+        AssuranceLevel = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.AssuranceLevel)?.Value;
+        Network = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Network)?.Value;
     }
 
-    public class CurrentHttpUser: ICurrentUser
-    {
-        private readonly HttpContext? httpContext;
+    public string? Id { get; }
+    public string? Name { get; }
+    public string? HprNummer { get; }
+    public string? PidPseudonym { get; }
+    public string? Pid { get; }
+    public string? SecurityLevel { get; }
+    public string? AssuranceLevel { get; }
+    public string? Network { get; }
 
-        public CurrentHttpUser(IHttpContextAccessor httpContextAccessor)
-        {
-            httpContext = httpContextAccessor.HttpContext;
-        }
-
-        public string? Id => httpContext?.User.Id();
-        public string? Name => httpContext?.User.Name();
-        public string? HprNummer => httpContext?.User.HprNumber();
-
-        public string? PidPseudonym => httpContext?.User.PidPseudonym();
-        public string? Pid => httpContext?.User.Pid();
-
-        public string? SecurityLevel => httpContext?.User.SecurityLevel();
-        public string? AssuranceLevel => httpContext?.User.AssuranceLevel();
-        public string? Network => httpContext?.User.Network();
-
-    }
 }

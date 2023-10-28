@@ -56,6 +56,7 @@ public class HelseIdWebAuthBuilder
         services.AddHttpContextAccessor();
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
+            services.AddScoped<ICurrentUser, CurrentHttpUser>();
             services.AddScoped<IGodkjenteHprKategoriListe, NoHprApprovals>();
             if (HelseIdWebKonfigurasjon.UseHprPolicy)
                 services.AddSingleton<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
@@ -69,7 +70,6 @@ public class HelseIdWebAuthBuilder
             services.AddMemoryCache();
             services.AddScoped<IHprFactory, HprFactory>();
             services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
-            services.AddScoped<ICurrentUser, CurrentHttpUser>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddSingleton<IRefreshTokenStore, RefreshTokenStore>();
             services.AddSingleton(SecretHandler);
