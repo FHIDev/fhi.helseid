@@ -130,7 +130,7 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdRsaXmlSecretHandler : SecretHandlerBase
     {
-        public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
+        public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
             this.configAuth = configAuth;
             var xml = File.ReadAllText(configAuth.ClientSecret);
@@ -150,7 +150,7 @@ namespace Fhi.HelseId.Web.Services
 
     public class HelseIdEnterpriseCertificateSecretHandler : SecretHandlerBase
     {
-        public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
+        public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
             this.configAuth = configAuth;
             var secretParts = configAuth.ClientSecret.Split(':');
@@ -198,7 +198,7 @@ namespace Fhi.HelseId.Web.Services
 
     public class HelseIdSharedSecretHandler : SecretHandlerBase
     {
-        public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
+        public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
             this.configAuth = configAuth;
             options.ClientSecret = configAuth.ClientSecret;
@@ -210,7 +210,7 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdSelvbetjeningSecretHandler : SecretHandlerBase
     {
-        public void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
+        public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
             this.configAuth = configAuth;
             var selvbetjeningJson = File.ReadAllText(configAuth.ClientSecret);

@@ -40,8 +40,8 @@ namespace Fhi.HelseId.Common
             logger.LogTrace("{class}.{method} - Starting", nameof(AuthHeaderHandler), nameof(SendAsync));
             var token = await ctx.GetUserAccessTokenAsync(cancellationToken: cancellationToken);
 
-            if (refreshTokenStore.GetLatestToken(user)!=null && !string.IsNullOrEmpty(refreshTokenStore.GetLatestToken(user).AccessToken) && refreshTokenStore.GetLatestToken(user).AccessToken != token)
-                token = refreshTokenStore.GetLatestToken(user).AccessToken;
+            if (refreshTokenStore.GetLatestToken(user)!=null && !string.IsNullOrEmpty(refreshTokenStore.GetLatestToken(user)?.AccessToken) && refreshTokenStore.GetLatestToken(user)?.AccessToken != token)
+                token = refreshTokenStore.GetLatestToken(user)?.AccessToken;
             if (token == null)
             {
                 logger.LogError("{class}.{method} No access token found in context. Make sure you have added the AddTokenManagement() to your Startup.cs", nameof(AuthHeaderHandler), nameof(SendAsync));

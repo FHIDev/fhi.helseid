@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -12,10 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
-
-
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
-
 public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
 {
     private readonly TokenEndpointService _service;
@@ -24,8 +20,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
     private readonly ISystemClock _clock;
     private readonly IHelseIdWebKonfigurasjon config;
     private readonly IRefreshTokenStore refreshTokenStore;
-    private readonly ICurrentUser user;
-
+    
     private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests = new();
 
     public AutomaticTokenManagementCookieEvents(
