@@ -1,4 +1,5 @@
-﻿using Fhi.HelseId.Common.Identity;
+﻿using System;
+using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 
@@ -29,7 +30,7 @@ public class CurrentHttpUser : ICurrentUser
         var httpContext = httpContextAccessor.HttpContext;
         if (httpContext == null)
         {
-            return;  // No context, then no user, probably not a proper request
+            throw new NoHttpContextException($"{nameof(CurrentHttpUser)}.ctor : No HttpContext found. This has to be called when there is a request");
         }
         Id = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
         HprNummer = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;
@@ -50,4 +51,19 @@ public class CurrentHttpUser : ICurrentUser
     public string? AssuranceLevel { get; }
     public string? Network { get; }
 
+}
+
+public class NoHttpContextException : Exception
+{
+    public NoHttpContextException()
+    {
+    }
+
+    public NoHttpContextException(string message) : base(message)
+    {
+    }
+
+    public NoHttpContextException(string message, Exception inner) : base(message, inner)
+    {
+    }
 }
