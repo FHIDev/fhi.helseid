@@ -27,11 +27,7 @@ public class CurrentHttpUser : ICurrentUser
 {
     public CurrentHttpUser(IHttpContextAccessor httpContextAccessor)
     {
-        var httpContext = httpContextAccessor.HttpContext;
-        if (httpContext == null)
-        {
-            throw new NoHttpContextException($"{nameof(CurrentHttpUser)}.ctor : No HttpContext found. This has to be called when there is a request");
-        }
+        var httpContext = httpContextAccessor.HttpContext ?? throw new NoHttpContextException($"{nameof(CurrentHttpUser)}.ctor : No HttpContext found. This has to be called when there is a request");
         Id = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
         HprNummer = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;
         Name = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
