@@ -26,7 +26,11 @@ public class CurrentHttpUser : ICurrentUser
 {
     public CurrentHttpUser(IHttpContextAccessor httpContextAccessor)
     {
-        var httpContext = httpContextAccessor.HttpContext!;
+        var httpContext = httpContextAccessor.HttpContext;
+        if (httpContext == null)
+        {
+            return;  // No context, then no user, probably not a proper request
+        }
         Id = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
         HprNummer = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;
         Name = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
