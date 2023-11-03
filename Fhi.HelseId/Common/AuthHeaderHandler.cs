@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Infrastructure;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Fhi.HelseId.Web.Services;
@@ -29,6 +30,7 @@ namespace Fhi.HelseId.Common
             , IRefreshTokenStore refreshTokenStore
             ,ICurrentUser user)
         {
+            logger.LogMember();
             this.contextAccessor = contextAccessor;
             this.logger = logger;
             this.refreshTokenStore = refreshTokenStore;

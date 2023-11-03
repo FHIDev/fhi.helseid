@@ -42,7 +42,7 @@ namespace Fhi.HelseId.Web.Services
     {
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            base.configAuth=configAuth;
+            this.configAuth=configAuth;
             var jwk = File.ReadAllText(configAuth.ClientSecret);
             jwkSecurityKey = new JsonWebKey(jwk);
 

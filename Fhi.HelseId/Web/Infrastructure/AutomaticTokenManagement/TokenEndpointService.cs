@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using IdentityModel;
 using IdentityModel.Client;
@@ -32,6 +33,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             ILogger<TokenEndpointService> logger,
             IHelseIdSecretHandler secretHandler)
         {
+            logger.LogMember();
             this.secretHandler = secretHandler ; //as HelseIdJwkSecretHandler;
             this.managementOptions = managementOptions.Value;
             this.oidcOptions = oidcOptions;

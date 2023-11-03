@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.ExtensionMethods;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ namespace Fhi.HelseId.Common.Middleware
         
         public UnhandledExceptionLoggerMiddleware(RequestDelegate next, ILogger<UnhandledExceptionLoggerMiddleware> logger)
         {
+            logger.LogMember();
             Logger = logger;
             this.next = next;
         }

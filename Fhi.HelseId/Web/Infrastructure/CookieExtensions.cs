@@ -1,5 +1,4 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Globalization;
 using System;

@@ -2,6 +2,8 @@
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using Fhi.HelseId.Web.ExtensionMethods;
 
 namespace Fhi.HelseId.Web.Services;
 
@@ -25,8 +27,9 @@ public interface ICurrentUser
 /// </summary>
 public class CurrentHttpUser : ICurrentUser
 {
-    public CurrentHttpUser(IHttpContextAccessor httpContextAccessor)
+    public CurrentHttpUser(IHttpContextAccessor httpContextAccessor, ILogger<CurrentHttpUser> logger)
     {
+        logger.LogMember(); 
         var httpContext = httpContextAccessor.HttpContext ?? throw new NoHttpContextException($"{nameof(CurrentHttpUser)}.ctor : No HttpContext found. This has to be called when there is a request");
         Id = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
         HprNummer = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;

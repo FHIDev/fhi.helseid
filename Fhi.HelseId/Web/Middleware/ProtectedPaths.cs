@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.ExtensionMethods;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -23,6 +24,7 @@ namespace Fhi.HelseId.Web.Middleware
 
         public ProtectPaths(RequestDelegate next, ProtectPathsOptions options,ILogger<ProtectPaths> logger)
         {
+            logger.LogMember();
             _next = next;
             this.logger = logger;
             _policyName = options.Policy;

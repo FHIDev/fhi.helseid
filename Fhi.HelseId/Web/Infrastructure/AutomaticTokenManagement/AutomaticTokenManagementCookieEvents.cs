@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -30,6 +31,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         ISystemClock clock,IHelseIdWebKonfigurasjon config,
         IRefreshTokenStore refreshTokenStore)
     {
+        logger.LogMember();
         _service = service;
         _options = options.Value;
         _logger = logger;

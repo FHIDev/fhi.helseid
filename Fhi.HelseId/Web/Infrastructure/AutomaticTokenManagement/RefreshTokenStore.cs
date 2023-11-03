@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Fhi.HelseId.Web.Services;
 using IdentityModel.Client;
+using Fhi.HelseId.Web.ExtensionMethods;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
@@ -25,6 +26,7 @@ public class RefreshTokenStore : IRefreshTokenStore
 
     public RefreshTokenStore(ILogger<RefreshTokenStore> logger)
     {
+        logger.LogMember();
         this.logger = logger;
     }
 
