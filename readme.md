@@ -12,7 +12,7 @@ All features of the components can be controlled using featureflags from your co
 
 The component uses the "Backend for Frontend" pattern, based off an Authorization Code flow, for details see [here](https://www.nhn.no/helseid/grunnleggende-kunnskap/autentiseringsflyt-og-grant-types/)
 
-The component requires minimum .NET Core app 3.1.
+The component requires minimum .NET 6.0.
 
 ## [Documentation wiki](https://github.com/folkehelseinstituttet/fhi.helseid/wiki)
 
