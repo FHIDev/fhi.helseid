@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Web.Hpr
 {
-
     public class HprGodkjenningAuthorizationHandler : AuthorizationHandler<HprGodkjenningAuthorizationRequirement>
     {
         private readonly IHprFactory _hprFactory;
@@ -64,6 +63,4 @@ namespace Fhi.HelseId.Web.Hpr
             }
         }
     }
-
-
 }

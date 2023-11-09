@@ -25,10 +25,12 @@ namespace Fhi.HelseId.Api.Handlers
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context, SecurityLevelOrApiRequirement requirement)
         {
+            logger.LogTrace("ApiSingleScopeHandler: Validating");
             var scopeClaims = context.User.FindAll("scope").ToList();
 
             if (scopeClaims.Any(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Value, _configAuth.ApiScope)))
             {
+                logger.LogTrace("ApiSingleScopeHandler: Succeeded");
                 context.Succeed(requirement);
             }
             else

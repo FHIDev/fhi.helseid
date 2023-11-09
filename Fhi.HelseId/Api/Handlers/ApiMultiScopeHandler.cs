@@ -24,7 +24,8 @@ namespace Fhi.HelseId.Api.Handlers
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context, SecurityLevelOrApiRequirement requirement)
         {
-            var scopeClaims = context.User.FindAll("scope").Where(s=>s.Value.StartsWith(_configAuth.ApiName)).ToList();
+            logger.LogTrace("ApiMultiScopeHandler: Validating");
+            var scopeClaims = context.User.FindAll("scope").Where(s => s.Value.StartsWith(_configAuth.ApiName)).ToList();
             foreach (var claim in scopeClaims)
             {
                 logger.LogInformation($"Fhi.HelseId.Api.Handlers.{nameof(ApiMultiScopeHandler)}: Scope claim: {claim.Value}");
@@ -48,6 +49,7 @@ namespace Fhi.HelseId.Api.Handlers
             var matches = scopes.Intersect(allowedScopes);
             if (matches.Any())
             {
+                logger.LogTrace("ApiMultiScopeHandler: Succeeded");
                 context.Succeed(requirement);
             }
             else

@@ -31,10 +31,12 @@ namespace Fhi.HelseId.Web.Hpr
             {
                 Logger.LogWarning("HprAuthorizationHandler: Failed. No HprNumber");
                 context.Fail();
-               
-            } else
+            }
+            else
+            {
+                Logger.LogTrace("HprAuthorizationHandler: Succeeded");
                 context.Succeed(requirement);
-            
+            }
         }
     }
 }
