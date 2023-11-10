@@ -11,6 +11,7 @@ namespace Fhi.HelseId.Common.Identity
         public const string SecurityLevel = Prefix + "security_level";
         public const string Network = Prefix + "network";
         public const string Name = "name";
+        public const string Scopes = "scope";
         
     }
 }

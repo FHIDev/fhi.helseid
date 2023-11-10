@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Web.Hpr
 {
-
     public class HprGodkjenningAuthorizationHandler : AuthorizationHandler<HprGodkjenningAuthorizationRequirement>
     {
         private readonly IHprFactory _hprFactory;
@@ -26,7 +25,7 @@ namespace Fhi.HelseId.Web.Hpr
             var currentUser = context.User;
             var userlogName = currentUser.Name().ObfuscateName();
             Logger.LogTrace("HprGodkjenningAuthorizationHandler: Checking {Name}", userlogName);
-            if (!currentUser.Identity.IsAuthenticated)
+            if (!currentUser.Identity?.IsAuthenticated??false)
             {
                 Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er ikke autentisiert", userlogName);
                 context.Fail();
@@ -64,6 +63,4 @@ namespace Fhi.HelseId.Web.Hpr
             }
         }
     }
-
-
 }

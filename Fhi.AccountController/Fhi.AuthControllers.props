@@ -1,0 +1,14 @@
+﻿<Project>
+  <ItemGroup>
+    <Content Include="HtmlFiles\**\*.html" Pack="true" PackagePath="content\%(RecursiveDir)" />
+  </ItemGroup>
+
+  <Target Name="CopyHtmlFilesToWwwroot" BeforeTargets="Build">
+    <ItemGroup>
+      <HtmlFiles Include="$(MSBuildThisFileDirectory)..\content\*.html" />
+      <WwwrootFiles Include="$(MSBuildProjectDirectory)\wwwroot\**\*.html" />
+    </ItemGroup>
+    <!--<Copy SourceFiles="@(HtmlFiles)" DestinationFolder="@(HtmlFiles->'$(MSBuildProjectDirectory)\wwwroot')" SkipUnchangedFiles="false" />-->
+    <Copy SourceFiles="@(HtmlFiles)" DestinationFolder="$(MSBuildProjectDirectory)\wwwroot\" SkipUnchangedFiles="false" />
+  </Target>
+</Project>

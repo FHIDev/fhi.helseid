@@ -30,12 +30,12 @@ namespace Fhi.HelseId.Web.Hpr
     /// Mulige verdier finnes i filen Kodekonstaner.g.cs
     /// Eks.: Verdi for Lege er:  Kodekonstanter.OId9060Lege
     /// </summary>
-    public abstract class GodkjenteHprKategoriListe : IGodkjenteHprKategoriListe
+    public class GodkjenteHprKategoriListe : IGodkjenteHprKategoriListe
     {
-        private readonly List<OId9060> godkjenninger = new List<OId9060>();
+        private readonly List<OId9060> godkjenninger = new();
 
-        protected void Add(OId9060 godkjent) => godkjenninger.Add(godkjent);
-
+        public void Add(OId9060 godkjent) => godkjenninger.Add(godkjent);
+        public void AddRange(IEnumerable<OId9060> godkjente) => godkjenninger.AddRange(godkjente);
         public IEnumerable<OId9060> Godkjenninger => godkjenninger;
     }
 
@@ -46,25 +46,25 @@ namespace Fhi.HelseId.Web.Hpr
         private readonly ILogger<HprFactory> logger;
         public IHPR2ServiceChannel? ServiceProxy { get; }
 
-        public HprFactory(IOptions<HprKonfigurasjon> hprKonfigurasjon, IGodkjenteHprKategoriListe godkjenninger, IMemoryCache memoryCache, ILogger<HprFactory> logger)
+        public HprFactory(IOptions<HelseIdWebKonfigurasjon> hprKonfigurasjon, IGodkjenteHprKategoriListe godkjenninger, IMemoryCache memoryCache, ILogger<HprFactory> logger)
         {
             this.godkjenninger = godkjenninger;
             this.memoryCache = memoryCache;
             this.logger = logger;
             var config = hprKonfigurasjon.Value;
-            this.logger.LogDebug("Oppsett til HPR: {Url}", config.Url);
+            this.logger.LogDebug("Oppsett til HPR: {Url}", config.HprUrl);
             if (!config.UseHpr)
             {
                 this.logger.LogInformation("HprFactory: Hpr er avslått, se konfigurasjon");
                 return;
             }
-
-            var userName = config.Brukernavn;
-            var passord = config.Passord;
+            
+            var userName = config.HprUsername;
+            var passord = config.HprPassword;
             var httpBinding = new WSHttpBinding(SecurityMode.Transport);
             httpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
 
-            var channelFactory = new ChannelFactory<IHPR2ServiceChannel>(httpBinding, new EndpointAddress(new Uri(config.Url)));
+            var channelFactory = new ChannelFactory<IHPR2ServiceChannel>(httpBinding, new EndpointAddress(new Uri(config.HprUrl)));
             channelFactory.Credentials.UserName.UserName = userName;
             channelFactory.Credentials.UserName.Password = passord;
             ServiceProxy = channelFactory.CreateChannel();

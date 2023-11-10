@@ -1,32 +1,68 @@
-﻿using Fhi.HelseId.Common.Identity;
+﻿using System;
+using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using Fhi.HelseId.Web.ExtensionMethods;
 
-namespace Fhi.HelseId.Web.Services
+namespace Fhi.HelseId.Web.Services;
+
+/// <summary>
+/// For Web backend
+/// </summary>
+public interface ICurrentUser
 {
-    public interface ICurrentUser
+    string? Id { get; }
+    string? Name { get; }
+    string? HprNummer { get; }
+    string? PidPseudonym { get; }
+    string? Pid { get; }
+    string? SecurityLevel { get; }
+    string? AssuranceLevel { get; }
+    string? Network { get; }
+}
+
+/// <summary>
+/// For Web backend
+/// </summary>
+public class CurrentHttpUser : ICurrentUser
+{
+    public CurrentHttpUser(IHttpContextAccessor httpContextAccessor, ILogger<CurrentHttpUser> logger)
     {
-        string? Id { get; }
-        string? Name { get; }
-        string? HprNummer { get; }
-        string? PidPseudonym { get; }
-        string? Pid { get; }
+        logger.LogMember(); 
+        var httpContext = httpContextAccessor.HttpContext ?? throw new NoHttpContextException($"{nameof(CurrentHttpUser)}.ctor : No HttpContext found. This has to be called when there is a request");
+        Id = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
+        HprNummer = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;
+        Name = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
+        Pid = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
+        PidPseudonym = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.PidPseudonym)?.Value;
+        SecurityLevel = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.SecurityLevel)?.Value;
+        AssuranceLevel = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.AssuranceLevel)?.Value;
+        Network = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Network)?.Value;
     }
 
-    public class CurrentHttpUser: ICurrentUser
+    public string? Id { get; }
+    public string? Name { get; }
+    public string? HprNummer { get; }
+    public string? PidPseudonym { get; }
+    public string? Pid { get; }
+    public string? SecurityLevel { get; }
+    public string? AssuranceLevel { get; }
+    public string? Network { get; }
+
+}
+
+public class NoHttpContextException : Exception
+{
+    public NoHttpContextException()
     {
-        private readonly HttpContext httpContext;
+    }
 
-        public CurrentHttpUser(IHttpContextAccessor httpContextAccessor)
-        {
-            httpContext = httpContextAccessor.HttpContext;
-        }
+    public NoHttpContextException(string message) : base(message)
+    {
+    }
 
-        public string? Id => httpContext.User.Id();
-        public string? Name => httpContext.User.Name();
-        public string? HprNummer => httpContext.User.HprNumber();
-
-        public string? PidPseudonym => httpContext.User.PidPseudonym();
-        public string? Pid => httpContext.User.Pid();
-
+    public NoHttpContextException(string message, Exception inner) : base(message, inner)
+    {
     }
 }

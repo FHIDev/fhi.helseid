@@ -1,11 +1,15 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.ExtensionMethods;
+using Fhi.HelseId.Web.Services;
 using IdentityModel;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
@@ -15,36 +19,54 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         private readonly AutomaticTokenManagementOptions managementOptions;
         private readonly IOptionsSnapshot<OpenIdConnectOptions> oidcOptions;
         private readonly IAuthenticationSchemeProvider schemeProvider;
-        private readonly HttpClient tokenClient;
+        private readonly HttpClient httpClient;
         private readonly ILogger<TokenEndpointService> logger;
+        private readonly AuthorizationCodeReceivedContext? authorizationCodeReceivedContext;
+        private readonly IHelseIdSecretHandler? secretHandler;
 
         public TokenEndpointService(
             IOptions<AutomaticTokenManagementOptions> managementOptions,
             IOptionsSnapshot<OpenIdConnectOptions> oidcOptions,
             IAuthenticationSchemeProvider schemeProvider,
-            HttpClient tokenClient,
-            ILogger<TokenEndpointService> logger)
+            HttpClient httpClient,
+            IHttpContextAccessor httpContextAccessor,
+            ILogger<TokenEndpointService> logger,
+            IHelseIdSecretHandler secretHandler)
         {
+            logger.LogMember();
+            this.secretHandler = secretHandler ; //as HelseIdJwkSecretHandler;
             this.managementOptions = managementOptions.Value;
             this.oidcOptions = oidcOptions;
             this.schemeProvider = schemeProvider;
-            this.tokenClient = tokenClient;
+            this.httpClient = httpClient;
             this.logger = logger;
+            authorizationCodeReceivedContext =
+                httpContextAccessor.HttpContext?.Features.Get<AuthorizationCodeReceivedContext>();
         }
 
         public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
         {
-            var oidcOptions = await GetOidcOptionsAsync();
-            var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
-            logger.LogTrace("TokenEndPoint: RefreshTokenAsync");
-            return await tokenClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+            var oidcOptions2 = await GetOidcOptionsAsync();
+            var configuration = await oidcOptions2.ConfigurationManager.GetConfigurationAsync(default);
+            var clientAssertion = secretHandler?.GenerateClientAssertion;
+            logger.LogTrace(
+                $"TokenEndPointService:RefreshTokenAsync. TokenEndpointAddress: {configuration.TokenEndpoint} ClientId: {oidcOptions2.ClientId} ClientAssertion: {clientAssertion}");
+            var tokenClient = new TokenClient(httpClient, new TokenClientOptions
             {
                 Address = configuration.TokenEndpoint,
-
-                ClientId = oidcOptions.ClientId,
-                ClientSecret = oidcOptions.ClientSecret,
-                RefreshToken = refreshToken
+                ClientId = oidcOptions2.ClientId,
+                ClientAssertion = new ClientAssertion
+                    { Value = clientAssertion, Type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer },
+                ClientCredentialStyle = ClientCredentialStyle.PostBody,
             });
+            var response = await tokenClient.RequestRefreshTokenAsync(refreshToken);
+            var tokenResponseJson = JsonConvert.SerializeObject(response);
+            logger.LogTrace("{class}.{method} : refreshtoken: {json}", nameof(TokenEndpointService), nameof(RefreshTokenAsync), tokenResponseJson);
+            if (response.IsError)
+            {
+                logger.LogError($"TokenEndPointService:RefreshTokenAsync. Error: {response.Error} ErrorDescription: {response.ErrorDescription}");
+            }
+            return response;
         }
 
         public async Task<TokenRevocationResponse> RevokeTokenAsync(string refreshToken)
@@ -52,11 +74,16 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             var oidcOptions = await GetOidcOptionsAsync();
             var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
             logger.LogTrace("TokenEndPoint: RevokeTokenAsync");
-            return await tokenClient.RevokeTokenAsync(new TokenRevocationRequest
+            var clientAssertion = authorizationCodeReceivedContext?.TokenEndpointRequest?.ClientAssertion;
+            if (clientAssertion == null)
+            {
+                logger.LogWarning("TokenEndPoint: RevokeTokenAsync. ClientAssertion is null");
+            }
+            return await httpClient.RevokeTokenAsync(new TokenRevocationRequest
             {
                 Address = configuration.AdditionalData[OidcConstants.Discovery.RevocationEndpoint].ToString(),
                 ClientId = oidcOptions.ClientId,
-                ClientSecret = oidcOptions.ClientSecret,
+                ClientAssertion = new ClientAssertion{ Value=clientAssertion, Type= IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer},
                 Token = refreshToken,
                 TokenTypeHint = OidcConstants.TokenTypes.RefreshToken
             });

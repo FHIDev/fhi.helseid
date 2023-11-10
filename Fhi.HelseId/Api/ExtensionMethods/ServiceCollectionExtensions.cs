@@ -20,6 +20,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
     {
         /// <summary>
         /// Use this for setting up ingoing api authentication (with an access token)
+        /// This extension enables multiple scopes defined in the configuration by one handler, and single scope by another
         /// </summary>
         public static void AddHelseIdApiAuthentication(this IServiceCollection services,
             IHelseIdApiKonfigurasjon config)
@@ -29,8 +30,11 @@ namespace Fhi.HelseId.Api.ExtensionMethods
 
             if (config.AuthUse)
             {
-                services.AddSingleton<IAuthorizationHandler, ApiScopeHandler>();
                 services.AddScoped<ICurrentUser, CurrentHttpUser>();
+                if (config.ApiScope.Contains(',')) // We know there are multiple scopes if a komma is present
+                    services.AddSingleton<IAuthorizationHandler, ApiMultiScopeHandler>();
+                else
+                    services.AddSingleton<IAuthorizationHandler, ApiSingleScopeHandler>();
                 services.AddScoped<IAccessTokenProvider, HttpContextAccessTokenProvider>();
 
                 services
@@ -44,12 +48,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             }
         }
 
-        [Obsolete("Use AddHelseIdApiAuthentication() instead", true)]
-        public static void ConfigureHelseIdApiAuthentication(this IServiceCollection services,
-            IHelseIdApiKonfigurasjon config, IConfigurationSection configAuthSection)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         /// <summary>
         /// Use this for either User or Client credentials
@@ -69,13 +68,6 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             return true;
         }
 
-        [Obsolete("Use AddHelseIdAuthorizationControllers() instead", true)]
-        public static bool SetupHelseIdAuthorizationControllers(this IServiceCollection services,
-            IAutentiseringkonfigurasjon config)
-        {
-            throw new NotImplementedException();
-        }
-
         public static IServiceCollection AddHelseIdAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
         {
             foreach (var api in apis)
@@ -87,12 +79,6 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             }
 
             return services;
-        }
-
-        [Obsolete("Use AddHelseIdAuthenticationServices() instead", true)]
-        public static IServiceCollection ConfigureAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -111,13 +97,9 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             return services;
         }
 
-        [Obsolete("Use AddHelseIdAuthenticationServicesForApis() instead")]
-        public static IServiceCollection ConfigureAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
-        {
-            throw new NotImplementedException();
-        }
 
-        private static IHttpClientBuilder AddHelseIdApiServices(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
+
+        private static IHttpClientBuilder AddHelseIdApiServices(this IServiceCollection services, IApiOutgoingKonfigurasjon api)
         {
             return services.AddUserAccessTokenHttpClient(api.Name, configureClient: client =>
                 {
@@ -127,7 +109,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
                 .AddHttpMessageHandler<AuthHeaderHandler>();
         }
 
-        private static IHttpClientBuilder AddHelseIdApiServicesNoAuth(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
+        private static IHttpClientBuilder AddHelseIdApiServicesNoAuth(this IServiceCollection services, IApiOutgoingKonfigurasjon api)
         {
             return services.AddHttpClient(api.Name, client =>
             {
@@ -136,7 +118,7 @@ namespace Fhi.HelseId.Api.ExtensionMethods
             });
         }
 
-        private static IHttpClientBuilder AddHelseIdApiServicesForApi(this IServiceCollection services, HelseIdApiOutgoingKonfigurasjon api)
+        private static IHttpClientBuilder AddHelseIdApiServicesForApi(this IServiceCollection services, IApiOutgoingKonfigurasjon api)
         {
             return services.AddHttpClient(api.Name, client =>
             {
@@ -144,5 +126,28 @@ namespace Fhi.HelseId.Api.ExtensionMethods
                 client.Timeout = TimeSpan.FromMinutes(10);
             }).AddHttpMessageHandler<AuthHeaderHandlerForApi>();
         }
+
+        #region Obsolete Errors
+        [Obsolete("Use AddHelseIdAuthenticationServices() instead", true)]
+        public static IServiceCollection ConfigureAuthenticationServices(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Obsolete("Use AddHelseIdAuthenticationServicesForApis() instead", true)]
+        public static IServiceCollection ConfigureAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<HelseIdApiOutgoingKonfigurasjon> apis)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Obsolete("Use AddHelseIdApiAuthentication() instead", true)]
+        public static void ConfigureHelseIdApiAuthentication(this IServiceCollection services,
+            IHelseIdApiKonfigurasjon config, IConfigurationSection configAuthSection)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+
     }
 }
