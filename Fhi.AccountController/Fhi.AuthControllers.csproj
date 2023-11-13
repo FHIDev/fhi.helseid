@@ -12,7 +12,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageDescription>Account controllers for use with OAuth</PackageDescription>
+    <PackageDescription>Account controllers for use with OAuth and HelseId</PackageDescription>
     <PackageCopyright>Copyright ©2023 Folkehelseinstituttet</PackageCopyright>
     <!-- Tags appear in the gallery and can be used for tag searches -->
     <Tags>helseid, oauth</Tags>
@@ -22,6 +22,7 @@
       </group>
     </dependencies>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,6 +42,10 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Web\HprServiceReference\ConnectedService.json" />
