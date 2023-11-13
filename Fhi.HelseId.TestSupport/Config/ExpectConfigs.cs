@@ -1,5 +1,4 @@
 ﻿using Fhi.HelseId.Common;
-using Fhi.HelseId.Worker;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using HelseIdApiKonfigurasjon = Fhi.HelseId.Api.HelseIdApiKonfigurasjon;
@@ -62,24 +61,5 @@ namespace Fhi.HelseId.TestSupport.Config
         }
     }
 
-    /// <summary>
-    /// Checks that the config file contains a Worker configuration
-    /// Setup as parametrized fixture with configuration filename 
-    /// Verifies that they are actually present and valid
-    /// Code example:
-    /// [TestFixture("appsettings.json")]
-    /// public MyCheckClass : ExpectHelseIdWorkerConfig
-    /// {
-    ///     public void MyCheckClass(string filename) : base(filename)
-    ///     {}
-    /// }
-    /// Add as many TestFixture attributes on top as you have configuration files
-    /// </summary>
-    public abstract class ExpectHelseIdWorkerConfig : ExpectConfigs<HelseIdWorkerKonfigurasjon>
-    {
-        protected ExpectHelseIdWorkerConfig(string filename, AppSettingsUsage useOfAppsettings) : base(filename, nameof(HelseIdWorkerKonfigurasjon),useOfAppsettings)
-        {
-
-        }
-    }
+    
 }
