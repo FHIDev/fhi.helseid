@@ -23,7 +23,6 @@ namespace Fhi.AuthControllers
             this.logger = logger;
             Config = options.Value;
             RedirectConfig = Config.RedirectPagesKonfigurasjon;
-
         }
 
         [AllowAnonymous]

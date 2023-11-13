@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		copylocal.cmd = copylocal.cmd
 		Fhi.HelseId\copynp.cmd = Fhi.HelseId\copynp.cmd
+		.github\workflows\Fhi.AuthController.Nuget.yml = .github\workflows\Fhi.AuthController.Nuget.yml
 		Fhi.HelseId.CI.yml = Fhi.HelseId.CI.yml
 		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
 		license.txt = license.txt
@@ -38,9 +39,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{62DC29
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A6F5B018-08C3-4F6D-BEC7-D7412D39D9BF}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\Fhi.AuthController.Nuget.yml = .github\workflows\Fhi.AuthController.Nuget.yml
 		.github\workflows\Fhi.HelseId.AltInn.Nuget = .github\workflows\Fhi.HelseId.AltInn.Nuget
 		.github\workflows\Fhi.HelseId.CI.yml = .github\workflows\Fhi.HelseId.CI.yml
 		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
+		.github\workflows\Fhi.HelseId.TestSupport.Nuget.yml = .github\workflows\Fhi.HelseId.TestSupport.Nuget.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.TestSupport", "Fhi.HelseId.TestSupport\Fhi.HelseId.TestSupport.csproj", "{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}"
