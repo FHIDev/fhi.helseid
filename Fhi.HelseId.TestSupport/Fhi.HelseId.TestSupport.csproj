@@ -5,6 +5,7 @@
     <Id>Fhi.HelseId.TestSupport</Id>
     <Version>2.0.0</Version>
     <IsPackable>true</IsPackable>
+    <IsTestProject>false</IsTestProject>
     <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
     <Copyright>(c) 2021-2022 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
@@ -25,6 +26,11 @@
 
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectCapability Remove="TestContainer" />
+  </ItemGroup>
+
+    
   <PropertyGroup>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
