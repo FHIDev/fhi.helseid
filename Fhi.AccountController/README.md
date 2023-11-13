@@ -10,7 +10,9 @@ There is no need for any other initialization that adding the package to your pr
 
 Just add the package to your project from [Nuget](https://www.nuget.org/packages/Fhi.AuthControllers).
 
-## Usage
+## Description
+
+### AccountController
 
 The package adds a controller named `AccountController` with the following GET endpoints:
 
@@ -20,5 +22,8 @@ The package adds a controller named `AccountController` with the following GET e
 
 The last `Ping` endpoint is used to check if controller is installed.`
 
+### Default Html files
+
+The package also adds four default pages, for `Error`, `Forbidden`, `LoggedOut` and `StatusCode` in the wwwroot folder.
 
 
