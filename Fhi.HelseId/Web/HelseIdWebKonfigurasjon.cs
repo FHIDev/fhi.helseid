@@ -23,22 +23,23 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; set; }
     ApiOutgoingKonfigurasjon[] Apis { get; set; }
     bool UseApis { get; }
+    bool UseRefreshTokenStore { get; }
 }
 
 
 [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
 public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKonfigurasjon
 {
-        
+
 
     public string[] SecurityLevels { get; set; } = { "3", "4" };
-    
-        
+
+
     protected override IEnumerable<string> FixedScopes
     {
         get
         {
-            var list =  new List<string>
+            var list = new List<string>
             {
                 "openid",
                 "profile",
@@ -62,6 +63,8 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
     public string HprUrl { get; set; } = "";
 
     public bool UseProtectedPaths { get; set; } = true;
+
+    public bool UseRefreshTokenStore { get; set; } = true;
 
     public bool UseApis => Apis.Any();
 

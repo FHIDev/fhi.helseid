@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using Fhi.HelseId.Web.Services;
 using IdentityModel.Client;
 using Fhi.HelseId.Web.ExtensionMethods;
+using Microsoft.Extensions.Options;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
@@ -23,9 +24,10 @@ public interface IRefreshTokenStore
 public class RefreshTokenStore : IRefreshTokenStore
 {
     private readonly ILogger<RefreshTokenStore> logger;
-
-    public RefreshTokenStore(ILogger<RefreshTokenStore> logger)
+    private readonly IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon;
+    public RefreshTokenStore(ILogger<RefreshTokenStore> logger, IOptions<HelseIdWebKonfigurasjon> options)
     {
+        helseIdWebKonfigurasjon = options.Value;
         logger.LogMember();
         this.logger = logger;
     }
@@ -35,6 +37,8 @@ public class RefreshTokenStore : IRefreshTokenStore
 
     public void Add(string previousToken, TokenResponse? tokenResponse, ICurrentUser user, [CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0)
     {
+        if (!helseIdWebKonfigurasjon.AuthUse || !helseIdWebKonfigurasjon.UseRefreshTokenStore)
+            return;
         var dtExpiresNew = DateTimeOffset.Now.AddSeconds(tokenResponse?.ExpiresIn ?? 0);
         var newRefreshToken = new RefreshToken
         {
@@ -58,6 +62,8 @@ public class RefreshTokenStore : IRefreshTokenStore
 
     public void AddIfNotExist(string previousToken, TokenResponse? tokenResponse, ICurrentUser user, [CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0)
     {
+        if (!helseIdWebKonfigurasjon.AuthUse || !helseIdWebKonfigurasjon.UseRefreshTokenStore)
+            return;
         if (!RefreshTokens.Exists(o => o.PreviousToken == previousToken && o.PidPseudonym==user.PidPseudonym))
         {
             Add(previousToken, tokenResponse, user, source, lineNumber);
@@ -67,6 +73,8 @@ public class RefreshTokenStore : IRefreshTokenStore
     public bool Exist(string token,ICurrentUser user) => RefreshTokens.Exists(o => o.CurrentToken == token && o.PidPseudonym==user.PidPseudonym);
     public bool IsLatest(string refreshTokenValue,ICurrentUser user)
     {
+        if (!helseIdWebKonfigurasjon.AuthUse || !helseIdWebKonfigurasjon.UseRefreshTokenStore)
+            return true;
         if (!RefreshTokens.Any())
             return true;
         var latest = GetLatestToken(user);

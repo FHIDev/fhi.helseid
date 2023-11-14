@@ -138,7 +138,8 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         _logger.LogTrace("{class}:{method}: SigningOut", nameof(AutomaticTokenManagementCookieEvents), nameof(SigningOut));
         await _options.CookieEvents.SigningOut(context);
 
-        if (_options.RevokeRefreshTokenOnSignout == false) return;
+        if (_options.RevokeRefreshTokenOnSignout == false) 
+            return;
 
         var result = await context.HttpContext.AuthenticateAsync();
 

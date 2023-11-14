@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Infrastructure;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
@@ -11,6 +12,7 @@ using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Fhi.HelseId.Common
 {
@@ -24,12 +26,15 @@ namespace Fhi.HelseId.Common
         private readonly ILogger<AuthHeaderHandler> logger;
         private readonly IRefreshTokenStore refreshTokenStore;
         private readonly ICurrentUser user;
+        private readonly HelseIdWebKonfigurasjon config;
 
         public AuthHeaderHandler(IHttpContextAccessor contextAccessor
             ,ILogger<AuthHeaderHandler> logger
             , IRefreshTokenStore refreshTokenStore
-            ,ICurrentUser user)
+            ,ICurrentUser user
+            ,IOptions<HelseIdWebKonfigurasjon> options)
         {
+            config = options.Value;
             logger.LogMember();
             this.contextAccessor = contextAccessor;
             this.logger = logger;
@@ -42,7 +47,7 @@ namespace Fhi.HelseId.Common
             logger.LogTrace("{class}.{method} - Starting", nameof(AuthHeaderHandler), nameof(SendAsync));
             var token = await ctx.GetUserAccessTokenAsync(cancellationToken: cancellationToken);
 
-            if (refreshTokenStore.GetLatestToken(user)!=null && !string.IsNullOrEmpty(refreshTokenStore.GetLatestToken(user)?.AccessToken) && refreshTokenStore.GetLatestToken(user)?.AccessToken != token)
+            if (config.UseRefreshTokenStore && refreshTokenStore.GetLatestToken(user)!=null && !string.IsNullOrEmpty(refreshTokenStore.GetLatestToken(user)?.AccessToken) && refreshTokenStore.GetLatestToken(user)?.AccessToken != token)
                 token = refreshTokenStore.GetLatestToken(user)?.AccessToken;
             if (token == null)
             {
