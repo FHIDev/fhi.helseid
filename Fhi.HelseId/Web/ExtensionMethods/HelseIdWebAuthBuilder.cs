@@ -57,7 +57,7 @@ public class HelseIdWebAuthBuilder
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
             services.AddScoped<ICurrentUser, CurrentHttpUser>();
-            services.AddScoped<IGodkjenteHprKategoriListe, NoHprApprovals>();
+            services.AddSingleton<IGodkjenteHprKategoriListe, NoHprApprovals>();
             if (HelseIdWebKonfigurasjon.UseHprPolicy)
             {
                 services.AddSingleton<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
