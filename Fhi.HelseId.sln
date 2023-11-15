@@ -44,6 +44,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\Fhi.HelseId.CI.yml = .github\workflows\Fhi.HelseId.CI.yml
 		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
 		.github\workflows\Fhi.HelseId.TestSupport.Nuget.yml = .github\workflows\Fhi.HelseId.TestSupport.Nuget.yml
+		.github\workflows\SonarBuild.yml = .github\workflows\SonarBuild.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.TestSupport", "Fhi.HelseId.TestSupport\Fhi.HelseId.TestSupport.csproj", "{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}"
