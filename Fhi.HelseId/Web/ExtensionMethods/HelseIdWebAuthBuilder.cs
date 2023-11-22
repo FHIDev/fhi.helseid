@@ -253,6 +253,7 @@ public class HelseIdWebAuthBuilder
     /// </summary>
     public HelseIdWebAuthBuilder AddOutgoingApiServices()
     {
+        services.AddAccessTokenManagement();
         services.AddTransient<AuthHeaderHandler>();
         return this;
        
