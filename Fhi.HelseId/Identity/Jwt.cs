@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -22,12 +21,12 @@ namespace Fhi.HelseId.Common.Identity
 
             var extraClaims = new List<Claim>
             {
-                new Claim(JwtClaimTypes.Subject, configAuth.ClientId),
-                new Claim(JwtClaimTypes.IssuedAt, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()),
-                new Claim(JwtClaimTypes.JwtId, Guid.NewGuid().ToString("N"))
+                new(JwtClaimTypes.Subject, configAuth.ClientId),
+                new(JwtClaimTypes.IssuedAt, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()),
+                new(JwtClaimTypes.JwtId, Guid.NewGuid().ToString("N"))
             };
 
-            var audience = Path.Combine(configAuth.Authority, "connect/token");
+            var audience = new Uri(new Uri(configAuth.Authority), "connect/token").AbsoluteUri;
 
             var payload = CreatePayload(configAuth.ClientId, audience, extraClaims);
             var header = new JwtHeader(signingCredentials);
