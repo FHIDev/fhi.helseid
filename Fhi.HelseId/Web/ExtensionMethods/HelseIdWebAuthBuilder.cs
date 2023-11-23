@@ -154,7 +154,7 @@ public class HelseIdWebAuthBuilder
         if (!HelseIdWebKonfigurasjon.AuthUse || !HelseIdWebKonfigurasjon.UseProtectedPaths) return;
         var excluded = overrideDefaults
             ? new List<PathString>()
-            : new List<PathString>
+            : new()
             {
                 "/favicon.ico",
                 RedirectPagesKonfigurasjon.Error,
