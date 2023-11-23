@@ -1,4 +1,4 @@
-name: Fhi.HelseId.Nuget
+name: Fhi.HelseId.Refit.Nuget
 on:
   push:
     branches:
