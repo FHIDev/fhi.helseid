@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.AuthControllers</id>
+    <Configurations>Debug;Release</Configurations>
     <Version>1.0.0</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023 Folkehelseinstituttet (FHI)</Copyright>
@@ -26,18 +27,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fhi.HelseId" Version="5.0.0" />
+    <PackageReference Include="Fhi.HelseId" Version="5.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="HtmlFiles\**\*.html" Pack="true" PackagePath="content" />
   </ItemGroup>
+  
   <ItemGroup>
     <None Include="Fhi.AuthControllers.props">
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
     </None>
   </ItemGroup>
+  
   <PropertyGroup>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
