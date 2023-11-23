@@ -121,9 +121,8 @@ namespace Fhi.HelseId.Common.Identity
             {
                 var thumbprint = Base64Url.Encode(x509Key.Certificate.GetCertHash());
                 var x5c = GenerateX5c(x509Key.Certificate);
-                var pubKey = x509Key.PublicKey as RSA;
 
-                if(pubKey == null)
+                if(x509Key.PublicKey is not RSA pubKey)
                 {
                     throw new UnsupportedSigningKeyTypeException("Only certificates based on RSA keys are supported at the moment");
                 }
