@@ -22,6 +22,10 @@ The package adds a controller named `AccountController` with the following GET e
 
 The last `Ping` endpoint is used to check if the controller is installed.`
 
+### UserController
+
+It also includes a UserController with a method `User` that displays information about the logged in user.
+
 ### Default Html files
 
 The package also adds four default pages, for `Error`, `Forbidden`, `LoggedOut` and `StatusCode` in the wwwroot folder.

@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <id>Fhi.AuthControllers</id>
     <Configurations>Debug;Release</Configurations>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fhi.HelseId" Version="5.0.3" />
+    <PackageReference Include="Fhi.HelseId" Version="5.0.4" />
   </ItemGroup>
 
   <ItemGroup>
