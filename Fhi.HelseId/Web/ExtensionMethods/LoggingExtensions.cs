@@ -12,14 +12,6 @@ namespace Fhi.HelseId.Web.ExtensionMethods
         /// </summary>
         public static void LogMember(this ILogger logger,string? className="",string? message="", [CallerMemberName] string? methodName=null)
         {
-            //if (string.IsNullOrWhiteSpace(className))
-            //{
-            //    className = methodName; 
-            //}
-            //if (string.IsNullOrWhiteSpace(message))
-            //{
-            //    message = "ctor";
-            //}
             logger.LogTrace("{class}.{method} {message}", className, methodName, message);
         }
     }
