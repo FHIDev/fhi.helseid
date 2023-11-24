@@ -85,18 +85,6 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-
-
-    private static IHttpClientBuilder AddHelseIdApiServices(this IServiceCollection services, IApiOutgoingKonfigurasjon api)
-    {
-        return services.AddUserAccessTokenHttpClient(api.Name, configureClient: client =>
-            {
-                client.BaseAddress = api.Uri;
-                client.Timeout = TimeSpan.FromMinutes(10);
-            })
-            .AddHttpMessageHandler<AuthHeaderHandler>();
-    }
-
     private static IHttpClientBuilder AddHelseIdApiServicesNoAuth(this IServiceCollection services, IApiOutgoingKonfigurasjon api)
     {
         return services.AddHttpClient(api.Name, client =>

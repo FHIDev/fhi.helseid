@@ -57,6 +57,7 @@ public static class Extensions
     /// Adds all apis defined in the configuration to the service collection
     /// Retrieve them in the named services using IHttpClientFactory
     /// </summary>
+    /// <param name="builder"></param>
     /// <param name="extra">Optional function which will be added for each api</param>
     /// <returns>WebApplicationBuilder</returns>
     public static WebApplicationBuilder AddApisUsingHttpClient(this WebApplicationBuilder builder, Func<IServiceCollection, IApiOutgoingKonfigurasjon, IServiceCollection>? extra = null) 
