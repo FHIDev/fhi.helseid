@@ -1,47 +1,49 @@
-name: Fhi.HelseId.Nuget
+name: Fhi.HelseId.Refit.Nuget
+
 on:
   push:
     branches:
       - master
+    paths:
+      - 'Fhi.HelseId.Refit/**'
+defaults:
+  run:
+    shell: pwsh
+    working-directory: ./Fhi.HelseId.Refit
+
 jobs:
   publish:
     name: Build, pack & publish
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
-
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore --verbosity normal
       # Publish
-      - name: Publish on version change
-        id: publish_nuget
-        uses: rohith/publish-nuget@v2
-        with:
-          # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: 'Fhi.HelseId.Refit/Fhi.HelseId.Refit.csproj'
-          
-          # NuGet package id, used for version detection & defaults to project name
-          PACKAGE_NAME: Fhi.HelseId.Refit
-          
-          # Regex pattern to extract version info in a capturing group
-          VERSION_REGEX: <Version>(.*)<\/Version>
-          
-          # Useful with external providers like Nerdbank.GitVersioning, ignores VERSION_FILE_PATH & VERSION_REGEX
-          # VERSION_STATIC: 1.0.0
-
-          # Flag to toggle git tagging, enabled by default
-          TAG_COMMIT: true
-
-          # Format of the git tag, [*] gets replaced with actual version
-          # TAG_FORMAT: v*
-
-          # API key to authenticate with NuGet server
-          NUGET_KEY: ${{secrets.NUGET_ORG_PUSH_API_KEY_HELSEID}}
-
-          # NuGet server uri hosting the packages, defaults to https://api.nuget.org
-          NUGET_SOURCE: https://api.nuget.org
-
-          # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
-          INCLUDE_SYMBOLS: true
+      # Create the NuGet package in the package folder 
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output  package 
+  
+      # Publish the NuGet package as an artifact, so they can be used in the following jobs
+      #- uses: actions/upload-artifact@v3
+      #  with:
+      #    name: nuget
+      #    if-no-files-found: error
+      #    retention-days: 7
+      #    path: ${{ package}}/*.nupkg
+      - name: Publish nupkg and snupkg to NuGet.org
+        run: |
+          foreach($file in (Get-ChildItem package -Recurse -Include *.nupkg)) {
+              dotnet nuget push $file --api-key "${{ secrets.NUGET_ORG_PUSH_API_KEY_HELSEID }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          }
+          foreach($file in (Get-ChildItem "package" -Recurse -Include *.snupkg)) {
+              dotnet nuget push $file --api-key "${{ secrets.NUGET_ORG_PUSH_API_KEY_HELSEID }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          }
