@@ -20,7 +20,7 @@ The package adds a controller named `AccountController` with the following GET e
 * Logout
 * Ping
 
-The last `Ping` endpoint is used to check if controller is installed.`
+The last `Ping` endpoint is used to check if the controller is installed.`
 
 ### Default Html files
 
