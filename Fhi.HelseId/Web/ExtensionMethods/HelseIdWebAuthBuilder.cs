@@ -37,7 +37,7 @@ public class HelseIdWebAuthBuilder
         Configuration = configuration;
         helseIdKonfigurasjonSeksjon = Configuration.GetSection(nameof(HelseIdWebKonfigurasjon));
         if (helseIdKonfigurasjonSeksjon == null)
-            throw new ConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
+            throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         HelseIdWebKonfigurasjon = helseIdKonfigurasjonSeksjon.Get<HelseIdWebKonfigurasjon>();
         RedirectPagesKonfigurasjon = HelseIdWebKonfigurasjon.RedirectPagesKonfigurasjon;
         SecretHandler = new HelseIdSharedSecretHandler(); // Default

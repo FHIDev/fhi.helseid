@@ -14,9 +14,9 @@ namespace Fhi.HelseId.Common
         }
 
         public static HelseIdWebKonfigurasjon GetWebKonfigurasjon(this IConfiguration root) =>
-            root.GetConfig<HelseIdWebKonfigurasjon>(nameof(HelseIdWebKonfigurasjon));
+            root.GetConfig<HelseIdWebKonfigurasjon>(nameof(HelseIdWebKonfigurasjon)) ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon));
         public static HelseIdApiKonfigurasjon GetApiKonfigurasjon(this IConfiguration root) =>
-            root.GetConfig<HelseIdApiKonfigurasjon>(nameof(HelseIdApiKonfigurasjon));
+            root.GetConfig<HelseIdApiKonfigurasjon>(nameof(HelseIdApiKonfigurasjon)) ?? throw new MissingConfigurationException(nameof(HelseIdApiKonfigurasjon));
 
         
 
