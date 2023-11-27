@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Fhi.HelseId.Altinn.Tests
 {
@@ -52,42 +53,42 @@ namespace Fhi.HelseId.Altinn.Tests
         public async Task SubUnitsExist()
         {
             var subUnits = serviceClient.GetOrganizationsOfTypes(CancellationToken.None, "BEDR", "AAFY");
-            Assert.NotNull(await subUnits.FirstOrDefaultAsync());
+            ClassicAssert.NotNull(await subUnits.FirstOrDefaultAsync());
         }
 
         [Test]
         public async Task UnitsExist()
         {
             var subUnits = serviceClient.GetOrganizationsNotOfTypes(CancellationToken.None, "BEDR", "AAFY");
-            Assert.NotNull(await subUnits.FirstOrDefaultAsync());
+            ClassicAssert.NotNull(await subUnits.FirstOrDefaultAsync());
         }
 
         [Test]
         public async Task KnownOrganizationIsPresent()
         {
             var organization = await serviceClient.GetOrganization(Organization);
-            Assert.NotNull(organization);
+            ClassicAssert.NotNull(organization);
         }
 
         [Test]
         public async Task MunicipalitiesExist()
         {
             var municipalities = serviceClient.GetOrganizationsOfTypes(CancellationToken.None, "KOMM");
-            Assert.NotNull(await municipalities.FirstOrDefaultAsync());
+            ClassicAssert.NotNull(await municipalities.FirstOrDefaultAsync());
         }
 
         [Test]
         public async Task KnownDelegationIsPresent()
         {
             var hasDelegation = await serviceClient.HasDelegation(Pid, Organization, ServiceCode, ServiceEditionCode);
-            Assert.True(hasDelegation);
+            ClassicAssert.True(hasDelegation);
         }
 
         [Test]
         public async Task KnownReporteesArePresent()
         {
             var reportees = serviceClient.GetReportees(Pid, ServiceCode, ServiceEditionCode);
-            Assert.NotNull(await reportees.FirstOrDefaultAsync());
+            ClassicAssert.NotNull(await reportees.FirstOrDefaultAsync());
         }
 
         [Test]
@@ -95,7 +96,7 @@ namespace Fhi.HelseId.Altinn.Tests
         {
             var rights = serviceClient.GetRights(Pid, Organization);
             var any = await rights.AnyAsync();
-            Assert.True(any);
+            ClassicAssert.True(any);
         }
 
         [Test]
@@ -105,19 +106,19 @@ namespace Fhi.HelseId.Altinn.Tests
             var first = await serviceClient.GetReportees(Pid, ServiceCode, ServiceEditionCode, 0, 1);
             var second = await serviceClient.GetReportees(Pid, ServiceCode, ServiceEditionCode, 1, 1);
 
-            Assert.NotNull(both);
-            Assert.AreEqual(2, both!.Length);
-            Assert.NotNull(first.Single());
-            Assert.NotNull(second.Single());
+            ClassicAssert.NotNull(both);
+            ClassicAssert.AreEqual(2, both!.Length);
+            ClassicAssert.NotNull(first.Single());
+            ClassicAssert.NotNull(second.Single());
 
             var firstReporteeFromBoth = both[0];
             var secondReporteeFromBoth = both[1];
             var firstReporteeAlone = first![0];
             var secondReporteeAlone = second![0];
 
-            Assert.AreNotEqual(firstReporteeAlone.Name, secondReporteeAlone.Name);
-            Assert.AreEqual(firstReporteeFromBoth.Name, firstReporteeAlone.Name);
-            Assert.AreEqual(secondReporteeFromBoth.Name, secondReporteeAlone.Name);
+            ClassicAssert.AreNotEqual(firstReporteeAlone.Name, secondReporteeAlone.Name);
+            ClassicAssert.AreEqual(firstReporteeFromBoth.Name, firstReporteeAlone.Name);
+            ClassicAssert.AreEqual(secondReporteeFromBoth.Name, secondReporteeAlone.Name);
         }
 
         [Test]
@@ -127,18 +128,18 @@ namespace Fhi.HelseId.Altinn.Tests
             var first = await serviceClient.GetRights(Pid, Organization, 0, 1);
             var second = await serviceClient.GetRights(Pid, Organization, 1, 1);
 
-            Assert.AreEqual(2, both.Rights.Length);
-            Assert.NotNull(first.Rights.Single());
-            Assert.NotNull(second.Rights.Single());
+            ClassicAssert.AreEqual(2, both.Rights.Length);
+            ClassicAssert.NotNull(first.Rights.Single());
+            ClassicAssert.NotNull(second.Rights.Single());
 
             var firstRightFromBoth = both.Rights[0];
             var secondRightFromBoth = both.Rights[1];
             var firstRightAlone = first.Rights[0];
             var secondRightAlone = second.Rights[0];
 
-            Assert.AreNotEqual(firstRightAlone.RightID, secondRightAlone.RightID);
-            Assert.AreEqual(firstRightFromBoth.RightID, firstRightAlone.RightID);
-            Assert.AreEqual(secondRightFromBoth.RightID, secondRightAlone.RightID);
+            ClassicAssert.AreNotEqual(firstRightAlone.RightID, secondRightAlone.RightID);
+            ClassicAssert.AreEqual(firstRightFromBoth.RightID, firstRightAlone.RightID);
+            ClassicAssert.AreEqual(secondRightFromBoth.RightID, secondRightAlone.RightID);
         }
     }
 }
