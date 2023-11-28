@@ -28,11 +28,11 @@ namespace Fhi.HelseId.Common
         private readonly ICurrentUser user;
         private readonly HelseIdWebKonfigurasjon config;
 
-        public AuthHeaderHandler(IHttpContextAccessor contextAccessor
-            ,ILogger<AuthHeaderHandler> logger
-            , IRefreshTokenStore refreshTokenStore
-            ,ICurrentUser user
-            ,IOptions<HelseIdWebKonfigurasjon> options)
+        public AuthHeaderHandler(IHttpContextAccessor contextAccessor,
+                                 ILogger<AuthHeaderHandler> logger,
+                                 IRefreshTokenStore refreshTokenStore,
+                                 ICurrentUser user,
+                                 IOptions<HelseIdWebKonfigurasjon> options)
         {
             config = options.Value;
             logger.LogMember();
