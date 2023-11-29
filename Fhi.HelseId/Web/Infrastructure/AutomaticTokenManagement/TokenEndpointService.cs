@@ -20,7 +20,6 @@ public class TokenEndpointService
     private readonly IAuthenticationSchemeProvider schemeProvider;
     private readonly HttpClient httpClient;
     private readonly ILogger<TokenEndpointService> logger;
-    private readonly AuthorizationCodeReceivedContext? authorizationCodeReceivedContext;
     private readonly IHelseIdSecretHandler? secretHandler;
 
     public TokenEndpointService(
@@ -39,8 +38,7 @@ public class TokenEndpointService
         this.schemeProvider = schemeProvider;
         this.httpClient = httpClient;
         this.logger = logger;
-        authorizationCodeReceivedContext =
-            httpContextAccessor.HttpContext?.Features.Get<AuthorizationCodeReceivedContext>();
+        httpContextAccessor.HttpContext?.Features.Get<AuthorizationCodeReceivedContext>();
     }
 
     public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
