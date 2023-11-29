@@ -19,7 +19,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
     private readonly AutomaticTokenManagementOptions _tokenConfig;
     private readonly ILogger _logger;
     private readonly ISystemClock _clock;
-    private readonly IHelseIdWebKonfigurasjon _helseIdConfig;
+    private readonly HelseIdWebKonfigurasjon _helseIdConfig;
     private readonly IRefreshTokenStore _refreshTokenStore;
     
     private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests = new();
@@ -29,7 +29,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         IOptions<AutomaticTokenManagementOptions> tokenOptions,
         ILogger<AutomaticTokenManagementCookieEvents> logger,
         ISystemClock clock,
-        IHelseIdWebKonfigurasjon helseIdConfig,
+        IOptions<HelseIdWebKonfigurasjon> helseIdOptions,
         IRefreshTokenStore refreshTokenStore)
     {
         logger.LogMember();
@@ -37,7 +37,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         _tokenConfig = tokenOptions.Value;
         _logger = logger;
         _clock = clock;
-        _helseIdConfig = helseIdConfig;
+        _helseIdConfig = helseIdOptions.Value;
         _refreshTokenStore = refreshTokenStore;
     }
 
