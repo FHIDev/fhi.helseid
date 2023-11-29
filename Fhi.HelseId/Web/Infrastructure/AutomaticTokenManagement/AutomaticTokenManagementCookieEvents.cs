@@ -160,15 +160,9 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         if (refreshToken == null)
         {
             _logger.LogTrace("No refresh token found in cookie properties. A refresh token must be requested and SaveTokens must be enabled.");
-            return;
         }
 
-        var response = await _service.RevokeTokenAsync(refreshToken.Value);
-
-        if (response.IsError)
-        {
-            _logger.LogTrace("Error revoking token: {error}", response.Error);
-        }
+        
     }
 
     public override Task RedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
