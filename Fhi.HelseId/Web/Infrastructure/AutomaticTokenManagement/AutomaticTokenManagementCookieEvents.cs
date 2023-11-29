@@ -16,35 +16,36 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
 {
     private readonly TokenEndpointService _service;
-    private readonly AutomaticTokenManagementOptions _options;
+    private readonly AutomaticTokenManagementOptions _tokenConfig;
     private readonly ILogger _logger;
     private readonly ISystemClock _clock;
-    private readonly IHelseIdWebKonfigurasjon config;
-    private readonly IRefreshTokenStore refreshTokenStore;
+    private readonly HelseIdWebKonfigurasjon _helseIdConfig;
+    private readonly IRefreshTokenStore _refreshTokenStore;
     
     private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests = new();
 
     public AutomaticTokenManagementCookieEvents(
         TokenEndpointService service,
-        IOptions<AutomaticTokenManagementOptions> options,
+        IOptions<AutomaticTokenManagementOptions> tokenOptions,
         ILogger<AutomaticTokenManagementCookieEvents> logger,
-        ISystemClock clock,IHelseIdWebKonfigurasjon config,
+        ISystemClock clock,
+        IOptions<HelseIdWebKonfigurasjon> helseIdOptions,
         IRefreshTokenStore refreshTokenStore)
     {
         logger.LogMember();
         _service = service;
-        _options = options.Value;
+        _tokenConfig = tokenOptions.Value;
         _logger = logger;
         _clock = clock;
-        this.config = config;
-        this.refreshTokenStore = refreshTokenStore;
+        _helseIdConfig = helseIdOptions.Value;
+        _refreshTokenStore = refreshTokenStore;
     }
 
     public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
     {
         var user = new UserByIdentity((ClaimsIdentity)context.Principal.Identity);
         _logger.LogTrace("{class}:{method} - Starting checking token and possible refresh", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
-        await _options.CookieEvents.ValidatePrincipal(context);
+        await _tokenConfig.CookieEvents.ValidatePrincipal(context);
 
         var tokens = context.Properties.GetTokens()?.ToList();
         if (tokens == null || !tokens.Any())
@@ -68,9 +69,9 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         }
         var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
         var rfValue = refreshToken.Value;
-        refreshTokenStore.AddIfNotExist(rfValue, null,user);
+        _refreshTokenStore.AddIfNotExist(rfValue, null,user);
 
-        if (false && !refreshTokenStore.IsLatest(rfValue,user))
+        if (!_refreshTokenStore.IsLatest(rfValue,user))
         {
             //var latesttoken = refreshTokenStore.GetLatestToken;
             //rfValue = latesttoken.CurrentToken;
@@ -82,10 +83,9 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
             _logger.LogTrace("{class}:{method} - Using current token {token} expires at {expires}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),rfValue,dtExpires);
         }
             
-        var dtRefresh = dtExpires.Subtract(_options.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
-        _logger.LogTrace(
-            $"ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {_options.RefreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {_clock.UtcNow}, refresh_token: {refreshToken.Value}, NoOfTokensInStore {refreshTokenStore.RefreshTokens.Count}");
-        if (config.UseApis)
+        var dtRefresh = dtExpires.Subtract(_tokenConfig.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
+        _logger.LogTrace("ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {refreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {utcNow}, refresh_token: {refreshToken}, NoOfTokensInStore {noOfRefreshTokens}", dtExpires, _tokenConfig.RefreshBeforeExpiration, dtRefresh, _clock.UtcNow, refreshToken.Value, _refreshTokenStore.RefreshTokens.Count);
+        if (_helseIdConfig.UseApis)
         {
             if (dtRefresh < _clock.UtcNow)
             {
@@ -99,11 +99,11 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
                         if (response.IsError)
                         {
                             _logger.LogTrace("Error refreshing token: {error}, {errordesc}\n{json}", response.Error, response.ErrorDescription, response.Json);
-                            refreshTokenStore.Dump();
+                            _refreshTokenStore.Dump();
                             context.RejectPrincipal();
                             return;
                         }
-                        refreshTokenStore.Add(rfValue, response, user);
+                        _refreshTokenStore.Add(rfValue, response, user);
                         var newExpiresAt = context.UpdateTokens(response);
                         _logger.LogTrace("{class}.{method} - SignInAsync now as it expires at: {newExpiresAt}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), newExpiresAt);
                         _logger.LogTrace("{class}.{method} - Refresh tokens: Current {current}, New {new}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), rfValue, response.RefreshToken);
@@ -136,9 +136,9 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
     public override async Task SigningOut(CookieSigningOutContext context)
     {
         _logger.LogTrace("{class}:{method}: SigningOut", nameof(AutomaticTokenManagementCookieEvents), nameof(SigningOut));
-        await _options.CookieEvents.SigningOut(context);
+        await _tokenConfig.CookieEvents.SigningOut(context);
 
-        if (_options.RevokeRefreshTokenOnSignout == false) 
+        if (!_tokenConfig.RevokeRefreshTokenOnSignout) 
             return;
 
         var result = await context.HttpContext.AuthenticateAsync();
@@ -167,34 +167,34 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
 
     public override Task RedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
     {
-        return _options.CookieEvents.RedirectToAccessDenied(context);
+        return _tokenConfig.CookieEvents.RedirectToAccessDenied(context);
     }
 
     public override Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
     {
-        return _options.CookieEvents.RedirectToLogin(context);
+        return _tokenConfig.CookieEvents.RedirectToLogin(context);
     }
 
     public override Task RedirectToLogout(RedirectContext<CookieAuthenticationOptions> context)
     {
-        return _options.CookieEvents.RedirectToLogout(context);
+        return _tokenConfig.CookieEvents.RedirectToLogout(context);
     }
 
     public override Task RedirectToReturnUrl(RedirectContext<CookieAuthenticationOptions> context)
     {
-        return _options.CookieEvents.RedirectToReturnUrl(context);
+        return _tokenConfig.CookieEvents.RedirectToReturnUrl(context);
     }
 
     public override Task SignedIn(CookieSignedInContext context)
     {
         _logger.LogTrace("{class}:{method}", nameof(AutomaticTokenManagementCookieEvents), nameof(SignedIn));
-        return _options.CookieEvents.SignedIn(context);
+        return _tokenConfig.CookieEvents.SignedIn(context);
     }
 
     public override Task SigningIn(CookieSigningInContext context)
     {
         _logger.LogTrace("{class}:{method}", nameof(AutomaticTokenManagementCookieEvents), nameof(SigningIn));
-        return _options.CookieEvents.SigningIn(context);
+        return _tokenConfig.CookieEvents.SigningIn(context);
     }
 }
 

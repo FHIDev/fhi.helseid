@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Fhi.HelseId.Api.Handlers;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
 
@@ -40,7 +41,7 @@ public class HelseIdWebAuthBuilder
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         HelseIdWebKonfigurasjon = helseIdKonfigurasjonSeksjon.Get<HelseIdWebKonfigurasjon>();
         RedirectPagesKonfigurasjon = HelseIdWebKonfigurasjon.RedirectPagesKonfigurasjon;
-        SecretHandler = new HelseIdSharedSecretHandler(); // Default
+        SecretHandler = new HelseIdNoAuthorizationSecretHandler(); // Default
     }
 
     /// <summary>
@@ -53,10 +54,9 @@ public class HelseIdWebAuthBuilder
         Action<MvcOptions>? configureMvc = null,
         ConfigureAuthentication? configureAuthentication = null)
     {
-        services.AddHttpContextAccessor();
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
-            services.AddScoped<ICurrentUser, CurrentHttpUser>();
+            
             services.AddSingleton<IGodkjenteHprKategoriListe, NoHprApprovals>();
             if (HelseIdWebKonfigurasjon.UseHprPolicy)
             {
@@ -68,19 +68,29 @@ public class HelseIdWebAuthBuilder
 
             services.AddSingleton<IWhitelist>(HelseIdWebKonfigurasjon.Whitelist);
             services.AddSingleton<IAutentiseringkonfigurasjon>(HelseIdWebKonfigurasjon);
-            services.AddSingleton(HelseIdWebKonfigurasjon);
-            services.Configure<HelseIdWebKonfigurasjon>(helseIdKonfigurasjonSeksjon);
             services.AddMemoryCache();
             services.AddSingleton<IHprFactory, HprFactory>();
             services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            services.AddSingleton<IRefreshTokenStore, RefreshTokenStore>();
-            services.AddSingleton(SecretHandler);
         }
+        else
+        {
+            services.AddSingleton<IAuthorizationHandler, NoAuthorizationHandler>();
+            services.AddAuthentication("NoAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, NoAuthenticationHandler>("NoAuthentication", null);
+        }
+        services.AddScoped<ICurrentUser, CurrentHttpUser>();
+        services.AddSingleton(HelseIdWebKonfigurasjon);
+        services.Configure<HelseIdWebKonfigurasjon>(helseIdKonfigurasjonSeksjon);
+        services.AddHttpContextAccessor();
+        services.AddSingleton<IRefreshTokenStore, RefreshTokenStore>();
+        services.AddSingleton(SecretHandler);
+        
 
         (var authorizeFilter, string policyName) = AddAuthentication(configureAuthentication);
-
+            
         AddControllers(configureMvc, authorizeFilter);
+        
 
         return MvcBuilder;
     }
@@ -90,14 +100,14 @@ public class HelseIdWebAuthBuilder
     /// </summary>
     public IMvcBuilder? MvcBuilder { get; private set; }
 
-    public HelseIdWebAuthBuilder AddControllers(Action<MvcOptions>? configureMvc, AuthorizeFilter authorizeFilter)
+    public HelseIdWebAuthBuilder AddControllers(Action<MvcOptions>? configureMvc, AuthorizeFilter? authorizeFilter)
     {
         MvcBuilder = services.AddControllers(config =>
         {
             //Unsure about this
-            if (HelseIdWebKonfigurasjon.AuthUse)
+            if (HelseIdWebKonfigurasjon.AuthUse && authorizeFilter is not null)
             {
-                config.Filters.Add(authorizeFilter);
+                config.Filters.Add(authorizeFilter!);
             }
 
             configureMvc?.Invoke(config);
@@ -122,20 +132,23 @@ public class HelseIdWebAuthBuilder
     protected virtual (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(ConfigureAuthentication? configureAuthentication = null)
     {
         const double tokenRefreshBeforeExpirationTime = 2;
-        AddHelseIdAuthentication()
-            .AddCookie(options =>
-            {
-                options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon);
+        if (HelseIdWebKonfigurasjon.AuthUse)
+        {
+            AddHelseIdAuthentication()
+                .AddCookie(options =>
+                {
+                    options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon);
 
-                configureAuthentication?.ConfigureCookieAuthentication?.Invoke(options);
-            })
-            .AddOpenIdConnect(HelseIdContext.Scheme, options =>
-            {
-                options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon, SecretHandler);
+                    configureAuthentication?.ConfigureCookieAuthentication?.Invoke(options);
+                })
+                .AddOpenIdConnect(HelseIdContext.Scheme, options =>
+                {
+                    options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon, SecretHandler);
 
-                configureAuthentication?.ConfigureOpenIdConnect?.Invoke(options);
-            })
-            .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
+                    configureAuthentication?.ConfigureOpenIdConnect?.Invoke(options);
+                })
+                .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
+        }
 
         (var authPolicy, string policyName) = AddHelseIdAuthorizationPolicy();
 
@@ -182,6 +195,12 @@ public class HelseIdWebAuthBuilder
     /// <returns></returns>
     public (AuthorizationPolicy AuthPolicy, string PolicyName) AddHelseIdAuthorizationPolicy()
     {
+        if (!HelseIdWebKonfigurasjon.AuthUse)
+        {
+            var noAuthorizationPolicy = new AuthorizationPolicyBuilder().AddRequirements(new NoAuthorizationRequirement()).Build();
+            return (noAuthorizationPolicy, Policies.NoAuthorization);
+        }
+
         var authenticatedPolicy = new AuthorizationPolicyBuilder()
             .RequireAuthenticatedUser()
             .Build();

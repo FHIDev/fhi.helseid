@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Fhi.HelseId.Common;
+using Fhi.HelseId.Web.Handlers;
 
 namespace Fhi.HelseId.Web;
 
@@ -24,6 +25,7 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     ApiOutgoingKonfigurasjon[] Apis { get; set; }
     bool UseApis { get; }
     bool UseRefreshTokenStore { get; }
+    NoAuthenticationUser NoAuthenticationUser { get; }
 }
 
 
@@ -76,6 +78,8 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
     }
 
     public ApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<ApiOutgoingKonfigurasjon>();
+
+    public NoAuthenticationUser NoAuthenticationUser { get; set; } = new();
 
     public Uri UriToApiByName(string name)
     {
