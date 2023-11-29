@@ -29,7 +29,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         IOptions<AutomaticTokenManagementOptions> tokenOptions,
         ILogger<AutomaticTokenManagementCookieEvents> logger,
         ISystemClock clock,
-        IOptions<IHelseIdWebKonfigurasjon> helseIdOptions,
+        IHelseIdWebKonfigurasjon helseIdConfig,
         IRefreshTokenStore refreshTokenStore)
     {
         logger.LogMember();
@@ -37,7 +37,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         _tokenConfig = tokenOptions.Value;
         _logger = logger;
         _clock = clock;
-        _helseIdConfig = helseIdOptions.Value;
+        _helseIdConfig = helseIdConfig;
         _refreshTokenStore = refreshTokenStore;
     }
 

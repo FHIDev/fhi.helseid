@@ -7,5 +7,6 @@ namespace Fhi.HelseId.Common.Identity
         public const string HidOrApi = nameof(HidOrApi);
         public const string HprNummer = nameof(HprNummer);
         public const string GodkjentHprKategoriPolicy = nameof(GodkjentHprKategoriPolicy);
+        public const string NoAuthorization = nameof(NoAuthorization);
     }
 }

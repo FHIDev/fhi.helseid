@@ -23,7 +23,7 @@ public static class HelseIdWebAuthBuilderExtensions
     /// <summary>
     /// Use this when working with legacy non-minimal app
     /// </summary>
-    public static HelseIdWebAuthBuilder AddHelseIdWebAuthentication(this IServiceCollection services,IConfiguration config)
+    public static HelseIdWebAuthBuilder AddHelseIdWebAuthentication(this IServiceCollection services, IConfiguration config)
     {
         AuthBuilder = new HelseIdWebAuthBuilder(config, services);
         return AuthBuilder;
@@ -34,7 +34,7 @@ public static class HelseIdWebAuthBuilderExtensions
     /// </summary>
     public static HelseIdWebAuthBuilder UseJwkKeySecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = new HelseIdJwkSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
         return authBuilder;
     }
 
@@ -43,7 +43,7 @@ public static class HelseIdWebAuthBuilderExtensions
     /// </summary>
     public static HelseIdWebAuthBuilder UseJwkKeyFileSecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = new HelseIdJwkFileSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkFileSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
         return authBuilder;
     }
     /// <summary>
@@ -51,7 +51,7 @@ public static class HelseIdWebAuthBuilderExtensions
     /// </summary>
     public static HelseIdWebAuthBuilder UseSelvbetjeningFileSecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = new HelseIdSelvbetjeningSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdSelvbetjeningSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
         return authBuilder;
     }
     /// <summary>
@@ -59,7 +59,7 @@ public static class HelseIdWebAuthBuilderExtensions
     /// </summary>
     public static HelseIdWebAuthBuilder UseAzureKeyVaultSecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = new HelseIdJwkAzureKeyVaultSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkAzureKeyVaultSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
         return authBuilder;
     }
 
@@ -68,7 +68,7 @@ public static class HelseIdWebAuthBuilderExtensions
     /// </summary>
     public static HelseIdWebAuthBuilder UseSharedSecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = new HelseIdSharedSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdSharedSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
         return authBuilder;
     }
 
