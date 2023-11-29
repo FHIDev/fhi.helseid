@@ -195,7 +195,7 @@ public class HelseIdWebAuthBuilder
     /// <returns></returns>
     public (AuthorizationPolicy AuthPolicy, string PolicyName) AddHelseIdAuthorizationPolicy()
     {
-        if (HelseIdWebKonfigurasjon.AuthUse is false)
+        if (!HelseIdWebKonfigurasjon.AuthUse)
         {
             var noAuthorizationPolicy = new AuthorizationPolicyBuilder().AddRequirements(new NoAuthorizationRequirement()).Build();
             return (noAuthorizationPolicy, Policies.NoAuthorization);

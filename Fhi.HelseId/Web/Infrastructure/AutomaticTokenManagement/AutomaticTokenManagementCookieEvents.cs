@@ -71,7 +71,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         var rfValue = refreshToken.Value;
         _refreshTokenStore.AddIfNotExist(rfValue, null,user);
 
-        if (false && !_refreshTokenStore.IsLatest(rfValue,user))
+        if (!_refreshTokenStore.IsLatest(rfValue,user))
         {
             //var latesttoken = refreshTokenStore.GetLatestToken;
             //rfValue = latesttoken.CurrentToken;
@@ -84,8 +84,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         }
             
         var dtRefresh = dtExpires.Subtract(_tokenConfig.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
-        _logger.LogTrace(
-            $"ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {_tokenConfig.RefreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {_clock.UtcNow}, refresh_token: {refreshToken.Value}, NoOfTokensInStore {_refreshTokenStore.RefreshTokens.Count}");
+        _logger.LogTrace("ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {refreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {utcNow}, refresh_token: {refreshToken}, NoOfTokensInStore {noOfRefreshTokens}", dtExpires, _tokenConfig.RefreshBeforeExpiration, dtRefresh, _clock.UtcNow, refreshToken.Value, _refreshTokenStore.RefreshTokens.Count);
         if (_helseIdConfig.UseApis)
         {
             if (dtRefresh < _clock.UtcNow)
@@ -139,7 +138,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         _logger.LogTrace("{class}:{method}: SigningOut", nameof(AutomaticTokenManagementCookieEvents), nameof(SigningOut));
         await _tokenConfig.CookieEvents.SigningOut(context);
 
-        if (_tokenConfig.RevokeRefreshTokenOnSignout == false) 
+        if (!_tokenConfig.RevokeRefreshTokenOnSignout) 
             return;
 
         var result = await context.HttpContext.AuthenticateAsync();
