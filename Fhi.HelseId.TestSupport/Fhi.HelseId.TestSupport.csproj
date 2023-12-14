@@ -7,14 +7,14 @@
     <IsPackable>true</IsPackable>
     <IsTestProject>false</IsTestProject>
     <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
-    <Copyright>(c) 2021-2022 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
+    <Copyright>(c) 2021-2023 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Release of base classes for testing an implementation using Fhi.HelseId</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgrades NUnit to 4.0.1</PackageReleaseNotes>
     <PackageDescription>Base classes for testing an implementation using Fhi.HelseId</PackageDescription>
-    <PackageCopyright>Copyright ©2021-2022 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
+    <PackageCopyright>Copyright ©2021-2023 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <tags>helseid, oauth</tags>
