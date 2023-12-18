@@ -1,0 +1,26 @@
+﻿@using Fhi.HelseId.Blazor;
+@inject IStateHandler StateHandler;
+
+@if (Ready)
+{
+    @ChildContent
+}
+
+@code 
+{
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// We do not render any child content until we are ready. This prevents Blazor from rendering child content before
+    /// OnInitializedAsync has finished.
+    /// </summary>
+    private bool Ready;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await StateHandler.Populate();
+        Ready = true;
+        await base.OnInitializedAsync();
+    }
+}
