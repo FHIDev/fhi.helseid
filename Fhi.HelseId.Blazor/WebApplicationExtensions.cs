@@ -10,52 +10,20 @@ namespace Fhi.HelseId.Blazor
 {
     public static class WebApplicationExtensions
     {
-        /// <summary>
-        /// Usage in Program.cs:
-        ///     builder.AddHelseIdForBlazor();
-        ///     ...
-        ///     app.UseHelseIdForBlazor();
-        ///     
-        /// Usage in App.razor, :
-        ///     <CascadingStates>
-        ///       ..All other App.razor content..
-        ///     </CascadingStates>
-        ///     
-        ///  Optional in Program.cs:
-        ///     app.UseHelseIdForBlazorLogout();
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static HelseidRefitBuilderForBlazor AddHelseIdForBlazor(this WebApplicationBuilder builder, string? section = null, RefitSettings? refitSettings = null)
+        public static HelseidRefitBuilderForBlazor AddHelseIdForBlazor(this WebApplicationBuilder builder, string? configSection = null, RefitSettings? refitSettings = null)
         {
             var config = builder.Configuration
-                .GetSection(section ?? nameof(HelseIdWebKonfigurasjon))
-                .Get<HelseIdWebKonfigurasjon>();
+                .GetSection(configSection ?? nameof(HelseIdWebKonfigurasjon))
+                .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon)); ;
 
             return new HelseidRefitBuilderForBlazor(builder, config, refitSettings);
         }
 
-        /// <summary>
-        /// Usage in Program.cs:
-        ///     builder.AddHelseIdForBlazor();
-        ///     ...
-        ///     app.UseHelseIdForBlazor();
-        ///     
-        /// Usage in App.razor, :
-        ///     <CascadingStates>
-        ///       ..All other App.razor content..
-        ///     </CascadingStates>
-        ///     
-        ///  Optional in Program.cs:
-        ///     app.UseHelseIdForBlazorLogout();
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
         public static HelseidRefitBuilderForBlazor AddHelseIdForBlazor(this WebApplicationBuilder builder, RefitSettings? refitSettings = null)
         {
             var config = builder.Configuration
                 .GetSection(nameof(HelseIdWebKonfigurasjon))
-                .Get<HelseIdWebKonfigurasjon>();
+                .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon)); ;
 
             return new HelseidRefitBuilderForBlazor(builder, config, refitSettings);
         }

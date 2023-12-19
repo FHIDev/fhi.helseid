@@ -60,6 +60,23 @@ builder.AddHelseIdForBlazor(new RefitSettings())
     .AddRefitClient<IMyRefitClient>();
 ```
 
+## Adding Correlation Id to all requests
+
+Use "AddCorrelationId()" to add header propagation of the default FHI correlation id header. 
+
+```
+builder.AddHelseIdForBlazor()
+    .AddCorrelationId()
+    .AddRefitClient<IMyRefitClient>();
+```
+
+A new correlation ID will be given to each request and response that does not contain the header when invoked.
+Remember to add usage of header propagation to your app startup code:
+
+```
+app.UseHeaderPropagation();
+```
+
 
 ## More usage
 

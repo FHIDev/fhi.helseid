@@ -40,4 +40,8 @@
     <PackageReference Include="Fhi.HelseId" Version="5.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Fhi.HelseId\Fhi.HelseId.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -28,7 +28,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +38,10 @@
     <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="6.0.24" />
     <PackageReference Include="Fhi.HelseId" Version="5.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fhi.HelseId\Fhi.HelseId.csproj" />
   </ItemGroup>
 
 </Project>
