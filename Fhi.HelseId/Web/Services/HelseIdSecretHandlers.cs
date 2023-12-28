@@ -205,6 +205,11 @@ namespace Fhi.HelseId.Web.Services
         }
     }
 
+    public class HelseIdNoAuthorizationSecretHandler : SecretHandlerBase
+    {
+
+    }
+
     /// <summary>
     /// For selvbetjening we expect ClientSecret to be a path to a file containing the full downloaded configuration file, including the private key in JWK format
     /// </summary>
