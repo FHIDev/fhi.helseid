@@ -39,7 +39,7 @@
   <ItemGroup>
     <PackageReference Include="Fhi.HelseId" Version="5.1.0" />
     <PackageReference Include="NUnit" Version="4.0.1" />
-    <PackageReference Include="morelinq" Version="4.0.0" />
+    <PackageReference Include="morelinq" Version="4.1.0" />
   </ItemGroup>
 
 </Project>
