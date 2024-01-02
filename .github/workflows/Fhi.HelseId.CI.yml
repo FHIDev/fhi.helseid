@@ -7,28 +7,21 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        dotnet-version: ['6.0.x', '8.0.x']  # Oppdater disse versjonene etter behov
+        dotnet-version: ['6.0.x', '8.0.x']  # Spesifiser nødvendige .NET SDK-versjoner her
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup .NET Core for .NET 6
-      if: ${{ matrix.dotnet-version == '6.0.x' }}
+    - name: Setup .NET SDK
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '6.0.x'  # Spesifiser versjonen som støtter .NET 6
+        dotnet-version: ${{ matrix.dotnet-version }}
 
-    - name: Setup .NET Core for .NET 8
-      if: ${{ matrix.dotnet-version == '8.0.x' }}
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '8.0.x'  # Spesifiser versjonen som støtter .NET 8
-
-    - name: Install dependencies
+    - name: Restore dependencies
       run: dotnet restore
 
     - name: Build
       run: dotnet build --configuration Release --no-restore
 
-    - name: Test
+    - name: Run tests
       run: dotnet test --no-restore --verbosity normal
