@@ -4,21 +4,31 @@ on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: windows-latest
     strategy:
       matrix:
-        dotnet-version: ['6.0.x', '8.0.x']
+        dotnet-version: ['6.0.x', '8.0.x']  # Oppdater disse versjonene etter behov
 
     steps:
     - uses: actions/checkout@v3
-    - name: Setup .NET Core
+
+    - name: Setup .NET Core for .NET 6
+      if: ${{ matrix.dotnet-version == '6.0.x' }}
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+        dotnet-version: '6.0.x'  # Spesifiser versjonen som støtter .NET 6
+
+    - name: Setup .NET Core for .NET 8
+      if: ${{ matrix.dotnet-version == '8.0.x' }}
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0.x'  # Spesifiser versjonen som støtter .NET 8
+
     - name: Install dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build --configuration Release --no-restore
+
     - name: Test
       run: dotnet test --no-restore --verbosity normal
