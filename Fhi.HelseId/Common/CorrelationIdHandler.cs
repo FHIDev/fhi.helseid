@@ -18,7 +18,7 @@ public class CorrelationIdHandler : DelegatingHandler
     {
         var correalationId = Guid.NewGuid().ToString();
 
-        if (!request.Headers.TryGetValues(CorrelationIdHeaderName, out var values))
+        if (request.Headers.TryGetValues(CorrelationIdHeaderName, out var values))
         {
             correalationId = values!.First();
         }
