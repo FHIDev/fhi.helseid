@@ -11,7 +11,7 @@ namespace Fhi.HelseId.Blazor
         private readonly IServiceCollection services;
         private readonly HelseIdWebKonfigurasjon helseIdConfig;
         private List<Type> DelegationHandlers = new();
-        private HelseidRefitBuilderForBlazorConfig options = new HelseidRefitBuilderForBlazorConfig();
+        private HelseidRefitBuilderForBlazorOptions options = new HelseidRefitBuilderForBlazorOptions();
 
         public RefitSettings RefitSettings { get; set; }
 

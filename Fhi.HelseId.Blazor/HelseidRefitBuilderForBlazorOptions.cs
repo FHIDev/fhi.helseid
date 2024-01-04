@@ -1,10 +1,10 @@
 ﻿namespace Fhi.HelseId.Blazor
 {
-    public class HelseidRefitBuilderForBlazorConfig
+    public class HelseidRefitBuilderForBlazorOptions
     {
         public bool UseCorrelationId { get; set; }
 
-        public bool UseLogoutUrl { get; set; }
+        public bool UseLogoutUrl { get; set; } = true;
 
         public string LogOutUrl { get; set; } = "/logout";
 

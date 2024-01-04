@@ -16,7 +16,7 @@ This default setup will add a token handler to your Refit Interface in addition 
 
 ## Usage
 
-Include thhis code in your WebApi startup builder (remember to also call "builder.AddHelseIdWebAuthentication()"):
+Include this code in your WebApi startup builder (remember to also call "builder.AddHelseIdWebAuthentication()" etc):
 
 ```
 builder.AddHelseIdForBlazor()
@@ -58,6 +58,16 @@ If you want to override the default RefitSettings to use you can pass the settin
 builder.AddHelseIdForBlazor(new RefitSettings())
     .AddRefitClient<IMyRefitClient>();
 ```
+
+
+Note that using this builder will automatically add a middleware for logging you out, as the default HelseId-way does not work well for Blazor apps.
+The URLs defaults to "/logout" and "/loggedout". You can configure the logout options by calling
+
+```
+builder.AddHelseIdForBlazor()
+    .ConfigureLogout(....);
+```
+
 
 ## Adding Correlation Id to all requests
 

@@ -54,7 +54,7 @@ namespace Fhi.HelseId.Blazor
         /// <returns></returns>
         public static WebApplication UseHelseIdForBlazor(this WebApplication app)
         {
-            var options = app.Services.GetService<HelseidRefitBuilderForBlazorConfig>();
+            var options = app.Services.GetService<HelseidRefitBuilderForBlazorOptions>();
             if (options == null)
             {
                 throw new Exception("You need to call builder.AddHelseIdForBlazor() before using app.UseHelseIdForBlazor()");
