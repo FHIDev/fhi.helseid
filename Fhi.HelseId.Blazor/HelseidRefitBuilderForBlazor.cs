@@ -44,7 +44,23 @@ namespace Fhi.HelseId.Blazor
             return this;
         }
 
-        public HelseidRefitBuilderForBlazor AddRefitClient<T>(string? nameOfService = null, Func<IHttpClientBuilder, IHttpClientBuilder>? extra = null) where T : class
+        /// <summary>
+        /// Adds propagation and handling of correlation ids. You should add this before any logging-delagates. Remember to add "app.UseHeaderPropagation()" in your startup code.
+        /// </summary>
+        /// <returns></returns>
+        public HelseidRefitBuilderForBlazor AddCorrelationId()
+        {
+            AddHandler<CorrelationIdHandler>();
+
+            builder.Services.AddHeaderPropagation(o =>
+            {
+                o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
+            });
+
+            return this;
+        }
+
+        public HelseidRefitBuilderForBlazor AddRefitClient<T>(string? nameOfService = null, Func<HttpClient, HttpClient>? extra = null) where T : class
         {
             var name = nameOfService ?? typeof(T).Name;
 
@@ -54,6 +70,7 @@ namespace Fhi.HelseId.Blazor
             {
                 var client = CreateHttpClient(s, DelegationHandlers);
                 client.BaseAddress = config.UriToApiByName(name);
+                extra?.Invoke(client);
                 return RestService.For<T>(client, RefitSettings);
             });
 
@@ -71,6 +88,13 @@ namespace Fhi.HelseId.Blazor
             var outer = mainHandler;
             foreach (var handlerType in DelegationHandlers.Skip(1))
             {
+                var i = 0;
+                while (outer.InnerHandler != null)
+                {
+                    outer = (DelegatingHandler)outer.InnerHandler;
+                    if (i++ > 1000) throw new Exception($"Circular reference of inner handlers in handler: {outer.GetType()}");
+                }
+
                 outer.InnerHandler = (DelegatingHandler)provider.GetRequiredService(handlerType);
                 outer = (DelegatingHandler)outer.InnerHandler;
             }
