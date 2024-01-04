@@ -12,15 +12,18 @@ namespace Fhi.HelseId.Refit
         private readonly IServiceCollection services;
         private readonly HelseIdWebKonfigurasjon config;
         private List<Type> delegationHandlers = new();
+        private readonly HelseidRefitBuilderOptions options = new HelseidRefitBuilderOptions();
 
-        public RefitSettings RefitSettings { get; set; }
+        private RefitSettings refitSettings { get; set; }
 
         public HelseidRefitBuilder(IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings)
         {
-            this.RefitSettings = refitSettings ?? CreateRefitSettings();
+            this.refitSettings = refitSettings ?? CreateRefitSettings();
 
             this.services = services;
             this.config = config;
+
+            services.AddSingleton(options);
 
             AddHandler<AuthHeaderHandler>();
         }
@@ -44,6 +47,8 @@ namespace Fhi.HelseId.Refit
         /// <returns></returns>
         public HelseidRefitBuilder AddCorrelationId()
         {
+            options.UseCorrelationId = true;
+
             AddHandler<CorrelationIdHandler>();
 
             services.AddHeaderPropagation(o =>
@@ -58,12 +63,16 @@ namespace Fhi.HelseId.Refit
         {
             var name = nameOfService ?? typeof(T).Name;
 
-            var clientBuilder = services.AddRefitClient<T>()
+            var clientBuilder = services.AddRefitClient<T>(refitSettings)
                 .ConfigureHttpClient(httpClient =>
                 {
                     httpClient.BaseAddress = config.UriToApiByName(name);
-                })
-                .AddHeaderPropagation();
+                });
+
+            if (options.UseCorrelationId)
+            {
+                clientBuilder.AddHeaderPropagation();
+            }
 
             foreach (var type in delegationHandlers)
             {
