@@ -25,7 +25,6 @@ builder.AddHelseIdForBlazor()
 ...
 
 app.UseHelseIdForBlazor();
-app.UseHelseIdForBlazorLogout();
 ```
 
 You will also need to wrap your hole App.razor code with a CascadingStates-tag:
@@ -71,12 +70,6 @@ builder.AddHelseIdForBlazor()
 ```
 
 A new correlation ID will be given to each request and response that does not contain the header when invoked.
-Remember to add usage of header propagation to your app startup code:
-
-```
-app.UseHeaderPropagation();
-```
-
 
 ## More usage
 

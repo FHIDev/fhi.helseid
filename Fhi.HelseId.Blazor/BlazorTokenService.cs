@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using System.Globalization;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
-using Microsoft.AspNetCore.Components;
 
 namespace Fhi.HelseId.Blazor;
 

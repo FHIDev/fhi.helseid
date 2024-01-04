@@ -54,41 +54,42 @@ namespace Fhi.HelseId.Blazor
         /// <returns></returns>
         public static WebApplication UseHelseIdForBlazor(this WebApplication app)
         {
-            app.UseMiddleware<BlazortContextMiddleware>();
-            return app;
-        }
-
-        /// <summary>
-        /// To be able to access the http context to log out of a blazor app
-        /// we need to do this from middleware where the HttpContext is availible.
-        /// To trigger it, be sure to force a reload when navigating to the logout url
-        /// f.ex:  NavManager.NavigateTo($"/logout", forceLoad: true);
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="url">The url used to trigger logging out.</param>
-        /// <param name="redirect">The url to continue to after logging out.</param>
-        /// <returns></returns>
-        public static WebApplication UseHelseIdForBlazorLogout(this WebApplication app, string url = "/logout", string redirect = "/loggedout")
-        {
-            app.Use(async (context, next) =>
+            var options = app.Services.GetService<HelseidRefitBuilderForBlazorConfig>();
+            if (options == null)
             {
-                if (context.Request.Path.Equals(url, StringComparison.OrdinalIgnoreCase))
+                throw new Exception("You need to call builder.AddHelseIdForBlazor() before using app.UseHelseIdForBlazor()");
+            }
+
+            app.UseMiddleware<BlazortContextMiddleware>();
+
+            if (options.UseCorrelationId)
+            {
+                app.UseMiddleware<CorrelationIdMiddleware>();
+                app.UseHeaderPropagation();
+            }
+
+            if (options.UseLogoutUrl)
+            {
+                app.Use(async (context, next) =>
                 {
-                    await context.SignOutAsync(HelseIdContext.Scheme, new AuthenticationProperties
+                    if (context.Request.Path.Equals(options.LogOutUrl, StringComparison.OrdinalIgnoreCase))
                     {
-                        RedirectUri = redirect,
-                    });
+                        await context.SignOutAsync(HelseIdContext.Scheme, new AuthenticationProperties
+                        {
+                            RedirectUri = options.LoggedOutRedirectUrl,
+                        });
 
-                    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme, new AuthenticationProperties
-                    {
-                        RedirectUri = redirect,
-                    });
+                        await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme, new AuthenticationProperties
+                        {
+                            RedirectUri = options.LoggedOutRedirectUrl,
+                        });
 
-                    return;
-                }
+                        return;
+                    }
 
-                await next();
-            });
+                    await next();
+                });
+            }
 
             return app;
         }

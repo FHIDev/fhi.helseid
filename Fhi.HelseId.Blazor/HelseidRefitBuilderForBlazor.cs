@@ -2,7 +2,6 @@
 using Refit;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fhi.HelseId.Blazor
@@ -10,8 +9,9 @@ namespace Fhi.HelseId.Blazor
     public class HelseidRefitBuilderForBlazor
     {
         private readonly IServiceCollection services;
-        private readonly HelseIdWebKonfigurasjon config;
+        private readonly HelseIdWebKonfigurasjon helseIdConfig;
         private List<Type> DelegationHandlers = new();
+        private HelseidRefitBuilderForBlazorConfig options = new HelseidRefitBuilderForBlazorConfig();
 
         public RefitSettings RefitSettings { get; set; }
 
@@ -20,13 +20,14 @@ namespace Fhi.HelseId.Blazor
             this.RefitSettings = refitSettings ?? CreateRefitSettings();
 
             this.services = services;
-            this.config = config;
+            this.helseIdConfig = config;
 
             services.AddStateHandlers().AddScopedState<HelseIdState>();
 
             services.AddScoped<BlazorContextHandler>();
             services.AddScoped<BlazortContextMiddleware>();
             services.AddScoped<BlazorTokenService>();
+            services.AddSingleton(options);
 
             AddHandler<BlazorTokenHandler>();
         }
@@ -45,11 +46,32 @@ namespace Fhi.HelseId.Blazor
         }
 
         /// <summary>
+        /// To be able to access the http context to log out of a blazor app
+        /// we need to do this from middleware where the HttpContext is availible.
+        /// To trigger it, be sure to force a reload when navigating to the logout url
+        /// f.ex:  NavManager.NavigateTo($"/logout", forceLoad: true);
+        /// </summary>
+        /// <param name="enabled"></param>
+        /// <param name="url">The url used to trigger logging out.</param>
+        /// <param name="redirect">The url to continue to after logging out.</param>
+        /// <returns></returns>
+
+        public HelseidRefitBuilderForBlazor ConfigureLogout(bool enabled = true, string url = "/logout", string redirect = "/loggedout")
+        {
+            options.UseLogoutUrl = enabled;
+            options.LogOutUrl = url;
+            options.LoggedOutRedirectUrl = redirect;
+            return this;
+        }
+
+        /// <summary>
         /// Adds propagation and handling of correlation ids. You should add this before any logging-delagates. Remember to add "app.UseHeaderPropagation()" in your startup code.
         /// </summary>
         /// <returns></returns>
         public HelseidRefitBuilderForBlazor AddCorrelationId()
         {
+            options.UseCorrelationId = true;
+
             AddHandler<CorrelationIdHandler>();
 
             services.AddHeaderPropagation(o =>
@@ -69,7 +91,7 @@ namespace Fhi.HelseId.Blazor
             services.AddScoped((s) =>
             {
                 var client = CreateHttpClient(s, DelegationHandlers);
-                client.BaseAddress = config.UriToApiByName(name);
+                client.BaseAddress = helseIdConfig.UriToApiByName(name);
                 extra?.Invoke(client);
                 return RestService.For<T>(client, RefitSettings);
             });
