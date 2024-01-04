@@ -41,9 +41,9 @@ public class BlazorTokenService
                     throw new Exception($"Unable to refresh token: {t.Error}");
                 }
 
-                state.AccessToken = t.AccessToken;
+                state.AccessToken = t.AccessToken!;
                 state.TokenExpires = DateTimeOffset.UtcNow.AddSeconds(t.ExpiresIn);
-                state.RefreshToken = t.RefreshToken;
+                state.RefreshToken = t.RefreshToken!;
 
                 await UpdateContext();
             }

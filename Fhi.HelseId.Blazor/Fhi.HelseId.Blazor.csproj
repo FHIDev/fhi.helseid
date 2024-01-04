@@ -1,21 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <id>Fhi.HelseId.Refit</id>
-    <Version>1.0.0-beta.1</Version>
+    <id>Fhi.HelseId.Blazor</id>
+    <Version>1.0.0-beta.2</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageDescription>Setup Refit with helseid Apis</PackageDescription>
+    <PackageDescription>Setup Blazor with helseid Apis</PackageDescription>
     <PackageCopyright>Copyright ©2023 Folkehelseinstituttet</PackageCopyright>
     <!-- Tags appear in the gallery and can be used for tag searches -->
-    <Tags>helseid, oauth, Refit</Tags>
+    <Tags>helseid, oauth, Refit, Blazor</Tags>
     <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
     <dependencies>
       <group targetFramework="net6.0">
@@ -25,6 +25,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   </PropertyGroup>
 
   <ItemGroup>

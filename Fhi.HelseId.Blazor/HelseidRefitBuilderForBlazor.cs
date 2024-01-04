@@ -9,24 +9,24 @@ namespace Fhi.HelseId.Blazor
 {
     public class HelseidRefitBuilderForBlazor
     {
-        private readonly WebApplicationBuilder builder;
+        private readonly IServiceCollection services;
         private readonly HelseIdWebKonfigurasjon config;
         private List<Type> DelegationHandlers = new();
 
         public RefitSettings RefitSettings { get; set; }
 
-        public HelseidRefitBuilderForBlazor(WebApplicationBuilder builder, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings)
+        public HelseidRefitBuilderForBlazor(IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings)
         {
             this.RefitSettings = refitSettings ?? CreateRefitSettings();
 
-            this.builder = builder;
+            this.services = services;
             this.config = config;
 
-            builder.AddStateHandlers().AddScopedState<HelseIdState>();
+            services.AddStateHandlers().AddScopedState<HelseIdState>();
 
-            builder.Services.AddScoped<BlazorContextHandler>();
-            builder.Services.AddScoped<BlazortContextMiddleware>();
-            builder.Services.AddScoped<BlazorTokenService>();
+            services.AddScoped<BlazorContextHandler>();
+            services.AddScoped<BlazortContextMiddleware>();
+            services.AddScoped<BlazorTokenService>();
 
             AddHandler<BlazorTokenHandler>();
         }
@@ -34,7 +34,7 @@ namespace Fhi.HelseId.Blazor
         public HelseidRefitBuilderForBlazor AddHandler<T>() where T : DelegatingHandler
         {
             DelegationHandlers.Add(typeof(T));
-            builder.Services.AddTransient<T>();
+            services.AddTransient<T>();
             return this;
         }
 
@@ -52,7 +52,7 @@ namespace Fhi.HelseId.Blazor
         {
             AddHandler<CorrelationIdHandler>();
 
-            builder.Services.AddHeaderPropagation(o =>
+            services.AddHeaderPropagation(o =>
             {
                 o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
             });
@@ -66,7 +66,7 @@ namespace Fhi.HelseId.Blazor
 
             // We are using a custom factory, since the Refit factory does not created correctly scoped TokenHandlers.
             // We need a new TokenHandler for each request to get the access token from the correct context.
-            builder.Services.AddScoped((s) =>
+            services.AddScoped((s) =>
             {
                 var client = CreateHttpClient(s, DelegationHandlers);
                 client.BaseAddress = config.UriToApiByName(name);
