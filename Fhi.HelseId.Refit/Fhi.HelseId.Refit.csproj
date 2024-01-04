@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.HelseId.Refit</id>
-    <Version>1.0.0-beta.1</Version>
+    <Version>1.0.0-beta.2</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
@@ -37,10 +37,7 @@
     <PackageReference Include="Refit" Version="6.3.2" />
     <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="6.0.24" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Fhi.HelseId\Fhi.HelseId.csproj" />
+    <PackageReference Include="Fhi.HelseId" Version="5.*" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Fhi.HelseId;
+﻿namespace Fhi.HelseId.Refit;
 
 public class CorrelationIdHandler : DelegatingHandler
 {

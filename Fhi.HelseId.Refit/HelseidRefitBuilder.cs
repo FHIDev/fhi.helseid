@@ -2,41 +2,39 @@
 using Refit;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Fhi.HelseId.Common;
 
 namespace Fhi.HelseId.Refit
 {
     public class HelseidRefitBuilder
     {
-        private readonly WebApplicationBuilder builder;
+        private readonly IServiceCollection services;
         private readonly HelseIdWebKonfigurasjon config;
-        private List<Type> DelegationHandlers = new();
+        private List<Type> delegationHandlers = new();
 
         public RefitSettings RefitSettings { get; set; }
 
-        public HelseidRefitBuilder(WebApplicationBuilder builder, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings)
+        public HelseidRefitBuilder(IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings)
         {
             this.RefitSettings = refitSettings ?? CreateRefitSettings();
 
-            this.builder = builder;
-            this.config = builder.Configuration.GetSection(nameof(HelseIdWebKonfigurasjon)).Get<HelseIdWebKonfigurasjon>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon));
+            this.services = services;
+            this.config = config;
 
             AddHandler<AuthHeaderHandler>();
         }
 
         public HelseidRefitBuilder AddHandler<T>() where T : DelegatingHandler
         {
-            DelegationHandlers.Add(typeof(T));
-            builder.Services.AddTransient<T>();
+            delegationHandlers.Add(typeof(T));
+            services.AddTransient<T>();
             return this;
         }
 
         public HelseidRefitBuilder ClearHandlers()
         {
-            DelegationHandlers.Clear();
+            delegationHandlers.Clear();
             return this;
         }
 
@@ -48,7 +46,7 @@ namespace Fhi.HelseId.Refit
         {
             AddHandler<CorrelationIdHandler>();
 
-            builder.Services.AddHeaderPropagation(o =>
+            services.AddHeaderPropagation(o =>
             {
                 o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
             });
@@ -60,14 +58,14 @@ namespace Fhi.HelseId.Refit
         {
             var name = nameOfService ?? typeof(T).Name;
 
-            var clientBuilder = builder.Services.AddRefitClient<T>()
+            var clientBuilder = services.AddRefitClient<T>()
                 .ConfigureHttpClient(httpClient =>
                 {
                     httpClient.BaseAddress = config.UriToApiByName(name);
                 })
                 .AddHeaderPropagation();
 
-            foreach (var type in DelegationHandlers)
+            foreach (var type in delegationHandlers)
             {
                 clientBuilder.AddHttpMessageHandler((s) => (DelegatingHandler)s.GetRequiredService(type));
             }

@@ -1,6 +1,7 @@
 ﻿using Fhi.HelseId.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Refit;
 
 namespace Fhi.HelseId.Refit;
@@ -13,7 +14,7 @@ public static class Extensions
             .GetSection(configSection ?? nameof(HelseIdWebKonfigurasjon))
             .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon)); ;
 
-        return new HelseidRefitBuilder(builder, config, refitSettings);
+        return new HelseidRefitBuilder(builder.Services, config, refitSettings);
     }
 
     public static HelseidRefitBuilder AddHelseidRefitBuilder(this WebApplicationBuilder builder, RefitSettings? refitSettings = null)
@@ -22,6 +23,11 @@ public static class Extensions
             .GetSection(nameof(HelseIdWebKonfigurasjon))
             .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon)); ;
 
-        return new HelseidRefitBuilder(builder, config, refitSettings);
+        return new HelseidRefitBuilder(builder.Services, config, refitSettings);
+    }
+
+    public static HelseidRefitBuilder AddHelseidRefitBuilder(this IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings = null)
+    {
+        return new HelseidRefitBuilder(services, config, refitSettings);
     }
 }
