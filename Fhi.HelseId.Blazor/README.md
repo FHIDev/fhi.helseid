@@ -117,3 +117,28 @@ public class UserState : IScopedState
     }
 }
 ```
+
+
+## Changing default implementations
+
+By default the code creates new HttpClients and delegates for each request, to be able to create correctly scoped delegates to apply the correct authentication token.
+This is bad if your system has a lot of users as it may lead to socket exhaustion.
+
+You can change the default implementation by providing your own IScopedHttpClientFactory
+```
+services.AddSingleton<IScopedHttpClientFactory>(new MyOwnScopedHttpClientFactory());
+```
+
+If you are able to create a better implementation please consider making a pull request to change our ScopedHttpClientFactory.
+
+Note that the ScopedHttpClientFactory creates the handler in the opposite direction than IHttpClientFactory. This is because we want to end
+up with applying authorization and correlation id before the user may add logging delegates, and finally having the default httpclienthandler 
+as the innermost handler.
+
+You can also change the default HttpClientHandler builder if you please. Note that if you do you might also want to change if the handlers should be disposed or not after HttpClients are disposed (defaults to true):
+
+```
+builder.AddHelseIdForBlazor()
+    .SetHttpClientHandlerBuilder(name => new HttpClientHandler())
+    .DisposeHandleres(true)
+```

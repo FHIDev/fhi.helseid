@@ -12,6 +12,7 @@ namespace Fhi.HelseId.Blazor
         private readonly HelseIdWebKonfigurasjon helseIdConfig;
         private List<Type> DelegationHandlers = new();
         private HelseidRefitBuilderForBlazorOptions options = new HelseidRefitBuilderForBlazorOptions();
+        private ScopedHttpClientFactory Factory = new ScopedHttpClientFactory();
 
         public RefitSettings RefitSettings { get; set; }
 
@@ -29,6 +30,8 @@ namespace Fhi.HelseId.Blazor
             services.AddScoped<BlazorTokenService>();
             services.AddSingleton(options);
 
+            services.AddSingleton<IScopedHttpClientFactory>(Factory);
+
             AddHandler<BlazorTokenHandler>();
         }
 
@@ -36,6 +39,23 @@ namespace Fhi.HelseId.Blazor
         {
             DelegationHandlers.Add(typeof(T));
             services.AddTransient<T>();
+            return this;
+        }
+
+        public HelseidRefitBuilderForBlazor SetHttpClientHandlerBuilder(Func<string, HttpClientHandler> builder)
+        {
+            Factory.HttpClientHandlerBuilder = builder;
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dispose">true if the inner handler should be disposed of by HttpClient.Dispose; if you intend to reuse the inner handler.</param>
+        /// <returns></returns>
+        public HelseidRefitBuilderForBlazor DisposeHandleres(bool dispose)
+        {
+            Factory.DisposeHandlers = dispose;
             return this;
         }
 
@@ -86,44 +106,18 @@ namespace Fhi.HelseId.Blazor
         {
             var name = nameOfService ?? typeof(T).Name;
 
-            // We are using a custom factory, since the Refit factory does not created correctly scoped TokenHandlers.
-            // We need a new TokenHandler for each request to get the access token from the correct context.
             services.AddScoped((s) =>
             {
-                var client = CreateHttpClient(s, DelegationHandlers);
+                // We are using a custom factory, since the Refit factory does not created correctly scoped TokenHandlers.
+                // We need a new TokenHandler for each request to get the access token from the correct context.
+                // This is BAD, as we are not using the HttpClientFactory to create the HttpClients.
+                var client = s.GetRequiredService<IScopedHttpClientFactory>().CreateHttpClient(name, s, DelegationHandlers);
                 client.BaseAddress = helseIdConfig.UriToApiByName(name);
                 extra?.Invoke(client);
                 return RestService.For<T>(client, RefitSettings);
             });
 
             return this;
-        }
-
-        private static HttpClient CreateHttpClient(IServiceProvider provider, List<Type> DelegationHandlers)
-        {
-            if (DelegationHandlers.Count == 0)
-            {
-                return new HttpClient();
-            }
-
-            var mainHandler = (DelegatingHandler)provider.GetRequiredService(DelegationHandlers.First());
-            var outer = mainHandler;
-            foreach (var handlerType in DelegationHandlers.Skip(1))
-            {
-                var i = 0;
-                while (outer.InnerHandler != null)
-                {
-                    outer = (DelegatingHandler)outer.InnerHandler;
-                    if (i++ > 1000) throw new Exception($"Circular reference of inner handlers in handler: {outer.GetType()}");
-                }
-
-                outer.InnerHandler = (DelegatingHandler)provider.GetRequiredService(handlerType);
-                outer = (DelegatingHandler)outer.InnerHandler;
-            }
-
-            outer.InnerHandler = new HttpClientHandler();
-
-            return new HttpClient(mainHandler);
         }
 
         private static RefitSettings CreateRefitSettings()
