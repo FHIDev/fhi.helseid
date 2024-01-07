@@ -12,16 +12,7 @@ public static class Extensions
     {
         var config = builder.Configuration
             .GetSection(configSection ?? nameof(HelseIdWebKonfigurasjon))
-            .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon)); ;
-
-        return new HelseidRefitBuilder(builder.Services, config, refitSettings);
-    }
-
-    public static HelseidRefitBuilder AddHelseidRefitBuilder(this WebApplicationBuilder builder, RefitSettings? refitSettings = null)
-    {
-        var config = builder.Configuration
-            .GetSection(nameof(HelseIdWebKonfigurasjon))
-            .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon)); ;
+            .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon));
 
         return new HelseidRefitBuilder(builder.Services, config, refitSettings);
     }
@@ -29,5 +20,27 @@ public static class Extensions
     public static HelseidRefitBuilder AddHelseidRefitBuilder(this IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings = null)
     {
         return new HelseidRefitBuilder(services, config, refitSettings);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
+    public static WebApplication UseCorrelationId(this WebApplication app)
+    {
+        var options = app.Services.GetService<HelseidRefitBuilderOptions>();
+        if (options == null)
+        {
+            throw new Exception("You need to call builder.AddHelseIdForBlazor() before using app.UseHelseIdForBlazor()");
+        }
+
+        if (options.UseCorrelationId)
+        {
+            app.UseMiddleware<CorrelationIdMiddleware>();
+            app.UseHeaderPropagation();
+        }
+
+        return app;
     }
 }
