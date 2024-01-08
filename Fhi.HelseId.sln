@@ -41,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\Fhi.AuthController.Nuget.yml = .github\workflows\Fhi.AuthController.Nuget.yml
 		.github\workflows\Fhi.HelseId.AltInn.Nuget = .github\workflows\Fhi.HelseId.AltInn.Nuget
+		.github\workflows\Fhi.HelseId.Blazor.Nuget.yml = .github\workflows\Fhi.HelseId.Blazor.Nuget.yml
 		.github\workflows\Fhi.HelseId.CI.yml = .github\workflows\Fhi.HelseId.CI.yml
 		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
 		.github\workflows\Fhi.HelseId.Refit.Nuget.yml = .github\workflows\Fhi.HelseId.Refit.Nuget.yml
@@ -54,7 +55,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.AuthControllers", "Fhi.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Refit", "Fhi.HelseId.Refit\Fhi.HelseId.Refit.csproj", "{7271D958-E93F-4EC0-BBFA-991531F42CD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId.Blazor", "Fhi.HelseId.Blazor\Fhi.HelseId.Blazor.csproj", "{FFC0B4DA-7D53-467F-BBAC-59CBCBDA1078}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Blazor", "Fhi.HelseId.Blazor\Fhi.HelseId.Blazor.csproj", "{FFC0B4DA-7D53-467F-BBAC-59CBCBDA1078}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
