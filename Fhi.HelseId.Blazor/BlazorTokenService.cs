@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using System.Globalization;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
-using Microsoft.AspNetCore.Components;
 
 namespace Fhi.HelseId.Blazor;
 
@@ -41,9 +40,9 @@ public class BlazorTokenService
                     throw new Exception($"Unable to refresh token: {t.Error}");
                 }
 
-                state.AccessToken = t.AccessToken;
+                state.AccessToken = t.AccessToken!;
                 state.TokenExpires = DateTimeOffset.UtcNow.AddSeconds(t.ExpiresIn);
-                state.RefreshToken = t.RefreshToken;
+                state.RefreshToken = t.RefreshToken!;
 
                 await UpdateContext();
             }
