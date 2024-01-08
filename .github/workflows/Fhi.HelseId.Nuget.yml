@@ -1,8 +1,17 @@
 name: Fhi.HelseId.Nuget
+
 on:
   push:
     branches:
       - master
+    paths:
+      - 'Fhi.HelseId/**'
+
+defaults:
+  run:
+    shell: pwsh
+    working-directory: ./Fhi.HelseId
+
 jobs:
   publish:
     name: Build, pack & publish
@@ -17,14 +26,20 @@ jobs:
             6.0.x
             8.0.x
 
-      - name: Publish on version change
-        id: publish_nuget
-        uses: rohith/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: 'Fhi.HelseId/Fhi.HelseId.csproj'
-          PACKAGE_NAME: Fhi.HelseId
-          VERSION_REGEX: <Version>(.*)<\/Version>
-          TAG_COMMIT: true
-          NUGET_KEY: ${{secrets.NUGET_ORG_PUSH_API_KEY_HELSEID}}
-          NUGET_SOURCE: https://api.nuget.org
-          INCLUDE_SYMBOLS: true
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore --verbosity normal
+
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output package 
+
+      - name: Publish nupkg and snupkg to NuGet.org
+        run: |
+          foreach($file in (Get-ChildItem package -Recurse -Include *.nupkg)) {
+              dotnet nuget push $file --api-key "${{ secrets.NUGET_ORG_PUSH_API_KEY_HELSEID }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          }
+          foreach($file in (Get-ChildItem "package" -Recurse -Include *.snupkg)) {
+              dotnet nuget push $file --api-key "${{ secrets.NUGET_ORG_PUSH_API_KEY_HELSEID }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          }
