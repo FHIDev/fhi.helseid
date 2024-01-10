@@ -26,6 +26,7 @@ namespace Fhi.HelseId.Refit
             services.AddSingleton(options);
 
             AddHandler<AuthHeaderHandler>();
+            AddHandler<FhiHeaderDelegationHandler>();
         }
 
         public HelseidRefitBuilder AddHandler<T>() where T : DelegatingHandler

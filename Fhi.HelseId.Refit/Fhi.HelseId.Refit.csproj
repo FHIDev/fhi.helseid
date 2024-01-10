@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.HelseId.Refit</id>
-    <Version>1.0.0-beta.3</Version>
+    <Version>1.0.0-alpha.1</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>

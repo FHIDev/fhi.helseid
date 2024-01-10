@@ -33,6 +33,7 @@ namespace Fhi.HelseId.Blazor
             services.AddSingleton<IScopedHttpClientFactory>(Factory);
 
             AddHandler<BlazorTokenHandler>();
+            AddHandler<FhiHeaderDelegationHandler>();
         }
 
         public HelseidRefitBuilderForBlazor AddHandler<T>() where T : DelegatingHandler
