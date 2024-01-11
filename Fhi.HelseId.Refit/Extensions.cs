@@ -27,9 +27,9 @@ public static class Extensions
     /// </summary>
     /// <param name="app"></param>
     /// <returns></returns>
-    public static WebApplication UseCorrelationId(this WebApplication app)
+    public static T UseCorrelationId<T>(this T app) where T : IApplicationBuilder
     {
-        var options = app.Services.GetService<HelseidRefitBuilderOptions>();
+        var options = app.ApplicationServices.GetService<HelseidRefitBuilderOptions>();
         if (options == null)
         {
             throw new Exception("You need to call builder.AddHelseIdForBlazor() before using app.UseHelseIdForBlazor()");
