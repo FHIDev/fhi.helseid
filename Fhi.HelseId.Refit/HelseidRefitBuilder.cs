@@ -25,7 +25,7 @@ namespace Fhi.HelseId.Refit
 
             services.AddSingleton(options);
 
-            AddHandler<AuthHeaderHandler>();
+            AddHandler<AuthHeaderHandlerForApi>();
             AddHandler<FhiHeaderDelegationHandler>();
         }
 
