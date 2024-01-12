@@ -13,6 +13,7 @@ namespace Fhi.HelseId.Refit
         private readonly HelseIdWebKonfigurasjon config;
         private List<Type> delegationHandlers = new();
         private readonly HelseidRefitBuilderOptions options = new HelseidRefitBuilderOptions();
+        private bool hasAddedHeaderEncoding = false;
 
         private RefitSettings refitSettings { get; set; }
 
@@ -24,8 +25,9 @@ namespace Fhi.HelseId.Refit
             this.config = config;
 
             services.AddSingleton(options);
+            services.AddHttpContextAccessor();
 
-            AddHandler<AuthHeaderHandler>();
+            AddHandler<AuthHeaderHandlerForApi>();
         }
 
         public HelseidRefitBuilder AddHandler<T>() where T : DelegatingHandler
@@ -61,6 +63,12 @@ namespace Fhi.HelseId.Refit
 
         public HelseidRefitBuilder AddRefitClient<T>(string? nameOfService = null, Func<IHttpClientBuilder, IHttpClientBuilder>? extra = null) where T : class
         {
+            if (!hasAddedHeaderEncoding)
+            {
+                hasAddedHeaderEncoding = true;
+                AddHandler<FhiHeaderDelegationHandler>();
+            }
+
             var name = nameOfService ?? typeof(T).Name;
 
             var clientBuilder = services.AddRefitClient<T>(refitSettings)
