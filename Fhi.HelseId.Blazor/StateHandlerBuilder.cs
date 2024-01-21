@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Fhi.HelseId.Blazor
 {
@@ -7,21 +6,21 @@ namespace Fhi.HelseId.Blazor
     {
         public StateHandlerOptions Options;
 
-        private WebApplicationBuilder Builder;
+        private IServiceCollection Services;
 
-        public StateHandlerBuilder(WebApplicationBuilder builder, StateHandlerOptions options)
+        public StateHandlerBuilder(IServiceCollection services, StateHandlerOptions options)
         {
             Options = options;
-            Builder = builder;
+            Services = services;
 
-            builder.Services.AddSingleton(Options);
-            builder.Services.AddScoped<IStateHandler, StateHandler>();
+            services.AddSingleton(Options);
+            services.AddScoped<IStateHandler, StateHandler>();
         }
 
         public StateHandlerBuilder AddScopedState<T>() where T : class, IScopedState
         {
             Options.StateTypes.Add(typeof(T));
-            Builder.Services.AddScoped<T>();
+            Services.AddScoped<T>();
             return this;
         }
     }

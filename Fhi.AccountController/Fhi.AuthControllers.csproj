@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fhi.HelseId" Version="5.1.0" />
+    <PackageReference Include="Fhi.HelseId" Version="5.*" />
   </ItemGroup>
 
   <ItemGroup>

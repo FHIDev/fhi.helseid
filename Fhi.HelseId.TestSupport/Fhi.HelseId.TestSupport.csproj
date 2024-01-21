@@ -3,18 +3,18 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Id>Fhi.HelseId.TestSupport</Id>
-    <Version>3.0.0</Version>
+    <Version>3.1.0</Version>
     <IsPackable>true</IsPackable>
     <IsTestProject>false</IsTestProject>
     <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
-    <Copyright>(c) 2021-2023 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
+    <Copyright>(c) 2021-2024 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>Upgrades NUnit to 4.0.1</PackageReleaseNotes>
     <PackageDescription>Base classes for testing an implementation using Fhi.HelseId</PackageDescription>
-    <PackageCopyright>Copyright ©2021-2023 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
+    <PackageCopyright>Copyright ©2021-2024 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <tags>helseid, oauth</tags>
@@ -37,9 +37,9 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Fhi.HelseId" Version="5.1.0" />
+    <PackageReference Include="Fhi.HelseId" Version="5.*" />
     <PackageReference Include="NUnit" Version="4.0.1" />
-    <PackageReference Include="morelinq" Version="4.0.0" />
+    <PackageReference Include="morelinq" Version="4.1.0" />
   </ItemGroup>
 
 </Project>

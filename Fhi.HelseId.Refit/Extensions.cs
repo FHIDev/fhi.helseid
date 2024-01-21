@@ -1,5 +1,4 @@
-﻿using Fhi.HelseId.Common;
-using Fhi.HelseId.Web;
+﻿using Fhi.HelseId.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,52 +6,41 @@ using Refit;
 
 namespace Fhi.HelseId.Refit;
 
-public class RefitBuilder
-{
-    private readonly WebApplicationBuilder builder;
-    readonly string correlationId;
-    readonly HelseIdWebKonfigurasjon webConfig;
-
-    public RefitBuilder(WebApplicationBuilder builder)
-    {
-        this.builder = builder;
-        correlationId = Guid.NewGuid().ToString();
-        builder.Services.AddHeaderPropagation(options => options.Headers.Add("x-correlation-id"));
-        webConfig = builder.Configuration.GetSection(nameof(HelseIdWebKonfigurasjon)).Get<HelseIdWebKonfigurasjon>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon));
-
-    }
-
-    public RefitBuilder AddRefitClient<T>(string nameOfService,Func<IHttpClientBuilder,IHttpClientBuilder>? extra=null) where T : class
-    {
-        var clientBuilder = builder.Services.AddRefitClient<T>()
-            .ConfigureHttpClient(httpClient =>
-            {
-                httpClient.BaseAddress = webConfig.UriToApiByName(nameOfService);
-                httpClient.DefaultRequestHeaders.Add("x-correlation-id", correlationId);
-            })
-            .AddHttpMessageHandler<AuthHeaderHandler>()
-            .AddHeaderPropagation();
-        extra?.Invoke(clientBuilder);
-        return this;
-    }
-
-}
-
-public class MissingConfigurationException : Exception
-{
-    public MissingConfigurationException(string outgoingApisName) : base(outgoingApisName)
-    {
-
-    }
-}
-
-
-
 public static class Extensions
 {
-    public static RefitBuilder AddRefitbuilder(this WebApplicationBuilder builder)
+    public static HelseidRefitBuilder AddHelseidRefitBuilder(this WebApplicationBuilder builder, string? configSection = null, RefitSettings? refitSettings = null)
     {
-        return new RefitBuilder(builder);
+        var config = builder.Configuration
+            .GetSection(configSection ?? nameof(HelseIdWebKonfigurasjon))
+            .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon));
+
+        return new HelseidRefitBuilder(builder.Services, config, refitSettings);
     }
-    
+
+    public static HelseidRefitBuilder AddHelseidRefitBuilder(this IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings = null)
+    {
+        return new HelseidRefitBuilder(services, config, refitSettings);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
+    public static T UseCorrelationId<T>(this T app) where T : IApplicationBuilder
+    {
+        var options = app.ApplicationServices.GetService<HelseidRefitBuilderOptions>();
+        if (options == null)
+        {
+            throw new Exception("You need to call builder.AddHelseIdForBlazor() before using app.UseHelseIdForBlazor()");
+        }
+
+        if (options.UseCorrelationId)
+        {
+            app.UseMiddleware<CorrelationIdMiddleware>();
+            app.UseHeaderPropagation();
+        }
+
+        return app;
+    }
 }
