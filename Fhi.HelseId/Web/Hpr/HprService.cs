@@ -24,6 +24,7 @@ namespace Fhi.HelseId.Web.Hpr
         IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste);
         bool ErGyldigForKategorier(Person person, params OId9060[] koder);
         string LastErrorMessage { get; }
+        List<OId9060> GodkjenteHelsepersonellkategorier { get; }
         Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer);
         IEnumerable<OId9060> HentGodkjenninger(Person? person);
         IHprService LeggTilAlleKategorier();
@@ -35,7 +36,7 @@ namespace Fhi.HelseId.Web.Hpr
         private readonly ILogger _logger;
         private readonly IMemoryCache _memoryCache;
 
-        private List<OId9060> GodkjenteHelsepersonellkategorier { get; }
+        public List<OId9060> GodkjenteHelsepersonellkategorier { get; }
 
 
         const string HprnummerAdmin = "000000000";
