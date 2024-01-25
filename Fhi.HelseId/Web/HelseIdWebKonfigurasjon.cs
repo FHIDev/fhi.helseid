@@ -66,7 +66,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
 
     public bool UseProtectedPaths { get; set; } = true;
 
-    public bool UseRefreshTokenStore { get; set; } = true;
+    public bool UseRefreshTokenStore { get; set; } = false;
 
     public bool UseApis => Apis.Any();
 

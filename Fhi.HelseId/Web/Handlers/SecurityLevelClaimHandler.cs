@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Identity;
@@ -26,11 +27,18 @@ namespace Fhi.HelseId.Web.Handlers
 
             if (securityLevelClaim != null)
             {
-                if (configAuth.SecurityLevels.Any(sl => sl.ToLowerInvariant() == securityLevelClaim.Value.ToLowerInvariant()))
+                if (configAuth.SecurityLevels.Any(sl => string.Equals(sl, securityLevelClaim.Value, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     logger.LogTrace("SecurityLevelClaimHandler: Succeeded");
                     context.Succeed(requirement);
                 }
+                else
+                {
+                    logger.LogError("SecurityLevelClaimHandler: Invalid security level claim '{securityLevelClaim}', access denied.", securityLevelClaim.Value);
+                }
+            } else
+            {
+                logger.LogError("SecurityLevelClaimHandler: No security level claim found, access denied");
             }
 
             return Task.CompletedTask;
