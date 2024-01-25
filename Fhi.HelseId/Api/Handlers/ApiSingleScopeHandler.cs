@@ -27,6 +27,11 @@ namespace Fhi.HelseId.Api.Handlers
         {
             logger.LogTrace("ApiSingleScopeHandler: Validating");
             var scopeClaims = context.User.FindAll("scope").ToList();
+            if (scopeClaims.Count == 0) 
+            {
+                logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiSingleScopeHandler}: No scopes found",nameof(ApiSingleScopeHandler));
+                return Task.CompletedTask;
+            }
 
             if (scopeClaims.Any(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Value, _configAuth.ApiScope)))
             {
@@ -35,7 +40,7 @@ namespace Fhi.HelseId.Api.Handlers
             }
             else
             {
-                logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiMultiScopeHandler}: Missing or invalid scope {scopeClaims}, access denied", nameof(ApiMultiScopeHandler), string.Join(',', scopeClaims));
+                logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiSingleScopeHandler}: Missing or invalid scope '{scopeClaims}', access denied.", nameof(ApiSingleScopeHandler), string.Join(',', scopeClaims));
             }
 
             return Task.CompletedTask;
