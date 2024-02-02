@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fhi.HelseId.Blazor
 {
     public interface IStateHandler
     {
-        Task Populate();
+        Task Populate(HttpContext? httpContext);
     }
 
     public class StateHandler : IStateHandler
@@ -20,16 +21,28 @@ namespace Fhi.HelseId.Blazor
             this.contextHandler = contextHandler;
         }
 
-        public async Task Populate()
+        public async Task Populate(HttpContext? ctx)
         {
-            await contextHandler.NewContext(async (context) =>
+            if (ctx != null)
             {
-                foreach (var stateType in options.StateTypes)
+                await PopulateWithContext(ctx);
+            }
+            else
+            {
+                await contextHandler.NewContext(async (context) =>
                 {
-                    var state = (IScopedState)provider.GetRequiredService(stateType);
-                    await state.Populate(context);
-                }
-            });
+                    await PopulateWithContext(context);
+                });
+            }
+        }
+
+        private async Task PopulateWithContext(HttpContext context)
+        {
+            foreach (var stateType in options.StateTypes)
+            {
+                var state = (IScopedState)provider.GetRequiredService(stateType);
+                await state.Populate(context);
+            }
         }
     }
 }

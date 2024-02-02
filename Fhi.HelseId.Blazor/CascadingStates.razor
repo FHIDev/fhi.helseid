@@ -1,4 +1,6 @@
 ﻿@using Fhi.HelseId.Blazor;
+@using System.Runtime.InteropServices
+@using Microsoft.AspNetCore.Http
 @inject IStateHandler StateHandler;
 
 @if (Ready)
@@ -8,6 +10,9 @@
 
 @code 
 {
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
@@ -19,8 +24,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await StateHandler.Populate();
+        await StateHandler.Populate(HttpContext);
         Ready = true;
+        
         await base.OnInitializedAsync();
     }
 }
