@@ -5,15 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.HelseId.Refit</id>
-    <Version>1.0.0-alpha.1</Version>
+    <Version>1.0.0-beta.5</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
-    <Copyright>©2023 Folkehelseinstituttet (FHI)</Copyright>
+    <Copyright>©2023-2024 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageDescription>Setup Refit with helseid Apis</PackageDescription>
-    <PackageCopyright>Copyright ©2023 Folkehelseinstituttet</PackageCopyright>
+    <PackageCopyright>Copyright ©2023-2024 Folkehelseinstituttet</PackageCopyright>
     <!-- Tags appear in the gallery and can be used for tag searches -->
     <Tags>helseid, oauth, Refit</Tags>
     <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
@@ -33,11 +33,15 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0" />
-    <PackageReference Include="Refit" Version="6.3.2" />
-    <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
-    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="6.0.24" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.26" />
+    <PackageReference Include="Refit" Version="7.0.0" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="6.0.26" />
     <PackageReference Include="Fhi.HelseId" Version="5.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fhi.HelseId.Blazor\Fhi.HelseId.Blazor.csproj" />
   </ItemGroup>
 
 </Project>
