@@ -11,15 +11,21 @@ namespace Fhi.HelseId.Refit
     {
         private readonly IServiceCollection services;
         private readonly HelseIdWebKonfigurasjon config;
-        private List<Type> delegationHandlers = new();
-        private readonly HelseidRefitBuilderOptions options = new HelseidRefitBuilderOptions();
-        private bool hasAddedHeaderEncoding = false;
+        private readonly List<Type> delegationHandlers = new();
+        private readonly HelseidRefitBuilderOptions options = new();
+        private bool hasAddedHeaderEncoding;
 
-        private RefitSettings refitSettings { get; set; }
+        private RefitSettings RefitSettings { get; }
 
-        public HelseidRefitBuilder(IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings)
+        /// <summary>
+        /// Creates a new instance of HelseidRefitBuilder. This is the main entry point for setting up Refit clients
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="config">Uses only the UriToApiByName method</param>
+        /// <param name="refitSettings">Optional. If not specified uses a default serialization setup with CamelCase, Ignorecase and enumconvertion</param>
+        public HelseidRefitBuilder(IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings=null)
         {
-            this.refitSettings = refitSettings ?? CreateRefitSettings();
+            RefitSettings = refitSettings ?? CreateRefitSettings();
 
             this.services = services;
             this.config = config;
@@ -27,9 +33,12 @@ namespace Fhi.HelseId.Refit
             services.AddSingleton(options);
             services.AddHttpContextAccessor();
 
-            AddHandler<AuthHeaderHandlerForApi>();
+            AddHandler<AuthHeaderHandler>();
         }
 
+        /// <summary>
+        /// Add delegating handlers to the Refit client. Also adds the handler to the service collection as Transient
+        /// </summary>
         public HelseidRefitBuilder AddHandler<T>() where T : DelegatingHandler
         {
             delegationHandlers.Add(typeof(T));
@@ -61,6 +70,13 @@ namespace Fhi.HelseId.Refit
             return this;
         }
 
+        /// <summary>
+        /// Adds a Refit client interface and which service name to bind to, and an optional extra configuration
+        /// </summary>
+        /// <typeparam name="T">The Refit interface definition for the Api</typeparam>
+        /// <param name="nameOfService">Name of the service that will serve the Refit Api</param>
+        /// <param name="extra"></param>
+        /// <returns></returns>
         public HelseidRefitBuilder AddRefitClient<T>(string? nameOfService = null, Func<IHttpClientBuilder, IHttpClientBuilder>? extra = null) where T : class
         {
             if (!hasAddedHeaderEncoding)
@@ -71,7 +87,7 @@ namespace Fhi.HelseId.Refit
 
             var name = nameOfService ?? typeof(T).Name;
 
-            var clientBuilder = services.AddRefitClient<T>(refitSettings)
+            var clientBuilder = services.AddRefitClient<T>(RefitSettings)
                 .ConfigureHttpClient(httpClient =>
                 {
                     httpClient.BaseAddress = config.UriToApiByName(name);
