@@ -32,7 +32,7 @@ public static class Extensions
         var options = app.ApplicationServices.GetService<HelseidRefitBuilderOptions>();
         if (options == null)
         {
-            throw new Exception("You need to call builder.AddHelseIdForBlazor() before using app.UseHelseIdForBlazor()");
+            throw new Exception("You need to call builder.AddHelseidRefitBuilder() before using app.UseCorrelationId()");
         }
 
         if (options.UseCorrelationId)
