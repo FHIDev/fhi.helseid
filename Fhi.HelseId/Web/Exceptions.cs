@@ -3,29 +3,15 @@ using System.Runtime.Serialization;
 
 namespace Fhi.HelseId.Web;
 
-public class ConfigurationException : Exception
-{
-    public ConfigurationException(string message) : base(message)
-    {
+public class ConfigurationException(string message) : Exception(message);
 
-    }
-}
 
-[Serializable]
-public class InvalidAzureKeyVaultSettingsException : Exception
+public class InvalidAzureKeyVaultSettingsException() : Exception(StandardMessage)
 {
     private const string StandardMessage = "For Azure Key Vault Secret we expect ClientSecret in the format <name of secret>;<uri to vault>. For example: 'MySecret;https://<your-unique-key-vault-name>.vault.azure.net/'";
-
-    public InvalidAzureKeyVaultSettingsException() : base(StandardMessage)
-    {
-    }
-
-    protected InvalidAzureKeyVaultSettingsException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
 }
 
-[Serializable]
+
 public class MissingConfigurationException : Exception
 {
     public MissingConfigurationException(string outgoingApisName) : base(outgoingApisName)
@@ -35,16 +21,10 @@ public class MissingConfigurationException : Exception
 
     public MissingConfigurationException() { }
     public MissingConfigurationException(string message, Exception inner) : base(message, inner) { }
-
-    protected MissingConfigurationException(
-        SerializationInfo info,
-        StreamingContext context) : base(info, context)
-    {
-    }
+   
 }
 
 
-[Serializable]
 public class InvalidApiNameException : Exception
 {
     //
@@ -58,9 +38,4 @@ public class InvalidApiNameException : Exception
     public InvalidApiNameException(string message) : base(message) { }
     public InvalidApiNameException(string message, Exception inner) : base(message, inner) { }
 
-    protected InvalidApiNameException(
-        SerializationInfo info,
-        StreamingContext context) : base(info, context)
-    {
-    }
 }
