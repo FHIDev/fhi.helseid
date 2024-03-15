@@ -25,7 +25,8 @@ namespace Fhi.HelseId.Api.Handlers
             AuthorizationHandlerContext context, SecurityLevelOrApiRequirement requirement)
         {
             var clientId = context.User.FindFirst("client_id")?.Value??"???";
-            logger.LogInformation($"ApiMultiScopeHandler: Validating, Request ClientId {clientId}");
+            var clientName = context.User.FindFirst("helseid://claims/client/client_name")?.Value??"???";
+            logger.LogInformation("ApiMultiScopeHandler: Validating, Request ClientId {clientId} ClientName {clientName}",clientId,clientName);
             var scopeClaims = context.User.FindAll("scope").Where(s => s.Value.StartsWith(_configAuth.ApiName)).ToList();
             foreach (var claim in scopeClaims)
             {
