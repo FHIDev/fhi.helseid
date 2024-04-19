@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <id>Fhi.HelseId.Swagger</id>
+    <Version>1.0.1</Version>
+    <authors>Folkehelseinstituttet (FHI)</authors>
+    <Copyright>©2023-2024 Folkehelseinstituttet (FHI)</Copyright>
+    <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageDescription>Setup Swagger with HelseID Apis</PackageDescription>
+    <PackageCopyright>Copyright ©2023-2024 Folkehelseinstituttet</PackageCopyright>
+    <!-- Tags appear in the gallery and can be used for tag searches -->
+    <Tags>helseid, oauth, Refit, Swagger</Tags>
+    <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
+    <dependencies>
+      <group targetFramework="net6.0">
+      </group>
+    </dependencies>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Fhi.HelseId" Version="5.*" />
+  </ItemGroup>
+
+</Project>
