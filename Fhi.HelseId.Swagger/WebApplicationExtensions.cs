@@ -6,7 +6,7 @@ using System.Net.Mime;
 
 namespace Fhi.HelseId.Swagger;
 
-internal static class WebApplicationExtensions
+public static class WebApplicationExtensions
 {
     public static RouteHandlerBuilder UseHelseIdTestTokenEndpoint(this WebApplication app)
     {

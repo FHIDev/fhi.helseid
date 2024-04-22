@@ -15,7 +15,7 @@ You will need a separate client in HelseID selvbetjening for the Swagger client.
 ```json
   "SwaggerHelseIdConfiguration": {
     "TokenEndpoint": "https://localhost:7113/.swagger-dev/token",
-    "clientName": "FOLKEHELSEINSTITUTTET -  Fhi.Sysvak.Epj.Testklient.dev (Test)",
+    "clientName": "FOLKEHELSEINSTITUTTET -  Fhi.SomeServiceName",
     "authority": "https://helseid-sts.test.nhn.no",
     "clientId": "fcffea32-8f2d-4efc-a25a-b668a788d4f1",
     "grantTypes": [
@@ -24,7 +24,7 @@ You will need a separate client in HelseID selvbetjening for the Swagger client.
     "scopes": [
       "openid",
       "helseid://scopes/hpr/hpr_number",
-      "fhi:sysvak.epj.dev/api"
+      "fhi:someservicename/api"
     ],
     "redirectUris": [
       "https://localhost:44380/swagger/oauth2-redirect.html"
@@ -45,6 +45,10 @@ The `TokenEndpoint` will point towards the test token endpoint that Swagger will
 Add required services and configuration:
 
 ```csharp
+using Fhi.HelseId.Swagger;
+
+// ...
+
 if (builder.Environment.IsDevelopment())
 {
     var swaggerAuthConfig = builder.Configuration.GetSection(nameof(SwaggerHelseIdConfiguration)).Get<SwaggerHelseIdConfiguration>()!;
