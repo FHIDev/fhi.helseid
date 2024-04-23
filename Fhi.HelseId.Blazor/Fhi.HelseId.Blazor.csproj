@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.HelseId.Blazor</id>
-    <Version>1.0.0-alpha.3</Version>
+    <Version>1.0.1</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023-2024 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>

@@ -89,9 +89,10 @@ namespace Fhi.HelseId.Blazor
         /// Adds propagation and handling of correlation ids. You should add this before any logging-delagates. Remember to add "app.UseHeaderPropagation()" in your startup code.
         /// </summary>
         /// <returns></returns>
-        public HelseidRefitBuilderForBlazor AddCorrelationId()
+        public HelseidRefitBuilderForBlazor AddCorrelationId(Func<IServiceProvider, string>? customCorrelationIdFunc = null)
         {
             options.UseCorrelationId = true;
+            options.CustomCorrelationIdFunc = customCorrelationIdFunc;
 
             AddHandler<CorrelationIdHandler>();
 
