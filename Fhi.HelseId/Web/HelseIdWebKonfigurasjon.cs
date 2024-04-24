@@ -34,7 +34,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
 {
 
 
-    public string[] SecurityLevels { get; set; } = { "3", "4" };
+    public string[] SecurityLevels { get; set; } = ["3", "4"];
 
 
     protected override IEnumerable<string> FixedScopes
