@@ -211,7 +211,7 @@ public class HelseIdWebAuthBuilder
             .Combine(authenticatedPolicy)
             .AddRequirements(new SecurityLevelOrApiRequirement())
             .Build();
-        hidOrApiPolicy = authenticatedPolicy;
+     
         if (HelseIdWebKonfigurasjon.UseHprNumber)
         {
             var hprNumberPolicyBuilder = new AuthorizationPolicyBuilder()
