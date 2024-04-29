@@ -34,15 +34,6 @@ You will also need to wrap your hole App.razor code with a CascadingStates-tag:
 </CascadingStates>
 ```
 
-
-
-If you want to add additional loggers add them before "AddRefitClient": 
-
-```
-builder.AddHelseIdForBlazor()
-    .AddHandler<MyLoggingDelegationHandler>()
-    .AddRefitClient<IMyRefitClient>()
-```
 The code loads your configuration from IConfiguration using the section "HelseIdWebKonfigurasjon".
 If you want to override which section to use you can pass the correct section to AddHelseIdForBlazor:
 
@@ -59,27 +50,67 @@ builder.AddHelseIdForBlazor(new RefitSettings())
     .AddRefitClient<IMyRefitClient>();
 ```
 
-
 Note that using this builder will automatically add a middleware for logging you out, as the default HelseId-way does not work well for Blazor apps.
-The URLs defaults to "/logout" and "/loggedout". You can configure the logout options by calling
+The URLs defaults to "/logout" and "/loggedout". You can configure the logout options in the builder options.
+
+## Options
+
+The default setup will add a token handler, logging handler, correlationId handler and an header-encoding handler
+to your Refit Interface. In addition you can add multiple custom delegates if needed.
+
+To add custom delegates use the AddHandler() function:
 
 ```
-builder.AddHelseIdForBlazor()
-    .ConfigureLogout(....);
+builder.AddHelseidRefitBuilder()
+    .AddHandler<MyOwnLoggingDelegationHandler>();
 ```
 
-
-## Adding Correlation Id to all requests
-
-Use "AddCorrelationId()" to add header propagation of the default FHI correlation id header. 
-
+You can also choose which handlers to use if you prefer not to use all the default handlers:
 ```
-builder.AddHelseIdForBlazor()
-    .AddCorrelationId()
+builder.AddHelseidRefitBuilder(builderOptions: new HelseidRefitBuilder()
+    {
+        UseAnonymizationLogger = true,
+        HtmlEncodeFhiHeaders = true,
+        UseCorrelationId = true,
+        UseDefaultTokenHandler = true,
+    })
     .AddRefitClient<IMyRefitClient>();
 ```
 
+## Correlation Id
+
+The Correlation Id Handler adds header propagation of the default FHI correlation id header. 
 A new correlation ID will be given to each request and response that does not contain the header when invoked.
+Remember to add usage of header propagation to your app startup code. It should be placed before any logging middleware:
+
+```
+app.UseCorrelationId();
+```
+
+## Logging
+
+The handler "LoggingDelegationHandler" log all Refit requets with anonymized URLs. 
+The logger requires dependency injection of a Microsoft.Extensions.Logging.ILogger.
+
+The LoggingDelegationHandler will log the following messages. Uri will have all Nowrwegian National identity numbers replaced with start '***********), and the query parameters removed:
+
+```
+    Requested HTTP {RequestMethod} {Uri} in {Elapsed}ms with response {StatusCode} {Reason} with CorrelationId {CorrelationId}
+    Requested HTTP {RequestMethod} {Uri} in {Elapsed}ms with exception {Exception} with CorrelationId {CorrelationId}
+```
+
+## Header encoding
+
+If HtmlEncodeFhiHeaders is enabled all headers starting with the prefix "fhi-" will be automatically Html-encoded.
+This is usefull when using headers like "fhi-organization-name", which might contain illegal HTTP header characters.
+
+The HTML encoding should only encode characters that normally are illegal in as header values, so the alternative is requests
+failing because of illegal headers.
+
+Note that headers are not automatically decoded on the receiving server! You will still have to do your own
+decoding (using HttpUtility.HtmlDecode or similar), as there are no standard header-encoding rules.
+
+Html-encoding is used over Url-encoding, since more "normal" characters, like spaces, are preserved.
 
 ## More usage
 

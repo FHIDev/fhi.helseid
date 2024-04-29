@@ -4,6 +4,8 @@ namespace Fhi.HelseId.Blazor;
 
 public class FhiHeaderDelegationHandler : DelegatingHandler
 {
+    private const string FhiHeaderPrefix = "fhi-";
+
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var headers = request
@@ -12,7 +14,7 @@ public class FhiHeaderDelegationHandler : DelegatingHandler
 
         foreach (var header in headers)
         {
-            if (header.Key.StartsWith("fhi-"))
+            if (header.Key.StartsWith(FhiHeaderPrefix))
             {
                 request.Headers.Remove(header.Key);
                 request.Headers.Add(header.Key, HttpUtility.HtmlEncode(header.Value));

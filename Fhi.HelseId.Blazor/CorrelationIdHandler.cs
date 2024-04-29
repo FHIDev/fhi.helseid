@@ -1,4 +1,6 @@
-﻿namespace Fhi.HelseId.Blazor;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace Fhi.HelseId.Blazor;
 
 public class CorrelationIdHandler : DelegatingHandler
 {
@@ -15,7 +17,7 @@ public class CorrelationIdHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var correalationId = _options.CustomCorrelationIdFunc?.Invoke(_provider) ?? Guid.NewGuid().ToString();
+        var correalationId = _options.CustomCorrelationIdFunc?.Invoke(_provider) ?? GetDefaultCorrelationId();
 
         if (request.Headers.TryGetValues(CorrelationIdHeaderName, out var values))
         {
@@ -34,5 +36,10 @@ public class CorrelationIdHandler : DelegatingHandler
         }
 
         return response;
+    }
+
+    private string GetDefaultCorrelationId()
+    {
+        return _provider.GetService<HelseIdState>()?.CorrelationId ?? Guid.NewGuid().ToString();
     }
 }
