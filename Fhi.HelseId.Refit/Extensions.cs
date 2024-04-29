@@ -8,18 +8,18 @@ namespace Fhi.HelseId.Refit;
 
 public static class Extensions
 {
-    public static HelseidRefitBuilder AddHelseidRefitBuilder(this WebApplicationBuilder builder, string? configSection = null, RefitSettings? refitSettings = null)
+    public static HelseidRefitBuilder AddHelseidRefitBuilder(this WebApplicationBuilder builder, string? configSection = null, HelseidRefitBuilderOptions? builderOptions = null, RefitSettings? refitSettings = null)
     {
         var config = builder.Configuration
             .GetSection(configSection ?? nameof(HelseIdWebKonfigurasjon))
             .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon));
 
-        return new HelseidRefitBuilder(builder.Services, config, refitSettings);
+        return new HelseidRefitBuilder(builder.Services, config, builderOptions, refitSettings);
     }
 
-    public static HelseidRefitBuilder AddHelseidRefitBuilder(this IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings = null)
+    public static HelseidRefitBuilder AddHelseidRefitBuilder(this IServiceCollection services, HelseIdWebKonfigurasjon config, HelseidRefitBuilderOptions? builderOptions = null, RefitSettings? refitSettings = null)
     {
-        return new HelseidRefitBuilder(services, config, refitSettings);
+        return new HelseidRefitBuilder(services, config, builderOptions, refitSettings);
     }
 
     /// <summary>

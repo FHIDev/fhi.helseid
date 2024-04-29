@@ -1,16 +1,31 @@
-﻿namespace Fhi.HelseId.Refit;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Fhi.HelseId.Refit;
 
 public class CorrelationIdHandler : DelegatingHandler
 {
     public const string CorrelationIdHeaderName = "X-Correlation-ID";
 
-    public CorrelationIdHandler()
+    private readonly IHttpContextAccessor httpContextAccessor;
+
+    public CorrelationIdHandler(IHttpContextAccessor httpContextAccessor)
     {
+        this.httpContextAccessor = httpContextAccessor;
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var correalationId = Guid.NewGuid().ToString();
+
+        var context = httpContextAccessor.HttpContext;
+        if (context != null)
+        {
+            var corrFromContext = context.Request.Headers.FirstOrDefault(x => x.Key == CorrelationIdHeaderName).Value.FirstOrDefault();
+            if (corrFromContext != null)
+            {
+                correalationId = corrFromContext;
+            }
+        }
 
         if (request.Headers.TryGetValues(CorrelationIdHeaderName, out var values))
         {
