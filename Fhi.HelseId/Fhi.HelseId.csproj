@@ -11,7 +11,6 @@
     <Copyright>(c) 2020-2024 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>Fix </PackageReleaseNotes>
     <PackageDescription>Authentication and authorization component for access to NHN HelseId</PackageDescription>
@@ -27,6 +26,7 @@
     </dependencies>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>fhi.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup>
