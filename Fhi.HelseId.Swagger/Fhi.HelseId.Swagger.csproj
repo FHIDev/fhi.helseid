@@ -5,20 +5,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.HelseId.Swagger</id>
-    <Version>1.0.1</Version>
+    <Version>1.0.0</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
-    <Copyright>©2023-2024 Folkehelseinstituttet (FHI)</Copyright>
+    <Copyright>©2024 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageDescription>Setup Swagger with HelseID Apis</PackageDescription>
-    <PackageCopyright>Copyright ©2023-2024 Folkehelseinstituttet</PackageCopyright>
+    <PackageCopyright>Copyright ©2024 Folkehelseinstituttet</PackageCopyright>
     <!-- Tags appear in the gallery and can be used for tag searches -->
     <Tags>helseid, oauth, Refit, Swagger</Tags>
     <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
     <dependencies>
-      <group targetFramework="net6.0">
+      <group targetFramework="net8.0">
       </group>
     </dependencies>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
