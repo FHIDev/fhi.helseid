@@ -10,7 +10,7 @@ The example bellow is intended for the usage of an API that requires a token usi
 
 ## Setting up appsettings.json when using HelseID as an STS
 
-You will need a separate client in HelseID selvbetjening for the Swagger client. After creating the client, add the HelseID configuration to appsettings under a `SwaggerHelseIdConfiguration` property and add the `TokenEndpoint` property as follows:
+You will need a separate client registration in HelseID selvbetjening for the Swagger client. After creating the client registration, add the HelseID configuration to appsettings under a `SwaggerHelseIdConfiguration` property and add the `TokenEndpoint` property as follows:
 
 ```json
   "SwaggerHelseIdConfiguration": {
