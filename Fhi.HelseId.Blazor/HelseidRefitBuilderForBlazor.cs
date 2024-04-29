@@ -22,6 +22,11 @@ namespace Fhi.HelseId.Blazor
             HelseidRefitBuilderForBlazorOptions? builderOptions = null,
             RefitSettings? refitSettings = null)
         {
+            if (OperatingSystem.IsBrowser())
+            {
+                throw new Exception("HelseidRefitBuilderForBlazor is only availible for server side code.");
+            }
+
             this.RefitSettings = refitSettings ?? CreateRefitSettings();
             this.builderOptions = builderOptions ?? new();
             this.services = services;

@@ -14,6 +14,9 @@ Some of the problems this code solves are
 
 This default setup will add a token handler to your Refit Interface in addition to letting you add multiple delegates if needed (f.ex. logging).
 
+Note that HelseidRefitBuilderForBlazor is only availible for server side code, and not WASM. 
+We limit the usage to Server Side code to prevent the access tokens from being availible in the front end.
+
 ## Usage
 
 Include this code in your WebApi startup builder (remember to also call "builder.AddHelseIdWebAuthentication()" etc):
