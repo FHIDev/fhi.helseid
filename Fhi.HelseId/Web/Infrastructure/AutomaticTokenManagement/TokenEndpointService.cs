@@ -10,10 +10,14 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
-public class TokenEndpointService
+public interface ITokenEndpointService
+{
+    Task<TokenResponse> RefreshTokenAsync(string refreshToken);
+}
+
+public class TokenEndpointService : ITokenEndpointService
 {
     private readonly AutomaticTokenManagementOptions managementOptions;
     private readonly IOptionsSnapshot<OpenIdConnectOptions> oidcOptions;
