@@ -93,7 +93,7 @@ public class AuthHeaderHandlerForApi : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request.Options.All(x => x.Key != AnonymousOptionKey))
+        if (request.Options.Any(x => x.Key == AnonymousOptionKey))
         {
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
