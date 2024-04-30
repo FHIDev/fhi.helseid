@@ -19,7 +19,7 @@ public class HelseidRefitBuilderOptions
 
     /// <summary>
     /// Html-encodes all headers starting with the prefix "fhi-".
-    /// This is usefull when using headers like "fhi-organization-name", which might contain
+    /// This is useful when using headers like "fhi-organization-name", which might contain
     /// illegal HTTP header characters.
     /// </summary>
     public bool HtmlEncodeFhiHeaders { get; set; } = true;
