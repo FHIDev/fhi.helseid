@@ -15,7 +15,7 @@ Some of the problems this code solves are
 This default setup will add a token handler to your Refit Interface in addition to letting you add multiple delegates if needed (f.ex. logging).
 
 Note that HelseidRefitBuilderForBlazor is only availible for server side code, and not WASM. 
-We limit the usage to Server Side code to prevent the access tokens from being availible in the front end.
+We limit the usage to Server Side code to prevent the access tokens from being available in the front end.
 
 ## Usage
 
@@ -58,12 +58,12 @@ The URLs defaults to "/logout" and "/loggedout". You can configure the logout op
 
 ## Options
 
-The default setup will add a token handler, logging handler, correlationId handler and an header-encoding handler
+The default setup will add a token handler, logging handler, correlationId handler and a header-encoding handler
 to your Refit Interface. In addition you can add multiple custom delegates if needed.
 
 To add custom delegates use the AddHandler() function:
 
-```
+```cs
 builder.AddHelseidRefitBuilder()
     .AddHandler<MyOwnLoggingDelegationHandler>();
 ```
@@ -86,7 +86,7 @@ The Correlation Id Handler adds header propagation of the default FHI correlatio
 A new correlation ID will be given to each request and response that does not contain the header when invoked.
 Remember to add usage of header propagation to your app startup code. It should be placed before any logging middleware:
 
-```
+```cs
 app.UseCorrelationId();
 ```
 

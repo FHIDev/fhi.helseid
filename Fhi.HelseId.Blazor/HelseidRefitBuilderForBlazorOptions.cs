@@ -26,7 +26,7 @@
 
         /// <summary>
         /// Adds logging to all requests using LoggingDelegationHandler.
-        /// The handler anonymizes all NIN-like requets paths and removes query strings from the log URL.
+        /// The handler anonymizes all NIN-like request paths and removes query strings from the log URL.
         /// </summary>
         public bool UseAnonymizationLogger { get; set; } = true;
 
