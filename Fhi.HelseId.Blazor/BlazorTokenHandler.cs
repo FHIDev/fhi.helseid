@@ -16,7 +16,7 @@ public class BlazorTokenHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request.Options.All(x => x.Key != AnonymousOptionKey))
+        if (request.Options.Any(x => x.Key == AnonymousOptionKey))
         {
             var accessToken = await tokenService.GetToken();
             request.Headers.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, accessToken);
