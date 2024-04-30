@@ -19,7 +19,7 @@
 
         /// <summary>
         /// Html-encodes all headers starting with the prefix "fhi-".
-        /// This is usefull when using headers like "fhi-organization-name", which might contain
+        /// This is useful when using headers like "fhi-organization-name", which might contain
         /// illegal HTTP header characters.
         /// </summary>
         public bool HtmlEncodeFhiHeaders { get; set; } = true;
@@ -37,7 +37,7 @@
 
         /// <summary>
         /// To be able to access the http context to log out of a blazor app
-        /// we need to do this from middleware where the HttpContext is availible.
+        /// we need to do this from middleware where the HttpContext is available.
         /// To trigger it, be sure to force a reload when navigating to the logout url
         /// f.ex:  NavManager.NavigateTo($"/logout", forceLoad: true);
         /// </summary>

@@ -8,7 +8,7 @@ namespace Fhi.HelseId.Blazor;
 /*
  * This code aims to solve some Blazor<>HelseId problems 
  * - The lifetime of the helse-id access token is max 600s, so it can time out before the user makes new Http-requests
- * - The code that should try to refresh the access token relies on IHttpContextAccessor, which is not availible in Blazor
+ * - The code that should try to refresh the access token relies on IHttpContextAccessor, which is not available in Blazor
  * = We only have a valid Access&Refresh token for 600s after the first HelseId login, even though the cookie is valid for a lot longer.
  * 
  * As Blazor uses SignalR, we will not normally have access to the HttpContext during the SPA's lifetime.
