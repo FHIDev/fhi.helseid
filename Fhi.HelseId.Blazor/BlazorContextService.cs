@@ -8,7 +8,7 @@ namespace Fhi.HelseId.Blazor;
 /*
  * This code aims to solve some Blazor<>HelseId problems 
  * - The lifetime of the helse-id access token is max 600s, so it can time out before the user makes new Http-requests
- * - The code that should try to refresh the access token relies on IHttpContextAccessor, which is not availible in Blazor
+ * - The code that should try to refresh the access token relies on IHttpContextAccessor, which is not available in Blazor
  * = We only have a valid Access&Refresh token for 600s after the first HelseId login, even though the cookie is valid for a lot longer.
  * 
  * As Blazor uses SignalR, we will not normally have access to the HttpContext during the SPA's lifetime.
@@ -23,14 +23,14 @@ namespace Fhi.HelseId.Blazor;
  * We do this by creating a service which we can use to create a NEW HttpContext where we have access to reading/setting cookies.
 */
 
-public class BlazorContextHandler
+public class BlazorContextService
 {
     public const string NEW_CONTEXT_URL = "/_blazor/httpcontext";
 
     private static ConcurrentDictionary<string, Func<HttpContext, Task>> ActionMap = new();
     private readonly IJSRuntime jsRuntime;
 
-    public BlazorContextHandler(IJSRuntime jsRuntime)
+    public BlazorContextService(IJSRuntime jsRuntime)
     {
         this.jsRuntime = jsRuntime;
     }
@@ -54,10 +54,10 @@ public class BlazortContextMiddleware : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        if (context.Request.Path.Value?.StartsWith(BlazorContextHandler.NEW_CONTEXT_URL) == true)
+        if (context.Request.Path.Value?.StartsWith(BlazorContextService.NEW_CONTEXT_URL) == true)
         {
             var id = context.Request.Path.Value.Split('/').Last();
-            var service = context.RequestServices.GetRequiredService<BlazorContextHandler>();
+            var service = context.RequestServices.GetRequiredService<BlazorContextService>();
             await service.ConnectContext(context, id);
             return;
         }

@@ -1,4 +1,6 @@
-﻿namespace Fhi.HelseId.Blazor;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace Fhi.HelseId.Blazor;
 
 public class CorrelationIdHandler : DelegatingHandler
 {
@@ -15,24 +17,30 @@ public class CorrelationIdHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var correalationId = _options.CustomCorrelationIdFunc?.Invoke(_provider) ?? Guid.NewGuid().ToString();
+        var correlationId = _options.CustomCorrelationIdFunc?.Invoke(_provider) ?? GetDefaultCorrelationId();
 
         if (request.Headers.TryGetValues(CorrelationIdHeaderName, out var values))
         {
-            correalationId = values!.First();
+            correlationId = values!.First();
         }
         else
         {
-            request.Headers.Add(CorrelationIdHeaderName, correalationId);
+            request.Headers.Add(CorrelationIdHeaderName, correlationId);
         }
 
         var response = await base.SendAsync(request, cancellationToken);
 
         if (!response.Headers.TryGetValues(CorrelationIdHeaderName, out _))
         {
-            response.Headers.Add(CorrelationIdHeaderName, correalationId);
+            response.Headers.Add(CorrelationIdHeaderName, correlationId);
         }
 
         return response;
+    }
+
+    private string GetDefaultCorrelationId()
+    {
+        var correlationId = _provider.GetService<HelseIdState>()?.CorrelationId;
+        return string.IsNullOrEmpty(correlationId) ? Guid.NewGuid().ToString() : correlationId;
     }
 }
