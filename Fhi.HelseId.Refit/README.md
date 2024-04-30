@@ -7,7 +7,7 @@ This package contains code to simplify working with Refit and HelseId.
 Include this code in your WebApi startup builder. 
 Don't forget to call UseCorrelationId() after building your application if you are using Correlation Id:
 
-```
+```cs
 builder.AddHelseidRefitBuilder()
     .AddRefitClient<IMyRefitClient>();
 
@@ -19,7 +19,7 @@ app.UseCorrelationId();
 The code loads your configuration from IConfiguration using the section "HelseIdWebKonfigurasjon".
 If you want to override which section to use you can pass the correct section to AddHelseidRefitBuilder:
 
-```
+```cs
 builder.AddHelseidRefitBuilder("CustomHelseIdWebKonfigurasjon")
     .AddRefitClient<IMyRefitClient>();
 ```
@@ -27,7 +27,7 @@ builder.AddHelseidRefitBuilder("CustomHelseIdWebKonfigurasjon")
 The default RefitSettings we are using use SystemTextJsonContentSerializer, is case insensitive and use camelCasing.
 If you want to override the default RefitSettings to use you can pass the settings to AddHelseidRefitBuilder:
 
-```
+```cs
 builder.AddHelseidRefitBuilder(new RefitSettings())
     .AddRefitClient<IMyRefitClient>();
 ```
@@ -40,13 +40,14 @@ to your Refit Interface. In addition you can add multiple custom delegates if ne
 
 To add custom delegates use the AddHandler() function:
 
-```
+```cs
 builder.AddHelseidRefitBuilder()
     .AddHandler<MyOwnLoggingDelegationHandler>();
 ```
 
 You can also choose which handlers to use if you prefer not to use all the default handlers:
-```
+
+```cs
 builder.AddHelseidRefitBuilder(builderOptions: new HelseidRefitBuilder()
     {
         UseAnonymizationLogger = true,
@@ -63,7 +64,7 @@ The Correlation Id Handler adds header propagation of the default FHI correlatio
 A new correlation ID will be given to each request and response that does not contain the header when invoked.
 Remember to add usage of header propagation to your app startup code. It should be placed before any logging middleware:
 
-```
+```cs
 app.UseCorrelationId();
 ```
 
