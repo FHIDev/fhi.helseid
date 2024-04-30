@@ -17,7 +17,7 @@ public class LoggingDelegationHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var correalationId = request.Headers.FirstOrDefault(x => x.Key == CorrelationIdHandler.CorrelationIdHeaderName).Value?.FirstOrDefault();
+        var correlationId = request.Headers.FirstOrDefault(x => x.Key == CorrelationIdHandler.CorrelationIdHeaderName).Value?.FirstOrDefault();
 
         var logUrl = AnonymizePersonalIdentifiers(request.RequestUri?.GetLeftPart(UriPartial.Path).ToString());
 
@@ -29,11 +29,11 @@ public class LoggingDelegationHandler : DelegatingHandler
 
             if (response.IsSuccessStatusCode)
             {
-                logger.LogInformation(LogMessage, request.Method, logUrl, time, (int)response.StatusCode, response.ReasonPhrase, correalationId);
+                logger.LogInformation(LogMessage, request.Method, logUrl, time, (int)response.StatusCode, response.ReasonPhrase, correlationId);
             }
             else
             {
-                logger.LogWarning(LogMessage, request.Method, logUrl, time, (int)response.StatusCode, response.ReasonPhrase, correalationId);
+                logger.LogWarning(LogMessage, request.Method, logUrl, time, (int)response.StatusCode, response.ReasonPhrase, correlationId);
             }
 
             return response;
@@ -41,7 +41,7 @@ public class LoggingDelegationHandler : DelegatingHandler
         catch (Exception ex)
         {
             var time = (int)(DateTime.Now - start).TotalMilliseconds;
-            logger.LogError(ex, LogMessageError, request.Method, logUrl, time, ex.Message, correalationId);
+            logger.LogError(ex, LogMessageError, request.Method, logUrl, time, ex.Message, correlationId);
             throw;
         }
     }
