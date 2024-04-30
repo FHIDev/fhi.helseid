@@ -45,7 +45,7 @@ public class AuthHeaderHandler : DelegatingHandler
     }
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request.Options.All(x => x.Key != AnonymousOptionKey))
+        if (request.Options.Any(x => x.Key == AnonymousOptionKey))
         {
             logger.LogTrace("{class}.{method} - Skipping Access token because of anonymous HttpRequestMessage options", nameof(AuthHeaderHandler), nameof(SendAsync));
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -82,13 +82,22 @@ public class AuthHeaderHandler : DelegatingHandler
 /// </summary>
 public class AuthHeaderHandlerForApi : DelegatingHandler
 {
+    public const string AnonymousOptionKey = "Anonymous";
+
     private readonly IHttpContextAccessor contextAccessor;
+
     public AuthHeaderHandlerForApi(IHttpContextAccessor contextAccessor)
     {
         this.contextAccessor = contextAccessor;
     }
+
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        if (request.Options.All(x => x.Key != AnonymousOptionKey))
+        {
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+
         var ctx = contextAccessor.HttpContext ?? throw new NoContextException();
         var token = await ctx.AccessToken();
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
