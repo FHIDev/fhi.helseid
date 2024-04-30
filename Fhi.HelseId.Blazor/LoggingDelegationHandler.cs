@@ -51,6 +51,6 @@ public class LoggingDelegationHandler : DelegatingHandler
         if (string.IsNullOrWhiteSpace(sourceToAnonymize))
             return sourceToAnonymize;
 
-        return Regex.Replace(sourceToAnonymize, "\\d{11}", "***********");
+        return Regex.Replace(sourceToAnonymize, "\\d{11}", "***********", RegexOptions.None, TimeSpan.FromMilliseconds(100));
     }
 }
