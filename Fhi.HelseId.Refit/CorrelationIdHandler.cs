@@ -15,7 +15,7 @@ public class CorrelationIdHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var correalationId = Guid.NewGuid().ToString();
+        var correlationId = Guid.NewGuid().ToString();
 
         var context = httpContextAccessor.HttpContext;
         if (context != null)
@@ -23,24 +23,24 @@ public class CorrelationIdHandler : DelegatingHandler
             var corrFromContext = context.Request.Headers.FirstOrDefault(x => x.Key == CorrelationIdHeaderName).Value.FirstOrDefault();
             if (corrFromContext != null)
             {
-                correalationId = corrFromContext;
+                correlationId = corrFromContext;
             }
         }
 
         if (request.Headers.TryGetValues(CorrelationIdHeaderName, out var values))
         {
-            correalationId = values!.First();
+            correlationId = values!.First();
         }
         else
         {
-            request.Headers.Add(CorrelationIdHeaderName, correalationId);
+            request.Headers.Add(CorrelationIdHeaderName, correlationId);
         }
 
         var response = await base.SendAsync(request, cancellationToken);
 
         if (!response.Headers.TryGetValues(CorrelationIdHeaderName, out _))
         {
-            response.Headers.Add(CorrelationIdHeaderName, correalationId);
+            response.Headers.Add(CorrelationIdHeaderName, correlationId);
         }
 
         return response;

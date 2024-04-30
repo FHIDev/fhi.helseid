@@ -84,8 +84,7 @@ The LoggingDelegationHandler will log the following messages. Uri will have all 
 If HtmlEncodeFhiHeaders is enabled all headers starting with the prefix "fhi-" will be automatically Html-encoded.
 This is usefull when using headers like "fhi-organization-name", which might contain illegal HTTP header characters.
 
-The HTML encoding should only encode characters that normally are illegal in as header values, so the alternative is requests
-failing because of illegal headers.
+The HTML encoding should only encode characters that normally are illegal in as header values, so the alternative is requests failing because of illegal headers.
 
 Note that headers are not automatically decoded on the receiving server! You will still have to do your own
 decoding (using HttpUtility.HtmlDecode or similar), as there are no standard header-encoding rules.
