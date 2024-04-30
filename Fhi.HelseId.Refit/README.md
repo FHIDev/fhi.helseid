@@ -5,7 +5,7 @@ This package contains code to simplify working with Refit and HelseId.
 ## Usage
 
 Include this code in your WebApi startup builder. 
-Don't forget to call UseCorrelationId() after building your application if you are using Corellation Id:
+Don't forget to call UseCorrelationId() after building your application if you are using Correlation Id:
 
 ```
 builder.AddHelseidRefitBuilder()
@@ -69,7 +69,7 @@ app.UseCorrelationId();
 
 ## Logging
 
-The handler "LoggingDelegationHandler" log all Refit requets with anonymized URLs. 
+The handler "LoggingDelegationHandler" log all Refit requests with anonymized URLs. 
 The logger requires dependency injection of a Microsoft.Extensions.Logging.ILogger.
 
 The LoggingDelegationHandler will log the following messages. Uri will have all Nowrwegian National identity numbers replaced with start '***********), and the query parameters removed:
@@ -82,9 +82,9 @@ The LoggingDelegationHandler will log the following messages. Uri will have all 
 ## Header encoding
 
 If HtmlEncodeFhiHeaders is enabled all headers starting with the prefix "fhi-" will be automatically Html-encoded.
-This is usefull when using headers like "fhi-organization-name", which might contain illegal HTTP header characters.
+This is useful when using headers like "fhi-organization-name", which might contain illegal HTTP header characters.
 
-The HTML encoding should only encode characters that normally are illegal in as header values, so the alternative is requests failing because of illegal headers.
+The HTML encoding should only encode characters that are normally illegal in headers. If we did not encode them the requests would fail.
 
 Note that headers are not automatically decoded on the receiving server! You will still have to do your own
 decoding (using HttpUtility.HtmlDecode or similar), as there are no standard header-encoding rules.
