@@ -7,9 +7,9 @@ public class BlazorTokenHandler : DelegatingHandler
 {
     public const string AnonymousOptionKey = "Anonymous";
 
-    private BlazorTokenService tokenService;
+    private IBlazorTokenService tokenService;
 
-    public BlazorTokenHandler(BlazorTokenService tokenService)
+    public BlazorTokenHandler(IBlazorTokenService tokenService)
     {
         this.tokenService = tokenService;
     }

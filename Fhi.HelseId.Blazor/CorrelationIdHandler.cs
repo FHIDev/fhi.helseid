@@ -40,6 +40,7 @@ public class CorrelationIdHandler : DelegatingHandler
 
     private string GetDefaultCorrelationId()
     {
-        return _provider.GetService<HelseIdState>()?.CorrelationId ?? Guid.NewGuid().ToString();
+        var correlationId = _provider.GetService<HelseIdState>()?.CorrelationId;
+        return string.IsNullOrEmpty(correlationId) ? Guid.NewGuid().ToString() : correlationId;
     }
 }

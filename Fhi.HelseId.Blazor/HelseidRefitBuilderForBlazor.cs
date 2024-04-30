@@ -12,7 +12,6 @@ namespace Fhi.HelseId.Blazor
         private readonly HelseIdWebKonfigurasjon helseIdConfig;
         private readonly HelseidRefitBuilderForBlazorOptions builderOptions;
         private readonly List<Type> delegationHandlers = new();
-        private readonly HelseidRefitBuilderForBlazorOptions options = new HelseidRefitBuilderForBlazorOptions();
 
         public RefitSettings RefitSettings { get; set; }
 
@@ -34,10 +33,10 @@ namespace Fhi.HelseId.Blazor
 
             services.AddStateHandlers().AddScopedState<HelseIdState>();
 
-            services.AddScoped<BlazorContextHandler>();
+            services.AddScoped<BlazorContextService>();
             services.AddScoped<BlazortContextMiddleware>();
-            services.AddScoped<BlazorTokenService>();
-            services.AddSingleton(options);
+            services.AddScoped<IBlazorTokenService, BlazorTokenService>();
+            services.AddSingleton(this.builderOptions);
 
             var factory = new ScopedHttpClientFactory(this.builderOptions.DisposeHandlers, this.builderOptions.HttpClientHandlerBuilder);
             services.AddSingleton<IScopedHttpClientFactory>(factory);
