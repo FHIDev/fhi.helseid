@@ -45,10 +45,6 @@ namespace Fhi.HelseId.Refit
             {
                 AddHandler<FhiHeaderDelegationHandler>();
             }
-            if (this.builderOptions.UseAnonymizationLogger)
-            {
-                AddHandler<LoggingDelegationHandler>();
-            }
             if (this.builderOptions.UseCorrelationId)
             {
                 AddHandler<CorrelationIdHandler>();
@@ -58,6 +54,10 @@ namespace Fhi.HelseId.Refit
                 {
                     o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
                 });
+            }
+            if (this.builderOptions.UseAnonymizationLogger)
+            {
+                AddHandler<LoggingDelegationHandler>();
             }
         }
 
