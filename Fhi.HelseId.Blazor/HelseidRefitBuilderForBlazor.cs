@@ -49,10 +49,6 @@ namespace Fhi.HelseId.Blazor
             {
                 AddHandler<FhiHeaderDelegationHandler>();
             }
-            if (this.builderOptions.UseAnonymizationLogger)
-            {
-                AddHandler<LoggingDelegationHandler>();
-            }
             if (this.builderOptions.UseCorrelationId)
             {
                 AddHandler<CorrelationIdHandler>();
@@ -61,6 +57,10 @@ namespace Fhi.HelseId.Blazor
                 {
                     o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
                 });
+            }
+            if (this.builderOptions.UseAnonymizationLogger)
+            {
+                AddHandler<LoggingDelegationHandler>();
             }
         }
 

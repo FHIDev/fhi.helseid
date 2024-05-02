@@ -32,7 +32,7 @@ public partial class HelseidRefitBuilderForBlazorTests
             HttpClientHandlerBuilder = x => new DummyInnerHandler(),
         };
 
-        var client = CreateTestClient(options);
+        var client = CreateTestClient(options, out var provider);
 
         var response = await client.Info();
 
@@ -45,7 +45,10 @@ public partial class HelseidRefitBuilderForBlazorTests
 
         // check that the correlation id is picked up from the state
         Assert.That(response.Headers.Single(x => x.Key == CorrelationIdHandler.CorrelationIdHeaderName).Value.Single(),
-            Is.EqualTo(ContextCorrelationId));
+        Is.EqualTo(ContextCorrelationId));
+
+        var logger = (TestLogger<LoggingDelegationHandler>)provider.GetRequiredService<ILogger<LoggingDelegationHandler>>();
+        Assert.That(logger.Entries.Any( x => x.Contains(ContextCorrelationId)), Is.True, "Correlation id not found: " + logger.Entries.First());
     }
 
     [Test]
@@ -61,7 +64,7 @@ public partial class HelseidRefitBuilderForBlazorTests
             HtmlEncodeFhiHeaders = false,
         };
 
-        var client = CreateTestClient(options);
+        var client = CreateTestClient(options, out var provider);
 
         var response = await client.Info();
 
@@ -77,7 +80,7 @@ public partial class HelseidRefitBuilderForBlazorTests
             Is.EqualTo("test æ"));
     }
 
-    public ITestClient CreateTestClient(HelseidRefitBuilderForBlazorOptions options)
+    public ITestClient CreateTestClient(HelseidRefitBuilderForBlazorOptions options, out ServiceProvider provider)
     {
         var services = CreateDefaultServiceCollection();
 
@@ -89,7 +92,7 @@ public partial class HelseidRefitBuilderForBlazorTests
         services.AddHelseIdForBlazor(config, options)
             .AddRefitClient<ITestClient>();
 
-        var provider = services.BuildServiceProvider();
+        provider = services.BuildServiceProvider();
 
         // Populate the HelseIdState. This would normally happen in the start of the Blazor Circuit.
         provider.GetRequiredService<HelseIdState>().Populate(CreateContext(provider)).Wait();
@@ -100,7 +103,7 @@ public partial class HelseidRefitBuilderForBlazorTests
     private ServiceCollection CreateDefaultServiceCollection()
     {
         var services = new ServiceCollection();
-        services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+        services.AddSingleton(typeof(ILogger<>), typeof(TestLogger<>));
         services.AddSingleton(Substitute.For<IJSRuntime>());
 
         // Add authentication parameters for a logged in user
