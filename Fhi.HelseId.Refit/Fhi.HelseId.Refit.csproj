@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.HelseId.Refit</id>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <id>Fhi.HelseId.Refit</id>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023-2024 Folkehelseinstituttet (FHI)</Copyright>
