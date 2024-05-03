@@ -42,10 +42,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\Fhi.AuthController.Nuget.yml = .github\workflows\Fhi.AuthController.Nuget.yml
 		.github\workflows\Fhi.HelseId.AltInn.Nuget = .github\workflows\Fhi.HelseId.AltInn.Nuget
 		.github\workflows\Fhi.HelseId.Blazor.Nuget.yml = .github\workflows\Fhi.HelseId.Blazor.Nuget.yml
-		.github\workflows\Fhi.HelseId.Swagger.Nuget.yml = .github\workflows\Fhi.HelseId.Swagger.Nuget.yml
 		.github\workflows\Fhi.HelseId.CI.yml = .github\workflows\Fhi.HelseId.CI.yml
 		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
 		.github\workflows\Fhi.HelseId.Refit.Nuget.yml = .github\workflows\Fhi.HelseId.Refit.Nuget.yml
+		.github\workflows\Fhi.HelseId.Swagger.Nuget.yml = .github\workflows\Fhi.HelseId.Swagger.Nuget.yml
 		.github\workflows\Fhi.HelseId.TestSupport.Nuget.yml = .github\workflows\Fhi.HelseId.TestSupport.Nuget.yml
 		.github\workflows\SonarBuild.yml = .github\workflows\SonarBuild.yml
 	EndProjectSection
@@ -59,6 +59,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Blazor", "Fhi.HelseId.Blazor\Fhi.HelseId.Blazor.csproj", "{FFC0B4DA-7D53-467F-BBAC-59CBCBDA1078}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Swagger", "Fhi.HelseId.Swagger\Fhi.HelseId.Swagger.csproj", "{D6B3A10C-B329-4745-9883-B2D3A6D3D1D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId.Swagger.Tests", "Fhi.HelseId.Swagger.Tests\Fhi.HelseId.Swagger.Tests.csproj", "{5C7453F7-9625-41C0-AA34-B082A87C990A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,6 +104,10 @@ Global
 		{D6B3A10C-B329-4745-9883-B2D3A6D3D1D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6B3A10C-B329-4745-9883-B2D3A6D3D1D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6B3A10C-B329-4745-9883-B2D3A6D3D1D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

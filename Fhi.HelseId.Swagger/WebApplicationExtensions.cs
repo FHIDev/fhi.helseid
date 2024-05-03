@@ -13,7 +13,7 @@ public static class WebApplicationExtensions
 
         var isProduction = currentEnvironmentName.StartsWith("Prod", StringComparison.OrdinalIgnoreCase);
 
-        if (enabledEnvironments?.Contains(currentEnvironmentName) == true && !isProduction)
+        if (enabledEnvironments?.Contains(currentEnvironmentName) ?? true && !isProduction)
         {
             return app.MapPost(".swagger-dev/token", async Task<IResult> ([FromForm] IFormCollection form, ITokenProxy tokenProxy) =>
             {
