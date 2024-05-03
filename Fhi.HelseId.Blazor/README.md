@@ -1,4 +1,4 @@
-﻿# Fhi.HelseId.Refit
+﻿# Fhi.HelseId.Blazor
 
 This package contains code to simplify working with Blazor, Refit and HelseId. 
 
@@ -14,7 +14,7 @@ Some of the problems this code solves are
 
 This default setup will add a token handler to your Refit Interface in addition to letting you add multiple delegates if needed (f.ex. logging).
 
-Note that HelseidRefitBuilderForBlazor is only available for server side code, and not WASM. 
+Note that HelseidRefitBuilderForBlazor is only available for server side code, and not WASM.
 We limit the usage to Server Side code to prevent the access tokens from being available in the front end.
 
 ## Usage
