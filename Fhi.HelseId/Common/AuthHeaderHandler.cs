@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -21,6 +22,8 @@ namespace Fhi.HelseId.Common;
 /// </summary>
 public class AuthHeaderHandler : DelegatingHandler
 {
+    public const string AnonymousOptionKey = "Anonymous";
+
     private readonly IHttpContextAccessor contextAccessor;
     private readonly ILogger<AuthHeaderHandler> logger;
     private readonly IRefreshTokenStore refreshTokenStore;
@@ -42,11 +45,17 @@ public class AuthHeaderHandler : DelegatingHandler
     }
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        if (request.Options.Any(x => x.Key == AnonymousOptionKey))
+        {
+            logger.LogTrace("{class}.{method} - Skipping Access token because of anonymous HttpRequestMessage options", nameof(AuthHeaderHandler), nameof(SendAsync));
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+
         var ctx = contextAccessor.HttpContext ?? throw new NoContextException();
         logger.LogTrace("{class}.{method} - Starting", nameof(AuthHeaderHandler), nameof(SendAsync));
         var token = await ctx.GetUserAccessTokenAsync(cancellationToken: cancellationToken);
 
-        if (config.UseRefreshTokenStore && refreshTokenStore.GetLatestToken(user)!=null && !string.IsNullOrEmpty(refreshTokenStore.GetLatestToken(user)?.AccessToken) && refreshTokenStore.GetLatestToken(user)?.AccessToken != token)
+        if (config.UseRefreshTokenStore && refreshTokenStore.GetLatestToken(user) != null && !string.IsNullOrEmpty(refreshTokenStore.GetLatestToken(user)?.AccessToken) && refreshTokenStore.GetLatestToken(user)?.AccessToken != token)
             token = refreshTokenStore.GetLatestToken(user)?.AccessToken;
         if (token == null)
         {
@@ -54,13 +63,13 @@ public class AuthHeaderHandler : DelegatingHandler
         }
         else
         {
-            logger.LogTrace("{class}.{method} - Found access token in context (hash:{hash})", nameof(AuthHeaderHandler), nameof(SendAsync),token.GetHashCode());
+            logger.LogTrace("{class}.{method} - Found access token in context (hash:{hash})", nameof(AuthHeaderHandler), nameof(SendAsync), token.GetHashCode());
         }
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
-            logger.LogError("{class}.{method} Request to {url} failed with status code {statusCode}", nameof(AuthHeaderHandler), nameof(SendAsync),request.RequestUri, response.StatusCode);
+            logger.LogError("{class}.{method} Request to {url} failed with status code {statusCode}", nameof(AuthHeaderHandler), nameof(SendAsync), request.RequestUri, response.StatusCode);
         }
 
         return response;
@@ -73,21 +82,30 @@ public class AuthHeaderHandler : DelegatingHandler
 /// </summary>
 public class AuthHeaderHandlerForApi : DelegatingHandler
 {
+    public const string AnonymousOptionKey = "Anonymous";
+
     private readonly IHttpContextAccessor contextAccessor;
+
     public AuthHeaderHandlerForApi(IHttpContextAccessor contextAccessor)
     {
         this.contextAccessor = contextAccessor;
     }
+
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        if (request.Options.Any(x => x.Key == AnonymousOptionKey))
+        {
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+
         var ctx = contextAccessor.HttpContext ?? throw new NoContextException();
         var token = await ctx.AccessToken();
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer",  token);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
 }
 
-public class NoContextException: Exception
+public class NoContextException : Exception
 {
     //
     // For guidelines regarding the creation of new exception types, see

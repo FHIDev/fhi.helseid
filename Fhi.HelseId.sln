@@ -62,6 +62,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Swagger", "Fhi.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId.Swagger.Tests", "Fhi.HelseId.Swagger.Tests\Fhi.HelseId.Swagger.Tests.csproj", "{5C7453F7-9625-41C0-AA34-B082A87C990A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId.Blazor.Tests", "Fhi.HelseId.Blazor.Tests\Fhi.HelseId.Blazor.Tests.csproj", "{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,10 @@ Global
 		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

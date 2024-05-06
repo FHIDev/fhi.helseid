@@ -10,100 +10,81 @@ namespace Fhi.HelseId.Blazor
     {
         private readonly IServiceCollection services;
         private readonly HelseIdWebKonfigurasjon helseIdConfig;
-        private List<Type> DelegationHandlers = new();
-        private HelseidRefitBuilderForBlazorOptions options = new HelseidRefitBuilderForBlazorOptions();
-        private ScopedHttpClientFactory Factory = new ScopedHttpClientFactory();
+        private readonly HelseidRefitBuilderForBlazorOptions builderOptions;
+        private readonly List<Type> delegationHandlers = new();
 
         public RefitSettings RefitSettings { get; set; }
 
-        public HelseidRefitBuilderForBlazor(IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings)
+        public HelseidRefitBuilderForBlazor(
+            IServiceCollection services,
+            HelseIdWebKonfigurasjon config,
+            HelseidRefitBuilderForBlazorOptions? builderOptions = null,
+            RefitSettings? refitSettings = null)
         {
-            this.RefitSettings = refitSettings ?? CreateRefitSettings();
+            if (OperatingSystem.IsBrowser())
+            {
+                throw new Exception("HelseidRefitBuilderForBlazor is only available for server side code.");
+            }
 
+            this.RefitSettings = refitSettings ?? CreateRefitSettings();
+            this.builderOptions = builderOptions ?? new();
             this.services = services;
             this.helseIdConfig = config;
 
             services.AddStateHandlers().AddScopedState<HelseIdState>();
 
-            services.AddScoped<BlazorContextHandler>();
+            services.AddScoped<BlazorContextService>();
             services.AddScoped<BlazortContextMiddleware>();
-            services.AddScoped<BlazorTokenService>();
-            services.AddSingleton(options);
+            services.AddScoped<IBlazorTokenService, BlazorTokenService>();
+            services.AddSingleton(this.builderOptions);
 
-            services.AddSingleton<IScopedHttpClientFactory>(Factory);
+            var factory = new ScopedHttpClientFactory(this.builderOptions.DisposeHandlers, this.builderOptions.HttpClientHandlerBuilder);
+            services.AddSingleton<IScopedHttpClientFactory>(factory);
 
-            AddHandler<BlazorTokenHandler>();
-            AddHandler<FhiHeaderDelegationHandler>();
+            if (this.builderOptions.UseDefaultTokenHandler)
+            {
+                AddHandler<BlazorTokenHandler>();
+            }
+            if (this.builderOptions.HtmlEncodeFhiHeaders)
+            {
+                AddHandler<FhiHeaderDelegationHandler>();
+            }
+            if (this.builderOptions.UseCorrelationId)
+            {
+                AddHandler<CorrelationIdHandler>();
+
+                services.AddHeaderPropagation(o =>
+                {
+                    o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
+                });
+            }
+            if (this.builderOptions.UseAnonymizationLogger)
+            {
+                AddHandler<LoggingDelegationHandler>();
+            }
         }
 
+        /// <summary>
+        /// Add delegating handlers to the Refit client. Also adds the handler to the service collection as Transient
+        /// </summary>
         public HelseidRefitBuilderForBlazor AddHandler<T>() where T : DelegatingHandler
         {
-            DelegationHandlers.Add(typeof(T));
-            services.AddTransient<T>();
-            return this;
-        }
-
-        public HelseidRefitBuilderForBlazor SetHttpClientHandlerBuilder(Func<string, HttpClientHandler> builder)
-        {
-            Factory.HttpClientHandlerBuilder = builder;
-            return this;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dispose">true if the inner handler should be disposed of by HttpClient.Dispose; if you intend to reuse the inner handler.</param>
-        /// <returns></returns>
-        public HelseidRefitBuilderForBlazor DisposeHandleres(bool dispose)
-        {
-            Factory.DisposeHandlers = dispose;
-            return this;
-        }
-
-        public HelseidRefitBuilderForBlazor ClearHandlers()
-        {
-            DelegationHandlers.Clear();
-            return this;
-        }
-
-        /// <summary>
-        /// To be able to access the http context to log out of a blazor app
-        /// we need to do this from middleware where the HttpContext is availible.
-        /// To trigger it, be sure to force a reload when navigating to the logout url
-        /// f.ex:  NavManager.NavigateTo($"/logout", forceLoad: true);
-        /// </summary>
-        /// <param name="enabled"></param>
-        /// <param name="url">The url used to trigger logging out.</param>
-        /// <param name="redirect">The url to continue to after logging out.</param>
-        /// <returns></returns>
-
-        public HelseidRefitBuilderForBlazor ConfigureLogout(bool enabled = true, string url = "/logout", string redirect = "/loggedout")
-        {
-            options.UseLogoutUrl = enabled;
-            options.LogOutUrl = url;
-            options.LoggedOutRedirectUrl = redirect;
-            return this;
-        }
-
-        /// <summary>
-        /// Adds propagation and handling of correlation ids. You should add this before any logging-delagates. Remember to add "app.UseHeaderPropagation()" in your startup code.
-        /// </summary>
-        /// <returns></returns>
-        public HelseidRefitBuilderForBlazor AddCorrelationId(Func<IServiceProvider, string>? customCorrelationIdFunc = null)
-        {
-            options.UseCorrelationId = true;
-            options.CustomCorrelationIdFunc = customCorrelationIdFunc;
-
-            AddHandler<CorrelationIdHandler>();
-
-            services.AddHeaderPropagation(o =>
+            var type = typeof(T);
+            if (!delegationHandlers.Any(x => x == type))
             {
-                o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
-            });
-
+                delegationHandlers.Add(type);
+                services.AddTransient<T>();
+            }
             return this;
         }
 
+        /// <summary>
+        /// Adds a Refit client interface and which service name to bind to, and an optional extra configuration
+        /// </summary>
+        /// <typeparam name="T">The Refit interface definition for the Api</typeparam>
+        /// <param name="nameOfService">Name of the service that will serve the Refit Api</param>
+        /// <param name="extra"></param>
+        /// <returns></returns>
         public HelseidRefitBuilderForBlazor AddRefitClient<T>(string? nameOfService = null, Func<HttpClient, HttpClient>? extra = null) where T : class
         {
             var name = nameOfService ?? typeof(T).Name;
@@ -113,7 +94,7 @@ namespace Fhi.HelseId.Blazor
                 // We are using a custom factory, since the Refit factory does not created correctly scoped TokenHandlers.
                 // We need a new TokenHandler for each request to get the access token from the correct context.
                 // This is BAD, as we are not using the HttpClientFactory to create the HttpClients.
-                var client = s.GetRequiredService<IScopedHttpClientFactory>().CreateHttpClient(name, s, DelegationHandlers);
+                var client = s.GetRequiredService<IScopedHttpClientFactory>().CreateHttpClient(name, s, delegationHandlers);
                 client.BaseAddress = helseIdConfig.UriToApiByName(name);
                 extra?.Invoke(client);
                 return RestService.For<T>(client, RefitSettings);
