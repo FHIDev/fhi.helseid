@@ -52,11 +52,6 @@ namespace Fhi.HelseId.Blazor
             if (this.builderOptions.UseCorrelationId)
             {
                 AddHandler<CorrelationIdHandler>();
-
-                services.AddHeaderPropagation(o =>
-                {
-                    o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
-                });
             }
             if (this.builderOptions.UseAnonymizationLogger)
             {

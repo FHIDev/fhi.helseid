@@ -65,7 +65,6 @@ namespace Fhi.HelseId.Blazor
             if (options.UseCorrelationId)
             {
                 app.UseMiddleware<CorrelationIdMiddleware>();
-                app.UseHeaderPropagation();
             }
 
             if (options.UseLogoutUrl)

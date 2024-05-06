@@ -48,12 +48,7 @@ namespace Fhi.HelseId.Refit
             if (this.builderOptions.UseCorrelationId)
             {
                 AddHandler<CorrelationIdHandler>();
-
                 services.AddHttpContextAccessor();
-                services.AddHeaderPropagation(o =>
-                {
-                    o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
-                });
             }
             if (this.builderOptions.UseAnonymizationLogger)
             {
@@ -96,11 +91,6 @@ namespace Fhi.HelseId.Refit
             if (!builderOptions.PreserveDefaultLogger)
             {
                 clientBuilder.RemoveAllLoggers();
-            }
-
-            if (builderOptions.UseCorrelationId)
-            {
-                clientBuilder.AddHeaderPropagation();
             }
 
             foreach (var type in delegationHandlers)
