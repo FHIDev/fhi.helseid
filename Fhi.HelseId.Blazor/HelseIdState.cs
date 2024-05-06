@@ -27,18 +27,26 @@ namespace Fhi.HelseId.Blazor
 
         private static string GetCorrelationId(HttpContext httpContext)
         {
-            var header = string.Empty;
+            var correlationId = Guid.NewGuid().ToString();
 
             if (httpContext.Request.Headers.TryGetValue(CorrelationIdHandler.CorrelationIdHeaderName, out var values))
             {
-                header = values.FirstOrDefault();
+                // if we find a correlation id on the request we update our default correlation Id
+                correlationId = values.First() ?? correlationId;
             }
-            else if (httpContext.Response.Headers.TryGetValue(CorrelationIdHandler.CorrelationIdHeaderName, out values))
+            else
             {
-                header = values.FirstOrDefault();
+                // if we did not find a correlation Id, set it to the default one so other code that reads correlation Id can see it
+                httpContext.Request.Headers.TryAdd(CorrelationIdHandler.CorrelationIdHeaderName, correlationId);
+            }
+            
+            if (!httpContext.Response.Headers.TryGetValue(CorrelationIdHandler.CorrelationIdHeaderName, out _))
+            {
+                // if we did not find a correlation Id, set it to the default one so other code that reads correlation Id can see it
+                httpContext.Response.Headers.TryAdd(CorrelationIdHandler.CorrelationIdHeaderName, correlationId);
             }
 
-            return string.IsNullOrEmpty(header) ? Guid.NewGuid().ToString() : header;
+            return correlationId;
         }
     }
 }

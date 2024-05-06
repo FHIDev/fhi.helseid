@@ -38,7 +38,6 @@ public static class Extensions
         if (options.UseCorrelationId)
         {
             app.UseMiddleware<CorrelationIdMiddleware>();
-            app.UseHeaderPropagation();
         }
 
         return app;
