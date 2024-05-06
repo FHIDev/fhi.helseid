@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.HelseId.Blazor</id>
-    <Version>1.0.1</Version>
+    <Version>1.1.3-alpha.1</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023-2024 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
@@ -26,9 +26,11 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <PackageIcon>fhi.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\images\fhi.png" Pack="true" PackagePath="" />
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
