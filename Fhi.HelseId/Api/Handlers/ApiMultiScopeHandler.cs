@@ -30,7 +30,7 @@ namespace Fhi.HelseId.Api.Handlers
             var scopeClaims = context.User.FindAll("scope").Where(s => s.Value.StartsWith(_configAuth.ApiName)).ToList();
             foreach (var claim in scopeClaims)
             {
-                logger.LogInformation($"Fhi.HelseId.Api.Handlers.{nameof(ApiMultiScopeHandler)}: Scope claim: {claim.Value}");
+                logger.LogTrace($"Fhi.HelseId.Api.Handlers.{nameof(ApiMultiScopeHandler)}: Scope claim: {claim.Value}");
             }
             if (!scopeClaims.Any())
             {
@@ -46,7 +46,7 @@ namespace Fhi.HelseId.Api.Handlers
             }
             foreach (var allowedScope in allowedScopes)
             {
-                logger.LogInformation("Fhi.HelseId.Api.Handlers.{class}: Allowed scope: {allowedScope}", nameof(ApiMultiScopeHandler), allowedScope);
+                logger.LogTrace("Fhi.HelseId.Api.Handlers.{class}: Allowed scope: {allowedScope}", nameof(ApiMultiScopeHandler), allowedScope);
             }
             var matches = scopes.Intersect(allowedScopes);
             if (matches.Any())
