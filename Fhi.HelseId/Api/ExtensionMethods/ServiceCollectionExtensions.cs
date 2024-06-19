@@ -36,9 +36,9 @@ public static class ServiceCollectionExtensions
                 services.AddSingleton<IAuthorizationHandler, ApiSingleScopeHandler>();
             services.AddScoped<IAccessTokenProvider, HttpContextAccessTokenProvider>();
 
-            services
+            services                
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddHelseIdJwtBearer(config);
+                .AddHelseIdJwtBearerAndDpop(config);
 
             if (config.RequireContextIdentity)
                 services.AddHelseIdAuthorization(config);

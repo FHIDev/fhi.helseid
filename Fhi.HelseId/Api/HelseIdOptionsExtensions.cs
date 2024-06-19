@@ -1,19 +1,29 @@
-﻿using Fhi.HelseId.Common;
+﻿using Fhi.HelseId.Api.Authorization;
+using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System;
 
 namespace Fhi.HelseId.Api
 {
     public static class HelseIdOptionsExtensions
     {
+        public static AuthenticationBuilder AddJwtBearerAndDpop(this AuthenticationBuilder builder, Action<JwtBearerOptions> configureOptions)
+        {
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerPostConfigureOptions>());
+            return builder.AddScheme<JwtBearerOptions, CustomAuthenticationHandler>(JwtBearerDefaults.AuthenticationScheme, displayName: null, configureOptions);
+        }
 
-        public static AuthenticationBuilder AddHelseIdJwtBearer(this AuthenticationBuilder authenticationBuilder,
+        public static AuthenticationBuilder AddHelseIdJwtBearerAndDpop(this AuthenticationBuilder authenticationBuilder,
             IHelseIdApiKonfigurasjon configAuth)
         {
-            var builder = authenticationBuilder.AddJwtBearer(
+            var builder = authenticationBuilder.AddJwtBearerAndDpop(
                 options =>
                 {
                     options.Authority = configAuth.Authority;
