@@ -15,7 +15,9 @@ using Microsoft.IdentityModel.Tokens;
 namespace Fhi.HelseId.Api.Authorization
 {
     /// <summary>
-    /// This is taken from Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler, the only thing we to is to add DPoP for authorazation
+    /// This is taken from package: Microsoft.AspNetCore.Authentication.JwtBearer, class JwtBearerHandler.
+    /// See the code by going into the definition, or this link: https://github.com/dotnet/aspnetcore/blob/99f2ba5fd1d668fecbff1e1a9ba6a541c99bec79/src/Security/Authentication/JwtBearer/src/JwtBearerHandler.cs#L15
+    /// !IMPORTANT! the only thing we to is to add DPoP for authorazation
     /// </summary>
     public class CustomAuthenticationHandler(
         IOptionsMonitor<JwtBearerOptions> options,
