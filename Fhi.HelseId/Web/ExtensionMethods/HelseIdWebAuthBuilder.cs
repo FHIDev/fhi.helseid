@@ -27,7 +27,7 @@ public class HelseIdWebAuthBuilder
 {
     private readonly IServiceCollection services;
     private IConfiguration Configuration { get; }
-    public IHelseIdWebKonfigurasjon HelseIdWebKonfigurasjon { get; }
+    public IHelseIdWebKonfigurasjon? HelseIdWebKonfigurasjon { get; }
     private readonly IConfigurationSection? helseIdKonfigurasjonSeksjon;
     public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; }
     public IHelseIdSecretHandler SecretHandler { get; set; }
@@ -40,6 +40,8 @@ public class HelseIdWebAuthBuilder
         if (helseIdKonfigurasjonSeksjon == null)
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         HelseIdWebKonfigurasjon = helseIdKonfigurasjonSeksjon.Get<HelseIdWebKonfigurasjon>();
+        if (HelseIdWebKonfigurasjon == null)
+            throw new MissingConfigurationException($"Missing required configuration {nameof(HelseIdWebKonfigurasjon)}");
         RedirectPagesKonfigurasjon = HelseIdWebKonfigurasjon.RedirectPagesKonfigurasjon;
         SecretHandler = new HelseIdNoAuthorizationSecretHandler(); // Default
     }
@@ -209,7 +211,7 @@ public class HelseIdWebAuthBuilder
             .Combine(authenticatedPolicy)
             .AddRequirements(new SecurityLevelOrApiRequirement())
             .Build();
-        hidOrApiPolicy = authenticatedPolicy;
+     
         if (HelseIdWebKonfigurasjon.UseHprNumber)
         {
             var hprNumberPolicyBuilder = new AuthorizationPolicyBuilder()

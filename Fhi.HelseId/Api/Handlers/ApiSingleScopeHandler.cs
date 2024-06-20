@@ -25,7 +25,9 @@ namespace Fhi.HelseId.Api.Handlers
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context, SecurityLevelOrApiRequirement requirement)
         {
-            logger.LogTrace("ApiSingleScopeHandler: Validating");
+            var clientId = context.User.FindFirst("client_id")?.Value ?? "???";
+            var clientName = context.User.FindFirst("helseid://claims/client/client_name")?.Value ?? "???";
+            logger.LogInformation("ApiSingleScopeHandler: Validating, Request ClientId {clientId} ClientName {clientName}",clientId,clientName);
             var scopeClaims = context.User.FindAll("scope").ToList();
             if (scopeClaims.Count == 0) 
             {

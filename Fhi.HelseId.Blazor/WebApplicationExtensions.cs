@@ -11,22 +11,22 @@ namespace Fhi.HelseId.Blazor
 {
     public static class WebApplicationExtensions
     {
-        public static HelseidRefitBuilderForBlazor AddHelseIdForBlazor(this WebApplicationBuilder builder, string? configSection = null, RefitSettings? refitSettings = null)
+        public static HelseidRefitBuilderForBlazor AddHelseIdForBlazor(this WebApplicationBuilder builder, string? configSection = null, HelseidRefitBuilderForBlazorOptions? builderOptions = null, RefitSettings? refitSettings = null)
         {
             var config = builder.Configuration
                 .GetSection(configSection ?? nameof(HelseIdWebKonfigurasjon))
                 .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon)); ;
 
-            return new HelseidRefitBuilderForBlazor(builder.Services, config, refitSettings);
+            return new HelseidRefitBuilderForBlazor(builder.Services, config, builderOptions, refitSettings);
         }
 
-        public static HelseidRefitBuilderForBlazor AddHelseIdForBlazor(this IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings = null)
+        public static HelseidRefitBuilderForBlazor AddHelseIdForBlazor(this IServiceCollection services, HelseIdWebKonfigurasjon config, HelseidRefitBuilderForBlazorOptions? builderOptions = null, RefitSettings? refitSettings = null)
         {
-            return new HelseidRefitBuilderForBlazor(services, config, refitSettings);
+            return new HelseidRefitBuilderForBlazor(services, config, builderOptions, refitSettings);
         }
 
         /// <summary>
-        /// Add a scoped state that will be populated using a HttpContext. This allows you to easily get values from the anywhere.
+        /// Add a scoped state that will be populated using a HttpContext. This allows you to easily get context values from the anywhere.
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
@@ -48,7 +48,7 @@ namespace Fhi.HelseId.Blazor
         }
 
         /// <summary>
-        /// 
+        /// Configures usage of Logout urls and Correlation Id middleware.
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
@@ -65,7 +65,6 @@ namespace Fhi.HelseId.Blazor
             if (options.UseCorrelationId)
             {
                 app.UseMiddleware<CorrelationIdMiddleware>();
-                app.UseHeaderPropagation();
             }
 
             if (options.UseLogoutUrl)

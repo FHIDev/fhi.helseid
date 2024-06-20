@@ -4,18 +4,23 @@ using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
 namespace Fhi.HelseId.Blazor;
 
+public interface IBlazorTokenService
+{
+    Task<string?> GetToken();
+}
+
 /// <summary>
 /// Service for getting valid access tokens.
 /// </summary>
-public class BlazorTokenService
+public class BlazorTokenService : IBlazorTokenService
 {
     private const int CLOSE_TO_EXPIRE_SECONDS = 5; // acount for IO-delay from ExpiresIn is set extyernally until it is read
 
     private readonly HelseIdState state;
     private readonly TokenEndpointService tokenRefreshService;
-    private readonly BlazorContextHandler contextHandler;
+    private readonly BlazorContextService contextHandler;
 
-    public BlazorTokenService(HelseIdState state, TokenEndpointService tokenRefreshService, BlazorContextHandler contextHandler)
+    public BlazorTokenService(HelseIdState state, TokenEndpointService tokenRefreshService, BlazorContextService contextHandler)
     {
         this.state = state;
         this.tokenRefreshService = tokenRefreshService;

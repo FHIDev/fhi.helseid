@@ -24,11 +24,13 @@ namespace Fhi.HelseId.Api.Handlers
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context, SecurityLevelOrApiRequirement requirement)
         {
-            logger.LogTrace("ApiMultiScopeHandler: Validating");
+            var clientId = context.User.FindFirst("client_id")?.Value??"???";
+            var clientName = context.User.FindFirst("helseid://claims/client/client_name")?.Value??"???";
+            logger.LogInformation("ApiMultiScopeHandler: Validating, Request ClientId {clientId} ClientName {clientName}",clientId,clientName);
             var scopeClaims = context.User.FindAll("scope").Where(s => s.Value.StartsWith(_configAuth.ApiName)).ToList();
             foreach (var claim in scopeClaims)
             {
-                logger.LogInformation($"Fhi.HelseId.Api.Handlers.{nameof(ApiMultiScopeHandler)}: Scope claim: {claim.Value}");
+                logger.LogTrace($"Fhi.HelseId.Api.Handlers.{nameof(ApiMultiScopeHandler)}: Scope claim: {claim.Value}");
             }
             if (!scopeClaims.Any())
             {
@@ -44,7 +46,7 @@ namespace Fhi.HelseId.Api.Handlers
             }
             foreach (var allowedScope in allowedScopes)
             {
-                logger.LogInformation("Fhi.HelseId.Api.Handlers.{class}: Allowed scope: {allowedScope}", nameof(ApiMultiScopeHandler), allowedScope);
+                logger.LogTrace("Fhi.HelseId.Api.Handlers.{class}: Allowed scope: {allowedScope}", nameof(ApiMultiScopeHandler), allowedScope);
             }
             var matches = scopes.Intersect(allowedScopes);
             if (matches.Any())

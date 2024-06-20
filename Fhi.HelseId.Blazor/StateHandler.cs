@@ -11,10 +11,10 @@ namespace Fhi.HelseId.Blazor
     public class StateHandler : IStateHandler
     {
         private readonly StateHandlerOptions options;
-        private readonly BlazorContextHandler contextHandler;
+        private readonly BlazorContextService contextHandler;
         private readonly IServiceProvider provider;
 
-        public StateHandler(StateHandlerOptions options, BlazorContextHandler contextHandler, IServiceProvider provider)
+        public StateHandler(StateHandlerOptions options, BlazorContextService contextHandler, IServiceProvider provider)
         {
             this.options = options;
             this.provider = provider;
