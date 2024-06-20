@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <id>Fhi.HelseId.Blazor</id>
-    <Version>1.1.3-alpha.1</Version>
+    <id>Fhi.HelseId.Swagger</id>
+    <Version>1.0.0</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
-    <Copyright>©2023-2024 Folkehelseinstituttet (FHI)</Copyright>
+    <Copyright>©2024 Folkehelseinstituttet (FHI)</Copyright>
     <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageDescription>Setup Blazor with helseid Apis</PackageDescription>
-    <PackageCopyright>Copyright ©2023-2024 Folkehelseinstituttet</PackageCopyright>
+    <PackageDescription>Setup Swagger with HelseID Apis</PackageDescription>
+    <PackageCopyright>Copyright ©2024 Folkehelseinstituttet</PackageCopyright>
     <!-- Tags appear in the gallery and can be used for tag searches -->
-    <Tags>helseid, oauth, Refit, Blazor</Tags>
+    <Tags>helseid, oauth, Refit, Swagger</Tags>
     <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
     <dependencies>
-      <group targetFramework="net6.0">
+      <group targetFramework="net8.0">
       </group>
     </dependencies>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -26,20 +26,14 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <PackageIcon>fhi.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\images\fhi.png" Pack="true" PackagePath="" />
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.27" />
-    <PackageReference Include="Refit" Version="7.0.0" />
-    <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="6.0.27" />
     <PackageReference Include="Fhi.HelseId" Version="5.*" />
   </ItemGroup>
 

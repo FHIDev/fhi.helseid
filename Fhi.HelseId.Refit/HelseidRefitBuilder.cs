@@ -9,31 +9,51 @@ namespace Fhi.HelseId.Refit
 {
     public class HelseidRefitBuilder
     {
+        private readonly List<Type> delegationHandlers = new();
+
         private readonly IServiceCollection services;
         private readonly HelseIdWebKonfigurasjon config;
-        private readonly List<Type> delegationHandlers = new();
-        private readonly HelseidRefitBuilderOptions options = new();
-        private bool hasAddedHeaderEncoding;
-
-        private RefitSettings RefitSettings { get; }
+        private readonly HelseidRefitBuilderOptions builderOptions;
+        private readonly RefitSettings refitSettings;
 
         /// <summary>
         /// Creates a new instance of HelseidRefitBuilder. This is the main entry point for setting up Refit clients
         /// </summary>
         /// <param name="services"></param>
         /// <param name="config">Uses only the UriToApiByName method</param>
+        /// <param name="builderOptions">Configure which features of the builder that will be include.</param>
         /// <param name="refitSettings">Optional. If not specified uses a default serialization setup with CamelCase, Ignorecase and enumconvertion</param>
-        public HelseidRefitBuilder(IServiceCollection services, HelseIdWebKonfigurasjon config, RefitSettings? refitSettings=null)
+        public HelseidRefitBuilder(
+            IServiceCollection services,
+            HelseIdWebKonfigurasjon config,
+            HelseidRefitBuilderOptions? builderOptions = null,
+            RefitSettings? refitSettings = null)
         {
-            RefitSettings = refitSettings ?? CreateRefitSettings();
+            this.refitSettings = refitSettings ?? CreateRefitSettings();
+            this.builderOptions = builderOptions ?? new();
 
             this.services = services;
             this.config = config;
 
-            services.AddSingleton(options);
-            services.AddHttpContextAccessor();
+            services.AddSingleton(this.builderOptions);
 
-            AddHandler<AuthHeaderHandler>();
+            if (this.builderOptions.UseDefaultTokenHandler)
+            {
+                AddHandler<AuthHeaderHandler>();
+            }
+            if (this.builderOptions.HtmlEncodeFhiHeaders)
+            {
+                AddHandler<FhiHeaderDelegationHandler>();
+            }
+            if (this.builderOptions.UseCorrelationId)
+            {
+                AddHandler<CorrelationIdHandler>();
+                services.AddHttpContextAccessor();
+            }
+            if (this.builderOptions.UseAnonymizationLogger)
+            {
+                AddHandler<LoggingDelegationHandler>();
+            }
         }
 
         /// <summary>
@@ -41,34 +61,15 @@ namespace Fhi.HelseId.Refit
         /// </summary>
         public HelseidRefitBuilder AddHandler<T>() where T : DelegatingHandler
         {
-            delegationHandlers.Add(typeof(T));
-            services.AddTransient<T>();
-            return this;
-        }
-
-        public HelseidRefitBuilder ClearHandlers()
-        {
-            delegationHandlers.Clear();
-            return this;
-        }
-
-        /// <summary>
-        /// Adds propagation and handling of correlation ids. You should add this before any logging-delagates. Remember to add "app.UseHeaderPropagation()" in your startup code
-        /// </summary>
-        /// <returns></returns>
-        public HelseidRefitBuilder AddCorrelationId()
-        {
-            options.UseCorrelationId = true;
-
-            AddHandler<CorrelationIdHandler>();
-
-            services.AddHeaderPropagation(o =>
+            var type = typeof(T);
+            if (!delegationHandlers.Any(x => x == type))
             {
-                o.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, context => string.IsNullOrEmpty(context.HeaderValue) ? Guid.NewGuid().ToString() : context.HeaderValue);
-            });
-
+                delegationHandlers.Add(type);
+                services.AddTransient<T>();
+            }
             return this;
         }
+
 
         /// <summary>
         /// Adds a Refit client interface and which service name to bind to, and an optional extra configuration
@@ -79,23 +80,17 @@ namespace Fhi.HelseId.Refit
         /// <returns></returns>
         public HelseidRefitBuilder AddRefitClient<T>(string? nameOfService = null, Func<IHttpClientBuilder, IHttpClientBuilder>? extra = null) where T : class
         {
-            if (!hasAddedHeaderEncoding)
-            {
-                hasAddedHeaderEncoding = true;
-                AddHandler<FhiHeaderDelegationHandler>();
-            }
-
             var name = nameOfService ?? typeof(T).Name;
 
-            var clientBuilder = services.AddRefitClient<T>(RefitSettings)
+            var clientBuilder = services.AddRefitClient<T>(refitSettings)
                 .ConfigureHttpClient(httpClient =>
                 {
                     httpClient.BaseAddress = config.UriToApiByName(name);
                 });
 
-            if (options.UseCorrelationId)
+            if (!builderOptions.PreserveDefaultLogger)
             {
-                clientBuilder.AddHeaderPropagation();
+                clientBuilder.RemoveAllLoggers();
             }
 
             foreach (var type in delegationHandlers)
