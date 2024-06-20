@@ -23,6 +23,13 @@ namespace Fhi.HelseId.Web.Handlers
             AuthorizationHandlerContext context, SecurityLevelOrApiRequirement requirement)
         {
             logger.LogTrace("SecurityLevelClaimHandler: Validating");
+
+            if (!context.User.Identity?.IsAuthenticated ?? false)
+            {
+                logger.LogInformation("SecurityLevelClaimHandler: User is not authenticated, access denied");
+                return Task.CompletedTask;
+            }
+
             var securityLevelClaim = (context.User.FindFirst(c => c.Type.ToLowerInvariant() == IdentityClaims.SecurityLevel));
 
             if (securityLevelClaim != null)
@@ -36,7 +43,8 @@ namespace Fhi.HelseId.Web.Handlers
                 {
                     logger.LogError("SecurityLevelClaimHandler: Invalid security level claim '{securityLevelClaim}', access denied.", securityLevelClaim.Value);
                 }
-            } else
+            }
+            else
             {
                 logger.LogError("SecurityLevelClaimHandler: No security level claim found, access denied");
             }
