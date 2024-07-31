@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Refit;
 using Microsoft.Extensions.DependencyInjection;
+using Fhi.HelseId.Exceptions;
 
 namespace Fhi.HelseId.Blazor
 {

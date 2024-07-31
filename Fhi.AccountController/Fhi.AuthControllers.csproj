@@ -27,10 +27,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fhi.HelseId" Version="5.*" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="HtmlFiles\**\*.html" Pack="true" PackagePath="content" />
   </ItemGroup>
   
@@ -52,6 +48,10 @@
 
   <ItemGroup>
     <None Remove="Web\HprServiceReference\ConnectedService.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
