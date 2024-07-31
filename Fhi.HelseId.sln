@@ -60,9 +60,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Blazor", "Fhi.H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Swagger", "Fhi.HelseId.Swagger\Fhi.HelseId.Swagger.csproj", "{D6B3A10C-B329-4745-9883-B2D3A6D3D1D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId.Swagger.Tests", "Fhi.HelseId.Swagger.Tests\Fhi.HelseId.Swagger.Tests.csproj", "{5C7453F7-9625-41C0-AA34-B082A87C990A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Swagger.Tests", "Fhi.HelseId.Swagger.Tests\Fhi.HelseId.Swagger.Tests.csproj", "{5C7453F7-9625-41C0-AA34-B082A87C990A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId.Blazor.Tests", "Fhi.HelseId.Blazor.Tests\Fhi.HelseId.Blazor.Tests.csproj", "{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Blazor.Tests", "Fhi.HelseId.Blazor.Tests\Fhi.HelseId.Blazor.Tests.csproj", "{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId.Web", "Fhi.HelseId.Web\Fhi.HelseId.Web.csproj", "{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId.Api", "Fhi.HelseId.Api\Fhi.HelseId.Api.csproj", "{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -114,6 +118,14 @@ Global
 		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

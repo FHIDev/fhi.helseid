@@ -1,5 +1,4 @@
-﻿using Fhi.HelseId.Web;
-using IdentityModel;
+﻿using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,21 +13,20 @@ namespace Fhi.HelseId.Common.Identity
 {
     public static class ClientAssertion
     {
-        public static string Generate(IHelseIdWebKonfigurasjon configAuth, SecurityKey securityKey)
+        public static string Generate(string clientId, string authority, SecurityKey securityKey)
         {
-
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512);
 
             var extraClaims = new List<Claim>
             {
-                new(JwtClaimTypes.Subject, configAuth.ClientId),
+                new(JwtClaimTypes.Subject, clientId),
                 new(JwtClaimTypes.IssuedAt, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()),
                 new(JwtClaimTypes.JwtId, Guid.NewGuid().ToString("N"))
             };
 
-            var audience = new Uri(new Uri(configAuth.Authority), "connect/token").AbsoluteUri;
+            var audience = new Uri(new Uri(authority), "connect/token").AbsoluteUri;
 
-            var payload = CreatePayload(configAuth.ClientId, audience, extraClaims);
+            var payload = CreatePayload(clientId, audience, extraClaims);
             var header = new JwtHeader(signingCredentials);
             UpdateJwtHeader(securityKey, header);
 

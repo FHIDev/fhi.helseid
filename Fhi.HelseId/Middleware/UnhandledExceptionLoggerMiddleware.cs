@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Fhi.HelseId.Web.ExtensionMethods;
+using Fhi.HelseId.ExtensionMethods;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;

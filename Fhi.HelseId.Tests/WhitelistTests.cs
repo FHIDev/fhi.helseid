@@ -1,7 +1,8 @@
-﻿using Fhi.HelseId.Web.Services;
-using Fhi.HelseId.Common.Identity;
+﻿using Fhi.HelseId.Common.Identity;
 using NUnit.Framework;
 using NSubstitute;
+using Fhi.HelseId.Common;
+using Fhi.HelseId.Api.Services;
 
 namespace Fhi.HelseId.Tests
 {
@@ -25,9 +26,8 @@ namespace Fhi.HelseId.Tests
         {
             Assert.Multiple(() =>
             {
-                Assert.That(whitelist!.IsWhite(user!));
-                Assert.That(whitelist.IsWhite(user!.PidPseudonym!));
-                Assert.That(whitelist.NameOf(user), Is.EqualTo("Arne"));
+                Assert.That(whitelist!.IsWhite(user!.PidPseudonym!));
+                Assert.That(whitelist.NameOf(user!.PidPseudonym!), Is.EqualTo("Arne"));
             });
         }
 
@@ -37,9 +37,8 @@ namespace Fhi.HelseId.Tests
             user!.PidPseudonym.Returns("9999");
             Assert.Multiple(() =>
             {
-                Assert.That(whitelist!.IsWhite(user), Is.False);
-                Assert.That(whitelist.IsWhite(user.PidPseudonym!), Is.False);
-                Assert.That(whitelist.NameOf(user), Is.EqualTo(""));
+                Assert.That(whitelist!.IsWhite(user!.PidPseudonym!), Is.False);
+                Assert.That(whitelist.NameOf(user!.PidPseudonym!), Is.EqualTo(""));
             });
         }
 
