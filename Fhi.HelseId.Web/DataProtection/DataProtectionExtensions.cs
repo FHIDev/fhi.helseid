@@ -1,9 +1,9 @@
 ﻿using AspNetCore.DataProtection.SqlServer;
-using Fhi.HelseId.Api.ExtensionMethods;
+using Fhi.HelseId.Web.ExtensionMethods;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Fhi.HelseId.Api.DataProtection
+namespace Fhi.HelseId.Web.DataProtection
 {
     public static class DataProtectionExtensions
     {
@@ -21,7 +21,5 @@ namespace Fhi.HelseId.Api.DataProtection
                 .AddDataProtection()
                 .PersistKeysToSqlServer(dataProtectionConfig.ConnectionString, dataProtectionConfig.Schema, dataProtectionConfig.TableName);
         }
-
-        
     }
 }

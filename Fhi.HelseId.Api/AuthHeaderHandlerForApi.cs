@@ -7,7 +7,7 @@ using Fhi.HelseId.Exceptions;
 using Fhi.HelseId.ExtensionMethods;
 using Microsoft.AspNetCore.Http;
 
-namespace Fhi.HelseId.Common;
+namespace Fhi.HelseId.Api;
 
 /// <summary>
 /// This is to be used for Apis that need to send same access tokens onwards to further Apis
