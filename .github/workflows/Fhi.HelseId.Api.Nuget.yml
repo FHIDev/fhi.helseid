@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'Fhi.HelseId/**'
 
 defaults:
   run:
     shell: pwsh
-    working-directory: ./Fhi.HelseId
+    working-directory: ./Fhi.HelseId.Api
 
 jobs:
   publish:
