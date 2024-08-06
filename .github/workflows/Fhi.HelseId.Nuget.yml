@@ -8,7 +8,6 @@ on:
 defaults:
   run:
     shell: pwsh
-    working-directory: ./Fhi.HelseId.Api
 
 jobs:
   publish:
@@ -24,20 +23,15 @@ jobs:
             6.0.x
             8.0.x
 
-      - name: Install dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --configuration Release --no-restore --verbosity normal
-
       - name: Pack
-        run: dotnet pack --configuration Release --no-build --output package 
+        run: dotnet pack
 
       - name: Publish nupkg and snupkg to NuGet.org
         run: |
-          foreach($file in (Get-ChildItem package -Recurse -Include *.nupkg)) {
+          $packageOutputPath = "artifacts/package/release"
+          foreach ($file in (Get-ChildItem $packageOutputPath -Recurse -Include *.nupkg)) {
               dotnet nuget push $file --api-key "${{ secrets.NUGET_ORG_PUSH_API_KEY_HELSEID }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           }
-          foreach($file in (Get-ChildItem "package" -Recurse -Include *.snupkg)) {
+          foreach ($file in (Get-ChildItem $packageOutputPath -Recurse -Include *.snupkg)) {
               dotnet nuget push $file --api-key "${{ secrets.NUGET_ORG_PUSH_API_KEY_HELSEID }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           }
