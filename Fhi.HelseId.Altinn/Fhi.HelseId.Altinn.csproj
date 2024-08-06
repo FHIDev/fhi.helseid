@@ -8,6 +8,7 @@
     <Configurations>Debug;Release</Configurations>
     <id>Fhi.HelseId.Altinn</id>
     <PackageDescription>Support component for Fhi.HelseId to access Altinn</PackageDescription>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
