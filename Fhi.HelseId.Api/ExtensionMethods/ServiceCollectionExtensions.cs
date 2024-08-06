@@ -6,6 +6,7 @@ using Fhi.HelseId.Api.Authorization;
 using Fhi.HelseId.Api.Handlers;
 using Fhi.HelseId.Api.Services;
 using Fhi.HelseId.Common;
+using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

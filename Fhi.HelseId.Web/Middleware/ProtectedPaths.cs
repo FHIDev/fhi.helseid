@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Fhi.HelseId.ExtensionMethods;
+using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;

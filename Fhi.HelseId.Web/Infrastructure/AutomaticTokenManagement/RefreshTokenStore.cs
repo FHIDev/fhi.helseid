@@ -7,7 +7,7 @@ using Fhi.HelseId.Web.Services;
 using IdentityModel.Client;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Microsoft.Extensions.Options;
-using Fhi.HelseId.ExtensionMethods;
+using Fhi.HelseId.Common.ExtensionMethods;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 

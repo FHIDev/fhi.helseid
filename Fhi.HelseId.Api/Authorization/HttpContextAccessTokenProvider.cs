@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
-using Fhi.HelseId.ExtensionMethods;
+using Fhi.HelseId.Api.ExtensionMethods;
 using Microsoft.AspNetCore.Http;
 
 // Code based on https://github.com/HelseID/HelseID.Samples/tree/master/HelseId.Core.BFF.Sample, originally written by Magnus Bjerke Vik 

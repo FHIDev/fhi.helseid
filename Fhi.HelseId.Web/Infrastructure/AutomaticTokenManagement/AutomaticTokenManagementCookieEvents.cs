@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Fhi.HelseId.ExtensionMethods;
+using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;

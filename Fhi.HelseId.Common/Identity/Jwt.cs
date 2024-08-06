@@ -59,7 +59,7 @@ namespace Fhi.HelseId.Common.Identity
         // We need to handle json objects ourself as this isn't directly supported by JwtSecurityHandler yet
         private static JwtPayload AddJsonToPayload(JwtPayload payload, IEnumerable<Claim> jsonClaims)
         {
-            var jsonTokens = jsonClaims.Select(x => new { x.Type, JsonValue = JRaw.Parse(x.Value) }).ToArray();
+            var jsonTokens = jsonClaims.Select(x => new { x.Type, JsonValue = JToken.Parse(x.Value) }).ToArray();
 
             var jsonObjects = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Object).ToArray();
             var jsonObjectGroups = jsonObjects.GroupBy(x => x.Type).ToArray();
@@ -120,7 +120,7 @@ namespace Fhi.HelseId.Common.Identity
                 var thumbprint = Base64Url.Encode(x509Key.Certificate.GetCertHash());
                 var x5c = GenerateX5c(x509Key.Certificate);
 
-                if(x509Key.PublicKey is not RSA pubKey)
+                if (x509Key.PublicKey is not RSA pubKey)
                 {
                     throw new UnsupportedSigningKeyTypeException("Only certificates based on RSA keys are supported at the moment");
                 }

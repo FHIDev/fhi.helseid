@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Fhi.HelseId.ExtensionMethods;
+using Fhi.HelseId.Common.ExtensionMethods;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ namespace Fhi.HelseId.Common.Middleware
         private readonly RequestDelegate next;
         private readonly string redirectPage;
         private ILogger Logger { get; }
-    
+
         public RedirectOnExceptionMiddleware(RequestDelegate next, string redirectPage, ILogger<RedirectOnExceptionMiddleware> logger)
         {
             logger.LogMember();

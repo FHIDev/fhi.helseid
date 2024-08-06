@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 
-namespace Fhi.HelseId.ExtensionMethods
+namespace Fhi.HelseId.Common.ExtensionMethods
 {
     public static class LoggingExtensions
     {

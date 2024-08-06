@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fhi.HelseId.Common
+namespace Fhi.HelseId.Common.Configuration
 {
     public interface IWhitelist
     {

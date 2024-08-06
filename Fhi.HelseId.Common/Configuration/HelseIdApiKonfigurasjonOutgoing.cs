@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fhi.HelseId.Common;
+namespace Fhi.HelseId.Common.Configuration;
 
 
 public interface IApiOutgoingKonfigurasjon
@@ -8,15 +8,15 @@ public interface IApiOutgoingKonfigurasjon
     string Name { get; set; }
     string Url { get; set; }
     string Scope { get; set; }
-    
+
     [System.Text.Json.Serialization.JsonIgnore]
     [Newtonsoft.Json.JsonIgnore]
     Uri Uri { get; }
-    
+
     /// <summary>
     /// Default 10 minutes
     /// </summary>
-    int Timeout { get; set; } 
+    int Timeout { get; set; }
 }
 
 /// <summary>

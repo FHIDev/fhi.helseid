@@ -1,10 +1,10 @@
 ﻿using System;
-using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Fhi.HelseId.Web.ExtensionMethods;
-using Fhi.HelseId.ExtensionMethods;
+using Fhi.HelseId.Common.ExtensionMethods;
+using Fhi.HelseId.Common.Identity;
 
 namespace Fhi.HelseId.Web.Services;
 

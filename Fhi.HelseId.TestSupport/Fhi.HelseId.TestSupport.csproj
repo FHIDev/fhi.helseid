@@ -37,9 +37,13 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Fhi.HelseId" Version="5.*" />
     <PackageReference Include="NUnit" Version="4.1.0" />
     <PackageReference Include="morelinq" Version="4.2.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Fhi.HelseId.Api\Fhi.HelseId.Api.csproj" />
+    <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
   </ItemGroup>
 
 </Project>

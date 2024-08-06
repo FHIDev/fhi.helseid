@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Fhi.HelseId.Common;
+using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Services;

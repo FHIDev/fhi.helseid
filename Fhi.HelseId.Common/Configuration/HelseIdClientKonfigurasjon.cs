@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Fhi.HelseId.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fhi.HelseId.Common
+namespace Fhi.HelseId.Common.Configuration
 {
     public interface IHelseIdClientKonfigurasjon : IAutentiseringkonfigurasjon
     {
@@ -22,7 +23,7 @@ namespace Fhi.HelseId.Common
     public abstract class HelseIdClientKonfigurasjon : HelseIdCommonKonfigurasjon, IHelseIdClientKonfigurasjon
     {
         protected List<string>? AllTheScopes { get; private set; }
-       
+
         public bool RewriteRedirectUriHttps { get; set; } = false;
         public string ClientId { get; set; } = "";
         public string ClientSecret { get; set; } = "";
@@ -55,7 +56,7 @@ namespace Fhi.HelseId.Common
 
         public string JsonWebKeySecret { get; set; } = "";
         public string RsaKeySecret { get; set; } = "";
-        
+
         public Whitelist Whitelist { get; set; } = new();
     }
 }

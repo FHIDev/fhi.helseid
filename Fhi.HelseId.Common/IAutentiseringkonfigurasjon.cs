@@ -1,6 +1,4 @@
-﻿
-
-namespace Fhi.HelseId.Common
+﻿namespace Fhi.HelseId.Common
 {
     public interface IAutentiseringkonfigurasjon
     {

@@ -1,5 +1,4 @@
 ﻿using Azure.Identity;
-using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -12,6 +11,7 @@ using Azure.Security.KeyVault.Secrets;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Web;
+using Fhi.HelseId.Common.Identity;
 
 namespace Fhi.HelseId.Web.Services
 {

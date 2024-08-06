@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using Fhi.HelseId.ExtensionMethods;
+using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using IdentityModel.Client;

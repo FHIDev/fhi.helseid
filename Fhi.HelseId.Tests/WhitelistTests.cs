@@ -1,8 +1,8 @@
 ﻿using Fhi.HelseId.Common.Identity;
 using NUnit.Framework;
 using NSubstitute;
-using Fhi.HelseId.Common;
 using Fhi.HelseId.Api.Services;
+using Fhi.HelseId.Common.Configuration;
 
 namespace Fhi.HelseId.Tests
 {

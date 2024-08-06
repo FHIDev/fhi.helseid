@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fhi.HelseId.Exceptions;
+namespace Fhi.HelseId.Common.Exceptions;
 
 public class NoContextException : Exception
 {

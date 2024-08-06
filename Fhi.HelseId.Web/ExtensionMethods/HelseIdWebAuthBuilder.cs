@@ -1,6 +1,7 @@
 ﻿using Fhi.HelseId.Common;
+using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Identity;
-using Fhi.HelseId.Exceptions;
+using Fhi.HelseId.Common.Exceptions;
 using Fhi.HelseId.Web.Handlers;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;

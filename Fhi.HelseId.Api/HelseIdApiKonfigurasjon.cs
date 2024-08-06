@@ -1,6 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 using Fhi.HelseId.Common;
+using Fhi.HelseId.Common.Configuration;
 
 namespace Fhi.HelseId.Api
 {

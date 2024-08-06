@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Fhi.HelseId.Common;
+using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Web.Handlers;
 
 namespace Fhi.HelseId.Web;

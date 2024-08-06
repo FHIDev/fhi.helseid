@@ -75,7 +75,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fhi.HelseId\Fhi.HelseId.csproj" />
+    <ProjectReference Include="..\Fhi.HelseId.Common\Fhi.HelseId.Common.csproj" />
   </ItemGroup>
 
 </Project>

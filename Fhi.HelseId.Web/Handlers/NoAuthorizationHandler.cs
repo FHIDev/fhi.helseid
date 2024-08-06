@@ -1,4 +1,4 @@
-﻿using Fhi.HelseId.Common;
+﻿using Fhi.HelseId.Common.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 

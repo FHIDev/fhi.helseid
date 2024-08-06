@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Fhi.HelseId.Common;
+using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;

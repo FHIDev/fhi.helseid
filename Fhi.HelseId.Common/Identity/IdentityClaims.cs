@@ -1,14 +1,13 @@
-﻿
-namespace Fhi.HelseId.Common.Identity;
+﻿namespace Fhi.HelseId.Common.Identity;
 
 public static class ClientClaims
-{     
-    
+{
+
     public const string Prefix = HelseIdUriPrefixes.Claims + "client/";
 
     public const string ClientName = Prefix + "client_name";
 
-           
+
 }
 
 
@@ -25,5 +24,5 @@ public static class IdentityClaims
     public const string Name = "name";
     public const string Givenname = "given_name";
     public const string Familyname = "family_name";
-    public const string Scopes = "scope";        
+    public const string Scopes = "scope";
 }

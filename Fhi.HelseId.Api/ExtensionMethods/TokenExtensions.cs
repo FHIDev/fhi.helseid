@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 
-namespace Fhi.HelseId.ExtensionMethods;
+namespace Fhi.HelseId.Api.ExtensionMethods;
 
 public static class TokenExtensions
 {
