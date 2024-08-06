@@ -5,34 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.HelseId.Blazor</id>
-    <Version>1.1.3-alpha.1</Version>
-    <authors>Folkehelseinstituttet (FHI)</authors>
-    <Copyright>©2023-2024 Folkehelseinstituttet (FHI)</Copyright>
-    <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageDescription>Setup Blazor with helseid Apis</PackageDescription>
-    <PackageCopyright>Copyright ©2023-2024 Folkehelseinstituttet</PackageCopyright>
-    <!-- Tags appear in the gallery and can be used for tag searches -->
-    <Tags>helseid, oauth, Refit, Blazor</Tags>
-    <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
-    <dependencies>
-      <group targetFramework="net6.0">
-      </group>
-    </dependencies>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <PackageIcon>fhi.png</PackageIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\images\fhi.png" Pack="true" PackagePath="" />
-    <None Include="README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

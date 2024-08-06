@@ -3,27 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Id>Fhi.HelseId.TestSupport</Id>
-    <Version>3.1.1</Version>
-    <IsPackable>true</IsPackable>
     <IsTestProject>false</IsTestProject>
-    <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
-    <Copyright>(c) 2021-2024 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
-    <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Upgrades NUnit to 4.0.1</PackageReleaseNotes>
     <PackageDescription>Base classes for testing an implementation using Fhi.HelseId</PackageDescription>
-    <PackageCopyright>Copyright ©2021-2024 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <tags>helseid, oauth</tags>
-    <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
-    <dependencies>
-      <group targetFramework="net6.0">
-      </group>
-    </dependencies>
-
   </PropertyGroup>
 
   <ItemGroup>

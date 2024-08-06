@@ -5,40 +5,9 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release</Configurations>
-    <id>Fhi.HelseId</id>
-    <Version>6.0.0</Version>
-    <authors>Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</authors>
-    <Copyright>(c) 2020-2024 Folkehelseinstituttet (FHI), Nasjonalt Helsenett (NHN)</Copyright>
-    <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Fix </PackageReleaseNotes>
-    <PackageDescription>Authentication and authorization component for access to NHN HelseId</PackageDescription>
-    <PackageCopyright>Copyright ©2020-2024 Folkehelseinstituttet, Nasjonalt Helsenett NHN</PackageCopyright>
-    <!-- Tags appear in the gallery and can be used for tag searches -->
-    <Tags>helseid, oauth</Tags>
-    <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
-    <dependencies>
-      <group targetFramework="net6.0">
-      </group>
-      <group targetFramework="net8.0">
-      </group>
-    </dependencies>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>fhi.png</PackageIcon>
+    <id>Fhi.HelseId.Web</id>
+    <PackageDescription>Authentication and authorization component for access to NHN HelseId in user-facing web applications</PackageDescription>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\README.md" Pack="true" PackagePath="\" />
-    <None Include="..\images\fhi.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <None Remove="HprServiceReference\ConnectedService.json" />
