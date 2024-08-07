@@ -6,29 +6,8 @@
     <Nullable>enable</Nullable>
     <id>Fhi.AuthControllers</id>
     <Configurations>Debug;Release</Configurations>
-    <Version>1.0.1</Version>
-    <authors>Folkehelseinstituttet (FHI)</authors>
-    <Copyright>©2023 Folkehelseinstituttet (FHI)</Copyright>
-    <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <icon>https://github.com/folkehelseinstituttet/Fhi.HelseId/images/fhi.png</icon>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageDescription>Account controllers for use with OAuth and HelseId</PackageDescription>
-    <PackageCopyright>Copyright ©2023 Folkehelseinstituttet</PackageCopyright>
-    <!-- Tags appear in the gallery and can be used for tag searches -->
-    <Tags>helseid, oauth</Tags>
-    <RepositoryUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</RepositoryUrl>
-    <dependencies>
-      <group targetFramework="net6.0">
-      </group>
-    </dependencies>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Fhi.HelseId" Version="5.*" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="HtmlFiles\**\*.html" Pack="true" PackagePath="content" />
@@ -41,17 +20,12 @@
     </None>
   </ItemGroup>
   
-  <PropertyGroup>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
-
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Remove="Web\HprServiceReference\ConnectedService.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Web\HprServiceReference\ConnectedService.json" />
+    <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

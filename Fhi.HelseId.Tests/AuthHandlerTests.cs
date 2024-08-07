@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.Handlers;
-using Fhi.HelseId.Common;
+using Fhi.HelseId.Common.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using NSubstitute;

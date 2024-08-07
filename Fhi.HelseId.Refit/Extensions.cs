@@ -1,4 +1,5 @@
-﻿using Fhi.HelseId.Web;
+﻿using Fhi.HelseId.Common.Exceptions;
+using Fhi.HelseId.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
