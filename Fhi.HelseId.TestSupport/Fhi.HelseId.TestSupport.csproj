@@ -20,8 +20,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="4.1.0" />
-    <PackageReference Include="morelinq" Version="4.2.0" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="morelinq" />
   </ItemGroup>
   
   <ItemGroup>

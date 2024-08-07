@@ -14,8 +14,8 @@
     <None Include="..\images\fhi.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="IdentityModel.AspNetCore" Version="4.3.0" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="IdentityModel.AspNetCore" />
   </ItemGroup>
 
 </Project>

@@ -9,13 +9,9 @@
     <PackageDescription>Authentication and authorization component for access to NHN HelseId</PackageDescription>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.27" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" Version="6.0.27" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" Version="8.0.2" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fhi.HelseId.Common\Fhi.HelseId.Common.csproj" />
