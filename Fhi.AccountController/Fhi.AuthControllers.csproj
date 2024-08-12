@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.AuthControllers</id>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug; Release</Configurations>
     <Version>1.0.1</Version>
     <authors>Folkehelseinstituttet (FHI)</authors>
     <Copyright>©2023 Folkehelseinstituttet (FHI)</Copyright>
