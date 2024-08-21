@@ -66,6 +66,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Blazor.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Integration.Tests", "Fhi.HelseId.IntegrationTest\Fhi.HelseId.Integration.Tests.csproj", "{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.HelseId.Component.Tests", "Fhi.HelseId.Component.Tests\Fhi.HelseId.Component.Tests.csproj", "{D6D559EF-2740-471B-98D1-F1B7D0CE6242}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +122,10 @@ Global
 		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D559EF-2740-471B-98D1-F1B7D0CE6242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D559EF-2740-471B-98D1-F1B7D0CE6242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D559EF-2740-471B-98D1-F1B7D0CE6242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D559EF-2740-471B-98D1-F1B7D0CE6242}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
