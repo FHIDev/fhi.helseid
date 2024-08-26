@@ -2,14 +2,21 @@ using Fhi.HelseId.Integration.Tests.TttClient;
 
 namespace Fhi.HelseId.Integration.Tests;
 
+public enum TokenType
+{
+    Default,
+    Expired,
+    InvalidScope,
+}
+
 public abstract class BuiltInTokens
 {
-    public static Dictionary<string, TokenRequest> Tokens =>
+    public static Dictionary<TokenType, TokenRequest> Tokens =>
         new()
         {
-            { "default", DefaultToken },
-            { "expired", ExpiredToken },
-            { "invalid_scope", InvalidApiScopeToken },
+            { TokenType.Default, DefaultToken },
+            { TokenType.Expired, ExpiredToken },
+            { TokenType.InvalidScope, InvalidApiScopeToken },
         };
 
     private static TokenRequest DefaultToken =>
