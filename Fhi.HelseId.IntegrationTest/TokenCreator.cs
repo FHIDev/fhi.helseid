@@ -13,7 +13,11 @@ internal class TokenCreator
 
     internal static async Task<Dictionary<string, string>> CreateTokens()
     {
-        var requests = new Dictionary<string, TokenRequest> { { "default", CreateRequest() } };
+        var requests = new Dictionary<string, TokenRequest>
+        {
+            { "default", Tokens.DefaultToken },
+            { "expired", Tokens.ExpiredToken },
+        };
         return (
             await Task.WhenAll(
                 requests.Select(async kv => new { kv.Key, Value = await GetHelseIdToken(kv.Value) })
@@ -24,25 +28,9 @@ internal class TokenCreator
     internal static async Task<string> GetHelseIdToken(TokenRequest request)
     {
         var tokenClient = new Client(HelseIdTTTEndpoint, await CreateHttpClient());
-        TokenRequest body = CreateRequest();
         var response = await tokenClient.CreateTestTokenAsync(request);
         return response.SuccessResponse.AccessTokenJwt;
     }
-
-    private static TokenRequest CreateRequest() =>
-        new TokenRequest()
-        {
-            GeneralClaimsParameters = new GeneralClaimsParameters()
-            {
-                Scope = ["fhi:helseid.testing.api/all"],
-            },
-
-            UserClaimsParameters = new UserClaimsParameters(),
-            GeneralClaimsParametersGeneration =
-                ParametersGeneration._3___GenerateDefaultWithClaimsFromNonEmptyParameterValues,
-            UserClaimsParametersGeneration =
-                ParametersGeneration._3___GenerateDefaultWithClaimsFromNonEmptyParameterValues,
-        };
 
     private static async Task<HttpClient> CreateHttpClient()
     {
