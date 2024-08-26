@@ -10,18 +10,23 @@ namespace Fhi.HelseId.Integration.Tests
     {
         internal WebApplicationFactory<Program>? _factory { set; get; }
 
-        internal string _token { set; get; } = "";
+        internal Dictionary<String, String> _tokens = new();
 
         [OneTimeSetUp]
         public async Task CreateTokens()
         {
-            _token = await TokenCreator.GetHelseIdToken();
+            _tokens = await TokenCreator.CreateTokens();
             var path = PathUtilities.GetDirectoryForCaller();
             var fullPath = Path.Combine(path, "Tokens");
             if (!Directory.Exists(fullPath))
                 Directory.CreateDirectory(fullPath);
-            File.WriteAllText(Path.Combine(fullPath, "default.txt"), _token);
-            parseTokenToFile(_token, fullPath, "default");
+            _tokens.ForEach(
+                (kvp) =>
+                {
+                    File.WriteAllText(Path.Combine(fullPath, $"{kvp.Key}.txt"), kvp.Value);
+                    parseTokenToFile(kvp.Value, fullPath, kvp.Key);
+                }
+            );
         }
 
         public void createService(string config)

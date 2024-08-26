@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text.Json;
 using Fhi.ClientCredentialsKeypairs;
 using Fhi.HelseId.Integration.Tests.TttClient;
@@ -8,27 +7,42 @@ namespace Fhi.HelseId.Integration.Tests;
 
 internal class TokenCreator
 {
-    private static readonly string[] DefaultScopes = ["fhi:helseid.testing.api/all"];
     private const string HelseIdTttConfigFile =
         "HelseID Configuration 983744516-HelseID TTT-klient.json";
-    private const string HelseIdCreateTokenEndpoint =
-        "https://helseid-ttt.test.nhn.no/create-test-token";
+    private const string HelseIdTTTEndpoint = "https://helseid-ttt.test.nhn.no";
 
-    internal static async Task<string> GetHelseIdToken()
+    internal static async Task<Dictionary<string, string>> CreateTokens()
     {
-        var tokenClient = new Client("https://helseid-ttt.test.nhn.no", await CreateHttpClient());
-        var body = new TokenRequest()
+        var requests = new Dictionary<string, TokenRequest> { { "default", CreateRequest() } };
+        return (
+            await Task.WhenAll(
+                requests.Select(async kv => new { kv.Key, Value = await GetHelseIdToken(kv.Value) })
+            )
+        ).ToDictionary(t => t.Key, t => t.Value);
+    }
+
+    internal static async Task<string> GetHelseIdToken(TokenRequest request)
+    {
+        var tokenClient = new Client(HelseIdTTTEndpoint, await CreateHttpClient());
+        TokenRequest body = CreateRequest();
+        var response = await tokenClient.CreateTestTokenAsync(request);
+        return response.SuccessResponse.AccessTokenJwt;
+    }
+
+    private static TokenRequest CreateRequest() =>
+        new TokenRequest()
         {
-            GeneralClaimsParameters = new GeneralClaimsParameters() { Scope = DefaultScopes },
+            GeneralClaimsParameters = new GeneralClaimsParameters()
+            {
+                Scope = ["fhi:helseid.testing.api/all"],
+            },
+
             UserClaimsParameters = new UserClaimsParameters(),
             GeneralClaimsParametersGeneration =
                 ParametersGeneration._3___GenerateDefaultWithClaimsFromNonEmptyParameterValues,
             UserClaimsParametersGeneration =
                 ParametersGeneration._3___GenerateDefaultWithClaimsFromNonEmptyParameterValues,
         };
-        var response = await tokenClient.CreateTestTokenAsync(body);
-        return response.SuccessResponse.AccessTokenJwt;
-    }
 
     private static async Task<HttpClient> CreateHttpClient()
     {
