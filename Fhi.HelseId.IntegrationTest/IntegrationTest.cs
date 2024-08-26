@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using ApprovalUtilities.Utilities;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -24,17 +25,27 @@ namespace Fhi.HelseId.Integration.Tests
                 (kvp) =>
                 {
                     File.WriteAllText(Path.Combine(fullPath, $"{kvp.Key}.txt"), kvp.Value);
-                    parseTokenToFile(kvp.Value, fullPath, kvp.Key);
+                    ParseTokenToFile(kvp.Value, fullPath, kvp.Key);
                 }
             );
         }
 
-        public void createService(string config)
+        public void CreateService(string config)
         {
             _factory = new();
         }
 
-        private void parseTokenToFile(string token, string path, string tokenIdentifier)
+        public HttpClient CreateHttpClient(string tokenIdentifier)
+        {
+            var client = Factory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                _tokens[tokenIdentifier]
+            );
+            return client;
+        }
+
+        private void ParseTokenToFile(string token, string path, string tokenIdentifier)
         {
             var handler = new JwtSecurityTokenHandler();
             var jwtTokenObj = handler.ReadJwtToken(token);
