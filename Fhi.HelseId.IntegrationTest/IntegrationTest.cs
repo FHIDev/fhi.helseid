@@ -8,9 +8,9 @@ namespace Fhi.HelseId.Integration.Tests
     [TestFixture]
     public abstract class IntegrationTest
     {
-        internal WebApplicationFactory<Program>? _factory { set; get; }
-
+        internal WebApplicationFactory<Program>? _factory;
         internal Dictionary<String, String> _tokens = new();
+        public WebApplicationFactory<Program> Factory => _factory!;
 
         [OneTimeSetUp]
         public async Task CreateTokens()

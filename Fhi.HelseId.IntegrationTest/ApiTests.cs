@@ -14,7 +14,7 @@ public class ApiTests : IntegrationTest
     [Test]
     public async Task ValidToken_Returns200Ok()
     {
-        using var client = _factory.CreateClient();
+        using var client = Factory.CreateClient();
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             "Bearer",
@@ -29,9 +29,25 @@ public class ApiTests : IntegrationTest
     }
 
     [Test]
+    public async Task ExpiredToken_Returns401Unauthorized()
+    {
+        using var client = Factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            "Bearer",
+            _tokens["expired"]
+        );
+
+        var response = await client.GetAsync("api/test");
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        Assert.That(responseBody, Is.Empty);
+    }
+
+    [Test]
     public async Task InvalidToken_Returns401Unauthorized()
     {
-        using var client = _factory.CreateClient();
+        using var client = Factory.CreateClient();
 
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
