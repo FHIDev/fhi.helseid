@@ -13,7 +13,7 @@ public class ApiTests : IntegrationTest
     [Test]
     public async Task ValidToken_Returns200Ok()
     {
-        using var client = CreateHttpClient("default");
+        using var client = CreateHttpClient(TokenType.Default);
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -24,7 +24,7 @@ public class ApiTests : IntegrationTest
     [Test]
     public async Task ExpiredToken_Returns401Unauthorized()
     {
-        using var client = CreateHttpClient("expired");
+        using var client = CreateHttpClient(TokenType.Expired);
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -34,7 +34,7 @@ public class ApiTests : IntegrationTest
     [Test]
     public async Task InvalidScope_Returns403Forbidden()
     {
-        using var client = CreateHttpClient("invalid_scope");
+        using var client = CreateHttpClient(TokenType.InvalidScope);
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 

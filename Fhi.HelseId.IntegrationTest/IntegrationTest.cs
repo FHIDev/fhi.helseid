@@ -10,7 +10,7 @@ namespace Fhi.HelseId.Integration.Tests
     public abstract class IntegrationTest
     {
         internal WebApplicationFactory<Program>? _factory;
-        internal Dictionary<String, String> _tokens = new();
+        internal Dictionary<TokenType, String> _tokens = new();
         public WebApplicationFactory<Program> Factory => _factory!;
 
         [OneTimeSetUp]
@@ -25,7 +25,7 @@ namespace Fhi.HelseId.Integration.Tests
                 (kvp) =>
                 {
                     File.WriteAllText(Path.Combine(fullPath, $"{kvp.Key}.txt"), kvp.Value);
-                    ParseTokenToFile(kvp.Value, fullPath, kvp.Key);
+                    ParseTokenToFile(kvp.Value, fullPath, kvp.Key.ToString());
                 }
             );
         }
@@ -35,12 +35,12 @@ namespace Fhi.HelseId.Integration.Tests
             _factory = new();
         }
 
-        public HttpClient CreateHttpClient(string tokenIdentifier)
+        public HttpClient CreateHttpClient(TokenType tokenType)
         {
             var client = Factory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
-                _tokens[tokenIdentifier]
+                _tokens[tokenType]
             );
             return client;
         }

@@ -11,7 +11,7 @@ internal class TokenCreator
         "HelseID Configuration 983744516-HelseID TTT-klient.json";
     private const string HelseIdTTTEndpoint = "https://helseid-ttt.test.nhn.no";
 
-    internal static async Task<Dictionary<string, string>> CreateTokens()
+    internal static async Task<Dictionary<TokenType, string>> CreateTokens()
     {
         return (
             await Task.WhenAll(
