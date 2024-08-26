@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
 
 namespace Fhi.HelseId.Integration.Tests;
 
@@ -8,19 +7,13 @@ public class ApiTests : IntegrationTest
     [SetUp]
     public void SetUp()
     {
-        base.createService("NOT IN USE YET");
+        base.CreateService("NOT IN USE YET");
     }
 
     [Test]
     public async Task ValidToken_Returns200Ok()
     {
-        using var client = Factory.CreateClient();
-
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "Bearer",
-            _tokens["default"]
-        );
-
+        using var client = CreateHttpClient("default");
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -31,12 +24,7 @@ public class ApiTests : IntegrationTest
     [Test]
     public async Task ExpiredToken_Returns401Unauthorized()
     {
-        using var client = Factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "Bearer",
-            _tokens["expired"]
-        );
-
+        using var client = CreateHttpClient("expired");
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 
