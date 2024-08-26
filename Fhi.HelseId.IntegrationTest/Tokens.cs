@@ -7,6 +7,8 @@ public enum TokenType
     Default,
     Expired,
     InvalidScope,
+    InvalidSigningKey,
+    InvalidIssuer,
 }
 
 public abstract class BuiltInTokens
@@ -16,7 +18,9 @@ public abstract class BuiltInTokens
         {
             { TokenType.Default, DefaultToken },
             { TokenType.Expired, ExpiredToken },
+            { TokenType.InvalidSigningKey, InvalidSigningKey },
             { TokenType.InvalidScope, InvalidApiScopeToken },
+            { TokenType.InvalidIssuer, InvalidIssuer },
         };
 
     private static TokenRequest DefaultToken =>
@@ -56,6 +60,26 @@ public abstract class BuiltInTokens
             {
                 Scope = ["fhi:helseid.testing.api/some"],
             };
+            return token;
+        }
+    }
+
+    private static TokenRequest InvalidSigningKey
+    {
+        get
+        {
+            var token = DefaultToken;
+            token.SignJwtWithInvalidSigningKey = true;
+            return token;
+        }
+    }
+
+    private static TokenRequest InvalidIssuer
+    {
+        get
+        {
+            var token = DefaultToken;
+            token.SetInvalidIssuer = true;
             return token;
         }
     }

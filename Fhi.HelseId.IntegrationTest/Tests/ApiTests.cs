@@ -42,6 +42,26 @@ public class ApiTests : IntegrationTest
     }
 
     [Test]
+    public async Task InvalidSigningKey_Returns401Unauthorized()
+    {
+        using var client = CreateHttpClient(TokenType.InvalidSigningKey);
+        var response = await client.GetAsync("api/test");
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+    [Test]
+    public async Task InvalidIssuer_Returns401Unauthorized()
+    {
+        using var client = CreateHttpClient(TokenType.InvalidIssuer);
+        var response = await client.GetAsync("api/test");
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+    [Test]
     public async Task InvalidToken_Returns401Unauthorized()
     {
         using var client = Factory.CreateClient();
