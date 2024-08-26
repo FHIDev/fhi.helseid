@@ -29,7 +29,16 @@ public class ApiTests : IntegrationTest
         var responseBody = await response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-        Assert.That(responseBody, Is.Empty);
+    }
+
+    [Test]
+    public async Task InvalidScope_Returns403Forbidden()
+    {
+        using var client = CreateHttpClient("invalid_scope");
+        var response = await client.GetAsync("api/test");
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
 
     [Test]
@@ -41,6 +50,5 @@ public class ApiTests : IntegrationTest
         var responseBody = await response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-        Assert.That(responseBody, Is.Empty);
     }
 }

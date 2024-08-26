@@ -13,14 +13,13 @@ internal class TokenCreator
 
     internal static async Task<Dictionary<string, string>> CreateTokens()
     {
-        var requests = new Dictionary<string, TokenRequest>
-        {
-            { "default", Tokens.DefaultToken },
-            { "expired", Tokens.ExpiredToken },
-        };
         return (
             await Task.WhenAll(
-                requests.Select(async kv => new { kv.Key, Value = await GetHelseIdToken(kv.Value) })
+                BuiltInTokens.Tokens.Select(async kv => new
+                {
+                    kv.Key,
+                    Value = await GetHelseIdToken(kv.Value),
+                })
             )
         ).ToDictionary(t => t.Key, t => t.Value);
     }

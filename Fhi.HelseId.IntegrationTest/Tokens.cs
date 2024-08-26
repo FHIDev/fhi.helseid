@@ -2,9 +2,17 @@ using Fhi.HelseId.Integration.Tests.TttClient;
 
 namespace Fhi.HelseId.Integration.Tests;
 
-public abstract class Tokens
+public abstract class BuiltInTokens
 {
-    internal static TokenRequest DefaultToken =>
+    public static Dictionary<string, TokenRequest> Tokens =>
+        new()
+        {
+            { "default", DefaultToken },
+            { "expired", ExpiredToken },
+            { "invalid_scope", InvalidApiScopeToken },
+        };
+
+    private static TokenRequest DefaultToken =>
         new TokenRequest()
         {
             GeneralClaimsParameters = new GeneralClaimsParameters()
@@ -19,7 +27,7 @@ public abstract class Tokens
                 ParametersGeneration._3___GenerateDefaultWithClaimsFromNonEmptyParameterValues,
         };
 
-    internal static TokenRequest ExpiredToken
+    private static TokenRequest ExpiredToken
     {
         get
         {
@@ -27,6 +35,19 @@ public abstract class Tokens
             token.ExpirationParameters = new ExpirationParameters()
             {
                 SetExpirationTimeAsExpired = true,
+            };
+            return token;
+        }
+    }
+
+    private static TokenRequest InvalidApiScopeToken
+    {
+        get
+        {
+            var token = DefaultToken;
+            token.GeneralClaimsParameters = new GeneralClaimsParameters()
+            {
+                Scope = ["fhi:helseid.testing.api/some"],
             };
             return token;
         }
