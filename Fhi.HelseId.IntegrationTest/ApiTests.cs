@@ -18,7 +18,7 @@ public class ApiTests : IntegrationTest
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             "Bearer",
-            _token
+            _tokens["default"]
         );
 
         var response = await client.GetAsync("api/test");
