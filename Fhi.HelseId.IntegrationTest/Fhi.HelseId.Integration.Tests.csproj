@@ -18,7 +18,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <ProjectReference Include="..\Fhi.HelseId\Fhi.HelseId.csproj" />
     <PackageReference Include="Fhi.ClientCredentialsKeypairs" Version="1.2.0" />
-
+    <PackageReference Include="ApprovalTests" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
