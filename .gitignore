@@ -380,4 +380,4 @@ FodyWeavers.xsd
 package/
 
 
-Fhi.HelseId.IntegrationTest/Tokens
+Fhi.HelseId.Integration.Tests/Tokens
