@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
             services.AddScoped<ICurrentUser, CurrentHttpUser>();
             if (config.ApiScope.Contains(',')) // We know there are multiple scopes if a komma is present
                 services.AddSingleton<IAuthorizationHandler, ApiMultiScopeHandler>();
-            else 
+            else
                 services.AddSingleton<IAuthorizationHandler, ApiSingleScopeHandler>();
             services.AddScoped<IAccessTokenProvider, HttpContextAccessTokenProvider>();
 
