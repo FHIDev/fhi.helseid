@@ -30,7 +30,7 @@ namespace Fhi.HelseId.Integration.Tests
             );
         }
 
-        public void CreateService(string config)
+        public void CreateService()
         {
             _factory = new();
         }

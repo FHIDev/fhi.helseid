@@ -7,7 +7,7 @@ public class ApiTests : IntegrationTest
     [SetUp]
     public void SetUp()
     {
-        base.CreateService("NOT IN USE YET");
+        base.CreateService();
     }
 
     [Test]
