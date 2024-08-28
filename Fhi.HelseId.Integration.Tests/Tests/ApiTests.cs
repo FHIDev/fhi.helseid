@@ -26,7 +26,7 @@ public class ApiTests : IntegrationTest
     {
         using var client = CreateHttpClient(TokenType.Expired);
         var response = await client.GetAsync("api/test");
-        var responseBody = await response.Content.ReadAsStringAsync();
+        await response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
@@ -36,7 +36,7 @@ public class ApiTests : IntegrationTest
     {
         using var client = CreateHttpClient(TokenType.InvalidScope);
         var response = await client.GetAsync("api/test");
-        var responseBody = await response.Content.ReadAsStringAsync();
+        response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
@@ -46,7 +46,7 @@ public class ApiTests : IntegrationTest
     {
         using var client = CreateHttpClient(TokenType.InvalidSigningKey);
         var response = await client.GetAsync("api/test");
-        var responseBody = await response.Content.ReadAsStringAsync();
+        response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
@@ -56,7 +56,7 @@ public class ApiTests : IntegrationTest
     {
         using var client = CreateHttpClient(TokenType.InvalidIssuer);
         var response = await client.GetAsync("api/test");
-        var responseBody = await response.Content.ReadAsStringAsync();
+        response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
@@ -67,7 +67,7 @@ public class ApiTests : IntegrationTest
         using var client = Factory.CreateClient();
 
         var response = await client.GetAsync("api/test");
-        var responseBody = await response.Content.ReadAsStringAsync();
+        response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }

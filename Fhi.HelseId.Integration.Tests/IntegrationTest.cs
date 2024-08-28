@@ -51,8 +51,6 @@ namespace Fhi.HelseId.Integration.Tests
             var jwtTokenObj = handler.ReadJwtToken(token);
             var header = jwtTokenObj.Header;
             var payload = jwtTokenObj.Payload;
-            string headerJson = JsonSerializer.Serialize(header);
-            string payloadJson = JsonSerializer.Serialize(payload);
             var outputJson = new { Header = header, Payload = payload };
             string outputJsonString = JsonSerializer.Serialize(
                 outputJson,

@@ -9,7 +9,7 @@ internal class TokenCreator
 {
     private const string HelseIdTttConfigFile =
         "HelseID Configuration 983744516-HelseID TTT-klient.json";
-    private const string HelseIdTTTEndpoint = "https://helseid-ttt.test.nhn.no";
+    private const string HelseIdTttEndpoint = "https://helseid-ttt.test.nhn.no";
 
     internal static async Task<Dictionary<TokenType, string>> CreateTokens()
     {
@@ -26,7 +26,7 @@ internal class TokenCreator
 
     internal static async Task<string> GetHelseIdToken(TokenRequest request)
     {
-        var tokenClient = new Client(HelseIdTTTEndpoint, await CreateHttpClient());
+        var tokenClient = new Client(HelseIdTttEndpoint, await CreateHttpClient());
         var response = await tokenClient.CreateTestTokenAsync(request);
         return response.SuccessResponse.AccessTokenJwt;
     }
