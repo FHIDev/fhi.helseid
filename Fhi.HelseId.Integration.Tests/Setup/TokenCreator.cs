@@ -8,7 +8,7 @@ namespace Fhi.HelseId.Integration.Tests;
 internal class TokenCreator
 {
     private const string HelseIdTttConfigFile =
-        "HelseID Configuration 983744516-HelseID TTT-klient.json";
+        "Setup/HelseID Configuration 983744516-HelseID TTT-klient.json";
     private const string HelseIdTttEndpoint = "https://helseid-ttt.test.nhn.no";
 
     internal static async Task<Dictionary<TokenType, string>> CreateTokens()

@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="HelseID Configuration 983744516-HelseID TTT-klient.json">
+    <None Update="Setup/HelseID Configuration 983744516-HelseID TTT-klient.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

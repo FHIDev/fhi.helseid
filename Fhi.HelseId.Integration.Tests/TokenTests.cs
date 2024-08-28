@@ -2,7 +2,7 @@ using System.Net;
 
 namespace Fhi.HelseId.Integration.Tests;
 
-public class ApiTests : IntegrationTest
+public class TokenTests : IntegrationTest
 {
     [SetUp]
     public void SetUp()
