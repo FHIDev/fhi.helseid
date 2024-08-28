@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Configurations>Debug;Release</Configurations>
+    <id>Fhi.HelseId.Common</id>
+    <PackageDescription>Common infrastructure for Fhi.HelseId</PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\images\fhi.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="IdentityModel.AspNetCore" />
+  </ItemGroup>
+
+</Project>

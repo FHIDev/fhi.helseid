@@ -3,14 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId", "Fhi.HelseId\Fhi.HelseId.csproj", "{77C0F2D9-7184-4BF5-9EF2-E9042789E032}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Common", "Fhi.HelseId.Common\Fhi.HelseId.Common.csproj", "{77C0F2D9-7184-4BF5-9EF2-E9042789E032}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DCBAE3A1-3C8A-4562-B9C3-0CCE7E65E794}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		copylocal.cmd = copylocal.cmd
-		Fhi.HelseId\copynp.cmd = Fhi.HelseId\copynp.cmd
+		Fhi.HelseId.Common\copynp.cmd = Fhi.HelseId.Common\copynp.cmd
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 		.github\workflows\Fhi.AuthController.Nuget.yml = .github\workflows\Fhi.AuthController.Nuget.yml
 		Fhi.HelseId.CI.yml = Fhi.HelseId.CI.yml
 		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
@@ -64,7 +66,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Swagger.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Blazor.Tests", "Fhi.HelseId.Blazor.Tests\Fhi.HelseId.Blazor.Tests.csproj", "{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Integration.Tests", "Fhi.HelseId.IntegrationTest\Fhi.HelseId.Integration.Tests.csproj", "{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}"
+Project("9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Integration.Tests", "Fhi.HelseId.IntegrationTest\Fhi.HelseId.Integration.Tests.csproj", "{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Web", "Fhi.HelseId.Web\Fhi.HelseId.Web.csproj", "{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Api", "Fhi.HelseId.Api\Fhi.HelseId.Api.csproj", "{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,6 +126,14 @@ Global
 		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

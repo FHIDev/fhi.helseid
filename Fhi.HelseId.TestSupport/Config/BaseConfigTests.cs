@@ -1,5 +1,4 @@
-﻿using Fhi.HelseId.Api;
-using Fhi.HelseId.Common;
+﻿using Fhi.HelseId.Common.Configuration;
 using NUnit.Framework;
 
 namespace Fhi.HelseId.TestSupport.Config

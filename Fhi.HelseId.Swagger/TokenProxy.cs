@@ -32,7 +32,7 @@ public class TokenProxy : ITokenProxy
         var jwk = HttpUtility.UrlDecode(_swaggerHelseIdConfiguration.PrivateJwk);
         var jwkSecurityKey = new JsonWebKey(jwk);
 
-        var clientAssertion = ClientAssertion.Generate(config, jwkSecurityKey);
+        var clientAssertion = ClientAssertion.Generate(config.ClientId, config.Authority, jwkSecurityKey);
 
         requestParameters["client_id"] = config.ClientId;
         requestParameters["client_assertion_type"] = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;

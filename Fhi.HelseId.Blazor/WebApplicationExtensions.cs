@@ -1,11 +1,12 @@
-﻿using Fhi.HelseId.Common.Identity;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Fhi.HelseId.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Refit;
 using Microsoft.Extensions.DependencyInjection;
+using Fhi.HelseId.Common.Exceptions;
+using Fhi.HelseId.Common.Identity;
 
 namespace Fhi.HelseId.Blazor
 {
