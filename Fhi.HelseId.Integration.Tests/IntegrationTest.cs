@@ -16,8 +16,7 @@ namespace Fhi.HelseId.Integration.Tests
         public async Task CreateTokens()
         {
             _tokens = await TokenCreator.CreateTokens();
-            var path = GetDirectoryForCaller();
-            var fullPath = Path.Combine(path, "Tokens");
+            var fullPath = Path.Combine(GetDirectoryForCaller(), "Tokens");
             if (!Directory.Exists(fullPath))
                 Directory.CreateDirectory(fullPath);
             foreach (var entry in _tokens)
@@ -48,11 +47,8 @@ namespace Fhi.HelseId.Integration.Tests
 
         private void ParseTokenToFile(string token, string path, string tokenIdentifier)
         {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtTokenObj = handler.ReadJwtToken(token);
-            var header = jwtTokenObj.Header;
-            var payload = jwtTokenObj.Payload;
-            var outputJson = new { Header = header, Payload = payload };
+            var jwtTokenObj = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var outputJson = new { Header = jwtTokenObj.Header, Payload = jwtTokenObj.Payload };
             string outputJsonString = JsonSerializer.Serialize(
                 outputJson,
                 new JsonSerializerOptions { WriteIndented = true }
