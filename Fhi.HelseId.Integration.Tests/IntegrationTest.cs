@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using ApprovalUtilities.Utilities;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Fhi.HelseId.Integration.Tests
@@ -17,18 +16,20 @@ namespace Fhi.HelseId.Integration.Tests
         public async Task CreateTokens()
         {
             _tokens = await TokenCreator.CreateTokens();
-            var path = PathUtilities.GetDirectoryForCaller();
+            var path = GetDirectoryForCaller();
             var fullPath = Path.Combine(path, "Tokens");
             if (!Directory.Exists(fullPath))
                 Directory.CreateDirectory(fullPath);
-            _tokens.ForEach(
-                (kvp) =>
-                {
-                    File.WriteAllText(Path.Combine(fullPath, $"{kvp.Key}.txt"), kvp.Value);
-                    ParseTokenToFile(kvp.Value, fullPath, kvp.Key.ToString());
-                }
-            );
+            foreach (var entry in _tokens)
+            {
+                File.WriteAllText(Path.Combine(fullPath, $"{entry.Key}.txt"), entry.Value);
+                ParseTokenToFile(entry.Value, fullPath, entry.Key.ToString());
+            }
         }
+
+        public static string GetDirectoryForCaller(
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = ""
+        ) => sourceFilePath[..sourceFilePath.LastIndexOf('\\')];
 
         public void CreateService()
         {
