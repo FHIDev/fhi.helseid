@@ -32,7 +32,7 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
 [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
 public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKonfigurasjon
 {
-
+    public string DevelopmentRedirectUri { get; set; } = "/";
 
     public string[] SecurityLevels { get; set; } = ["3", "4"];
 
