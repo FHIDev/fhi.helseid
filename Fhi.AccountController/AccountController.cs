@@ -36,7 +36,7 @@ namespace Fhi.AuthControllers
                     HelseIdContext.Scheme,
                     new AuthenticationProperties
                     {
-                        RedirectUri = "/"
+                        RedirectUri = Config.DevelopmentRedirectUri ?? "/"
                     });
             }
             else
