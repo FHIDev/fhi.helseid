@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 namespace Fhi.HelseId.Integration.Tests.Setup
 {
     [TestFixture]
-    public abstract class IntegrationTest<TProgram> where TProgram : class
+    public abstract class IntegrationTest<TProgram>
+        where TProgram : class
     {
         public readonly WebApplicationFactory<TProgram> Factory = new();
         internal Dictionary<TokenType, String> _tokens = new();
@@ -25,7 +26,6 @@ namespace Fhi.HelseId.Integration.Tests.Setup
             }
         }
 
-        
         public static string GetDirectoryForCaller(
             [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = ""
         ) => sourceFilePath[..sourceFilePath.LastIndexOf('\\')];
