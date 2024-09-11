@@ -32,6 +32,14 @@ public class HelseIdWebAuthBuilder
     public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; }
     public IHelseIdSecretHandler SecretHandler { get; set; }
 
+    /// <summary>
+    /// Checks the HelseIdWebKonfigurasjon.AuthUse property
+    /// Returns false if it doesn't exist.
+    /// It is default tri
+    /// </summary>
+    public bool UseAuthentication => HelseIdWebKonfigurasjon?.AuthUse ?? false;
+
+
     public HelseIdWebAuthBuilder(IConfiguration configuration, IServiceCollection services)
     {
         this.services = services;
