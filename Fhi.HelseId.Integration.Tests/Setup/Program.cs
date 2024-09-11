@@ -12,7 +12,7 @@ var configAuth = new HelseIdApiKonfigurasjon
     ApiScope = "fhi:helseid.testing.api/all",
     AuthUse = true,
     UseHttps = true,
-    RequireContextIdentity = true
+    RequireContextIdentity = true,
 };
 
 builder.Services.AddHelseIdApiAuthentication(configAuth);

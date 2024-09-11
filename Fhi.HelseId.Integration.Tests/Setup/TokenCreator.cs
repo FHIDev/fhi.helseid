@@ -1,9 +1,9 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
 using Fhi.ClientCredentialsKeypairs;
-using Fhi.HelseId.Integration.Tests.TttClient;
+using Fhi.HelseId.Integration.Tests.Setup.TttClient;
 
-namespace Fhi.HelseId.Integration.Tests;
+namespace Fhi.HelseId.Integration.Tests.Setup;
 
 internal class TokenCreator
 {

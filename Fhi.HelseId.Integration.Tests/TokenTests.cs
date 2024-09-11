@@ -1,15 +1,9 @@
 using System.Net;
 
-namespace Fhi.HelseId.Integration.Tests;
+namespace Fhi.HelseId.Integration.Tests.Setup;
 
-public class TokenTests : IntegrationTest
+public class TokenTests : IntegrationTest<Program>
 {
-    [SetUp]
-    public void SetUp()
-    {
-        base.CreateService();
-    }
-
     [Test]
     public async Task ValidToken_Returns200Ok()
     {
