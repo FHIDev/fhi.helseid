@@ -40,7 +40,6 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 #if NET9_0
             options.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Require;
 #endif
-
             options.ResponseType = "code";
             options.TokenValidationParameters.ValidAudience = configAuth.ClientId;
             options.CallbackPath = "/signin-callback";

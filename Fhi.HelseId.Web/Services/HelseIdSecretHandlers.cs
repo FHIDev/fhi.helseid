@@ -25,12 +25,15 @@ namespace Fhi.HelseId.Web.Services
     {
         protected JsonWebKey? jwkSecurityKey;
         protected IHelseIdWebKonfigurasjon? configAuth;
+
+        public const string ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
+
         public virtual void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
             
         }
 
-        public string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, jwkSecurityKey);
+        public virtual string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, jwkSecurityKey);
     }
 
 
@@ -48,11 +51,21 @@ namespace Fhi.HelseId.Web.Services
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
-                ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
-                ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, jwkSecurityKey);
+                ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
+                ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
                 return Task.CompletedTask;
             };
+
+#if NET9_0
+            options.Events.OnPushAuthorization = ctx =>
+            {
+                ctx.ProtocolMessage.ClientAssertionType = ClientAssertionType;
+                ctx.ProtocolMessage.ClientAssertion = GenerateClientAssertion;
+
+                return Task.CompletedTask;
+            };
+#endif
         }
 
     }
@@ -69,11 +82,22 @@ namespace Fhi.HelseId.Web.Services
             this.configAuth = configAuth;
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
-                ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
-                ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, jwkSecurityKey);
+                ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
+                ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
                 return Task.CompletedTask;
             };
+
+
+#if NET9_0
+            options.Events.OnPushAuthorization = ctx =>
+            {
+                ctx.ProtocolMessage.ClientAssertionType = ClientAssertionType;
+                ctx.ProtocolMessage.ClientAssertion = GenerateClientAssertion;
+
+                return Task.CompletedTask;
+            };
+#endif
         }
 
         
@@ -117,11 +141,22 @@ namespace Fhi.HelseId.Web.Services
                     throw new InvalidOperationException($"{nameof(ctx.TokenEndpointRequest)} cannot be null");
                 }
 
-                ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
-                ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, jwkSecurityKey);
+                ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
+                ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
                 return Task.CompletedTask;
             };
+
+
+#if NET9_0
+            options.Events.OnPushAuthorization = ctx =>
+            {
+                ctx.ProtocolMessage.ClientAssertionType = ClientAssertionType;
+                ctx.ProtocolMessage.ClientAssertion = GenerateClientAssertion;
+
+                return Task.CompletedTask;
+            };
+#endif
         }
     }
 
@@ -130,26 +165,44 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdRsaXmlSecretHandler : SecretHandlerBase
     {
+        private RsaSecurityKey _rsaSecurityKey;
+
+        public override string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, _rsaSecurityKey);
+
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
             this.configAuth = configAuth;
             var xml = File.ReadAllText(configAuth.ClientSecret);
             var rsa = RSA.Create();
             rsa.FromXmlString(xml);
-            var rsaSecurityKey = new RsaSecurityKey(rsa);
+            _rsaSecurityKey = new RsaSecurityKey(rsa);
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
-                ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
-                ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, rsaSecurityKey);
+                ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
+                ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
                 return Task.CompletedTask;
             };
+
+#if NET9_0
+            options.Events.OnPushAuthorization = ctx =>
+            {
+                ctx.ProtocolMessage.ClientAssertionType = ClientAssertionType;
+                ctx.ProtocolMessage.ClientAssertion = GenerateClientAssertion;
+
+                return Task.CompletedTask;
+            };
+#endif
         }
     }
 
     public class HelseIdEnterpriseCertificateSecretHandler : SecretHandlerBase
     {
+        private X509SecurityKey _x509SecurityKey;
+
+        public override string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, _x509SecurityKey);
+
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
             this.configAuth = configAuth;
@@ -172,15 +225,25 @@ namespace Fhi.HelseId.Web.Services
                 throw new Exception($"No certificate with thumbprint {options.ClientSecret} found in store LocalMachine");
             }
 
-            var x509SecurityKey = new X509SecurityKey(certificates[0]);
+            _x509SecurityKey = new X509SecurityKey(certificates[0]);
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
-                ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
-                ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, x509SecurityKey);
+                ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
+                ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
                 return Task.CompletedTask;
             };
+
+#if NET9_0
+            options.Events.OnPushAuthorization = ctx =>
+            {
+                ctx.ProtocolMessage.ClientAssertionType = ClientAssertionType;
+                ctx.ProtocolMessage.ClientAssertion = GenerateClientAssertion;
+
+                return Task.CompletedTask;
+            };
+#endif
         }
 
         public class InvalidEnterpriseCertificateSecretException : Exception
@@ -227,11 +290,21 @@ namespace Fhi.HelseId.Web.Services
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
-                ctx.TokenEndpointRequest.ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
-                ctx.TokenEndpointRequest.ClientAssertion = ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, jwkSecurityKey);
+                ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
+                ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
                 return Task.CompletedTask;
             };
+
+#if NET9_0
+            options.Events.OnPushAuthorization = ctx =>
+            {
+                ctx.ProtocolMessage.ClientAssertionType = ClientAssertionType;
+                ctx.ProtocolMessage.ClientAssertion = GenerateClientAssertion;
+
+                return Task.CompletedTask;
+            };
+#endif
         }
 
         public class SelvbetjeningConfig
