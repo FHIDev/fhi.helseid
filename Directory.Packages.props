@@ -30,7 +30,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.27"/>
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Analyzers" Version="6.0.27"/>
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Analyzers" Version="9.0.0-rc.1.24452.1"/>
     <PackageVersion Include="System.ServiceModel.Http" Version="6.2.0"/>
     <PackageVersion Include="System.ServiceModel.Primitives" Version="6.2.0"/>
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.27" />
