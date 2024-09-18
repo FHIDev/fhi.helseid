@@ -8,8 +8,10 @@ using Fhi.HelseId.Api.Services;
 using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Identity;
+using HelseId.Samples.Common.ApiDPoPValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -36,6 +38,10 @@ public static class ServiceCollectionExtensions
             else
                 services.AddSingleton<IAuthorizationHandler, ApiSingleScopeHandler>();
             services.AddScoped<IAccessTokenProvider, HttpContextAccessTokenProvider>();
+
+            services.AddDistributedMemoryCache();
+            services.AddSingleton<IReplayCache, DummyReplayCache>();
+            services.AddSingleton<DPoPProofValidator>();
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
