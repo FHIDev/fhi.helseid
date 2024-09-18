@@ -12,15 +12,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IdentityModel.AspNetCore" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" />
+    <PackageReference Include="System.Formats.Asn1" />
     <PackageReference Include="System.Linq.Async" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
     <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="System.ServiceModel.Primitives" />
     <PackageReference Include="System.Data.SqlClient" />
     <PackageReference Include="AspNetCore.DataProtection.SqlServer" />
+    <PackageReference Include="System.Text.Encodings.Web" />
   </ItemGroup>
 
 </Project>
