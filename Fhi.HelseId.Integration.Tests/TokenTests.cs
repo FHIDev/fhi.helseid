@@ -1,8 +1,10 @@
 using System.Net;
+using Fhi.HelseId.Integration.Tests.Setup.Programs.MultiScopeApi;
+using Fhi.HelseId.Integration.Tests.Setup.Programs.SingleScopeApi;
 
 namespace Fhi.HelseId.Integration.Tests.Setup;
 
-public class TokenTests : IntegrationTest<Program>
+public class TokenTests : IntegrationTest<SingleScopeApi>
 {
     [Test]
     public async Task ValidToken_Returns200Ok()
