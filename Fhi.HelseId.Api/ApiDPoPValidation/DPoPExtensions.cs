@@ -7,7 +7,7 @@ namespace HelseId.Samples.Common.ApiDPoPValidation;
 
 public static class DPoPExtensions
 {
-    private const string DPoPAuthorizationSchema = OidcConstants.AuthenticationSchemes.AuthorizationHeaderDPoP + " ";
+    private const string DPoPAuthorizationSchema = "DPoP ";
 
     public static bool GetDPoPAccessToken(this HttpRequest request, out string? token)
     {
@@ -29,6 +29,6 @@ public static class DPoPExtensions
     
     public static string CreateThumbprint(this JsonWebKey jwk)
     {
-        return IdentityModel.Base64Url.Encode(jwk.ComputeJwkThumbprint());
+        return Base64UrlEncoder.Encode(jwk.ComputeJwkThumbprint());
     }
 }

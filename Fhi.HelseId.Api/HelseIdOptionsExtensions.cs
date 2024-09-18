@@ -78,7 +78,7 @@ namespace Fhi.HelseId.Api
                             request.GetDPoPAccessToken(out var accessToken);
 
                             // Get the cnf claim from the access token:
-                            var cnfClaimValue = tokenValidatedContext.Principal!.FindFirstValue(JwtClaimTypes.Confirmation);
+                            var cnfClaimValue = tokenValidatedContext.Principal!.FindFirstValue(DPoPClaimNames.Confirmation);
 
                             var data = new DPoPProofValidationData(request, dPopProof!, accessToken!, cnfClaimValue);
 

@@ -82,7 +82,7 @@ public class DPoPProofValidator
         try
         {
             var jktValue = JsonSerializer.Deserialize<Dictionary<string, string>>(data.CnfClaimValueFromAccessToken);
-            if (jktValue == null || !jktValue.TryGetValue(JwtClaimTypes.ConfirmationMethods.JwkThumbprint, out jktContent))
+            if (jktValue == null || !jktValue.TryGetValue(DPoPClaimNames.ConfirmationMethods.JwkThumbprint, out jktContent))
             {
                 return ValidationResult.Error("Missing 'jkt' value in 'cnf' claim in access token");
             }
@@ -109,7 +109,7 @@ public class DPoPProofValidator
             return ValidationResult.Error("Malformed DPoP token.");
         }
 
-        if (!token.TryGetHeaderValue<string>("typ", out var typ) || typ != JwtClaimTypes.JwtTypes.DPoPProofToken)
+        if (!token.TryGetHeaderValue<string>("typ", out var typ) || typ != DPoPClaimNames.JwtTypes.DPoPProofToken)
         {
             return ValidationResult.Error("Invalid 'typ' value.");
         }
@@ -119,7 +119,7 @@ public class DPoPProofValidator
             return ValidationResult.Error("Invalid 'alg' value.");
         }
 
-        if (!token.TryGetHeaderValue<JsonElement>(JwtClaimTypes.JsonWebKey, out var jwkValues))
+        if (!token.TryGetHeaderValue<JsonElement>(JwtHeaderParameterNames.Jwk, out var jwkValues))
         {
             return ValidationResult.Error("Invalid 'jwk' value.");
         }
@@ -184,7 +184,7 @@ public class DPoPProofValidator
     private ValidationResult ValidatePayload(DPoPProofValidationData data)
     {
         string? accessTokenHashFromProof = null;
-        if (data.Payload.TryGetValue(JwtClaimTypes.DPoPAccessTokenHash, out var ath))
+        if (data.Payload.TryGetValue(DPoPClaimNames.DPoPAccessTokenHash, out var ath))
         {
             accessTokenHashFromProof = ath as string;
         }
@@ -199,7 +199,7 @@ public class DPoPProofValidator
             return ValidationResult.Error("Invalid 'ath' value.");
         }
 
-        if (data.Payload.TryGetValue(JwtClaimTypes.JwtId, out var jti))
+        if (data.Payload.TryGetValue(JwtRegisteredClaimNames.Jti, out var jti))
         {
             data.TokenId = jti as string;
         }
@@ -209,18 +209,18 @@ public class DPoPProofValidator
             return ValidationResult.Error("Invalid or missing 'jti' value.");
         }
 
-        if (!data.Payload.TryGetValue(JwtClaimTypes.DPoPHttpMethod, out var htm) || !data.HttpMethod.Equals(htm))
+        if (!data.Payload.TryGetValue(DPoPClaimNames.DPoPHttpMethod, out var htm) || !data.HttpMethod.Equals(htm))
         {
             return ValidationResult.Error("Invalid 'htm' value.");
         }
 
-        if (!data.Payload.TryGetValue(JwtClaimTypes.DPoPHttpUrl, out var htu) || !data.Url.Equals(htu))
+        if (!data.Payload.TryGetValue(DPoPClaimNames.DPoPHttpUrl, out var htu) || !data.Url.Equals(htu))
         {
             return ValidationResult.Error("Invalid 'htu' value.");
         }
 
         long? issuedAtTime = null;
-        if (data.Payload.TryGetValue(JwtClaimTypes.IssuedAt, out var iat))
+        if (data.Payload.TryGetValue(JwtRegisteredClaimNames.Iat, out var iat))
         {
             issuedAtTime = iat switch
             {
