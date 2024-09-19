@@ -32,7 +32,9 @@ namespace Fhi.HelseId.Api
         string ApiScope { get;  }
 
         bool UseHttps { get;  }
-        bool RequireContextIdentity { get;  }
+        bool RequireContextIdentity { get; }
+        bool AllowDPoPTokens { get; }
+        bool RequireDPoPTokens { get; }
     }
 
     public class HelseIdApiKonfigurasjon : HelseIdCommonKonfigurasjon, IHelseIdApiFeatures, IHelseIdApiKonfigurasjon
@@ -41,7 +43,7 @@ namespace Fhi.HelseId.Api
         public string ApiScope { get; set; } = "";
 
         public bool RequireContextIdentity { get; set; } = false;
+        public bool AllowDPoPTokens { get; set; }
+        public bool RequireDPoPTokens { get; set; }
     }
-
-
 }

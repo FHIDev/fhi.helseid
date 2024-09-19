@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
+using Fhi.HelseId.Api.ApiDPoPValidation;
 using Fhi.HelseId.Api.Authorization;
 using Fhi.HelseId.Api.Handlers;
 using Fhi.HelseId.Api.Services;
@@ -11,7 +12,6 @@ using Fhi.HelseId.Common.Identity;
 using HelseId.Samples.Common.ApiDPoPValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,9 +39,13 @@ public static class ServiceCollectionExtensions
                 services.AddSingleton<IAuthorizationHandler, ApiSingleScopeHandler>();
             services.AddScoped<IAccessTokenProvider, HttpContextAccessTokenProvider>();
 
-            services.AddDistributedMemoryCache();
-            services.AddSingleton<IReplayCache, DummyReplayCache>();
-            services.AddSingleton<DPoPProofValidator>();
+            if (config.AllowDPoPTokens || config.RequireDPoPTokens)
+            {
+                services.AddDistributedMemoryCache();
+                services.AddSingleton<IReplayCache, InMemoryReplayCache>();
+                services.AddTransient<IDPoPProofValidator, DPoPProofValidator>();
+                services.AddTransient<IDPoPTokenHandler, DPoPTokenHandler>();
+            }
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

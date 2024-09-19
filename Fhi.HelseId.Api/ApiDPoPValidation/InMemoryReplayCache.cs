@@ -4,13 +4,20 @@ using System.Threading.Tasks;
 
 namespace HelseId.Samples.Common.ApiDPoPValidation;
 
-public class DummyReplayCache : IReplayCache
+public interface IReplayCache
+{
+    Task AddAsync(string purpose, string handle, DateTimeOffset expiration);
+
+    Task<bool> ExistsAsync(string purpose, string handle);
+}
+
+public class InMemoryReplayCache : IReplayCache
 {
     private const string Prefix = "DummyReplayCache-";
 
     private readonly IDistributedCache _cache;
 
-    public DummyReplayCache(IDistributedCache cache)
+    public InMemoryReplayCache(IDistributedCache cache)
     {
         _cache = cache;
     }

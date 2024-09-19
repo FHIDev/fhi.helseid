@@ -9,10 +9,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace HelseId.Samples.Common.ApiDPoPValidation;
 
-public class DPoPProofValidator
+public interface IDPoPProofValidator
+{
+    Task<ValidationResult> Validate(DPoPProofValidationData data);
+}
+
+public class DPoPProofValidator : IDPoPProofValidator
 {
     // This is the number of seconds that we allow for the DPoP proof to expire
-    private TimeSpan ProofTokenValidityDuration { get;} = TimeSpan.FromSeconds(1);
+    private TimeSpan ProofTokenValidityDuration { get; } = TimeSpan.FromSeconds(1);
     // This is the maximum difference between the client's clock and this application's clock
     private TimeSpan ClientClockSkew { get; set; } = TimeSpan.FromSeconds(5);
     private const string ReplayCachePurpose = "DPoPJwtBearerEvents-DPoPReplay-jti-";

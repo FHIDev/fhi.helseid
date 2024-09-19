@@ -7,12 +7,12 @@ namespace HelseId.Samples.Common.ApiDPoPValidation;
 
 public static class DPoPExtensions
 {
-    private const string DPoPAuthorizationSchema = "DPoP ";
+    private const string DPoPAuthorizationSchema = OidcConstants.HttpHeaders.DPoP + " ";
 
-    public static bool GetDPoPAccessToken(this HttpRequest request, out string? token)
+    public static bool TryGetDPoPAccessToken(this HttpRequest request, out string token)
     {
-        token = null;
-        var authorization = request.Headers.Authorization.SingleOrDefault();
+        token = "";
+        var authorization = request.Headers.Authorization.SingleOrDefault() ?? "";
         if (string.IsNullOrEmpty(authorization) || !authorization.StartsWith(DPoPAuthorizationSchema))
         {
             return false;
@@ -21,9 +21,9 @@ public static class DPoPExtensions
         return true;
     }
 
-    public static bool GetDPoPProof(this HttpRequest request, out string? dPopProof)
+    public static bool TryGetDPoPProof(this HttpRequest request, out string dPopProof)
     {
-        dPopProof = request.Headers[OidcConstants.HttpHeaders.DPoP].SingleOrDefault();
+        dPopProof = request.Headers[OidcConstants.HttpHeaders.DPoP].SingleOrDefault() ?? "";
         return !string.IsNullOrEmpty(dPopProof);
     }
     
