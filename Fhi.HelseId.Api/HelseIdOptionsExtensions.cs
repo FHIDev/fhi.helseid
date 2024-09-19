@@ -37,7 +37,7 @@ namespace Fhi.HelseId.Api
 
                     if (configAuth.AllowDPoPTokens || configAuth.RequireDPoPTokens)
                     {
-                        ConfigureDPoPTokenHandling(options, configAuth);
+                        ConfigureDPoPTokenHandling(options);
                     }
                 }
             );
@@ -90,7 +90,7 @@ namespace Fhi.HelseId.Api
             );
         }
 
-        private static void ConfigureDPoPTokenHandling(JwtBearerOptions options, IHelseIdApiKonfigurasjon configAuth)
+        private static void ConfigureDPoPTokenHandling(JwtBearerOptions options)
         {
             options.Events ??= new JwtBearerEvents();
             options.Events.OnMessageReceived = context =>
