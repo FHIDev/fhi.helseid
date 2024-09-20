@@ -1,5 +1,6 @@
-﻿using Fhi.HelseId.Api.ApiDPoPValidation;
+﻿using Fhi.HelseId.Api.ExtensionMethods;
 using Fhi.HelseId.Common.Configuration;
+using Fhi.HelseId.Common.DPoP;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,7 +38,7 @@ namespace Fhi.HelseId.Api
 
                     if (configAuth.AllowDPoPTokens || configAuth.RequireDPoPTokens)
                     {
-                        ConfigureDPoPTokenHandling(options);
+                        options.EnableDPoP(configAuth.RequireDPoPTokens);
                     }
                 }
             );
@@ -88,24 +89,6 @@ namespace Fhi.HelseId.Api
                     config.AddPolicy(Policies.HidOrApi, hidOrApiPolicy);
                 }
             );
-        }
-
-        private static void ConfigureDPoPTokenHandling(JwtBearerOptions options)
-        {
-            options.Events ??= new JwtBearerEvents();
-            options.Events.OnMessageReceived = context =>
-            {
-                var tokenHandler = context.HttpContext.RequestServices.GetRequiredService<IDPoPTokenHandler>();
-                tokenHandler.ValidateAuthorizationHeader(context);
-
-                return Task.CompletedTask;
-            };
-
-            options.Events.OnTokenValidated = async tokenValidatedContext =>
-            {
-                var tokenHandler = tokenValidatedContext.HttpContext.RequestServices.GetRequiredService<IDPoPTokenHandler>();
-                await tokenHandler.ValidateDPoPProof(tokenValidatedContext);
-            };
         }
     }
 }

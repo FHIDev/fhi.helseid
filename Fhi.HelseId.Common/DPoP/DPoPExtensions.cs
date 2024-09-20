@@ -1,9 +1,8 @@
 using System.Linq;
-using Fhi.HelseId.Api.ApiDPoPValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
-namespace HelseId.Samples.Common.ApiDPoPValidation;
+namespace Fhi.HelseId.Common.DPoP;
 
 public static class DPoPExtensions
 {
@@ -26,7 +25,7 @@ public static class DPoPExtensions
         dPopProof = request.Headers[OidcConstants.HttpHeaders.DPoP].SingleOrDefault() ?? "";
         return !string.IsNullOrEmpty(dPopProof);
     }
-    
+
     public static string CreateThumbprint(this JsonWebKey jwk)
     {
         return Base64UrlEncoder.Encode(jwk.ComputeJwkThumbprint());

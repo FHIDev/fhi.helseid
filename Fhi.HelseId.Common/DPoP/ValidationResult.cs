@@ -1,4 +1,4 @@
-namespace HelseId.Samples.Common.ApiDPoPValidation;
+namespace Fhi.HelseId.Common.DPoP;
 
 public class ValidationResult
 {
@@ -10,7 +10,7 @@ public class ValidationResult
             ErrorDescription = description,
         };
     }
-    
+
     public static ValidationResult Success()
     {
         return new ValidationResult

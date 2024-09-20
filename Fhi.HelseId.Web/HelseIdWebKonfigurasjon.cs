@@ -26,6 +26,8 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     bool UseApis { get; }
     bool UseRefreshTokenStore { get; }
     NoAuthenticationUser NoAuthenticationUser { get; }
+    public bool AllowDPoPTokens { get; }
+    public bool RequireDPoPTokens { get; }
 }
 
 
@@ -80,6 +82,9 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
     public ApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<ApiOutgoingKonfigurasjon>();
 
     public NoAuthenticationUser NoAuthenticationUser { get; set; } = new();
+
+    public bool AllowDPoPTokens { get; }
+    public bool RequireDPoPTokens { get; }
 
     public Uri UriToApiByName(string name)
     {

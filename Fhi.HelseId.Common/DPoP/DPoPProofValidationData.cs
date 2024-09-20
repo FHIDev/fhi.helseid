@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
-namespace HelseId.Samples.Common.ApiDPoPValidation;
+namespace Fhi.HelseId.Common.DPoP;
 
 public class DPoPProofValidationData
 {
@@ -16,7 +16,7 @@ public class DPoPProofValidationData
         AccessTokenHash = HashAccessToken(accessToken);
         CnfClaimValueFromAccessToken = cnfClaimValueFromAccessToken;
     }
-    
+
     private static string HashAccessToken(string accessToken)
     {
         using var sha = SHA256.Create();
@@ -34,14 +34,14 @@ public class DPoPProofValidationData
     public string ProofToken { get; }
 
     public string AccessTokenHash { get; }
-    
+
     public string? CnfClaimValueFromAccessToken { get; }
 
     public JsonWebKey? JsonWebKey { get; set; }
-    
+
     public IDictionary<string, object> Payload { get; set; } = new Dictionary<string, object>();
-    
+
     public string? TokenId { get; set; }
-    
+
     public string? JktClaimValueFromAccessToken { get; set; }
 }

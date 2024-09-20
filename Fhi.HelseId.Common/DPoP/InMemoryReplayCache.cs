@@ -2,7 +2,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Threading.Tasks;
 
-namespace HelseId.Samples.Common.ApiDPoPValidation;
+namespace Fhi.HelseId.Common.DPoP;
 
 public interface IReplayCache
 {
@@ -34,6 +34,6 @@ public class InMemoryReplayCache : IReplayCache
 
     public async Task<bool> ExistsAsync(string purpose, string handle)
     {
-        return (await _cache.GetAsync(Prefix + purpose + handle)) != null;
+        return await _cache.GetAsync(Prefix + purpose + handle) != null;
     }
 }

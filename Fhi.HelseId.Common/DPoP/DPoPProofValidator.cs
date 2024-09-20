@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Fhi.HelseId.Api.ApiDPoPValidation;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace HelseId.Samples.Common.ApiDPoPValidation;
+namespace Fhi.HelseId.Common.DPoP;
 
 public interface IDPoPProofValidator
 {

@@ -1,4 +1,4 @@
-﻿namespace Fhi.HelseId.Api.ApiDPoPValidation;
+﻿namespace Fhi.HelseId.Common.DPoP;
 
 internal class OidcConstants
 {

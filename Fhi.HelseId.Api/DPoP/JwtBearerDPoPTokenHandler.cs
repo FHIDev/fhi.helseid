@@ -1,21 +1,20 @@
-﻿using HelseId.Samples.Common.ApiDPoPValidation;
+﻿using Fhi.HelseId.Common.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Fhi.HelseId.Api.ApiDPoPValidation;
+namespace Fhi.HelseId.Api.DPoP;
 
-public interface IDPoPTokenHandler
+public interface IJwtBearerDPoPTokenHandler
 {
-    void ValidateAuthorizationHeader(MessageReceivedContext context);
-    Task ValidateDPoPProof(TokenValidatedContext tokenValidatedContext);
+    void ValidateAuthorizationHeader(MessageReceivedContext context, bool requireDPoPTokens = true);
+    Task ValidateDPoPProof(TokenValidatedContext tokenValidatedContext, bool requireDPoPTokens = true);
 }
 
-public class DPoPTokenHandler(
-    IHelseIdApiKonfigurasjon helseIdApiKonfigurasjon,
-    IDPoPProofValidator dPoPProofValidator) : IDPoPTokenHandler
+public class JwtBearerDPoPTokenHandler(
+    IDPoPProofValidator dPoPProofValidator) : IJwtBearerDPoPTokenHandler
 {
-    public void ValidateAuthorizationHeader(MessageReceivedContext context)
+    public void ValidateAuthorizationHeader(MessageReceivedContext context, bool requireDPoPTokens = true)
     {
         var requestHasDPoPAccessToken = context.Request.TryGetDPoPAccessToken(out var dPopToken);
 
@@ -24,13 +23,13 @@ public class DPoPTokenHandler(
             context.Token = dPopToken;
         }
 
-        if (!requestHasDPoPAccessToken && helseIdApiKonfigurasjon.RequireDPoPTokens)
+        if (!requestHasDPoPAccessToken && requireDPoPTokens)
         {
             context.Fail("Request has no DPoP token, which is required");
         }
     }
 
-    public async Task ValidateDPoPProof(TokenValidatedContext tokenValidatedContext)
+    public async Task ValidateDPoPProof(TokenValidatedContext tokenValidatedContext, bool requireDPoPTokens = true)
     {
         var request = tokenValidatedContext.HttpContext.Request;
 
@@ -39,7 +38,7 @@ public class DPoPTokenHandler(
 
         if (!requestIsDPoP)
         {
-            if (helseIdApiKonfigurasjon.RequireDPoPTokens)
+            if (requireDPoPTokens)
             {
                 tokenValidatedContext.Fail("Request has no DPoP token, which is required");
             }

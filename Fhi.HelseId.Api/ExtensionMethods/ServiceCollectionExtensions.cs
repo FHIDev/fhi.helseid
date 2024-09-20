@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
-using Fhi.HelseId.Api.ApiDPoPValidation;
 using Fhi.HelseId.Api.Authorization;
+using Fhi.HelseId.Api.DPoP;
 using Fhi.HelseId.Api.Handlers;
 using Fhi.HelseId.Api.Services;
 using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Configuration;
+using Fhi.HelseId.Common.DPoP;
 using Fhi.HelseId.Common.Identity;
-using HelseId.Samples.Common.ApiDPoPValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -44,7 +44,7 @@ public static class ServiceCollectionExtensions
                 services.AddDistributedMemoryCache();
                 services.AddSingleton<IReplayCache, InMemoryReplayCache>();
                 services.AddTransient<IDPoPProofValidator, DPoPProofValidator>();
-                services.AddTransient<IDPoPTokenHandler, DPoPTokenHandler>();
+                services.AddTransient<IJwtBearerDPoPTokenHandler, JwtBearerDPoPTokenHandler>();
             }
 
             services

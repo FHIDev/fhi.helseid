@@ -83,6 +83,11 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             options.AccessDeniedPath = redirectPagesKonfigurasjon.Forbidden;
 
+            if (configAuth.AllowDPoPTokens || configAuth.RequireDPoPTokens)
+            {
+                //options.EnableDPoP(configAuth.RequireDPoPTokens);
+            }
+
             secretHandler.AddSecretConfiguration(configAuth, options);
 
             string GetAcrValues(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
