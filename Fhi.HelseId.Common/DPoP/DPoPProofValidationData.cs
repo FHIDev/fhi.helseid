@@ -27,15 +27,15 @@ public class DPoPProofValidationData
         return Base64UrlEncoder.Encode(hash);
     }
 
-    public string Url { get; }
+    public string Url { get; set; }
 
-    public string HttpMethod { get; }
+    public string HttpMethod { get; set; }
 
-    public string ProofToken { get; }
+    public string ProofToken { get; set; }
 
-    public string AccessTokenHash { get; }
+    public string AccessTokenHash { get; set; }
 
-    public string? CnfClaimValueFromAccessToken { get; }
+    public string? CnfClaimValueFromAccessToken { get; set; }
 
     public JsonWebKey? JsonWebKey { get; set; }
 

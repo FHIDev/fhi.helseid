@@ -53,7 +53,7 @@ public class AuthHeaderHandlerTests
         var token = await response.Content.ReadAsStringAsync();
 
         // the dummy client returns the authorization header
-        Assert.That(token, Is.EqualTo("Bearer " + authToken));
+        Assert.That(token, Is.False);
     }
 
     [Test]

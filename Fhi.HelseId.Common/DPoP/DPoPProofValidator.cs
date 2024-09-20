@@ -125,7 +125,7 @@ public class DPoPProofValidator : IDPoPProofValidator
 
         if (!token.TryGetHeaderValue<JsonElement>(JwtHeaderParameterNames.Jwk, out var jwkValues))
         {
-            return ValidationResult.Error("Invalid 'jwk' value.");
+            return ValidationResult.Error("Missing or invalid 'jwk' value.");
         }
 
         var jwkJson = JsonSerializer.Serialize(jwkValues);
@@ -178,7 +178,7 @@ public class DPoPProofValidator : IDPoPProofValidator
 
         if (tokenValidationResult.Exception != null)
         {
-            return ValidationResult.Error("Invalid signature on DPoP token.");
+            return ValidationResult.Error("Failed validating signature on DPoP token.");
         }
 
         data.Payload = tokenValidationResult.Claims;
@@ -195,7 +195,7 @@ public class DPoPProofValidator : IDPoPProofValidator
 
         if (string.IsNullOrEmpty(accessTokenHashFromProof))
         {
-            return ValidationResult.Error("Invalid 'ath' value.");
+            return ValidationResult.Error("Missing 'ath' value.");
         }
 
         if (data.AccessTokenHash != accessTokenHashFromProof)
