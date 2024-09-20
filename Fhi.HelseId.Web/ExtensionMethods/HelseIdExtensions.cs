@@ -85,7 +85,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             if (configAuth.AllowDPoPTokens || configAuth.RequireDPoPTokens)
             {
-                //options.EnableDPoP(configAuth.RequireDPoPTokens);
+                options.EnableDPoP(configAuth.RequireDPoPTokens);
             }
 
             secretHandler.AddSecretConfiguration(configAuth, options);
