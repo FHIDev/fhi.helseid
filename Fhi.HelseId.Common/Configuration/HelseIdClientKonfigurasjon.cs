@@ -14,7 +14,7 @@ namespace Fhi.HelseId.Common.Configuration
         string ClientSecret { get; set; }
         string[] Scopes { get; set; }
         bool Debug { get; set; }
-        List<string> AllScopes { get; }
+        IEnumerable<string> AllScopes { get; }
         string JsonWebKeySecret { get; set; }
         string RsaKeySecret { get; set; }
         Whitelist Whitelist { get; set; }
@@ -27,28 +27,11 @@ namespace Fhi.HelseId.Common.Configuration
         public bool RewriteRedirectUriHttps { get; set; } = false;
         public string ClientId { get; set; } = "";
         public string ClientSecret { get; set; } = "";
-        public string[] Scopes { get; set; } = Array.Empty<string>();
+        public string[] Scopes { get; set; } = [];
         public bool Debug { get; set; } = false;
 
-        public virtual void MergeScopes()
-        {
-            AllTheScopes = null;
-        }
-
-        public List<string> AllScopes
-        {
-            get
-            {
-                if (AllTheScopes != null)
-                    return AllTheScopes;
-                AllTheScopes = new List<string>();
-                AllTheScopes.AddRange(FixedScopes);
-                AllTheScopes.AddRange(Scopes);
-                AllTheScopes = AllTheScopes.Distinct().ToList();
-                return AllTheScopes;
-            }
-        }
-
+        public IEnumerable<string> AllScopes => FixedScopes.Concat(Scopes).Distinct();
+        
         protected virtual IEnumerable<string> FixedScopes => new List<string>
         {
             "offline_access"
