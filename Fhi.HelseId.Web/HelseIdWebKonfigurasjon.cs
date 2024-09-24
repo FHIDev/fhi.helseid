@@ -83,8 +83,8 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
 
     public NoAuthenticationUser NoAuthenticationUser { get; set; } = new();
 
-    public bool AllowDPoPTokens { get; }
-    public bool RequireDPoPTokens { get; }
+    public bool AllowDPoPTokens { get; set; }
+    public bool RequireDPoPTokens { get; set; }
 
     public Uri UriToApiByName(string name)
     {

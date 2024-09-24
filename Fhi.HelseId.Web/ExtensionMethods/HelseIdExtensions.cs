@@ -1,13 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Fhi.HelseId.Common.Identity;
+﻿using Fhi.HelseId.Common.Identity;
+using Fhi.HelseId.Web.DPoP;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.ExtensionMethods
 {
@@ -38,7 +40,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             options.RequireHttpsMetadata = true;
             options.ClientId = configAuth.ClientId;
 #if NET9_0
-            options.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Require;
+           // options.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Require;
 #endif
             options.ResponseType = "code";
             options.TokenValidationParameters.ValidAudience = configAuth.ClientId;
@@ -52,6 +54,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 options.Scope.Add(scope.Trim());
             }
             options.SaveTokens = true;
+
             options.Events.OnRedirectToIdentityProvider = ctx =>
             {
                 //API requests should get a 401 status instead of being redirected to login
@@ -78,6 +81,12 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     ctx.ProtocolMessage.RedirectUri = builder.ToString();
                 }
 
+                if (configAuth.AllowDPoPTokens || configAuth.RequireDPoPTokens)
+                {
+                    var proofGenerator = ctx.HttpContext.RequestServices.GetRequiredService<IProofRedirector>();
+                    proofGenerator.AttachThumbprint(ctx);
+                }
+
                 return Task.CompletedTask;
             };
 
@@ -85,7 +94,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             if (configAuth.AllowDPoPTokens || configAuth.RequireDPoPTokens)
             {
-                options.EnableDPoP(configAuth.RequireDPoPTokens);
+                options.ForwardDPoPContext(configAuth.RequireDPoPTokens);
             }
 
             secretHandler.AddSecretConfiguration(configAuth, options);
