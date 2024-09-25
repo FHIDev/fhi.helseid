@@ -11,16 +11,9 @@ public interface IReplayCache
     Task<bool> ExistsAsync(string purpose, string handle);
 }
 
-public class InMemoryReplayCache : IReplayCache
+public class InMemoryReplayCache(IDistributedCache cache) : IReplayCache
 {
     private const string Prefix = "ReplayCache-";
-
-    private readonly IDistributedCache _cache;
-
-    public InMemoryReplayCache(IDistributedCache cache)
-    {
-        _cache = cache;
-    }
 
     public async Task AddAsync(string purpose, string handle, DateTimeOffset expiration)
     {
@@ -29,11 +22,11 @@ public class InMemoryReplayCache : IReplayCache
             AbsoluteExpiration = expiration
         };
 
-        await _cache.SetAsync(Prefix + purpose + handle, new byte[] { }, options);
+        await cache.SetAsync(Prefix + purpose + handle, new byte[] { }, options);
     }
 
     public async Task<bool> ExistsAsync(string purpose, string handle)
     {
-        return await _cache.GetAsync(Prefix + purpose + handle) != null;
+        return await cache.GetAsync(Prefix + purpose + handle) != null;
     }
 }
