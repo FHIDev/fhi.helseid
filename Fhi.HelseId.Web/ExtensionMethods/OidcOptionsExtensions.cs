@@ -6,7 +6,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods;
 
 public static class OidcOptionsExtensions
 {
-    public static void ForwardDPoPContext(this OpenIdConnectOptions options, bool requireDPoP)
+    public static void ForwardDPoPContext(this OpenIdConnectOptions options)
     {
         options.Events.OnMessageReceived = context =>
         {

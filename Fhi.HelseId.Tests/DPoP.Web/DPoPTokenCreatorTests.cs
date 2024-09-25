@@ -3,13 +3,10 @@ using Microsoft.IdentityModel.Tokens;
 using NSubstitute;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -20,7 +17,6 @@ internal class DPoPTokenCreatorTests
     private INonceStore _nonceStore;
     private ProofKeyConfiguration _keyConfiguration;
     private DPoPTokenCreator _dPoPTokenCreator;
-    private JsonWebKey _jsonWebKey;
 
     [SetUp]
     public void SetUp()
@@ -30,7 +26,6 @@ internal class DPoPTokenCreatorTests
         var dpopJwk = JsonSerializer.Serialize(jsonWebKey);
 
         _nonceStore = Substitute.For<INonceStore>();
-        _jsonWebKey = jsonWebKey;
         _keyConfiguration = new ProofKeyConfiguration(dpopJwk);
         _dPoPTokenCreator = new DPoPTokenCreator(_nonceStore, _keyConfiguration);
     }

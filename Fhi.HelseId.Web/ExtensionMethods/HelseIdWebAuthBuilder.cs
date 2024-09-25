@@ -84,7 +84,7 @@ public class HelseIdWebAuthBuilder
             services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            if (HelseIdWebKonfigurasjon.AllowDPoPTokens || HelseIdWebKonfigurasjon.RequireDPoPTokens)
+            if (HelseIdWebKonfigurasjon.RequireDPoPTokens)
             {
                 services.AddDistributedMemoryCache();
                 services.AddTransient<IDPoPTokenCreator, DPoPTokenCreator>();
@@ -94,6 +94,10 @@ public class HelseIdWebAuthBuilder
                 services.AddSingleton(new ProofKeyConfiguration(HelseIdWebKonfigurasjon.ClientSecret));
 
                 services.ConfigureOptions<BackchannelConfiguration>();
+            }
+            else
+            {
+                services.AddHostedService<DPoPComplianceWarning>();
             }
         }
         else

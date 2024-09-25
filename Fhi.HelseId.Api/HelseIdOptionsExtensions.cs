@@ -1,4 +1,5 @@
-﻿using Fhi.HelseId.Api.ExtensionMethods;
+﻿using Fhi.HelseId.Api.DPoP;
+using Fhi.HelseId.Api.ExtensionMethods;
 using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication;
@@ -40,6 +41,12 @@ namespace Fhi.HelseId.Api
                     }
                 }
             );
+
+            if (!configAuth.RequireDPoPTokens)
+            {
+                builder.Services.AddHostedService<DPoPComplianceWarning>();
+            }
+
             return builder;
         }
 

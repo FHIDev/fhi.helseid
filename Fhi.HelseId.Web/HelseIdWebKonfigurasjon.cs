@@ -26,7 +26,6 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     bool UseApis { get; }
     bool UseRefreshTokenStore { get; }
     NoAuthenticationUser NoAuthenticationUser { get; }
-    public bool AllowDPoPTokens { get; }
     public bool RequireDPoPTokens { get; }
 }
 
