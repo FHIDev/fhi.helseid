@@ -40,7 +40,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             options.RequireHttpsMetadata = true;
             options.ClientId = configAuth.ClientId;
 #if NET9_0
-           // options.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Require;
+            options.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Require;
 #endif
             options.ResponseType = "code";
             options.TokenValidationParameters.ValidAudience = configAuth.ClientId;
