@@ -9,7 +9,7 @@ internal class DPoPComplianceWarning(ILogger<DPoPComplianceWarning> logger) : IH
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        logger.LogWarning("This web-API is not configured to require DPoP-tokens. " +
+        logger.LogWarning("This web API is not configured to require DPoP-tokens. " +
             $"This must be enabled in order to be compliant with the NHN Security profile. " +
             $"It can be enabled by setting the flag {nameof(HelseIdApiKonfigurasjon.RequireDPoPTokens)} " +
             $"to true in appsettings.json under 'HelseIdApiKonfigurasjon'.");
