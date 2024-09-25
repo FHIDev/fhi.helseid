@@ -2,7 +2,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Fhi.HelseId.Common.DPoP;
+namespace Fhi.HelseId.Api.DPoP;
 
 public static class DPoPExtensions
 {

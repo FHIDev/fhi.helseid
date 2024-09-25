@@ -25,22 +25,4 @@ public static class JwtBearerOptionsExtensions
             await tokenHandler.ValidateDPoPProof(tokenValidatedContext, requireDPoP);
         };
     }
-
-    public static void EnableDPoP(this OpenIdConnectOptions options, bool requireDPoP)
-    {
-        //     options.Events.OnRedirectToIdentityProvider = ctx =>
-        //options.Events.OnMessageReceived = context =>
-        //{
-        //    var tokenHandler = context.HttpContext.RequestServices.GetRequiredService<IDPoPTokenHandler>();
-        //    tokenHandler.ValidateAuthorizationHeader(context, requireDPoP);
-
-        //    return Task.CompletedTask;
-        //};
-
-        //options.Events.OnTokenValidated = async tokenValidatedContext =>
-        //{
-        //    var tokenHandler = tokenValidatedContext.HttpContext.RequestServices.GetRequiredService<IDPoPTokenHandler>();
-        //    await tokenHandler.ValidateDPoPProof(tokenValidatedContext, requireDPoP);
-        //};
-    }
 }

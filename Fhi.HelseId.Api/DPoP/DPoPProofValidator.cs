@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Fhi.HelseId.Common.DPoP;
+namespace Fhi.HelseId.Api.DPoP;
 
 public interface IDPoPProofValidator
 {

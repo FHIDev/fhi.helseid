@@ -1,11 +1,11 @@
-﻿using Fhi.HelseId.Common.DPoP;
+﻿using Fhi.HelseId.Api.DPoP;
 using Microsoft.Extensions.Caching.Distributed;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
-namespace Fhi.HelseId.Tests.DPoP;
+namespace Fhi.HelseId.Tests.DPoP.Api;
 
 public class InMemoryReplayCacheTests
 {

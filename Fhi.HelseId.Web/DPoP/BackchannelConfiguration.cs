@@ -9,7 +9,7 @@ public class BackchannelConfiguration(
     BackchannelHandler backchannelHandler)
     : IConfigureNamedOptions<OpenIdConnectOptions>
 {
-    public void Configure(string name, OpenIdConnectOptions options)
+    public void Configure(string? name, OpenIdConnectOptions options)
     {
         if (name == HelseIdContext.Scheme)
         {

@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.DPoP;
 
-public interface IDPopTokenCreator
+public interface IDPoPTokenCreator
 {
     Task<string> CreateSignedToken(HttpMethod method, string url, string? nonce = null);
 }
 
-public class DPopTokenCreator(
+public class DPoPTokenCreator(
     INonceStore nonceStore,
-    ProofKeyConfiguration keyConfiguration) : IDPopTokenCreator
+    ProofKeyConfiguration keyConfiguration) : IDPoPTokenCreator
 {
     public async Task<string> CreateSignedToken(HttpMethod method, string url, string? nonce = null)
     {

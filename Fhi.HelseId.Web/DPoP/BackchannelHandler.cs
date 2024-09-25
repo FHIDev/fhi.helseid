@@ -9,7 +9,7 @@ namespace Fhi.HelseId.Web.DPoP;
 
 public class BackchannelHandler(
     IHttpContextAccessor httpContextAccessor,
-    IDPopTokenCreator tokenHelper)
+    IDPoPTokenCreator tokenHelper)
     : DelegatingHandler
 {
     private const string DPoPHeader = "DPoP";

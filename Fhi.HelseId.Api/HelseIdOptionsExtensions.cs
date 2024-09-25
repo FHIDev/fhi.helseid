@@ -1,13 +1,10 @@
 ﻿using Fhi.HelseId.Api.ExtensionMethods;
 using Fhi.HelseId.Common.Configuration;
-using Fhi.HelseId.Common.DPoP;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Api
 {

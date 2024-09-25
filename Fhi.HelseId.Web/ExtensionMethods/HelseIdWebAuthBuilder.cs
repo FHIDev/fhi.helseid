@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using Fhi.HelseId.Common.DPoP;
 using Fhi.HelseId.Web.DPoP;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
@@ -88,7 +87,7 @@ public class HelseIdWebAuthBuilder
             if (HelseIdWebKonfigurasjon.AllowDPoPTokens || HelseIdWebKonfigurasjon.RequireDPoPTokens)
             {
                 services.AddDistributedMemoryCache();
-                services.AddTransient<IDPopTokenCreator, DPopTokenCreator>();
+                services.AddTransient<IDPoPTokenCreator, DPoPTokenCreator>();
                 services.AddTransient<INonceStore, NonceStore>();
                 services.AddSingleton<IProofRedirector, JwtThumbprintAttacher>();
                 services.AddTransient<BackchannelHandler>();

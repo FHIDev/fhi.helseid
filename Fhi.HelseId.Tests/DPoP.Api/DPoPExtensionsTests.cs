@@ -1,10 +1,10 @@
-﻿using Fhi.HelseId.Common.DPoP;
+﻿using Fhi.HelseId.Api.DPoP;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Fhi.HelseId.Tests.DPoP;
+namespace Fhi.HelseId.Tests.DPoP.Api;
 
 internal class DPoPExtensionsTests
 {

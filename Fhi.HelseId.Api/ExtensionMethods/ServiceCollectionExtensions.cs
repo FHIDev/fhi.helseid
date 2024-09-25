@@ -8,7 +8,6 @@ using Fhi.HelseId.Api.Handlers;
 using Fhi.HelseId.Api.Services;
 using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Configuration;
-using Fhi.HelseId.Common.DPoP;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -113,5 +112,4 @@ public static class ServiceCollectionExtensions
             client.Timeout = TimeSpan.FromMinutes(10);
         }).AddHttpMessageHandler<AuthHeaderHandlerForApi>();
     }
-
 }

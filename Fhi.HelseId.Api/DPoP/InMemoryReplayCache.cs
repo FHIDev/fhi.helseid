@@ -2,7 +2,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Threading.Tasks;
 
-namespace Fhi.HelseId.Common.DPoP;
+namespace Fhi.HelseId.Api.DPoP;
 
 public interface IReplayCache
 {
@@ -13,7 +13,7 @@ public interface IReplayCache
 
 public class InMemoryReplayCache : IReplayCache
 {
-    private const string Prefix = "DummyReplayCache-";
+    private const string Prefix = "ReplayCache-";
 
     private readonly IDistributedCache _cache;
 

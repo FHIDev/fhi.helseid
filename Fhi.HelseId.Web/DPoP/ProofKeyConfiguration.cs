@@ -17,4 +17,9 @@ public class ProofKeyConfiguration
         var dpopJwk = JsonSerializer.Serialize(jsonWebKey);
         ProofKey = new JsonWebKey(dpopJwk);
     }
+
+    public ProofKeyConfiguration(JsonWebKey key)
+    {
+        ProofKey = key;
+    }
 }
