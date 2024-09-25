@@ -14,7 +14,7 @@ public class InMemoryReplayCacheTests
 
     private const string Purpose = "test-purpose";
     private const string Handle = "test-handle";
-    private const string CacheKey = "DummyReplayCache-" + Purpose + Handle;
+    private const string CacheKey = "ReplayCache-" + Purpose + Handle;
 
     [SetUp]
     public void SetUp()

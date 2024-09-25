@@ -8,7 +8,9 @@ using System.IdentityModel.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Tests.DPoP.Web;
@@ -23,15 +25,13 @@ internal class DPoPTokenCreatorTests
     [SetUp]
     public void SetUp()
     {
+        var rsaKey = new RsaSecurityKey(RSA.Create(2048));
+        var jsonWebKey = JsonWebKeyConverter.ConvertFromRSASecurityKey(rsaKey);
+        var dpopJwk = JsonSerializer.Serialize(jsonWebKey);
+
         _nonceStore = Substitute.For<INonceStore>();
-        _jsonWebKey = new JsonWebKey
-        {
-            Alg = "RS256",
-            E = "AQAB",
-            Kty = "RSA",
-            N = "test_n"
-        };
-        _keyConfiguration = new ProofKeyConfiguration(_jsonWebKey);
+        _jsonWebKey = jsonWebKey;
+        _keyConfiguration = new ProofKeyConfiguration(dpopJwk);
         _dPoPTokenCreator = new DPoPTokenCreator(_nonceStore, _keyConfiguration);
     }
 

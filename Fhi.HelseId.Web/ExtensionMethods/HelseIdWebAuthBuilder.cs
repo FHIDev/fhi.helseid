@@ -91,7 +91,7 @@ public class HelseIdWebAuthBuilder
                 services.AddTransient<INonceStore, NonceStore>();
                 services.AddSingleton<IProofRedirector, JwtThumbprintAttacher>();
                 services.AddTransient<BackchannelHandler>();
-                services.AddSingleton<ProofKeyConfiguration>();
+                services.AddSingleton(new ProofKeyConfiguration(HelseIdWebKonfigurasjon.ClientSecret));
 
                 services.ConfigureOptions<BackchannelConfiguration>();
             }
