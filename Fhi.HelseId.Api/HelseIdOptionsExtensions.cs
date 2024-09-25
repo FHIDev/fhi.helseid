@@ -31,6 +31,7 @@ namespace Fhi.HelseId.Api
                         ValidateIssuerSigningKey = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
+                        ValidTypes = ["at+jwt", "JWT"]
                     };
 
                     if (configAuth.AllowDPoPTokens || configAuth.RequireDPoPTokens)

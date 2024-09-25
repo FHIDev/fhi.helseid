@@ -49,9 +49,12 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
                 "profile",
                 "helseid://scopes/identity/pid",
                 "helseid://scopes/identity/pid_pseudonym",
-                "helseid://scopes/identity/security_level",
-                "helseid://scopes/hpr/hpr_number"
+                "helseid://scopes/identity/security_level"
             };
+            if (UseHprNumber)
+            {
+                list.Add("helseid://scopes/hpr/hpr_number");
+            }
             list.AddRange(base.FixedScopes);
             return list;
         }
