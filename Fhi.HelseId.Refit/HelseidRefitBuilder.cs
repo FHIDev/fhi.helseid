@@ -40,6 +40,15 @@ namespace Fhi.HelseId.Refit
             if (this.builderOptions.UseDefaultTokenHandler)
             {
                 AddHandler<AuthHeaderHandler>();
+
+                if (config.UseDPoPTokens)
+                {
+                    services.AddTransient<IAuthorizationHeaderSetter, DPoPAuthorizationHeaderSetter>();
+                }
+                else
+                {
+                    services.AddTransient<IAuthorizationHeaderSetter, BearerAuthorizationHeaderSetter>();
+                }
             }
             if (this.builderOptions.HtmlEncodeFhiHeaders)
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Fhi.HelseId.Common.DPoP;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,14 +12,16 @@ namespace Fhi.HelseId.Web.DPoP;
 
 public interface IDPoPTokenCreator
 {
-    Task<string> CreateSignedToken(HttpMethod method, string url, string? nonce = null);
+    Task<string> CreateSignedToken(HttpMethod method, string url, string? nonce = null, string? ath = null);
+    Task<int> DoStuffAsync(HttpMethod methodm, string? param = null, string? param2 = null);
+
 }
 
 public class DPoPTokenCreator(
     INonceStore nonceStore,
     ProofKeyConfiguration keyConfiguration) : IDPoPTokenCreator
 {
-    public async Task<string> CreateSignedToken(HttpMethod method, string url, string? nonce = null)
+    public async Task<string> CreateSignedToken(HttpMethod method, string url, string? nonce = null, string? ath = null)
     {
         var iat = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
         var jti = Guid.NewGuid().ToString();
@@ -32,6 +35,11 @@ public class DPoPTokenCreator(
         };
 
         await AddNonceToClaims(nonce, claims, url, method);
+
+        if (!string.IsNullOrEmpty(ath))
+        {
+            claims.Add(new Claim("ath", ath));
+        }
 
         var jwk = keyConfiguration.ProofKey;
         var signingCredentials = new SigningCredentials(jwk, jwk.Alg);
@@ -72,4 +80,9 @@ public class DPoPTokenCreator(
         }
         .Where(kvp => !string.IsNullOrEmpty(kvp.Value))
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+    public Task<int> DoStuffAsync(HttpMethod methodm, string? param = null, string? param2 = null)
+    {
+        throw new NotImplementedException();
+    }
 }

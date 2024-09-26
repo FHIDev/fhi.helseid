@@ -1,4 +1,5 @@
-﻿using Fhi.HelseId.Web.DPoP;
+﻿using Fhi.HelseId.Common.DPoP;
+using Fhi.HelseId.Web.DPoP;
 using Microsoft.IdentityModel.Tokens;
 using NSubstitute;
 using NUnit.Framework;

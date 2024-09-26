@@ -8,23 +8,13 @@ namespace Fhi.HelseId.Api.DPoP;
 
 public class DPoPProofValidationData(HttpRequest request, string proofToken, string accessToken, string? cnfClaimValueFromAccessToken)
 {
-    private static string HashAccessToken(string accessToken)
-    {
-        using var sha = SHA256.Create();
-
-        var bytes = Encoding.UTF8.GetBytes(accessToken);
-        var hash = sha.ComputeHash(bytes);
-
-        return Base64UrlEncoder.Encode(hash);
-    }
-
     public string Url { get; set; } = request.Scheme + "://" + request.Host + request.PathBase + request.Path;
 
     public string HttpMethod { get; set; } = request.Method;
 
     public string ProofToken { get; set; } = proofToken;
 
-    public string AccessTokenHash { get; set; } = HashAccessToken(accessToken);
+    public string AccessTokenHash { get; set; } = Common.DPoP.AccessTokenHash.Sha256(accessToken);
 
     public string? CnfClaimValueFromAccessToken { get; set; } = cnfClaimValueFromAccessToken;
 

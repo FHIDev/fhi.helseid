@@ -33,7 +33,7 @@ namespace Fhi.HelseId.Api
 
         bool UseHttps { get;  }
         bool RequireContextIdentity { get; }
-        
+
         /// <summary>
         /// Allows DPoP-authorization headers on incoming API-calls in addition to Bearer tokens.
         /// </summary>
@@ -51,7 +51,7 @@ namespace Fhi.HelseId.Api
         public string ApiScope { get; set; } = "";
 
         public bool RequireContextIdentity { get; set; } = false;
-        public bool AllowDPoPTokens { get; set; }
+        public bool AllowDPoPTokens { get; set; } = true;
         public bool RequireDPoPTokens { get; set; }
     }
 }

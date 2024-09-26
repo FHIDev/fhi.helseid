@@ -84,7 +84,7 @@ public class HelseIdWebAuthBuilder
             services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            if (HelseIdWebKonfigurasjon.RequireDPoPTokens)
+            if (HelseIdWebKonfigurasjon.UseDPoPTokens)
             {
                 services.AddDistributedMemoryCache();
                 services.AddTransient<IDPoPTokenCreator, DPoPTokenCreator>();

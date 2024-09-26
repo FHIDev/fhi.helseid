@@ -82,7 +82,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     ctx.ProtocolMessage.RedirectUri = builder.ToString();
                 }
 
-                if (configAuth.RequireDPoPTokens)
+                if (configAuth.UseDPoPTokens)
                 {
                     var proofGenerator = ctx.HttpContext.RequestServices.GetRequiredService<IProofRedirector>();
                     proofGenerator.AttachThumbprint(ctx);
@@ -93,7 +93,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             options.AccessDeniedPath = redirectPagesKonfigurasjon.Forbidden;
 
-            if (configAuth.RequireDPoPTokens)
+            if (configAuth.UseDPoPTokens)
             {
                 options.ForwardDPoPContext();
             }

@@ -30,7 +30,7 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     /// <summary>
     /// Enables DPoP support in the authorizaiton code flow.
     /// </summary>
-    public bool RequireDPoPTokens { get; }
+    public bool UseDPoPTokens { get; }
 }
 
 
@@ -89,7 +89,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
 
     public NoAuthenticationUser NoAuthenticationUser { get; set; } = new();
 
-    public bool RequireDPoPTokens { get; set; }
+    public bool UseDPoPTokens { get; set; }
 
     public Uri UriToApiByName(string name)
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.DPoP;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -183,7 +184,7 @@ public class DPoPProofValidator(IReplayCache replayCache) : IDPoPProofValidator
     private ValidationResult ValidatePayload(DPoPProofValidationData data)
     {
         string? accessTokenHashFromProof = null;
-        if (data.Payload.TryGetValue(DPoPClaimNames.DPoPAccessTokenHash, out var ath))
+        if (data.Payload.TryGetValue(DPoPClaimNames.AccessTokenHash, out var ath))
         {
             accessTokenHashFromProof = ath as string;
         }
@@ -208,12 +209,12 @@ public class DPoPProofValidator(IReplayCache replayCache) : IDPoPProofValidator
             return ValidationResult.Error("Invalid or missing 'jti' value.");
         }
 
-        if (!data.Payload.TryGetValue(DPoPClaimNames.DPoPHttpMethod, out var htm) || !data.HttpMethod.Equals(htm))
+        if (!data.Payload.TryGetValue(DPoPClaimNames.HttpMethod, out var htm) || !data.HttpMethod.Equals(htm))
         {
             return ValidationResult.Error("Invalid 'htm' value.");
         }
 
-        if (!data.Payload.TryGetValue(DPoPClaimNames.DPoPHttpUrl, out var htu) || !data.Url.Equals(htu))
+        if (!data.Payload.TryGetValue(DPoPClaimNames.HttpUrl, out var htu) || !data.Url.Equals(htu))
         {
             return ValidationResult.Error("Invalid 'htu' value.");
         }

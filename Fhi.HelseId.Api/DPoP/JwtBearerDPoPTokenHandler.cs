@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Fhi.HelseId.Common.DPoP;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
 using System.Threading.Tasks;
 

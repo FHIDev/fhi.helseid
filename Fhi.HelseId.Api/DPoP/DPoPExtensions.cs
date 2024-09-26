@@ -1,4 +1,5 @@
 using System.Linq;
+using Fhi.HelseId.Common.DPoP;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
@@ -6,7 +7,7 @@ namespace Fhi.HelseId.Api.DPoP;
 
 public static class DPoPExtensions
 {
-    private const string DPoPAuthorizationSchema = OidcConstants.HttpHeaders.DPoP + " ";
+    private const string DPoPAuthorizationSchema = AuthorizationScheme.DPoP + " ";
 
     public static bool TryGetDPoPAccessToken(this HttpRequest request, out string token)
     {
@@ -22,7 +23,7 @@ public static class DPoPExtensions
 
     public static bool TryGetDPoPProof(this HttpRequest request, out string dPopProof)
     {
-        dPopProof = request.Headers[OidcConstants.HttpHeaders.DPoP].SingleOrDefault() ?? "";
+        dPopProof = request.Headers[DPoPHttpHeaders.ProofHeaderName].SingleOrDefault() ?? "";
         return !string.IsNullOrEmpty(dPopProof);
     }
 
