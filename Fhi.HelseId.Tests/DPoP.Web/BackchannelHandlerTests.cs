@@ -36,7 +36,7 @@ internal class BackchannelHandlerTests
     public async Task SendAsync_AddsDPoPHeader_When_RequestHasJktContext()
     {
         // Arrange
-        _context.Items["request_has_jkt_context"] = true;
+        _context.Items[DPoPContext.ContextKey] = true;
         _tokenHelper.CreateSignedToken(Arg.Any<HttpMethod>(), Arg.Any<string>(), Arg.Any<string?>())
             .Returns(Task.FromResult("dpop-proof"));
 
