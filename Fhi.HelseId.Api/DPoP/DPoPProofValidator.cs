@@ -13,7 +13,7 @@ public interface IDPoPProofValidator
     Task<ValidationResult> Validate(DPoPProofValidationData data);
 }
 
-public class DPoPProofValidator : IDPoPProofValidator
+public class DPoPProofValidator(IReplayCache replayCache) : IDPoPProofValidator
 {
     // This is the number of seconds that we allow for the DPoP proof to expire
     private TimeSpan ProofTokenValidityDuration { get; } = TimeSpan.FromSeconds(1);
@@ -36,12 +36,7 @@ public class DPoPProofValidator : IDPoPProofValidator
         SecurityAlgorithms.EcdsaSha512
     };
 
-    private readonly IReplayCache _replayCache;
-
-    public DPoPProofValidator(IReplayCache replayCache)
-    {
-        _replayCache = replayCache;
-    }
+    private readonly IReplayCache _replayCache = replayCache;
 
     public async Task<ValidationResult> Validate(DPoPProofValidationData data)
     {

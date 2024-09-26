@@ -18,7 +18,7 @@ public class BackchannelHandler(
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var httpContext = httpContextAccessor.HttpContext;
-        var requestHasJktContext = httpContext!.Items.ContainsKey("request_has_jkt_context");
+        var requestHasJktContext = httpContext!.Items.ContainsKey(DPoPContext.ContextKey);
         
         if (requestHasJktContext)
         {
