@@ -26,6 +26,10 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     bool UseApis { get; }
     bool UseRefreshTokenStore { get; }
     NoAuthenticationUser NoAuthenticationUser { get; }
+
+    /// <summary>
+    /// Enables DPoP support in the authorizaiton code flow.
+    /// </summary>
     public bool RequireDPoPTokens { get; }
 }
 
