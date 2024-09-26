@@ -1,20 +1,22 @@
-using Fhi.HelseId.Api;
 using System.Net;
+using Fhi.HelseId.Api;
 
 namespace Fhi.HelseId.Integration.Tests.Setup;
 
-public class TokenTests : IntegrationTest<Program>
+public class SingleScopeTests : IntegrationTest<Program>
 {
-    public TokenTests() : base(new HelseIdApiKonfigurasjon
-    {
-        Authority = "https://helseid-sts.test.nhn.no/",
-        ApiName = "fhi:helseid.testing.api",
-        ApiScope = "fhi:helseid.testing.api/all",
-        AuthUse = true,
-        UseHttps = true,
-        RequireContextIdentity = true
-    })
-    { }
+    public SingleScopeTests()
+        : base(
+            new HelseIdApiKonfigurasjon
+            {
+                Authority = "https://helseid-sts.test.nhn.no/",
+                ApiName = "fhi:helseid.testing.api",
+                ApiScope = "fhi:helseid.testing.api/all",
+                AuthUse = true,
+                UseHttps = true,
+                RequireContextIdentity = true,
+            }
+        ) { }
 
     [Test]
     public async Task ValidToken_Returns200Ok()
