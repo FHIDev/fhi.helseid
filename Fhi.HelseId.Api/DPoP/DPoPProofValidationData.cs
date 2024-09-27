@@ -1,11 +1,10 @@
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
 
 namespace Fhi.HelseId.Api.DPoP;
 
+// Implementation from https://github.com/NorskHelsenett/HelseID.Samples/blob/d88f5ffdae47cd34975e1d597433e53995fdd935/Common/ApiDPoPValidation/DPoPProofValidationData.cs
 public class DPoPProofValidationData(HttpRequest request, string proofToken, string accessToken, string? cnfClaimValueFromAccessToken)
 {
     public string Url { get; set; } = request.Scheme + "://" + request.Host + request.PathBase + request.Path;

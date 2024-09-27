@@ -33,6 +33,20 @@ internal class DPoPExtensionsTests
     }
 
     [Test]
+    public void TryGetDPoPAccessToken_AuthorizationHeaderExists_ReturnsTrueAndToken_NotCaseSensitive()
+    {
+        // Arrange
+        _httpRequestMock.Headers.Authorization = $"DPOP {DPoPToken}";
+
+        // Act
+        var result = DPoPExtensions.TryGetDPoPAccessToken(_httpRequestMock, out var token);
+
+        // Assert
+        Assert.That(result, Is.True);
+        Assert.That(token, Is.EqualTo(DPoPToken));
+    }
+
+    [Test]
     public void TryGetDPoPAccessToken_AuthorizationHeaderMissing_ReturnsFalseAndEmptyToken()
     {
         // Arrange

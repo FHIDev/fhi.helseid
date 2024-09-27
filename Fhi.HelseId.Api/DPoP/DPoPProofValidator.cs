@@ -14,6 +14,8 @@ public interface IDPoPProofValidator
     Task<ValidationResult> Validate(DPoPProofValidationData data);
 }
 
+// Implementation from https://github.com/NorskHelsenett/HelseID.Samples/blob/d88f5ffdae47cd34975e1d597433e53995fdd935/Common/ApiDPoPValidation/DPoPProofValidator.cs
+
 public class DPoPProofValidator(IReplayCache replayCache) : IDPoPProofValidator
 {
     // This is the number of seconds that we allow for the DPoP proof to expire

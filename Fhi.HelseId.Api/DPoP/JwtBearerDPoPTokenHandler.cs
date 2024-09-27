@@ -48,7 +48,7 @@ public class JwtBearerDPoPTokenHandler(
 
         if (!request.TryGetDPoPProof(out var dPopProof))
         {
-            tokenValidatedContext.Fail("Missing DPoP proof");
+            tokenValidatedContext.Fail("There must be exactly one DPoP proof header present");
             return;
         }
 

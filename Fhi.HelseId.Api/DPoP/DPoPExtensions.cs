@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Fhi.HelseId.Api.DPoP;
 
+/// Source code originally from https://github.com/NorskHelsenett/HelseID.Samples/blob/d88f5ffdae47cd34975e1d597433e53995fdd935/Common/ApiDPoPValidation/DPoPExtensions.cs#L26
+
 public static class DPoPExtensions
 {
     private const string DPoPAuthorizationSchema = AuthorizationScheme.DPoP + " ";
@@ -13,7 +15,7 @@ public static class DPoPExtensions
     {
         token = "";
         var authorization = request.Headers.Authorization.SingleOrDefault() ?? "";
-        if (string.IsNullOrEmpty(authorization) || !authorization.StartsWith(DPoPAuthorizationSchema))
+        if (string.IsNullOrEmpty(authorization) || !authorization.StartsWith(DPoPAuthorizationSchema, System.StringComparison.InvariantCultureIgnoreCase))
         {
             return false;
         }
