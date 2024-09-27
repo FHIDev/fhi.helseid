@@ -1,5 +1,4 @@
 ﻿using Fhi.HelseId.Common.DPoP;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -8,20 +7,13 @@ using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.DPoP;
 
-public class BackchannelHandler(
-    IHttpContextAccessor httpContextAccessor,
+public class RefreshTokenBackchannelHandler(
     IDPoPTokenCreator tokenHelper)
     : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var httpContext = httpContextAccessor.HttpContext;
-        var requestHasJktContext = httpContext!.Items.ContainsKey(DPoPContext.ContextKey);
-        
-        if (requestHasJktContext)
-        {
-            SetDPoPHeader(request);
-        }
+        SetDPoPHeader(request);
 
         var response = await base.SendAsync(request, cancellationToken);
         var nonce = GetNonce(response.Headers);

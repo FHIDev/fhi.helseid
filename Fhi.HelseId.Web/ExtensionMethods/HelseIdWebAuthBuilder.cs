@@ -94,10 +94,14 @@ public class HelseIdWebAuthBuilder
                 services.AddSingleton(new ProofKeyConfiguration(HelseIdWebKonfigurasjon.ClientSecret));
 
                 services.ConfigureOptions<BackchannelConfiguration>();
+                services.AddTransient<RefreshTokenBackchannelHandler>();
+                services.AddHttpClient<TokenEndpointService>()
+                    .AddHttpMessageHandler<RefreshTokenBackchannelHandler>();
             }
             else
             {
                 services.AddHostedService<DPoPComplianceWarning>();
+                services.AddHttpClient<TokenEndpointService>();
             }
         }
         else

@@ -29,6 +29,7 @@
     <PackageReference Include="System.Security.Cryptography.Pkcs" />
     <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="System.ServiceModel.Primitives" />
+    <PackageReference Include="IdentityModel.AspNetCore" />
   </ItemGroup>
 
   <ItemGroup>
