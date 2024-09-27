@@ -1,4 +1,5 @@
-﻿using Fhi.HelseId.Common;
+﻿using Fhi.HelseId.Api.DPoP;
+using Fhi.HelseId.Api.ExtensionMethods;
 using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication;
@@ -10,7 +11,6 @@ namespace Fhi.HelseId.Api
 {
     public static class HelseIdOptionsExtensions
     {
-
         public static AuthenticationBuilder AddHelseIdJwtBearer(this AuthenticationBuilder authenticationBuilder,
             IHelseIdApiKonfigurasjon configAuth)
         {
@@ -34,8 +34,19 @@ namespace Fhi.HelseId.Api
                         ValidateLifetime = true,
                         ValidTypes = ["at+jwt", "JWT"]
                     };
+
+                    if (configAuth.AllowDPoPTokens || configAuth.RequireDPoPTokens)
+                    {
+                        options.EnableDPoP(configAuth.RequireDPoPTokens);
+                    }
                 }
             );
+
+            if (!configAuth.RequireDPoPTokens)
+            {
+                builder.Services.AddHostedService<DPoPComplianceWarning>();
+            }
+
             return builder;
         }
 
@@ -84,6 +95,5 @@ namespace Fhi.HelseId.Api
                 }
             );
         }
-
     }
 }

@@ -1,9 +1,21 @@
+using Fhi.HelseId.Api;
 using System.Net;
 
 namespace Fhi.HelseId.Integration.Tests.Setup;
 
 public class TokenTests : IntegrationTest<Program>
 {
+    public TokenTests() : base(new HelseIdApiKonfigurasjon
+    {
+        Authority = "https://helseid-sts.test.nhn.no/",
+        ApiName = "fhi:helseid.testing.api",
+        ApiScope = "fhi:helseid.testing.api/all",
+        AuthUse = true,
+        UseHttps = true,
+        RequireContextIdentity = true
+    })
+    { }
+
     [Test]
     public async Task ValidToken_Returns200Ok()
     {

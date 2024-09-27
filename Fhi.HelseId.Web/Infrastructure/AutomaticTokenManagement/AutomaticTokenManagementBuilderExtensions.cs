@@ -28,7 +28,6 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         /// </remarks>
         public static AuthenticationBuilder AddAutomaticTokenManagement(this AuthenticationBuilder builder)
         {
-            builder.Services.AddHttpClient<TokenEndpointService>();
             builder.Services.AddTransient<AutomaticTokenManagementCookieEvents>();
             builder.Services.AddSingleton<IConfigureOptions<CookieAuthenticationOptions>, AutomaticTokenManagementConfigureCookieOptions>();
 

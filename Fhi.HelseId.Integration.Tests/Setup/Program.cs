@@ -1,22 +1,7 @@
-﻿using Fhi.HelseId.Api;
-using Fhi.HelseId.Api.ExtensionMethods;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder();
-
-var configAuth = new HelseIdApiKonfigurasjon
-{
-    Authority = "https://helseid-sts.test.nhn.no/",
-    ApiName = "fhi:helseid.testing.api",
-    ApiScope = "fhi:helseid.testing.api/all",
-    AuthUse = true,
-    UseHttps = true,
-    RequireContextIdentity = true,
-};
-
-builder.Services.AddHelseIdApiAuthentication(configAuth);
-builder.Services.AddHelseIdAuthorizationControllers(configAuth);
 
 var app = builder.Build();
 

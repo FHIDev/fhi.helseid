@@ -1,7 +1,4 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using Fhi.HelseId.Common.ExtensionMethods;
-using Fhi.HelseId.Web.ExtensionMethods;
+﻿using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
@@ -10,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
@@ -48,7 +47,7 @@ public class TokenEndpointService : ITokenEndpointService
         IHelseIdSecretHandler secretHandler)
     {
         logger.LogMember();
-        this.secretHandler = secretHandler ; //as HelseIdJwkSecretHandler;
+        this.secretHandler = secretHandler; //as HelseIdJwkSecretHandler;
         this.managementOptions = managementOptions.Value;
         this.oidcOptions = oidcOptions;
         this.schemeProvider = schemeProvider;
