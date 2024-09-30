@@ -3,9 +3,9 @@ using System.Net;
 
 namespace Fhi.HelseId.Integration.Tests.Setup;
 
-public class TokenTests : IntegrationTest<Program>
+public class SingleScopeTests : IntegrationTest<Program>
 {
-    public TokenTests() : base(new HelseIdApiKonfigurasjon
+    public SingleScopeTests() : base(new HelseIdApiKonfigurasjon
     {
         Authority = "https://helseid-sts.test.nhn.no/",
         ApiName = "fhi:helseid.testing.api",
