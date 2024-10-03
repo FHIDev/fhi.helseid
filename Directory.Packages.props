@@ -53,6 +53,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-rc.1.24452.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0-rc.1.24452.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Analyzers" Version="9.0.0-rc.1.24452.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.0-rc.1.24452.1" />
     <PackageVersion Include="System.ServiceModel.Http" Version="8.0.0" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="8.0.0" />
   </ItemGroup>
