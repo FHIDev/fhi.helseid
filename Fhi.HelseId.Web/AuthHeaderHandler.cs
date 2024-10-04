@@ -1,4 +1,9 @@
-﻿using Fhi.HelseId.Common.Exceptions;
+﻿using System.Diagnostics;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Fhi.HelseId.Common.Exceptions;
 using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
@@ -7,11 +12,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Common;
 
@@ -82,9 +82,6 @@ public class AuthHeaderHandler : DelegatingHandler
 
         return response;
     }
-    
-    private string GetDebuggerDisplay()
-    {
-        return ToString();
-    }
+
+    private string GetDebuggerDisplay() => ToString() ?? "";
 }
