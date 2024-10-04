@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
@@ -122,15 +121,12 @@ public partial class HelseidRefitBuilderForBlazorTests
             .Returns(Task.FromResult(ticket));
         services.AddSingleton(authStore);
 
-        var mockHttpMessageHandler = Substitute.ForPartsOf<MockHttpMessageHandler>();
-        var httpClient = new HttpClient(mockHttpMessageHandler);
-
         // Create fake TokenEndpointService
         services.AddSingleton(new TokenEndpointService(
             Substitute.For<IOptions<AutomaticTokenManagementOptions>>(),
             Substitute.For<IOptionsSnapshot<OpenIdConnectOptions>>(),
             Substitute.For<IAuthenticationSchemeProvider>(),
-            httpClient,
+            Substitute.For<HttpClient>(),
             Substitute.For<IHttpContextAccessor>(),
             NullLogger<TokenEndpointService>.Instance,
             Substitute.For<IHelseIdSecretHandler>()));
@@ -159,14 +155,5 @@ public partial class HelseidRefitBuilderForBlazorTests
         [Get("/info")]
         [Headers($"{TestHeaderName}: test æ")]
         Task<ApiResponse<string>> Info();
-    }
-
-    public class MockHttpMessageHandler : HttpMessageHandler
-    {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-            => Send(request, cancellationToken);
-
-        public new Task<HttpResponseMessage> Send(HttpRequestMessage request, CancellationToken cancellationToken)
-            => throw new NotImplementedException();
     }
 }
