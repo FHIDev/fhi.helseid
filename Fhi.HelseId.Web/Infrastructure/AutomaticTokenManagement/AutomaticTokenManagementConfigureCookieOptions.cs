@@ -8,7 +8,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 {
     public class AutomaticTokenManagementConfigureCookieOptions : IConfigureNamedOptions<CookieAuthenticationOptions>
     {
-        private readonly AuthenticationScheme _scheme;
+        private readonly AuthenticationScheme? _scheme;
 
         public AutomaticTokenManagementConfigureCookieOptions(IAuthenticationSchemeProvider provider, ILogger<AutomaticTokenManagementConfigureCookieOptions> logger)
         {
@@ -21,7 +21,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 
         public void Configure(string? name, CookieAuthenticationOptions options)
         {
-            if (name == _scheme.Name)
+            if (name == _scheme?.Name)
             {
                 options.EventsType = typeof(AutomaticTokenManagementCookieEvents);
             }
