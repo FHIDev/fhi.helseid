@@ -16,7 +16,7 @@ public class AuthorizationHeaderSetterTests
     [SetUp]
     public void SetUp()
     {
-        _request = new HttpRequestMessage(HttpMethod.Get, "https://example.com");
+        _request = new HttpRequestMessage(HttpMethod.Get, "https://example.com?whatever");
     }
 
     [TearDown]
@@ -50,7 +50,9 @@ public class AuthorizationHeaderSetterTests
         var proofToken = "proof-token";
 
         var dPoPTokenCreator = Substitute.For<IDPoPTokenCreator>();
-        dPoPTokenCreator.CreateSignedToken(_request.Method, _request.RequestUri!.ToString(), ath: athValue)
+        var expectedRequestUri = _request.RequestUri!.Scheme + "://" + _request.RequestUri!.Authority +
+                                 _request.RequestUri!.LocalPath;
+        dPoPTokenCreator.CreateSignedToken(_request.Method, expectedRequestUri, ath: athValue)
             .Returns(Task.FromResult(proofToken));
 
         var dPoPHeaderSetter = new DPoPAuthorizationHeaderSetter(dPoPTokenCreator);
