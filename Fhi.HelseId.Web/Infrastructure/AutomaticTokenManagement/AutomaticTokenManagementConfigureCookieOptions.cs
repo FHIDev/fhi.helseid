@@ -1,4 +1,5 @@
-﻿using Fhi.HelseId.Common.ExtensionMethods;
+﻿using System;
+using Fhi.HelseId.Common.ExtensionMethods;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
@@ -8,12 +9,17 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 {
     public class AutomaticTokenManagementConfigureCookieOptions : IConfigureNamedOptions<CookieAuthenticationOptions>
     {
-        private readonly AuthenticationScheme? _scheme;
+        private readonly AuthenticationScheme _scheme;
 
         public AutomaticTokenManagementConfigureCookieOptions(IAuthenticationSchemeProvider provider, ILogger<AutomaticTokenManagementConfigureCookieOptions> logger)
         {
             logger.LogMember();
-            _scheme = provider.GetDefaultSignInSchemeAsync().GetAwaiter().GetResult();
+            var scheme = provider.GetDefaultSignInSchemeAsync().GetAwaiter().GetResult();
+            if (scheme is null)
+            {
+                throw new InvalidOperationException("Field 'scheme' cannot be null");
+            }
+            _scheme = scheme;
         }
 
         public void Configure(CookieAuthenticationOptions options)
@@ -21,7 +27,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 
         public void Configure(string? name, CookieAuthenticationOptions options)
         {
-            if (name == _scheme?.Name)
+            if (name == _scheme.Name)
             {
                 options.EventsType = typeof(AutomaticTokenManagementCookieEvents);
             }
