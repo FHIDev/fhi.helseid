@@ -35,7 +35,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.Analyzers" Version="6.0.33" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.33" />
     <PackageVersion Include="Microsoft.AspNetCore.Components" Version="6.0.33" />
-    <PackageVersion Include="Microsoft.AspNetCore.HeaderPropagation" Version="6.0.33" />
     <PackageVersion Include="System.ServiceModel.Http" Version="6.2.0" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="6.2.0" />
   </ItemGroup>
@@ -45,7 +44,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.Analyzers" Version="8.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.Components" Version="8.0.8" />
-    <PackageVersion Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.8" />
     <PackageVersion Include="System.ServiceModel.Http" Version="8.0.0" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="8.0.0" />
   </ItemGroup>
@@ -53,7 +51,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-rc.1.24452.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0-rc.1.24452.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Analyzers" Version="9.0.0-rc.1.24452.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.0-rc.1.24452.1" />
     <PackageVersion Include="System.ServiceModel.Http" Version="8.0.0" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="8.0.0" />
   </ItemGroup>
