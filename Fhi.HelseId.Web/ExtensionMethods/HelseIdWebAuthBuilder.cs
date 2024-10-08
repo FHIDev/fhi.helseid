@@ -1,7 +1,12 @@
-﻿using Fhi.HelseId.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Configuration;
-using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Common.Exceptions;
+using Fhi.HelseId.Common.Identity;
+using Fhi.HelseId.Web.DPoP;
 using Fhi.HelseId.Web.Handlers;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
@@ -16,41 +21,35 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using Fhi.HelseId.Web.DPoP;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
 
 public class HelseIdWebAuthBuilder
 {
-    private readonly IServiceCollection services;
-    private IConfiguration Configuration { get; }
-    public IHelseIdWebKonfigurasjon? HelseIdWebKonfigurasjon { get; }
-    private readonly IConfigurationSection? helseIdKonfigurasjonSeksjon;
+    private readonly IServiceCollection _services;
+    private IConfiguration _configuration { get; }
+    private readonly IConfigurationSection _helseIdWebKonfigurasjonSection;
+    public IHelseIdWebKonfigurasjon HelseIdWebKonfigurasjon { get; }
     public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; }
     public IHelseIdSecretHandler SecretHandler { get; set; }
 
     /// <summary>
     /// Checks the HelseIdWebKonfigurasjon.AuthUse property
     /// Returns false if it doesn't exist.
-    /// It is default tri
     /// </summary>
     public bool UseAuthentication => HelseIdWebKonfigurasjon?.AuthUse ?? false;
 
-
     public HelseIdWebAuthBuilder(IConfiguration configuration, IServiceCollection services)
     {
-        this.services = services;
-        Configuration = configuration;
-        helseIdKonfigurasjonSeksjon = Configuration.GetSection(nameof(HelseIdWebKonfigurasjon));
-        if (helseIdKonfigurasjonSeksjon == null)
+        _services = services;
+        _configuration = configuration;        
+        _helseIdWebKonfigurasjonSection = _configuration.GetSection(nameof(HelseIdWebKonfigurasjon));
+        if (_helseIdWebKonfigurasjonSection == null)
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
-        HelseIdWebKonfigurasjon = helseIdKonfigurasjonSeksjon.Get<HelseIdWebKonfigurasjon>();
-        if (HelseIdWebKonfigurasjon == null)
+        var helseIdWebKonfigurasjon = _helseIdWebKonfigurasjonSection.Get<HelseIdWebKonfigurasjon>();
+        if (helseIdWebKonfigurasjon == null)
             throw new MissingConfigurationException($"Missing required configuration {nameof(HelseIdWebKonfigurasjon)}");
+        HelseIdWebKonfigurasjon = helseIdWebKonfigurasjon;
         RedirectPagesKonfigurasjon = HelseIdWebKonfigurasjon.RedirectPagesKonfigurasjon;
         SecretHandler = new HelseIdNoAuthorizationSecretHandler(); // Default
     }
@@ -67,61 +66,58 @@ public class HelseIdWebAuthBuilder
     {
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
-            
-            services.AddSingleton<IGodkjenteHprKategoriListe, NoHprApprovals>();
+            _services.AddSingleton<IGodkjenteHprKategoriListe, NoHprApprovals>();
             if (HelseIdWebKonfigurasjon.UseHprPolicy)
             {
-                services.AddSingleton<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
-                services.AddSingleton<IAuthorizationHandler, HprAuthorizationHandler>();
+                _services.AddSingleton<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
+                _services.AddSingleton<IAuthorizationHandler, HprAuthorizationHandler>();
             }
             else if (HelseIdWebKonfigurasjon.UseHprNumber)
-                services.AddSingleton<IAuthorizationHandler, HprAuthorizationHandler>();
+                _services.AddSingleton<IAuthorizationHandler, HprAuthorizationHandler>();
 
-            services.AddSingleton<IWhitelist>(HelseIdWebKonfigurasjon.Whitelist);
-            services.AddSingleton<IAutentiseringkonfigurasjon>(HelseIdWebKonfigurasjon);
-            services.AddMemoryCache();
-            services.AddSingleton<IHprFactory, HprFactory>();
-            services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
+            _services.AddSingleton<IWhitelist>(HelseIdWebKonfigurasjon.Whitelist);
+            _services.AddSingleton<IAutentiseringkonfigurasjon>(HelseIdWebKonfigurasjon);
+            _services.AddMemoryCache();
+            _services.AddSingleton<IHprFactory, HprFactory>();
+            _services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             if (HelseIdWebKonfigurasjon.UseDPoPTokens)
             {
-                services.AddDistributedMemoryCache();
-                services.AddTransient<IDPoPTokenCreator, DPoPTokenCreator>();
-                services.AddTransient<INonceStore, NonceStore>();
-                services.AddSingleton<IProofRedirector, JwtThumbprintAttacher>();
-                services.AddTransient<BackchannelHandler>();
-                services.AddSingleton(new ProofKeyConfiguration(HelseIdWebKonfigurasjon.ClientSecret));
+                _services.AddDistributedMemoryCache();
+                _services.AddTransient<IDPoPTokenCreator, DPoPTokenCreator>();
+                _services.AddTransient<INonceStore, NonceStore>();
+                _services.AddSingleton<IProofRedirector, JwtThumbprintAttacher>();
+                _services.AddTransient<BackchannelHandler>();
+                _services.AddSingleton(new ProofKeyConfiguration(HelseIdWebKonfigurasjon.ClientSecret));
 
-                services.ConfigureOptions<BackchannelConfiguration>();
-                services.AddTransient<RefreshTokenBackchannelHandler>();
-                services.AddHttpClient<TokenEndpointService>()
+                _services.ConfigureOptions<BackchannelConfiguration>();
+                _services.AddTransient<RefreshTokenBackchannelHandler>();
+                _services.AddHttpClient<TokenEndpointService>()
                     .AddHttpMessageHandler<RefreshTokenBackchannelHandler>();
             }
             else
             {
-                services.AddHostedService<DPoPComplianceWarning>();
-                services.AddHttpClient<TokenEndpointService>();
+                _services.AddHostedService<DPoPComplianceWarning>();
+                _services.AddHttpClient<TokenEndpointService>();
             }
         }
         else
         {
-            services.AddSingleton<IAuthorizationHandler, NoAuthorizationHandler>();
-            services.AddAuthentication("NoAuthentication")
+            _services.AddSingleton<IAuthorizationHandler, NoAuthorizationHandler>();
+            _services.AddAuthentication("NoAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, NoAuthenticationHandler>("NoAuthentication", null);
         }
-        services.AddScoped<ICurrentUser, CurrentHttpUser>();
-        services.AddSingleton(HelseIdWebKonfigurasjon);
-        services.Configure<HelseIdWebKonfigurasjon>(helseIdKonfigurasjonSeksjon);
-        services.AddHttpContextAccessor();
-        services.AddSingleton<IRefreshTokenStore, RefreshTokenStore>();
-        services.AddSingleton(SecretHandler);
-        
+        _services.AddScoped<ICurrentUser, CurrentHttpUser>();
+        _services.AddSingleton(HelseIdWebKonfigurasjon);
+        _services.Configure<HelseIdWebKonfigurasjon>(_helseIdWebKonfigurasjonSection);
+        _services.AddHttpContextAccessor();
+        _services.AddSingleton<IRefreshTokenStore, RefreshTokenStore>();
+        _services.AddSingleton(SecretHandler);
 
         (var authorizeFilter, string policyName) = AddAuthentication(configureAuthentication);
-            
+
         AddControllers(configureMvc, authorizeFilter);
-        
 
         return MvcBuilder;
     }
@@ -133,7 +129,7 @@ public class HelseIdWebAuthBuilder
 
     public HelseIdWebAuthBuilder AddControllers(Action<MvcOptions>? configureMvc, AuthorizeFilter? authorizeFilter)
     {
-        MvcBuilder = services.AddControllers(config =>
+        MvcBuilder = _services.AddControllers(config =>
         {
             //Unsure about this
             if (HelseIdWebKonfigurasjon.AuthUse && authorizeFilter is not null)
@@ -143,6 +139,7 @@ public class HelseIdWebAuthBuilder
 
             configureMvc?.Invoke(config);
         });
+
         return this;
     }
 
@@ -151,14 +148,14 @@ public class HelseIdWebAuthBuilder
     /// </summary>
     private AuthenticationBuilder AddHelseIdAuthentication()
     {
-        var builder = services.AddAuthentication(options =>
+        var builder = _services.AddAuthentication(options =>
         {
             options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = HelseIdContext.Scheme;
         });
+
         return builder;
     }
-
 
     protected virtual (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(ConfigureAuthentication? configureAuthentication = null)
     {
@@ -240,7 +237,7 @@ public class HelseIdWebAuthBuilder
             .Combine(authenticatedPolicy)
             .AddRequirements(new SecurityLevelOrApiRequirement())
             .Build();
-     
+
         if (HelseIdWebKonfigurasjon.UseHprNumber)
         {
             var hprNumberPolicyBuilder = new AuthorizationPolicyBuilder()
@@ -254,33 +251,35 @@ public class HelseIdWebAuthBuilder
                     .Combine(hprNumberPolicy);
                 policy.Requirements.Add(new HprGodkjenningAuthorizationRequirement());
                 var hprGodkjenningPolicy = policy.Build();
-                services.AddAuthorization(config =>
+                _services.AddAuthorization(config =>
                 {
                     config.AddPolicy(Policies.HidOrApi, hidOrApiPolicy);
                     config.AddPolicy(Policies.HprNummer, hprNumberPolicy);
                     config.AddPolicy(Policies.GodkjentHprKategoriPolicy, hprGodkjenningPolicy);
                     config.DefaultPolicy = hprGodkjenningPolicy;
                 });
+
                 return (hprGodkjenningPolicy, Policies.GodkjentHprKategoriPolicy);
             }
 
-            services.AddAuthorization(config =>
+            _services.AddAuthorization(config =>
             {
                 config.AddPolicy(Policies.HidOrApi, hidOrApiPolicy);
                 config.AddPolicy(Policies.HprNummer, hprNumberPolicy);
                 config.DefaultPolicy = hprNumberPolicy;
             });
+
             return (hprNumberPolicy, Policies.HprNummer);
         }
 
-        services.AddAuthorization(config =>
+        _services.AddAuthorization(config =>
         {
             config.AddPolicy(Policies.HidOrApi, hidOrApiPolicy);
             config.DefaultPolicy = hidOrApiPolicy;
         });
+
         return (hidOrApiPolicy, Policies.HidOrApi);
     }
-
 
     /// <summary>
     /// Determine the presiding policy from configuration.
@@ -303,10 +302,10 @@ public class HelseIdWebAuthBuilder
     /// </summary>
     public HelseIdWebAuthBuilder AddOutgoingApiServices()
     {
-        services.AddAccessTokenManagement();
-        services.AddTransient<AuthHeaderHandler>();
+        _services.AddAccessTokenManagement();
+        _services.AddTransient<AuthHeaderHandler>();
+
         return this;
-       
     }
 
     public HelseIdWebAuthBuilder WithHttpClients()
@@ -318,30 +317,24 @@ public class HelseIdWebAuthBuilder
             else
                 AddHelseIdApiServicesNoAuth(api);
         }
+
         return this;
     }
 
-
     private IHttpClientBuilder AddHelseIdApiServices(IApiOutgoingKonfigurasjon api)
-    {
-        return services.AddUserAccessTokenHttpClient(api.Name, configureClient: client =>
-            {
-                client.BaseAddress = api.Uri;
-                client.Timeout = TimeSpan.FromMinutes(10);
-            })
-            .AddHttpMessageHandler<AuthHeaderHandler>();
-    }
+        => _services.AddUserAccessTokenHttpClient(api.Name, configureClient: client =>
+        {
+            client.BaseAddress = api.Uri;
+            client.Timeout = TimeSpan.FromMinutes(10);
+        })
+        .AddHttpMessageHandler<AuthHeaderHandler>();
 
     private IHttpClientBuilder AddHelseIdApiServicesNoAuth(IApiOutgoingKonfigurasjon api)
-    {
-        return services.AddHttpClient(api.Name, client =>
+        => _services.AddHttpClient(api.Name, client =>
         {
             client.BaseAddress = api.Uri;
             client.Timeout = TimeSpan.FromMinutes(10);
         });
-    }
-
-
 }
 
 public class NoHprApprovals : GodkjenteHprKategoriListe
