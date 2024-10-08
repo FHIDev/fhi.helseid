@@ -13,10 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Fhi.HelseId.Common\copynp.cmd = Fhi.HelseId.Common\copynp.cmd
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
-		.github\workflows\Fhi.AuthController.Nuget.yml = .github\workflows\Fhi.AuthController.Nuget.yml
-		Fhi.HelseId.CI.yml = Fhi.HelseId.CI.yml
-		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
-		license.txt = license.txt
+		LICENSE.md = LICENSE.md
 		nuget.config = nuget.config
 		readme.md = readme.md
 	EndProjectSection
@@ -30,10 +27,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{01EA8EA1
 		ToolsHpr\readme.oid9060.md = ToolsHpr\readme.oid9060.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Altinn", "Fhi.HelseId.Altinn\Fhi.HelseId.Altinn.csproj", "{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Altinn.Tests", "Fhi.HelseId.Altinn.Tests\Fhi.HelseId.Altinn.Tests.csproj", "{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{62DC297D-5B06-4E8E-B693-6A386015DE8B}"
 	ProjectSection(SolutionItems) = preProject
 		.github\dependabot.yml = .github\dependabot.yml
@@ -41,15 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{62DC29
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A6F5B018-08C3-4F6D-BEC7-D7412D39D9BF}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Fhi.AuthController.Nuget.yml = .github\workflows\Fhi.AuthController.Nuget.yml
-		.github\workflows\Fhi.HelseId.AltInn.Nuget = .github\workflows\Fhi.HelseId.AltInn.Nuget
-		.github\workflows\Fhi.HelseId.Blazor.Nuget.yml = .github\workflows\Fhi.HelseId.Blazor.Nuget.yml
 		.github\workflows\Fhi.HelseId.CI.yml = .github\workflows\Fhi.HelseId.CI.yml
 		.github\workflows\Fhi.HelseId.Nuget.yml = .github\workflows\Fhi.HelseId.Nuget.yml
-		.github\workflows\Fhi.HelseId.Refit.Nuget.yml = .github\workflows\Fhi.HelseId.Refit.Nuget.yml
-		.github\workflows\Fhi.HelseId.Swagger.Nuget.yml = .github\workflows\Fhi.HelseId.Swagger.Nuget.yml
-		.github\workflows\Fhi.HelseId.TestSupport.Nuget.yml = .github\workflows\Fhi.HelseId.TestSupport.Nuget.yml
-		.github\workflows\SonarBuild.yml = .github\workflows\SonarBuild.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.TestSupport", "Fhi.HelseId.TestSupport\Fhi.HelseId.TestSupport.csproj", "{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}"
@@ -86,14 +72,6 @@ Global
 		{7ED5EF48-028C-4AB2-A26E-55BD6B20B9EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ED5EF48-028C-4AB2-A26E-55BD6B20B9EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ED5EF48-028C-4AB2-A26E-55BD6B20B9EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E08F9CB-A0E5-4C9A-A082-D338249C74D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6809AEE6-1757-4B99-AD7F-A4F0B998FFAF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -110,6 +88,10 @@ Global
 		{FFC0B4DA-7D53-467F-BBAC-59CBCBDA1078}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFC0B4DA-7D53-467F-BBAC-59CBCBDA1078}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFC0B4DA-7D53-467F-BBAC-59CBCBDA1078}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D6B3A10C-B329-4745-9883-B2D3A6D3D1D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6B3A10C-B329-4745-9883-B2D3A6D3D1D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6B3A10C-B329-4745-9883-B2D3A6D3D1D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -118,14 +100,6 @@ Global
 		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C7453F7-9625-41C0-AA34-B082A87C990A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B88CFA4-80E6-48E5-BF12-63CF6433D1C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AB9B7DE-0C13-4431-8214-C21B41EFB03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -134,6 +108,10 @@ Global
 		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

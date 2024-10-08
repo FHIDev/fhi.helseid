@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using Fhi.HelseId.Web.DPoP;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
 
@@ -82,6 +83,26 @@ public class HelseIdWebAuthBuilder
             services.AddSingleton<IHprFactory, HprFactory>();
             services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            if (HelseIdWebKonfigurasjon.UseDPoPTokens)
+            {
+                services.AddDistributedMemoryCache();
+                services.AddTransient<IDPoPTokenCreator, DPoPTokenCreator>();
+                services.AddTransient<INonceStore, NonceStore>();
+                services.AddSingleton<IProofRedirector, JwtThumbprintAttacher>();
+                services.AddTransient<BackchannelHandler>();
+                services.AddSingleton(new ProofKeyConfiguration(HelseIdWebKonfigurasjon.ClientSecret));
+
+                services.ConfigureOptions<BackchannelConfiguration>();
+                services.AddTransient<RefreshTokenBackchannelHandler>();
+                services.AddHttpClient<TokenEndpointService>()
+                    .AddHttpMessageHandler<RefreshTokenBackchannelHandler>();
+            }
+            else
+            {
+                services.AddHostedService<DPoPComplianceWarning>();
+                services.AddHttpClient<TokenEndpointService>();
+            }
         }
         else
         {

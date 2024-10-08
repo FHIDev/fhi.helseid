@@ -1,5 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
+using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
@@ -11,11 +18,6 @@ using Microsoft.JSInterop;
 using NSubstitute;
 using NUnit.Framework;
 using Refit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Blazor.Tests;
 
@@ -123,11 +125,11 @@ public partial class HelseidRefitBuilderForBlazorTests
         services.AddSingleton(new TokenEndpointService(
             Substitute.For<IOptions<AutomaticTokenManagementOptions>>(),
             Substitute.For<IOptionsSnapshot<OpenIdConnectOptions>>(),
-            null,
-            null,
+            Substitute.For<IAuthenticationSchemeProvider>(),
+            Substitute.For<HttpClient>(),
             Substitute.For<IHttpContextAccessor>(),
             NullLogger<TokenEndpointService>.Instance,
-            null));
+            Substitute.For<IHelseIdSecretHandler>()));
 
         return services;
     }

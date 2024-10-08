@@ -1,13 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Fhi.HelseId.Common.Identity;
+﻿using Fhi.HelseId.Common.Identity;
+using Fhi.HelseId.Web.DPoP;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.ExtensionMethods
 {
@@ -42,6 +44,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 #endif
             options.ResponseType = "code";
             options.TokenValidationParameters.ValidAudience = configAuth.ClientId;
+            options.TokenValidationParameters.ValidTypes = ["at+jwt", "JWT"];
             options.CallbackPath = "/signin-callback";
             options.SignedOutCallbackPath = "/signout-callback";
             options.Scope.Clear();
@@ -52,6 +55,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 options.Scope.Add(scope.Trim());
             }
             options.SaveTokens = true;
+
             options.Events.OnRedirectToIdentityProvider = ctx =>
             {
                 //API requests should get a 401 status instead of being redirected to login
@@ -78,10 +82,21 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                     ctx.ProtocolMessage.RedirectUri = builder.ToString();
                 }
 
+                if (configAuth.UseDPoPTokens)
+                {
+                    var proofGenerator = ctx.HttpContext.RequestServices.GetRequiredService<IProofRedirector>();
+                    proofGenerator.AttachThumbprint(ctx);
+                }
+
                 return Task.CompletedTask;
             };
 
             options.AccessDeniedPath = redirectPagesKonfigurasjon.Forbidden;
+
+            if (configAuth.UseDPoPTokens)
+            {
+                options.ForwardDPoPContext();
+            }
 
             secretHandler.AddSecretConfiguration(configAuth, options);
 

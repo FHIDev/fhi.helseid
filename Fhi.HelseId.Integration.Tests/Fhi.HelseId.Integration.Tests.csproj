@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,13 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-    <PackageReference Include="NUnit"/>
-    <PackageReference Include="NUnit.Analyzers"/>
-    <PackageReference Include="NUnit3TestAdapter"/>
-    <PackageReference Include="Fhi.ClientCredentialsKeypairs"/>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit.Analyzers" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Fhi.ClientCredentialsKeypairs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Fhi.HelseId.Testing.Api.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Setup/HelseID Configuration 983744516-HelseID TTT-klient.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

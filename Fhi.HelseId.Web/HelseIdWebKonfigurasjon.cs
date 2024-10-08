@@ -26,6 +26,11 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     bool UseApis { get; }
     bool UseRefreshTokenStore { get; }
     NoAuthenticationUser NoAuthenticationUser { get; }
+
+    /// <summary>
+    /// Enables DPoP support in the authorizaiton code flow.
+    /// </summary>
+    public bool UseDPoPTokens { get; }
 }
 
 
@@ -47,9 +52,12 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
                 "profile",
                 "helseid://scopes/identity/pid",
                 "helseid://scopes/identity/pid_pseudonym",
-                "helseid://scopes/identity/security_level",
-                "helseid://scopes/hpr/hpr_number"
+                "helseid://scopes/identity/security_level"
             };
+            if (UseHprNumber)
+            {
+                list.Add("helseid://scopes/hpr/hpr_number");
+            }
             list.AddRange(base.FixedScopes);
             return list;
         }
@@ -80,6 +88,8 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
     public ApiOutgoingKonfigurasjon[] Apis { get; set; } = Array.Empty<ApiOutgoingKonfigurasjon>();
 
     public NoAuthenticationUser NoAuthenticationUser { get; set; } = new();
+
+    public bool UseDPoPTokens { get; set; }
 
     public Uri UriToApiByName(string name)
     {

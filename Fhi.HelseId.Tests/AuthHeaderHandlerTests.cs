@@ -1,5 +1,6 @@
 ﻿using Fhi.HelseId.Common;
 using Fhi.HelseId.Web;
+using Fhi.HelseId.Web.DPoP;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Fhi.HelseId.Web.Services;
 using IdentityModel.AspNetCore.AccessTokenManagement;
@@ -42,7 +43,8 @@ public class AuthHeaderHandlerTests
             NullLogger<AuthHeaderHandler>.Instance,
             Substitute.For<IRefreshTokenStore>(),
             Substitute.For<ICurrentUser>(),
-            Options.Create(new HelseIdWebKonfigurasjon()));
+            Options.Create(new HelseIdWebKonfigurasjon()),
+            new BearerAuthorizationHeaderSetter());
 
         handler.InnerHandler = new DummyInnerHandler();
 
@@ -72,7 +74,8 @@ public class AuthHeaderHandlerTests
             NullLogger<AuthHeaderHandler>.Instance,
             Substitute.For<IRefreshTokenStore>(),
             Substitute.For<ICurrentUser>(),
-            Options.Create(new HelseIdWebKonfigurasjon()));
+            Options.Create(new HelseIdWebKonfigurasjon()),
+            new BearerAuthorizationHeaderSetter());
 
         handler.InnerHandler = new DummyInnerHandler();
 

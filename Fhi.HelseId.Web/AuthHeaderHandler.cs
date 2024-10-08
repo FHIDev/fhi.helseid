@@ -1,15 +1,11 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Common.Exceptions;
+using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web;
-using Fhi.HelseId.Web.ExtensionMethods;
-using Fhi.HelseId.Web.Infrastructure;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -33,12 +29,14 @@ public class AuthHeaderHandler : DelegatingHandler
     private readonly IRefreshTokenStore refreshTokenStore;
     private readonly ICurrentUser user;
     private readonly HelseIdWebKonfigurasjon config;
+    private readonly IAuthorizationHeaderSetter authorizationHeaderSetter;
 
     public AuthHeaderHandler(IHttpContextAccessor contextAccessor,
         ILogger<AuthHeaderHandler> logger,
         IRefreshTokenStore refreshTokenStore,
         ICurrentUser user,
-        IOptions<HelseIdWebKonfigurasjon> options)
+        IOptions<HelseIdWebKonfigurasjon> options,
+        IAuthorizationHeaderSetter authorizationHeaderSetter)
     {
         config = options.Value;
         logger.LogMember();
@@ -46,6 +44,7 @@ public class AuthHeaderHandler : DelegatingHandler
         this.logger = logger;
         this.refreshTokenStore = refreshTokenStore;
         this.user = user;
+        this.authorizationHeaderSetter = authorizationHeaderSetter;
     }
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
@@ -69,7 +68,12 @@ public class AuthHeaderHandler : DelegatingHandler
         {
             logger.LogTrace("{class}.{method} - Found access token in context (hash:{hash})", nameof(AuthHeaderHandler), nameof(SendAsync), token.GetHashCode());
         }
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            await authorizationHeaderSetter.SetAuthorizationHeader(request, token);
+        }
+
         var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
@@ -79,8 +83,5 @@ public class AuthHeaderHandler : DelegatingHandler
         return response;
     }
 
-    private string GetDebuggerDisplay()
-    {
-        return ToString();
-    }
+    private string GetDebuggerDisplay() => ToString() ?? "";
 }
