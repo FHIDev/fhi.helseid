@@ -44,10 +44,10 @@ public class HelseIdWebAuthBuilder
         _services = services;
         _configuration = configuration;        
         _helseIdWebKonfigurasjonSection = _configuration.GetSection(nameof(HelseIdWebKonfigurasjon));
-        if (_helseIdWebKonfigurasjonSection is null)
+        if (_helseIdWebKonfigurasjonSection == null)
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         var helseIdWebKonfigurasjon = _helseIdWebKonfigurasjonSection.Get<HelseIdWebKonfigurasjon>();
-        if (helseIdWebKonfigurasjon is null)
+        if (helseIdWebKonfigurasjon == null)
             throw new MissingConfigurationException($"Missing required configuration {nameof(HelseIdWebKonfigurasjon)}");
         HelseIdWebKonfigurasjon = helseIdWebKonfigurasjon;
         RedirectPagesKonfigurasjon = HelseIdWebKonfigurasjon.RedirectPagesKonfigurasjon;
