@@ -15,7 +15,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         {
             logger.LogMember();
             var scheme = provider.GetDefaultSignInSchemeAsync().GetAwaiter().GetResult();
-            if (scheme is null)
+            if (scheme == null)
             {
                 throw new InvalidOperationException("Field 'scheme' cannot be null");
             }
