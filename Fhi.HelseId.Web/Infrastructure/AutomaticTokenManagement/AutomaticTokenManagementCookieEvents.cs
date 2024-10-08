@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.ExtensionMethods;
-using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -22,7 +21,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
     private readonly ISystemClock _clock;
     private readonly HelseIdWebKonfigurasjon _helseIdConfig;
     private readonly IRefreshTokenStore _refreshTokenStore;
-    
+
     private static readonly ConcurrentDictionary<string, bool> PendingRefreshTokenRequests = new();
 
     public AutomaticTokenManagementCookieEvents(
@@ -44,7 +43,12 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
 
     public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
     {
-        var user = new UserByIdentity((ClaimsIdentity)context.Principal.Identity);
+        if (context.Principal == null)
+        {
+            throw new InvalidOperationException("Property 'context.Principal' cannot be null.");
+        }
+
+        var user = new UserByIdentity((ClaimsIdentity?)context.Principal.Identity);
         _logger.LogTrace("{class}:{method} - Starting checking token and possible refresh", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
         await _tokenConfig.CookieEvents.ValidatePrincipal(context);
 
@@ -70,9 +74,9 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         }
         var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
         var rfValue = refreshToken.Value;
-        _refreshTokenStore.AddIfNotExist(rfValue, null,user);
+        _refreshTokenStore.AddIfNotExist(rfValue, null, user);
 
-        if (!_refreshTokenStore.IsLatest(rfValue,user))
+        if (!_refreshTokenStore.IsLatest(rfValue, user))
         {
             //var latesttoken = refreshTokenStore.GetLatestToken;
             //rfValue = latesttoken.CurrentToken;
@@ -81,9 +85,9 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         }
         else
         {
-            _logger.LogTrace("{class}:{method} - Using current token {token} expires at {expires}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),rfValue,dtExpires);
+            _logger.LogTrace("{class}:{method} - Using current token {token} expires at {expires}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), rfValue, dtExpires);
         }
-            
+
         var dtRefresh = dtExpires.Subtract(_tokenConfig.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
         _logger.LogTrace("ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {refreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {utcNow}, refresh_token: {refreshToken}, NoOfTokensInStore {noOfRefreshTokens}", dtExpires, _tokenConfig.RefreshBeforeExpiration, dtRefresh, _clock.UtcNow, refreshToken.Value, _refreshTokenStore.RefreshTokens.Count);
         if (_helseIdConfig.UseApis)
@@ -91,7 +95,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
             if (dtRefresh < _clock.UtcNow)
             {
                 var shouldRefresh = PendingRefreshTokenRequests.TryAdd(rfValue, true);
-                _logger.LogTrace("{class}:{method} - Should refresh: {shouldRefresh}, No Of tokens in PendingRefreshTokenRequests {count} ", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),shouldRefresh,PendingRefreshTokenRequests.Count);
+                _logger.LogTrace("{class}:{method} - Should refresh: {shouldRefresh}, No Of tokens in PendingRefreshTokenRequests {count} ", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), shouldRefresh, PendingRefreshTokenRequests.Count);
                 if (shouldRefresh)
                 {
                     try
@@ -109,6 +113,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
                         _logger.LogTrace("{class}.{method} - SignInAsync now as it expires at: {newExpiresAt}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), newExpiresAt);
                         _logger.LogTrace("{class}.{method} - Refresh tokens: Current {current}, New {new}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), rfValue, response.RefreshToken);
                         context.ShouldRenew = true;
+
                         await context.HttpContext.SignInAsync(context.Principal, context.Properties);
                     }
                     finally
@@ -118,7 +123,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
                 }
                 else
                 {
-                    _logger.LogTrace("{class}:{method} -: Refresh token already requested, value {refreshtoken}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal),refreshToken.Value);
+                    _logger.LogTrace("{class}:{method} -: Refresh token already requested, value {refreshtoken}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), refreshToken.Value);
                 }
             }
             else
@@ -128,7 +133,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         }
         else
         {
-            _logger.LogTrace("{class}:{method} - No Apis in configuration",nameof(AutomaticTokenManagementCookieEvents),nameof(ValidatePrincipal));
+            _logger.LogTrace("{class}:{method} - No Apis in configuration", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
         }
 
         _logger.LogTrace("{class}:{method} finished", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
@@ -139,7 +144,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         _logger.LogTrace("{class}:{method}: SigningOut", nameof(AutomaticTokenManagementCookieEvents), nameof(SigningOut));
         await _tokenConfig.CookieEvents.SigningOut(context);
 
-        if (!_tokenConfig.RevokeRefreshTokenOnSignout) 
+        if (!_tokenConfig.RevokeRefreshTokenOnSignout)
             return;
 
         var result = await context.HttpContext.AuthenticateAsync();
@@ -162,8 +167,6 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         {
             _logger.LogTrace("No refresh token found in cookie properties. A refresh token must be requested and SaveTokens must be enabled.");
         }
-
-        
     }
 
     public override Task RedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
@@ -206,22 +209,22 @@ public class UserByIdentity : ICurrentUser
 {
     public UserByIdentity(ClaimsIdentity? identity)
     {
-        if ( (identity==null))
+        if (identity == null)
         {
             return;
         }
-        Name = identity.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Name)?.Value??"";
-       PidPseudonym = identity.Claims.SingleOrDefault(c => c.Type == "pid_pseudonym")?.Value ?? "";
-       Id = identity.Claims.SingleOrDefault(c => c.Type == "id")?.Value ?? "";
-       HprNummer = identity.Claims.SingleOrDefault(c => c.Type == "hpr_nummer")?.Value ?? "";
-       Pid = identity.Claims.SingleOrDefault(c => c.Type == "pid")?.Value ?? "";
-       SecurityLevel = identity.Claims.SingleOrDefault(c => c.Type == "security_level")?.Value ?? "";
-       AssuranceLevel = identity.Claims.SingleOrDefault(c => c.Type == "assurance_level")?.Value ?? "";
-       Network = identity.Claims.SingleOrDefault(c => c.Type == "network")?.Value ?? "";
-
+        Name = identity.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? "";
+        PidPseudonym = identity.Claims.SingleOrDefault(c => c.Type == "pid_pseudonym")?.Value ?? "";
+        Id = identity.Claims.SingleOrDefault(c => c.Type == "id")?.Value ?? "";
+        HprNummer = identity.Claims.SingleOrDefault(c => c.Type == "hpr_nummer")?.Value ?? "";
+        Pid = identity.Claims.SingleOrDefault(c => c.Type == "pid")?.Value ?? "";
+        SecurityLevel = identity.Claims.SingleOrDefault(c => c.Type == "security_level")?.Value ?? "";
+        AssuranceLevel = identity.Claims.SingleOrDefault(c => c.Type == "assurance_level")?.Value ?? "";
+        Network = identity.Claims.SingleOrDefault(c => c.Type == "network")?.Value ?? "";
     }
+
     public string Id { get; } = "";
-    public string Name { get; }= "";
+    public string Name { get; } = "";
     public string HprNummer { get; } = "";
     public string PidPseudonym { get; } = "";
     public string Pid { get; } = "";
