@@ -23,7 +23,6 @@
     <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
     <PackageVersion Include="Fhi.ClientCredentialsKeypairs" Version="1.4.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.7" />
     <PackageVersion Include="System.Text.Encodings.Web" Version="4.7.2" />
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="6.0.4" />
     <PackageVersion Include="System.Formats.Asn1" Version="6.0.1" />
@@ -53,6 +52,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-rc.1.24452.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0-rc.1.24452.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Analyzers" Version="9.0.0-rc.1.24452.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.0-rc.1.24452.1" />
     <PackageVersion Include="System.ServiceModel.Http" Version="8.0.0" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="8.0.0" />
   </ItemGroup>

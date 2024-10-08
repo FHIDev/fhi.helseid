@@ -27,7 +27,9 @@ public class DPoPAuthorizationHeaderSetter(IDPoPTokenCreator dPoPTokenCreator) :
         request.Headers.Authorization = new AuthenticationHeaderValue(AuthorizationScheme.DPoP, token);
 
         var athValue = AccessTokenHash.Sha256(token);
-        var proof = await dPoPTokenCreator.CreateSignedToken(request.Method, request.RequestUri!.ToString(), ath: athValue);
+        var requestUri = request.RequestUri!.Scheme + "://" + request.RequestUri!.Authority +
+                         request.RequestUri!.LocalPath;
+        var proof = await dPoPTokenCreator.CreateSignedToken(request.Method, requestUri, ath: athValue);
         request.Headers.Add(DPoPHttpHeaders.ProofHeaderName, proof);
     }
 }

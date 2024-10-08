@@ -1,17 +1,17 @@
-﻿using Azure.Identity;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using Azure.Core;
-using Azure.Security.KeyVault.Secrets;
-using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using System.Web;
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Fhi.HelseId.Common.Identity;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Fhi.HelseId.Web.Services
 {
@@ -28,15 +28,10 @@ namespace Fhi.HelseId.Web.Services
 
         public const string ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
 
-        public virtual void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
-        {
-            
-        }
+        public virtual void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options) { }
 
         public virtual string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, jwkSecurityKey);
     }
-
-
 
     /// <summary>
     /// Used when you have the Jwk in a file. The file should contain the Jwk as a string. The ClientSecret property should contain the file name
@@ -45,12 +40,17 @@ namespace Fhi.HelseId.Web.Services
     {
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth=configAuth;
+            this.configAuth = configAuth;
             var jwk = File.ReadAllText(configAuth.ClientSecret);
             jwkSecurityKey = new JsonWebKey(jwk);
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
+                if (ctx.TokenEndpointRequest == null)
+                {
+                    throw new InvalidOperationException($"{nameof(ctx.TokenEndpointRequest)} cannot be null");
+                }
+
                 ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
                 ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
@@ -67,7 +67,6 @@ namespace Fhi.HelseId.Web.Services
             };
 #endif
         }
-
     }
 
     /// <summary>
@@ -75,19 +74,22 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkSecretHandler : SecretHandlerBase
     {
-        
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
             jwkSecurityKey = new JsonWebKey(configAuth.ClientSecret);
             this.configAuth = configAuth;
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
+                if (ctx.TokenEndpointRequest == null)
+                {
+                    throw new InvalidOperationException($"{nameof(ctx.TokenEndpointRequest)} cannot be null");
+                }
+
                 ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
                 ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
                 return Task.CompletedTask;
             };
-
 
 #if NET9_0
             options.Events.OnPushAuthorization = ctx =>
@@ -99,11 +101,7 @@ namespace Fhi.HelseId.Web.Services
             };
 #endif
         }
-
-        
     }
-
-
 
     /// <summary>
     /// For Azure Key Vault Secret we expect ClientSecret in the format 'name of secret;uri to vault'. For example: 'MySecret;https://your-unique-key-vault-name.vault.azure.net/'
@@ -147,7 +145,6 @@ namespace Fhi.HelseId.Web.Services
                 return Task.CompletedTask;
             };
 
-
 #if NET9_0
             options.Events.OnPushAuthorization = ctx =>
             {
@@ -179,6 +176,11 @@ namespace Fhi.HelseId.Web.Services
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
+                if (ctx.TokenEndpointRequest == null)
+                {
+                    throw new InvalidOperationException($"{nameof(ctx.TokenEndpointRequest)} cannot be null");
+                }
+
                 ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
                 ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
@@ -207,20 +209,20 @@ namespace Fhi.HelseId.Web.Services
         {
             this.configAuth = configAuth;
             var secretParts = configAuth.ClientSecret.Split(':');
-            if(secretParts.Length != 2)
+            if (secretParts.Length != 2)
             {
                 throw new InvalidEnterpriseCertificateSecretException(configAuth.ClientSecret);
             }
 
             var storeLocation = (StoreLocation)Enum.Parse(typeof(StoreLocation), secretParts[0]);
             var thumprint = secretParts[1];
-            
+
             var store = new X509Store(storeLocation);
             store.Open(OpenFlags.ReadOnly);
 
             var certificates = store.Certificates.Find(X509FindType.FindByThumbprint, thumprint, true);
 
-            if(certificates.Count == 0)
+            if (certificates.Count == 0)
             {
                 throw new Exception($"No certificate with thumbprint {options.ClientSecret} found in store LocalMachine");
             }
@@ -229,6 +231,11 @@ namespace Fhi.HelseId.Web.Services
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
+                if (ctx.TokenEndpointRequest == null)
+                {
+                    throw new InvalidOperationException($"{nameof(ctx.TokenEndpointRequest)} cannot be null");
+                }
+
                 ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
                 ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
@@ -268,10 +275,7 @@ namespace Fhi.HelseId.Web.Services
         }
     }
 
-    public class HelseIdNoAuthorizationSecretHandler : SecretHandlerBase
-    {
-
-    }
+    public class HelseIdNoAuthorizationSecretHandler : SecretHandlerBase { }
 
     /// <summary>
     /// For selvbetjening we expect ClientSecret to be a path to a file containing the full downloaded configuration file, including the private key in JWK format
@@ -290,6 +294,11 @@ namespace Fhi.HelseId.Web.Services
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
+                if (ctx.TokenEndpointRequest == null)
+                {
+                    throw new InvalidOperationException($"{nameof(ctx.TokenEndpointRequest)} cannot be null");
+                }
+
                 ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
                 ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
 
