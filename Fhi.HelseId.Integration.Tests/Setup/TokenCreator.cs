@@ -54,7 +54,8 @@ internal class TokenCreator
             );
         }
 
-        var auth = new AuthenticationService(config);
+        var apiConfig = new ClientCredentialsKeypairs.Api();
+        var auth = new AuthenticationService(config, apiConfig);
         await auth.SetupToken();
 
         if (string.IsNullOrEmpty(auth.AccessToken))
