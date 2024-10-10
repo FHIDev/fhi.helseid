@@ -38,7 +38,6 @@ namespace Fhi.HelseId.Web.Hpr
 
         public List<OId9060> GodkjenteHelsepersonellkategorier { get; }
 
-
         const string HprnummerAdmin = "000000000";
         public string LastErrorMessage { get; private set; } = "";
 
@@ -87,7 +86,7 @@ namespace Fhi.HelseId.Web.Hpr
         {
             var cacheKey = $"fhi-helseid-{hprnummer}";
 
-            if (_memoryCache.TryGetValue(cacheKey, out Person person))
+            if (_memoryCache.TryGetValue(cacheKey, out Person? person))
             {
                 _logger.LogDebug("Person med Hpr-nummer {HprNummer} hentet fra cache", hprnummer);
                 return person;
@@ -180,6 +179,5 @@ namespace Fhi.HelseId.Web.Hpr
         {
             if (_serviceClient is HPR2ServiceClient client) await client.CloseAsync();
         }
-
     }
 }

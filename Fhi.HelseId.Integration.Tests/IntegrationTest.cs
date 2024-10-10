@@ -3,8 +3,6 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using Fhi.ClientCredentialsKeypairs;
 using Fhi.HelseId.Api;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Options;
 
 namespace Fhi.HelseId.Integration.Tests.Setup
 {
@@ -39,16 +37,17 @@ namespace Fhi.HelseId.Integration.Tests.Setup
             var config = JsonSerializer.Deserialize<ClientCredentialsConfiguration>(configString)
                 ?? throw new Exception("No config found in Fhi.HelseId.Testing.Api.json");
 
-            config.UseDpop = useDpop;
             var client = Factory.CreateClient();
-            var handler = BuildProvider(config);
+            var handler = BuildProvider(config, useDpop);
             return Factory.CreateDefaultClient(Factory.ClientOptions.BaseAddress, handler);
         }
 
-        private HttpAuthHandler BuildProvider(ClientCredentialsConfiguration config)
+        private HttpAuthHandler BuildProvider(ClientCredentialsConfiguration config, bool useDpop)
         {
-            var store = new AuthenticationService(config);
-            var tokenProvider = new AuthenticationStore(store, Options.Create(config));
+            var apiConfig = new ClientCredentialsKeypairs.Api();
+            apiConfig.UseDpop = useDpop;
+            var store = new AuthenticationService(config, apiConfig);
+            var tokenProvider = new AuthenticationStore(store, config);
             var authHandler = new HttpAuthHandler(tokenProvider);
             return authHandler;
         }
