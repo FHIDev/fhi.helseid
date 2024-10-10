@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.ExtensionMethods;
-using Fhi.HelseId.Web.ExtensionMethods;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -23,7 +22,7 @@ namespace Fhi.HelseId.Web.Middleware
         private readonly List<PathString> _excludedPaths;
         private readonly string _accessDeniedPath;
 
-        public ProtectPaths(RequestDelegate next, ProtectPathsOptions options,ILogger<ProtectPaths> logger)
+        public ProtectPaths(RequestDelegate next, ProtectPathsOptions options, ILogger<ProtectPaths> logger)
         {
             logger.LogMember();
             _next = next;
@@ -33,16 +32,14 @@ namespace Fhi.HelseId.Web.Middleware
             _accessDeniedPath = options.AccessDeniedPath;
         }
 
-        public async Task Invoke(HttpContext httpContext,
-            IAuthorizationService authorizationService)
+        public async Task Invoke(HttpContext httpContext, IAuthorizationService authorizationService)
         {
             var path = httpContext.Request.Path;
             logger.LogTrace($"ProtectedPaths: Checking path: {path}");
             if (!_excludedPaths.Any(path.StartsWithSegments))
             {
-                if (!httpContext.User.Identity.IsAuthenticated)
+                if (httpContext.User.Identity == null || !httpContext.User.Identity.IsAuthenticated)
                 {
-                    
                     var redirectUri = httpContext.Request.GetEncodedPathAndQuery();
                     await httpContext.ChallengeAsync(new AuthenticationProperties { RedirectUri = redirectUri });
                     logger.LogTrace("ProtectedPaths:User is not authenticated, ChallengeAsync called");
