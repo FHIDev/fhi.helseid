@@ -58,13 +58,14 @@ internal class TokenCreator
         var auth = new AuthenticationService(config, apiConfig);
         await auth.SetupToken();
 
-        if (string.IsNullOrEmpty(auth.AccessToken))
+        var jwtAccessToken = auth.GetAccessToken(HttpMethod.Get, apiConfig.Url);
+        if (string.IsNullOrEmpty(jwtAccessToken.AccessToken))
         {
             throw new Exception(
                 "Could not get any valid access token from HelseId for HelseId TTT"
             );
         }
 
-        return auth.AccessToken;
+        return jwtAccessToken.AccessToken;
     }
 }
