@@ -23,14 +23,33 @@ namespace Fhi.HelseId.Web.Services
 
     public abstract class SecretHandlerBase : IHelseIdSecretHandler
     {
-        protected JsonWebKey? jwkSecurityKey;
-        protected IHelseIdWebKonfigurasjon? configAuth;
+        protected JsonWebKey _jwkSecurityKey = null!; // Explicitly checks for null when GenerateClientAssertion is called.
+        protected IHelseIdWebKonfigurasjon _configAuth = null!; // Explicitly checks for null when GenerateClientAssertion is called.
 
         public const string ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
 
         public virtual void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options) { }
 
-        public virtual string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, jwkSecurityKey);
+        public virtual string GenerateClientAssertion
+        {
+            get
+            {
+                if (_configAuth == null)
+                {
+                    throw new ArgumentNullException(nameof(_configAuth) + " cannot be null.");
+                }
+
+                if (_jwkSecurityKey == null)
+                {
+                    throw new ArgumentNullException(nameof(_jwkSecurityKey) + " cannot be null.");
+                }
+
+                return ClientAssertion.Generate(
+                        _configAuth.ClientId,
+                        _configAuth.Authority,
+                        _jwkSecurityKey);
+            }
+        }
     }
 
     /// <summary>
@@ -40,9 +59,9 @@ namespace Fhi.HelseId.Web.Services
     {
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            _configAuth = configAuth;
             var jwk = File.ReadAllText(configAuth.ClientSecret);
-            jwkSecurityKey = new JsonWebKey(jwk);
+            _jwkSecurityKey = new JsonWebKey(jwk);
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
@@ -76,8 +95,8 @@ namespace Fhi.HelseId.Web.Services
     {
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            jwkSecurityKey = new JsonWebKey(configAuth.ClientSecret);
-            this.configAuth = configAuth;
+            _configAuth = configAuth;
+            _jwkSecurityKey = new JsonWebKey(configAuth.ClientSecret);
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
                 if (ctx.TokenEndpointRequest == null)
@@ -110,7 +129,7 @@ namespace Fhi.HelseId.Web.Services
     {
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            _configAuth = configAuth;
             var azureClientSettings = configAuth.ClientSecret.Split(';');
             if (azureClientSettings.Length != 2)
             {
@@ -130,7 +149,7 @@ namespace Fhi.HelseId.Web.Services
             var secretClient = new SecretClient(new Uri(azureClientSettings[1]), new DefaultAzureCredential(), secretClientOptions);
             var secret = secretClient.GetSecret(azureClientSettings[0]);
 
-            jwkSecurityKey = new JsonWebKey(secret.Value.Value);
+            _jwkSecurityKey = new JsonWebKey(secret.Value.Value);
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
@@ -162,13 +181,24 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdRsaXmlSecretHandler : SecretHandlerBase
     {
-        private RsaSecurityKey _rsaSecurityKey;
+        private RsaSecurityKey _rsaSecurityKey = null!; // Explicitly checks for null when GenerateClientAssertion is called.
 
-        public override string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, _rsaSecurityKey);
+        public override string GenerateClientAssertion
+        {
+            get
+            {
+                if (_rsaSecurityKey == null)
+                {
+                    throw new ArgumentNullException(nameof(_rsaSecurityKey) + " cannot be null.");
+                }
+
+                return ClientAssertion.Generate(_configAuth.ClientId, _configAuth.Authority, _rsaSecurityKey);
+            }
+        }
 
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            _configAuth = configAuth;
             var xml = File.ReadAllText(configAuth.ClientSecret);
             var rsa = RSA.Create();
             rsa.FromXmlString(xml);
@@ -201,13 +231,24 @@ namespace Fhi.HelseId.Web.Services
 
     public class HelseIdEnterpriseCertificateSecretHandler : SecretHandlerBase
     {
-        private X509SecurityKey _x509SecurityKey;
+        private X509SecurityKey _x509SecurityKey = null!; // Explicitly checks for null when GenerateClientAssertion is called.
 
-        public override string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, _x509SecurityKey);
+        public override string GenerateClientAssertion
+        {
+            get
+            {
+                if (_x509SecurityKey == null)
+                {
+                    throw new ArgumentNullException(nameof(_x509SecurityKey) + " cannot be null.");
+                }
+
+                return ClientAssertion.Generate(_configAuth.ClientId, _configAuth.Authority, _x509SecurityKey);
+            }
+        }
 
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            _configAuth = configAuth;
             var secretParts = configAuth.ClientSecret.Split(':');
             if (secretParts.Length != 2)
             {
@@ -215,12 +256,12 @@ namespace Fhi.HelseId.Web.Services
             }
 
             var storeLocation = (StoreLocation)Enum.Parse(typeof(StoreLocation), secretParts[0]);
-            var thumprint = secretParts[1];
+            var thumbprint = secretParts[1];
 
             var store = new X509Store(storeLocation);
             store.Open(OpenFlags.ReadOnly);
 
-            var certificates = store.Certificates.Find(X509FindType.FindByThumbprint, thumprint, true);
+            var certificates = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, true);
 
             if (certificates.Count == 0)
             {
@@ -270,7 +311,7 @@ namespace Fhi.HelseId.Web.Services
     {
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            _configAuth = configAuth;
             options.ClientSecret = configAuth.ClientSecret;
         }
     }
@@ -284,13 +325,13 @@ namespace Fhi.HelseId.Web.Services
     {
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            _configAuth = configAuth;
             var selvbetjeningJson = File.ReadAllText(configAuth.ClientSecret);
 
             var selvbetjeningConfig = JsonSerializer.Deserialize<SelvbetjeningConfig>(selvbetjeningJson);
             var jwk = HttpUtility.UrlDecode(selvbetjeningConfig.PrivateJwk);
 
-            jwkSecurityKey = new JsonWebKey(jwk);
+            _jwkSecurityKey = new JsonWebKey(jwk);
 
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
