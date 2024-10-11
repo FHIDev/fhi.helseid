@@ -38,7 +38,7 @@ namespace Fhi.HelseId.Web.Middleware
             logger.LogTrace($"ProtectedPaths: Checking path: {path}");
             if (!_excludedPaths.Any(path.StartsWithSegments))
             {
-                if (httpContext.User.Identity == null || !httpContext.User.Identity.IsAuthenticated)
+                if (httpContext.User.Identity is not { IsAuthenticated: true })
                 {
                     var redirectUri = httpContext.Request.GetEncodedPathAndQuery();
                     await httpContext.ChallengeAsync(new AuthenticationProperties { RedirectUri = redirectUri });
