@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Refit" />
     <PackageReference Include="Refit.HttpClientFactory" />
-    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" />
+    <PackageReference Include="System.Text.Json" />
   </ItemGroup>
 
   <ItemGroup>

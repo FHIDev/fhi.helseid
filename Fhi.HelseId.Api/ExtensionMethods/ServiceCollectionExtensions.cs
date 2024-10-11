@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
 using Fhi.HelseId.Api.Authorization;
+using Fhi.HelseId.Api.DPoP;
 using Fhi.HelseId.Api.Handlers;
 using Fhi.HelseId.Api.Services;
 using Fhi.HelseId.Common;
@@ -36,6 +37,14 @@ public static class ServiceCollectionExtensions
             else
                 services.AddSingleton<IAuthorizationHandler, ApiSingleScopeHandler>();
             services.AddScoped<IAccessTokenProvider, HttpContextAccessTokenProvider>();
+
+            if (config.AllowDPoPTokens || config.RequireDPoPTokens)
+            {
+                services.AddDistributedMemoryCache();
+                services.AddSingleton<IReplayCache, InMemoryReplayCache>();
+                services.AddTransient<IDPoPProofValidator, DPoPProofValidator>();
+                services.AddTransient<IJwtBearerDPoPTokenHandler, JwtBearerDPoPTokenHandler>();
+            }
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -103,5 +112,4 @@ public static class ServiceCollectionExtensions
             client.Timeout = TimeSpan.FromMinutes(10);
         }).AddHttpMessageHandler<AuthHeaderHandlerForApi>();
     }
-
 }

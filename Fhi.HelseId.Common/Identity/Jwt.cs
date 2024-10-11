@@ -1,5 +1,4 @@
-﻿using IdentityModel;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -19,9 +18,9 @@ namespace Fhi.HelseId.Common.Identity
 
             var extraClaims = new List<Claim>
             {
-                new(JwtClaimTypes.Subject, clientId),
-                new(JwtClaimTypes.IssuedAt, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()), 
-                new(JwtClaimTypes.JwtId, Guid.NewGuid().ToString("N"))
+                new(JwtRegisteredClaimNames.Sub, clientId),
+                new(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N"))
             };
              
             var payload = CreatePayload(clientId, authority, extraClaims, DateTime.UtcNow);
@@ -116,7 +115,7 @@ namespace Fhi.HelseId.Common.Identity
         {
             if (key is X509SecurityKey x509Key)
             {
-                var thumbprint = Base64Url.Encode(x509Key.Certificate.GetCertHash());
+                var thumbprint = Base64UrlEncoder.Encode(x509Key.Certificate.GetCertHash());
                 var x5c = GenerateX5c(x509Key.Certificate);
 
                 if (x509Key.PublicKey is not RSA pubKey)
@@ -125,8 +124,8 @@ namespace Fhi.HelseId.Common.Identity
                 }
 
                 var parameters = pubKey.ExportParameters(false);
-                var exponent = Base64Url.Encode(parameters.Exponent);
-                var modulus = Base64Url.Encode(parameters.Modulus);
+                var exponent = Base64UrlEncoder.Encode(parameters.Exponent);
+                var modulus = Base64UrlEncoder.Encode(parameters.Modulus);
 
                 header.Add("x5c", x5c);
                 header.Add("kty", pubKey.SignatureAlgorithm);
@@ -139,8 +138,8 @@ namespace Fhi.HelseId.Common.Identity
             if (key is RsaSecurityKey rsaKey)
             {
                 var parameters = rsaKey.Rsa?.ExportParameters(false) ?? rsaKey.Parameters;
-                var exponent = Base64Url.Encode(parameters.Exponent);
-                var modulus = Base64Url.Encode(parameters.Modulus);
+                var exponent = Base64UrlEncoder.Encode(parameters.Exponent);
+                var modulus = Base64UrlEncoder.Encode(parameters.Modulus);
 
                 header.Add("kty", "RSA");
                 header.Add("use", "sig");
