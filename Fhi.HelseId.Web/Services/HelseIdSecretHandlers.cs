@@ -36,12 +36,12 @@ namespace Fhi.HelseId.Web.Services
             {
                 if (_configAuth == null)
                 {
-                    throw new ArgumentNullException(nameof(_configAuth) + " cannot be null.");
+                    throw new ArgumentNullException(nameof(_configAuth));
                 }
 
                 if (_jwkSecurityKey == null)
                 {
-                    throw new ArgumentNullException(nameof(_jwkSecurityKey) + " cannot be null.");
+                    throw new ArgumentNullException(nameof(_jwkSecurityKey));
                 }
 
                 return ClientAssertion.Generate(
@@ -189,7 +189,7 @@ namespace Fhi.HelseId.Web.Services
             {
                 if (_rsaSecurityKey == null)
                 {
-                    throw new ArgumentNullException(nameof(_rsaSecurityKey) + " cannot be null.");
+                    throw new ArgumentNullException(nameof(_rsaSecurityKey));
                 }
 
                 return ClientAssertion.Generate(_configAuth.ClientId, _configAuth.Authority, _rsaSecurityKey);
@@ -239,7 +239,7 @@ namespace Fhi.HelseId.Web.Services
             {
                 if (_x509SecurityKey == null)
                 {
-                    throw new ArgumentNullException(nameof(_x509SecurityKey) + " cannot be null.");
+                    throw new ArgumentNullException(nameof(_x509SecurityKey));
                 }
 
                 return ClientAssertion.Generate(_configAuth.ClientId, _configAuth.Authority, _x509SecurityKey);
