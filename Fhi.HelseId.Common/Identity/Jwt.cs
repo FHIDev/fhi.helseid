@@ -15,18 +15,16 @@ namespace Fhi.HelseId.Common.Identity
     {
         public static string Generate(string clientId, string authority, SecurityKey securityKey)
         {
-            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512);
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
 
             var extraClaims = new List<Claim>
             {
                 new(JwtClaimTypes.Subject, clientId),
-                new(JwtClaimTypes.IssuedAt, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()),
+                new(JwtClaimTypes.IssuedAt, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()), 
                 new(JwtClaimTypes.JwtId, Guid.NewGuid().ToString("N"))
             };
-
-            var audience = new Uri(new Uri(authority), "connect/token").AbsoluteUri;
-
-            var payload = CreatePayload(clientId, audience, extraClaims);
+             
+            var payload = CreatePayload(clientId, authority, extraClaims, DateTime.UtcNow);
             var header = new JwtHeader(signingCredentials);
             UpdateJwtHeader(securityKey, header);
 
@@ -34,14 +32,15 @@ namespace Fhi.HelseId.Common.Identity
             return tokenHandler.WriteToken(new JwtSecurityToken(header, payload));
         }
 
-        private static JwtPayload CreatePayload(string clientId, string audience, List<Claim>? claims = null)
+        private static JwtPayload CreatePayload(string clientId, string audience, List<Claim>? claims = null, DateTime? issuedAt=null)
         {
             var payload = new JwtPayload(
                clientId,
                audience,
                null,
                DateTime.UtcNow,
-               DateTime.UtcNow.AddSeconds(10));
+               DateTime.UtcNow.AddSeconds(10), 
+               issuedAt);
 
             if (claims == null)
             {

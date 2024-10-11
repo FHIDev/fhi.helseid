@@ -37,7 +37,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             options.Authority = configAuth.Authority;
             options.RequireHttpsMetadata = true;
             options.ClientId = configAuth.ClientId;
-
+            
             options.ResponseType = "code";
             options.TokenValidationParameters.ValidAudience = configAuth.ClientId;
             options.CallbackPath = "/signin-callback";
