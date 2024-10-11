@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.ExtensionMethods;
-using Fhi.HelseId.Web.ExtensionMethods;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -18,18 +17,18 @@ namespace Fhi.HelseId.Web.Middleware
     public class ProtectPaths
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<ProtectPaths> logger;
+        private readonly ILogger<ProtectPaths> _logger;
         private readonly string _policyName;
         private readonly List<PathString> _excludedPaths;
         private readonly string _accessDeniedPath;
 
-        public ProtectPaths(RequestDelegate next, ProtectPathsOptions options,ILogger<ProtectPaths> logger)
+        public ProtectPaths(RequestDelegate next, ProtectPathsOptions options, ILogger<ProtectPaths> logger)
         {
             logger.LogMember();
             _next = next;
-            this.logger = logger;
+            _logger = logger;
             _policyName = options.Policy;
-            _excludedPaths = options.Exclusions ?? new List<PathString>();
+            _excludedPaths = options.Exclusions ?? [];
             _accessDeniedPath = options.AccessDeniedPath;
         }
 
@@ -37,22 +36,30 @@ namespace Fhi.HelseId.Web.Middleware
             IAuthorizationService authorizationService)
         {
             var path = httpContext.Request.Path;
-            logger.LogTrace($"ProtectedPaths: Checking path: {path}");
+            _logger.LogTrace($"ProtectedPaths: Checking path: {path}");
             if (!_excludedPaths.Any(path.StartsWithSegments))
             {
+                var endpoint = httpContext.GetEndpoint();
+                var allowAnonymous = endpoint?.Metadata.GetMetadata<IAllowAnonymous>();
+
+                if (allowAnonymous != null)
+                {
+                    await _next(httpContext);
+                    return;
+                }
+                
                 if (!httpContext.User.Identity.IsAuthenticated)
                 {
-                    
                     var redirectUri = httpContext.Request.GetEncodedPathAndQuery();
                     await httpContext.ChallengeAsync(new AuthenticationProperties { RedirectUri = redirectUri });
-                    logger.LogTrace("ProtectedPaths:User is not authenticated, ChallengeAsync called");
+                    _logger.LogTrace("ProtectedPaths:User is not authenticated, ChallengeAsync called");
                     return;
                 }
 
                 var authorizationResult = await authorizationService.AuthorizeAsync(httpContext.User, null, _policyName);
                 if (!authorizationResult.Succeeded)
                 {
-                    logger.LogTrace($"ProtectedPaths: Auth failed");
+                    _logger.LogTrace($"ProtectedPaths: Auth failed");
                     httpContext.Response.Redirect(_accessDeniedPath);
                     return;
                 }
