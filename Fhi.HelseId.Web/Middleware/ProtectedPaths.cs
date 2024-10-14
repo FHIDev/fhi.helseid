@@ -32,8 +32,7 @@ namespace Fhi.HelseId.Web.Middleware
             _accessDeniedPath = options.AccessDeniedPath;
         }
 
-        public async Task Invoke(HttpContext httpContext,
-            IAuthorizationService authorizationService)
+        public async Task Invoke(HttpContext httpContext, IAuthorizationService authorizationService)
         {
             var path = httpContext.Request.Path;
             _logger.LogTrace($"ProtectedPaths: Checking path: {path}");
@@ -48,7 +47,7 @@ namespace Fhi.HelseId.Web.Middleware
                     return;
                 }
                 
-                if (!httpContext.User.Identity.IsAuthenticated)
+                if (httpContext.User.Identity is not { IsAuthenticated: true })
                 {
                     var redirectUri = httpContext.Request.GetEncodedPathAndQuery();
                     await httpContext.ChallengeAsync(new AuthenticationProperties { RedirectUri = redirectUri });
