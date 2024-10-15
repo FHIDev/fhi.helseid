@@ -22,6 +22,7 @@
     <PackageReference Include="NUnit.Analyzers" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Fhi.ClientCredentialsKeypairs" />
+    <PackageReference Include="System.Text.Json" /> <!-- Direct reference, can be removed when transitive references are fixed. (8.0.4 was vulnerable) -->
   </ItemGroup>
 
   <ItemGroup>
