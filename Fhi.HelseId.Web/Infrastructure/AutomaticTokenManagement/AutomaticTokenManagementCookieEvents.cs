@@ -18,7 +18,9 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
     private readonly TokenEndpointService _service;
     private readonly AutomaticTokenManagementOptions _tokenConfig;
     private readonly ILogger _logger;
+#pragma warning disable CS0618 // TODO: Use TimeProvider instead. Can be removed when support for Net6.0 is removed.
     private readonly ISystemClock _clock;
+#pragma warning restore CS0618
     private readonly HelseIdWebKonfigurasjon _helseIdConfig;
     private readonly IRefreshTokenStore _refreshTokenStore;
 
@@ -28,7 +30,9 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         TokenEndpointService service,
         IOptions<AutomaticTokenManagementOptions> tokenOptions,
         ILogger<AutomaticTokenManagementCookieEvents> logger,
+#pragma warning disable CS0618 // TODO: Use TimeProvider instead. Can be removed when support for Net6.0 is removed.
         ISystemClock clock,
+#pragma warning restore CS0618
         IOptions<HelseIdWebKonfigurasjon> helseIdOptions,
         IRefreshTokenStore refreshTokenStore)
     {
