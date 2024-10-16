@@ -13,17 +13,17 @@
     <ProjectCapability Remove="TestContainer" />
   </ItemGroup>
 
-    
   <PropertyGroup>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="NUnit" />
     <PackageReference Include="morelinq" />
+    <PackageReference Include="System.Text.RegularExpressions" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Fhi.HelseId.Api\Fhi.HelseId.Api.csproj" />
     <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
