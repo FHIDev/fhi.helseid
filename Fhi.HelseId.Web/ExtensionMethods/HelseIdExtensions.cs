@@ -44,7 +44,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 #endif
             options.ResponseType = "code";
             options.TokenValidationParameters.ValidAudience = configAuth.ClientId;
-            options.TokenValidationParameters.ValidTypes = ["at+jwt", "JWT"];
+            options.TokenValidationParameters.ValidTypes = ["at+jwt", "JWT"]; 
             options.CallbackPath = "/signin-callback";
             options.SignedOutCallbackPath = "/signout-callback";
             options.Scope.Clear();

@@ -19,7 +19,6 @@ namespace Fhi.HelseId.Common.Identity
             var extraClaims = new List<Claim>
             {
                 new(JwtRegisteredClaimNames.Sub, clientId),
-                new(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N"))
             };
              
