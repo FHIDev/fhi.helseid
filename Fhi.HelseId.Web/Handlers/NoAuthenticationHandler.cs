@@ -16,13 +16,20 @@ namespace Fhi.HelseId.Web.Handlers
     {
         private readonly NoAuthenticationUser _noAuthenticationUserConfig;
 
-#pragma warning disable CS0618 // TODO: Use TimeProvider instead. Can be removed when support for Net6.0 is removed.
+
+#if NET6_0
         public NoAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IOptions<HelseIdWebKonfigurasjon> helseIdWebOptions)
             : base(options, logger, encoder, clock)
-#pragma warning restore CS0618
         {
             _noAuthenticationUserConfig = helseIdWebOptions.Value.NoAuthenticationUser ?? throw new ArgumentException(nameof(HelseIdWebKonfigurasjon.NoAuthenticationUser));
         }
+#else
+        public NoAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, IOptions<HelseIdWebKonfigurasjon> helseIdWebOptions)
+            : base(options, logger, encoder)
+        {
+            _noAuthenticationUserConfig = helseIdWebOptions.Value.NoAuthenticationUser ?? throw new ArgumentException(nameof(HelseIdWebKonfigurasjon.NoAuthenticationUser));
+        }
+#endif
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
