@@ -12,16 +12,20 @@
   <ItemGroup>
     <Content Include="HtmlFiles\**\*.html" Pack="true" PackagePath="content" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="Fhi.AuthControllers.props">
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
     </None>
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Remove="Web\HprServiceReference\ConnectedService.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.RegularExpressions" />
   </ItemGroup>
 
   <ItemGroup>
