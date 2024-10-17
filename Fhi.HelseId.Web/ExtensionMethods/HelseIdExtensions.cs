@@ -102,7 +102,10 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             string GetAcrValues(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
             {
-                return string.Join(' ',helseIdWebKonfigurasjon.SecurityLevels.Select(sl => $"Level{sl}"));
+                if (helseIdWebKonfigurasjon.UseIdPorten)
+                    return "idporten-loa-substantial";
+                else //(!helseIdWebKonfigurasjon.UseIdPorten)
+                    return string.Join(' ', helseIdWebKonfigurasjon.SecurityLevels.Select(sl => $"Level{sl}"));
             }
         }
 
