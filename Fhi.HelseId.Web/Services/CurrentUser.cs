@@ -37,7 +37,23 @@ public class CurrentHttpUser : ICurrentUser
         Name = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Name)?.Value;
         Pid = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
         PidPseudonym = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.PidPseudonym)?.Value;
-        SecurityLevel = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.SecurityLevel)?.Value;
+        if(httpContext.User.Claims.Any(x => x.Type == IdentityClaims.SecurityLevel))
+        {
+            SecurityLevel = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.SecurityLevel)?.Value;
+        }
+        else if (httpContext.User.Claims.Any(x => x.Type == IdentityClaims.SecurityLevelEnum))
+        {
+            var SecurityLevelEnum = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.SecurityLevelEnum)?.Value;
+            switch (SecurityLevelEnum)
+            {
+                case "idporten-loa-substantial":
+                    SecurityLevel = "Level3";
+                    break;
+                case "idporten-loa-high":
+                    SecurityLevel = "Level4";
+                    break;
+            }
+        }
         AssuranceLevel = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.AssuranceLevel)?.Value;
         Network = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Network)?.Value;
     }

@@ -29,19 +29,35 @@ namespace Fhi.HelseId.Web.Handlers
                 logger.LogInformation("SecurityLevelClaimHandler: User is not authenticated, access denied");
                 return Task.CompletedTask;
             }
-
-            var securityLevelClaim = (context.User.FindFirst(c => c.Type.ToLowerInvariant() == IdentityClaims.SecurityLevel));
-
-            if (securityLevelClaim != null)
+            var securityLevel = "";
+            if (context.User.Claims.Any(x => x.Type == IdentityClaims.SecurityLevel))
             {
-                if (configAuth.SecurityLevels.Any(sl => string.Equals(sl, securityLevelClaim.Value, StringComparison.InvariantCultureIgnoreCase)))
+                securityLevel = context.User.Claims.FirstOrDefault(x => x.Type.ToLowerInvariant() == IdentityClaims.SecurityLevel)?.Value;
+            }
+            else if (context.User.Claims.Any(x => x.Type.ToLowerInvariant() == IdentityClaims.SecurityLevelEnum))
+            {
+                var SecurityLevelEnum = context.User.Claims.FirstOrDefault(x => x.Type.ToLowerInvariant() == IdentityClaims.SecurityLevelEnum)?.Value;
+                switch (SecurityLevelEnum)
+                {
+                    case "idporten-loa-substantial":
+                        securityLevel = "3";
+                        break;
+                    case "idporten-loa-high":
+                        securityLevel = "4";
+                        break;
+                }
+            }
+             
+            if (securityLevel != null)
+            {
+                if (configAuth.SecurityLevels.Any(sl => string.Equals(sl, securityLevel, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     logger.LogTrace("SecurityLevelClaimHandler: Succeeded");
                     context.Succeed(requirement);
                 }
                 else
                 {
-                    logger.LogError("SecurityLevelClaimHandler: Invalid security level claim '{securityLevelClaim}', access denied.", securityLevelClaim.Value);
+                    logger.LogError("SecurityLevelClaimHandler: Invalid security level claim '{securityLevel}', access denied.", securityLevel);
                 }
             }
             else
