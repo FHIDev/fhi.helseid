@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System;
 using System.Globalization;
-using System;
-using IdentityModel.Client;
+using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Fhi.HelseId.Web.Infrastructure
 {
@@ -20,20 +20,19 @@ namespace Fhi.HelseId.Web.Infrastructure
             return updated;
         }
 
-        public static DateTime UpdateExpiresAt(this CookieValidatePrincipalContext ctx, int expiresAt)
+        public static DateTimeOffset UpdateExpiresAt(this CookieValidatePrincipalContext ctx, DateTimeOffset expiresOn)
         {
-            var newExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(expiresAt);
+            var newExpiresAt = expiresOn;
             ctx.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
             return newExpiresAt;
         }
 
-        public static DateTime UpdateTokens(this CookieValidatePrincipalContext ctx, TokenResponse tokenResponse)
+        public static DateTimeOffset UpdateTokens(this CookieValidatePrincipalContext ctx, OidcToken tokenResponse)
         {
             ctx.UpdateAccessToken(tokenResponse.AccessToken);
             ctx.UpdateRefreshToken(tokenResponse.RefreshToken);
-            var newExpiresAt = ctx.UpdateExpiresAt(tokenResponse.ExpiresIn);
+            var newExpiresAt = ctx.UpdateExpiresAt(tokenResponse.ExpiresOn);
             return newExpiresAt;
         }
-
     }
 }

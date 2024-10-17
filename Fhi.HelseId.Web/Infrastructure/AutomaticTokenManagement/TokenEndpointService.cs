@@ -1,14 +1,16 @@
-﻿using Fhi.HelseId.Common.ExtensionMethods;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
-using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
@@ -22,7 +24,7 @@ public interface ITokenEndpointService
     /// </summary>
     /// <param name="refreshToken">An OIDC refresh token</param>
     /// <returns>Result of the refresh attempt</returns>
-    Task<TokenResponse> RefreshTokenAsync(string refreshToken);
+    Task<OidcToken> RefreshTokenAsync(string refreshToken);
 }
 
 /// <summary>
@@ -61,29 +63,42 @@ public class TokenEndpointService : ITokenEndpointService
     /// </summary>
     /// <param name="refreshToken">An OIDC refresh token</param>
     /// <returns>Result of the refresh attempt</returns>
-    public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
+    public async Task<OidcToken> RefreshTokenAsync(string refreshToken)
     {
-        var oidcOptions2 = await GetOidcOptionsAsync();
-        var configuration = await oidcOptions2.ConfigurationManager.GetConfigurationAsync(default);
+        var oidcOptions = await GetOidcOptionsAsync();
+        var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
         var clientAssertion = secretHandler?.GenerateClientAssertion;
-        logger.LogTrace(
-            $"TokenEndPointService:RefreshTokenAsync. TokenEndpointAddress: {configuration.TokenEndpoint} ClientId: {oidcOptions2.ClientId} ClientAssertion: {clientAssertion}");
-        var tokenClient = new TokenClient(httpClient, new TokenClientOptions
+
+        var tokenEndpointRequest = new OpenIdConnectMessage()
         {
-            Address = configuration.TokenEndpoint,
-            ClientId = oidcOptions2.ClientId,
-            ClientAssertion = new ClientAssertion
-                { Value = clientAssertion, Type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer },
-            ClientCredentialStyle = ClientCredentialStyle.PostBody,
-        });
-        var response = await tokenClient.RequestRefreshTokenAsync(refreshToken);
-        var tokenResponseJson = JsonConvert.SerializeObject(response);
-        logger.LogTrace("{class}.{method} : refreshtoken: {json}", nameof(TokenEndpointService), nameof(RefreshTokenAsync), tokenResponseJson);
-        if (response.IsError)
+            ClientId = oidcOptions.ClientId,
+            GrantType = OpenIdConnectGrantTypes.RefreshToken,
+            RefreshToken = refreshToken,
+            ClientAssertion = clientAssertion,
+            ClientAssertionType = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", // TODO: check if there is a const class for this somewhere
+        };
+
+        var requestMessage = new HttpRequestMessage(HttpMethod.Post, configuration.TokenEndpoint);
+        requestMessage.Content = new FormUrlEncodedContent(tokenEndpointRequest.Parameters);
+
+        try
         {
-            logger.LogError($"TokenEndPointService:RefreshTokenAsync. Error: {response.Error} ErrorDescription: {response.ErrorDescription}");
+            var responseMessage = await httpClient.SendAsync(requestMessage);
+            var responseContent = await responseMessage.Content.ReadAsStringAsync();
+            var resultMessage = new OpenIdConnectMessage(responseContent);
+
+            var expiresOn = DateTimeOffset.Now + TimeSpan.FromSeconds(int.Parse(resultMessage.ExpiresIn));
+            var tokenResponseJson = JsonConvert.SerializeObject(resultMessage);
+
+            return new OidcToken(resultMessage.AccessToken, resultMessage.RefreshToken, expiresOn, tokenResponseJson);
         }
-        return response;
+        catch (MsalServiceException ex)
+        {
+            var message = $"TokenEndPointService:RefreshTokenAsync. Error: {ex.Message}";
+            logger.LogError(ex, message);
+
+            return new OidcToken(ex, message);
+        }
     }
 
     private async Task<OpenIdConnectOptions> GetOidcOptionsAsync()
@@ -94,5 +109,13 @@ public class TokenEndpointService : ITokenEndpointService
             return oidcOptions.Get(scheme.Name);
         }
         return oidcOptions.Get(managementOptions.Scheme);
+    }
+}
+
+internal sealed class MsalHttpClientFactoryAdapter(HttpClient httpClient) : IMsalHttpClientFactory
+{
+    public HttpClient GetHttpClient()
+    {
+        return httpClient;
     }
 }

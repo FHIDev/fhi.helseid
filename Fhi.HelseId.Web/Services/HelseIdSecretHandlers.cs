@@ -26,7 +26,8 @@ namespace Fhi.HelseId.Web.Services
         protected JsonWebKey? jwkSecurityKey;
         protected IHelseIdWebKonfigurasjon? configAuth;
 
-        public const string ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
+        //public const string ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
+        public const string ClientAssertionType = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
 
         public virtual void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options) { }
 

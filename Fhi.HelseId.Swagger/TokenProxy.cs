@@ -35,7 +35,7 @@ public class TokenProxy : ITokenProxy
         var clientAssertion = ClientAssertion.Generate(config.ClientId, config.Authority, jwkSecurityKey);
 
         requestParameters["client_id"] = config.ClientId;
-        requestParameters["client_assertion_type"] = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
+        requestParameters["client_assertion_type"] = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
         requestParameters["client_assertion"] = clientAssertion;
 
         var tokenUrl = $"{_swaggerHelseIdConfiguration.Authority}/connect/token";

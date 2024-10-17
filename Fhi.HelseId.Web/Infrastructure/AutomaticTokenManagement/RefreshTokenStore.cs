@@ -1,13 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Fhi.HelseId.Web.Services;
-using IdentityModel.Client;
-using Fhi.HelseId.Web.ExtensionMethods;
-using Microsoft.Extensions.Options;
 using Fhi.HelseId.Common.ExtensionMethods;
+using Fhi.HelseId.Web.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
@@ -15,9 +13,9 @@ public interface IRefreshTokenStore
 {
     List<RefreshToken> RefreshTokens { get; set; }
     RefreshToken? GetLatestToken(ICurrentUser user);
-    void Add(string previousToken, TokenResponse? tokenResponse, ICurrentUser user, [CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0);
+    void Add(string previousToken, OidcToken? tokenResponse, ICurrentUser user, [CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0);
     void Dump();
-    void AddIfNotExist(string previousToken, TokenResponse? tokenResponse, ICurrentUser user,[CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0);
+    void AddIfNotExist(string previousToken, OidcToken? tokenResponse, ICurrentUser user,[CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0);
     bool Exist(string token, ICurrentUser user);
     bool IsLatest(string refreshTokenValue, ICurrentUser user);
 }
@@ -36,11 +34,11 @@ public class RefreshTokenStore : IRefreshTokenStore
     static int currentSequenceNumber;
     public List<RefreshToken> RefreshTokens { get; set; } = new();
 
-    public void Add(string previousToken, TokenResponse? tokenResponse, ICurrentUser user, [CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0)
+    public void Add(string previousToken, OidcToken? tokenResponse, ICurrentUser user, [CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0)
     {
         if (!helseIdWebKonfigurasjon.AuthUse || !helseIdWebKonfigurasjon.UseRefreshTokenStore)
             return;
-        var dtExpiresNew = DateTimeOffset.Now.AddSeconds(tokenResponse?.ExpiresIn ?? 0);
+        var dtExpiresNew = tokenResponse?.ExpiresOn ?? DateTimeOffset.MinValue;
         var newRefreshToken = new RefreshToken
         {
             PreviousToken = previousToken,
@@ -61,7 +59,7 @@ public class RefreshTokenStore : IRefreshTokenStore
 
     }
 
-    public void AddIfNotExist(string previousToken, TokenResponse? tokenResponse, ICurrentUser user, [CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0)
+    public void AddIfNotExist(string previousToken, OidcToken? tokenResponse, ICurrentUser user, [CallerMemberName] string source = "", [CallerLineNumber] int lineNumber = 0)
     {
         if (!helseIdWebKonfigurasjon.AuthUse || !helseIdWebKonfigurasjon.UseRefreshTokenStore)
             return;

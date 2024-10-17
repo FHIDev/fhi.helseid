@@ -46,7 +46,7 @@ public class BlazorTokenService : IBlazorTokenService
                 }
 
                 state.AccessToken = t.AccessToken!;
-                state.TokenExpires = DateTimeOffset.UtcNow.AddSeconds(t.ExpiresIn);
+                state.TokenExpires = t.ExpiresOn;
                 state.RefreshToken = t.RefreshToken!;
 
                 await UpdateContext();
