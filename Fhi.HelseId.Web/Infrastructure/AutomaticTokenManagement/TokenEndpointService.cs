@@ -1,4 +1,7 @@
-﻿using Fhi.HelseId.Common.ExtensionMethods;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
@@ -7,8 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
@@ -64,6 +65,12 @@ public class TokenEndpointService : ITokenEndpointService
     public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
     {
         var oidcOptions2 = await GetOidcOptionsAsync();
+
+        if (oidcOptions2.ConfigurationManager == null)
+        {
+            throw new InvalidOperationException("ConfigurationManager cannot be null.");
+        }
+
         var configuration = await oidcOptions2.ConfigurationManager.GetConfigurationAsync(default);
         var clientAssertion = secretHandler?.GenerateClientAssertion;
         logger.LogTrace(
@@ -73,7 +80,7 @@ public class TokenEndpointService : ITokenEndpointService
             Address = configuration.TokenEndpoint,
             ClientId = oidcOptions2.ClientId,
             ClientAssertion = new ClientAssertion
-                { Value = clientAssertion, Type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer },
+            { Value = clientAssertion, Type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer },
             ClientCredentialStyle = ClientCredentialStyle.PostBody,
         });
         var response = await tokenClient.RequestRefreshTokenAsync(refreshToken);
@@ -91,6 +98,12 @@ public class TokenEndpointService : ITokenEndpointService
         if (string.IsNullOrEmpty(managementOptions.Scheme))
         {
             var scheme = await schemeProvider.GetDefaultChallengeSchemeAsync();
+
+            if (scheme == null)
+            {
+                throw new InvalidOperationException("No AuthenticationScheme was specified, and there was no DefaultChallengeScheme found.");
+            }
+
             return oidcOptions.Get(scheme.Name);
         }
         return oidcOptions.Get(managementOptions.Scheme);
