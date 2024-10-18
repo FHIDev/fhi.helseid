@@ -175,15 +175,6 @@ public class HelseIdWebAuthBuilder
     }
 
     /// <summary>
-    /// Use when a shared secret key is in the CLientSecret property
-    /// </summary>
-    public HelseIdWebAuthBuilder UseSharedSecretHandler()
-    {
-        SecretHandler = HelseIdWebKonfigurasjon.AuthUse ? new HelseIdSharedSecretHandler(HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(HelseIdWebKonfigurasjon);
-        return this;
-    }
-
-    /// <summary>
     /// This property is set by the AddControllers method
     /// </summary>
     public IMvcBuilder? MvcBuilder { get; private set; }
