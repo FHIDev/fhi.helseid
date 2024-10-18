@@ -22,7 +22,7 @@ namespace Fhi.HelseId.Web.Services
 
     public abstract class SecretHandlerBase : IHelseIdSecretHandler
     {
-        protected abstract SecurityKey GetJsonWebKey();
+        protected abstract SecurityKey GetSecurityKey();
 
         public const string ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
 
@@ -33,7 +33,7 @@ namespace Fhi.HelseId.Web.Services
 
         public virtual void AddSecretConfiguration(OpenIdConnectOptions options) { }
 
-        public virtual string GenerateClientAssertion => ClientAssertion.Generate(ConfigAuth.ClientId, ConfigAuth.Authority, GetJsonWebKey());
+        public virtual string GenerateClientAssertion => ClientAssertion.Generate(ConfigAuth.ClientId, ConfigAuth.Authority, GetSecurityKey());
 
         protected IHelseIdWebKonfigurasjon ConfigAuth { get; }
     }
@@ -76,7 +76,7 @@ namespace Fhi.HelseId.Web.Services
 #endif
         }
 
-        protected override SecurityKey GetJsonWebKey() => JsonWebKey;
+        protected override SecurityKey GetSecurityKey() => JsonWebKey;
     }
 
     /// <summary>
@@ -116,10 +116,7 @@ namespace Fhi.HelseId.Web.Services
 #endif
         }
 
-        protected override SecurityKey GetJsonWebKey()
-        {
-            return JsonWebKey;
-        }
+        protected override SecurityKey GetSecurityKey() => JsonWebKey;
     }
 
     /// <summary>
@@ -178,15 +175,12 @@ namespace Fhi.HelseId.Web.Services
 #endif
         }
 
-        protected override SecurityKey GetJsonWebKey()
-        {
-            return JsonWebKey;
-        }
+        protected override SecurityKey GetSecurityKey() => JsonWebKey;
     }
 
     public class HelseIdEnterpriseCertificateSecretHandler : SecretHandlerBase
     {
-        private X509SecurityKey _x509SecurityKey;
+        private readonly X509SecurityKey _x509SecurityKey;
         public HelseIdEnterpriseCertificateSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
             var secretParts = ConfigAuth.ClientSecret.Split(':');
@@ -210,8 +204,6 @@ namespace Fhi.HelseId.Web.Services
 
             _x509SecurityKey = new X509SecurityKey(certificates[0]);
         }
-
-        public override string GenerateClientAssertion => ClientAssertion.Generate(ConfigAuth.ClientId, ConfigAuth.Authority, _x509SecurityKey);
 
         public override void AddSecretConfiguration(OpenIdConnectOptions options)
         {
@@ -251,10 +243,7 @@ namespace Fhi.HelseId.Web.Services
             public string Secret { get; }
         }
 
-        protected override SecurityKey GetJsonWebKey()
-        {
-            return _x509SecurityKey;
-        }
+        protected override SecurityKey GetSecurityKey() => _x509SecurityKey;
     }
 
     public class HelseIdNoAuthorizationSecretHandler : SecretHandlerBase
@@ -268,7 +257,7 @@ namespace Fhi.HelseId.Web.Services
         /// Will never be called
         /// </summary>
         /// <returns></returns>
-        protected override SecurityKey GetJsonWebKey()
+        protected override SecurityKey GetSecurityKey()
         {
             throw new NotImplementedException("This method is not used and should not be called. If this happens, there is a missing check for AuthUse");
         }
@@ -344,6 +333,6 @@ namespace Fhi.HelseId.Web.Services
             public bool PkceRequired { get; set; }
         }
 
-        protected override SecurityKey GetJsonWebKey() => JsonWebKey;
+        protected override SecurityKey GetSecurityKey() => JsonWebKey;
     }
 }
