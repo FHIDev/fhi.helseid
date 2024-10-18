@@ -9,6 +9,7 @@ using System.Web;
 using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Fhi.HelseId.Common.Exceptions;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -348,8 +349,13 @@ namespace Fhi.HelseId.Web.Services
         public HelseIdSelvbetjeningSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
             var selvbetjeningJson = File.ReadAllText(ConfigAuth.ClientSecret);
-
             var selvbetjeningConfig = JsonSerializer.Deserialize<SelvbetjeningConfig>(selvbetjeningJson);
+
+            if (selvbetjeningConfig == null)
+            {
+                throw new MissingConfigurationException($"{nameof(SelvbetjeningConfig)}: Could not deserialize json or path not found.");
+            }
+
             var jwk = HttpUtility.UrlDecode(selvbetjeningConfig.PrivateJwk);
 
             JsonWebKey = new JsonWebKey(jwk);
