@@ -122,11 +122,6 @@ public class HelseIdWebAuthBuilder
         return MvcBuilder;
     }
 
-    /// <summary>
-    /// This property is set by the AddControllers method
-    /// </summary>
-    public IMvcBuilder? MvcBuilder { get; private set; }
-
     public HelseIdWebAuthBuilder AddControllers(Action<MvcOptions>? configureMvc, AuthorizeFilter? authorizeFilter)
     {
         MvcBuilder = _services.AddControllers(config =>
@@ -140,6 +135,67 @@ public class HelseIdWebAuthBuilder
             configureMvc?.Invoke(config);
         });
 
+        return this;
+    }
+
+    /// <summary>
+    /// The ClientSecret property should contain the Jwk private key as a string
+    /// </summary>
+    public HelseIdWebAuthBuilder UseJwkKeySecretHandler()
+    {
+        SecretHandler = HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkSecretHandler(HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(HelseIdWebKonfigurasjon);
+        return this;
+    }
+
+    /// <summary>
+    /// Used when you have the Jwk in a file. The file should contain the Jwk as a string. The ClientSecret property should contain the file name
+    /// </summary>
+    public HelseIdWebAuthBuilder UseJwkKeyFileSecretHandler()
+    {
+        SecretHandler = HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkFileSecretHandler(HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(HelseIdWebKonfigurasjon);
+        return this;
+    }
+
+    /// <summary>
+    /// For selvbetjening we expect ClientSecret to be a path to a file containing the full downloaded configuration file, including the private key in JWK format
+    /// </summary>
+    public HelseIdWebAuthBuilder UseSelvbetjeningFileSecretHandler()
+    {
+        SecretHandler = HelseIdWebKonfigurasjon.AuthUse ? new HelseIdSelvbetjeningSecretHandler(HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(HelseIdWebKonfigurasjon);
+        return this;
+    }
+
+    /// <summary>
+    /// For Azure Key Vault Secret we expect ClientSecret in the format 'name of secret;uri to vault'. For example: 'MySecret;https://your-unique-key-vault-name.vault.azure.net/'
+    /// </summary>
+    public HelseIdWebAuthBuilder UseAzureKeyVaultSecretHandler()
+    {
+        SecretHandler = HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkAzureKeyVaultSecretHandler(HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(HelseIdWebKonfigurasjon);
+        return this;
+    }
+
+    /// <summary>
+    /// Use when a shared secret key is in the CLientSecret property
+    /// </summary>
+    public HelseIdWebAuthBuilder UseSharedSecretHandler()
+    {
+        SecretHandler = HelseIdWebKonfigurasjon.AuthUse ? new HelseIdSharedSecretHandler(HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(HelseIdWebKonfigurasjon);
+        return this;
+    }
+
+    /// <summary>
+    /// This property is set by the AddControllers method
+    /// </summary>
+    public IMvcBuilder? MvcBuilder { get; private set; }
+
+    /// <summary>
+    /// End a fluent series with this to create the authentication handlers. It returns the builder which can be further used later if needed, otherwise ignore the return.
+    /// This sets up authentication and authorization services, and adds the controllers. You still need to call app.UseAuthentication() and app.UseAuthorization() to enable the middleware.
+    /// </summary>
+    public HelseIdWebAuthBuilder Build(Action<MvcOptions>? configureMvc = null,
+        ConfigureAuthentication? configureAuthentication = null)
+    {
+        AddHelseIdWebAuthentication(configureMvc, configureAuthentication);
         return this;
     }
 
@@ -300,7 +356,7 @@ public class HelseIdWebAuthBuilder
     /// <summary>
     /// Use this to add the HelseId Api access token handling to the app.
     /// </summary>
-    public HelseIdWebAuthBuilder AddOutgoingApiServices()
+    public HelseIdWebAuthBuilder AddOutgoingApis()
     {
         _services.AddAccessTokenManagement();
         _services.AddTransient<AuthHeaderHandler>();
