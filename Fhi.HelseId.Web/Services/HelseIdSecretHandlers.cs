@@ -259,7 +259,7 @@ namespace Fhi.HelseId.Web.Services
 
             if (certificates.Count == 0)
             {
-                throw new Exception($"No certificate with thumbprint {ConfigAuth.ClientSecret} found in store LocalMachine");
+                throw new Exception($"No certificate with thumbprint {thumbprint} found in store LocalMachine");
             }
 
             _x509SecurityKey = new X509SecurityKey(certificates[0]);
