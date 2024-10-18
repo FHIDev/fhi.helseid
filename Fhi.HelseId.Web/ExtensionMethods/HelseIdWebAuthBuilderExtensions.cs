@@ -36,7 +36,7 @@ public static class HelseIdWebAuthBuilderExtensions
     /// </summary>
     public static HelseIdWebAuthBuilder UseJwkKeySecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon);
         return authBuilder;
     }
 
@@ -45,23 +45,25 @@ public static class HelseIdWebAuthBuilderExtensions
     /// </summary>
     public static HelseIdWebAuthBuilder UseJwkKeyFileSecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkFileSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkFileSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon);
         return authBuilder;
     }
+
     /// <summary>
     /// For selvbetjening we expect ClientSecret to be a path to a file containing the full downloaded configuration file, including the private key in JWK format
     /// </summary>
     public static HelseIdWebAuthBuilder UseSelvbetjeningFileSecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdSelvbetjeningSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdSelvbetjeningSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon);
         return authBuilder;
     }
+
     /// <summary>
     /// For Azure Key Vault Secret we expect ClientSecret in the format 'name of secret;uri to vault'. For example: 'MySecret;https://your-unique-key-vault-name.vault.azure.net/'
     /// </summary>
     public static HelseIdWebAuthBuilder UseAzureKeyVaultSecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkAzureKeyVaultSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdJwkAzureKeyVaultSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon);
         return authBuilder;
     }
 
@@ -70,7 +72,7 @@ public static class HelseIdWebAuthBuilderExtensions
     /// </summary>
     public static HelseIdWebAuthBuilder UseSharedSecretHandler(this HelseIdWebAuthBuilder authBuilder)
     {
-        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdSharedSecretHandler() : new HelseIdNoAuthorizationSecretHandler();
+        authBuilder.SecretHandler = AuthBuilder.HelseIdWebKonfigurasjon.AuthUse ? new HelseIdSharedSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon) : new HelseIdNoAuthorizationSecretHandler(AuthBuilder.HelseIdWebKonfigurasjon);
         return authBuilder;
     }
 
@@ -86,7 +88,6 @@ public static class HelseIdWebAuthBuilderExtensions
     }
 
     public static void UseHelseIdProtectedPaths(this IApplicationBuilder app) => AuthBuilder.UseHelseIdProtectedPaths(app);
-    public static void UseHelseIdProtectedPaths(this IApplicationBuilder app,IReadOnlyCollection<PathString> excludeList, bool overrideDefaults = false) => AuthBuilder.UseHelseIdProtectedPaths(app,excludeList,overrideDefaults);
-    
-    
+    public static void UseHelseIdProtectedPaths(this IApplicationBuilder app,IReadOnlyCollection<PathString> excludeList, bool overrideDefaults = false) => AuthBuilder.UseHelseIdProtectedPaths(app,excludeList,overrideDefaults);  
+   
 }

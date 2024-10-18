@@ -51,7 +51,7 @@ public class HelseIdWebAuthBuilder
             throw new MissingConfigurationException($"Missing required configuration {nameof(HelseIdWebKonfigurasjon)}");
         HelseIdWebKonfigurasjon = helseIdWebKonfigurasjon;
         RedirectPagesKonfigurasjon = HelseIdWebKonfigurasjon.RedirectPagesKonfigurasjon;
-        SecretHandler = new HelseIdNoAuthorizationSecretHandler(); // Default
+        SecretHandler = new HelseIdNoAuthorizationSecretHandler(helseIdWebKonfigurasjon); // Default
     }
 
     /// <summary>

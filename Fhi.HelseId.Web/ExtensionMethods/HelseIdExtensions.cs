@@ -98,7 +98,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
                 options.ForwardDPoPContext();
             }
 
-            secretHandler.AddSecretConfiguration(configAuth, options);
+            secretHandler.AddSecretConfiguration(options);
 
             string GetAcrValues(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
             {
