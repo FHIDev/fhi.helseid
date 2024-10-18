@@ -25,11 +25,14 @@ namespace Fhi.HelseId.Web.Services
     {
         protected JsonWebKey JsonWebKey { get; set; }
 
+        protected abstract JsonWebKey GetJsonWebKey();
+
         public const string ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
 
         protected SecretHandlerBase(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
         {
             ConfigAuth = helseIdWebKonfigurasjon;
+            JsonWebKey = GetJsonWebKey();
         }
 
         public virtual void AddSecretConfiguration(OpenIdConnectOptions options) { }
@@ -75,6 +78,11 @@ namespace Fhi.HelseId.Web.Services
             };
 #endif
         }
+
+        protected override JsonWebKey GetJsonWebKey()
+        {
+            return JsonWebKey;
+        }
     }
 
     /// <summary>
@@ -111,6 +119,11 @@ namespace Fhi.HelseId.Web.Services
                 return Task.CompletedTask;
             };
 #endif
+        }
+
+        protected override JsonWebKey GetJsonWebKey()
+        {
+            return JsonWebKey;
         }
     }
 
@@ -168,6 +181,11 @@ namespace Fhi.HelseId.Web.Services
             };
 #endif
         }
+
+        protected override JsonWebKey GetJsonWebKey()
+        {
+            return JsonWebKey;
+        }
     }
 
     /// <summary>
@@ -211,6 +229,11 @@ namespace Fhi.HelseId.Web.Services
                 return Task.CompletedTask;
             };
 #endif
+        }
+
+        protected override JsonWebKey GetJsonWebKey()
+        {
+            return JsonWebKey;
         }
     }
 
@@ -281,6 +304,11 @@ namespace Fhi.HelseId.Web.Services
 
             public string Secret { get; }
         }
+
+        protected override JsonWebKey GetJsonWebKey()
+        {
+            return JsonWebKey;
+        }
     }
 
     public class HelseIdSharedSecretHandler : SecretHandlerBase
@@ -293,12 +321,22 @@ namespace Fhi.HelseId.Web.Services
         {
             options.ClientSecret = ConfigAuth.ClientSecret;
         }
+
+        protected override JsonWebKey GetJsonWebKey()
+        {
+            return JsonWebKey;
+        }
     }
 
     public class HelseIdNoAuthorizationSecretHandler : SecretHandlerBase
     {
         public HelseIdNoAuthorizationSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
+        }
+
+        protected override JsonWebKey GetJsonWebKey()
+        {
+            return JsonWebKey;
         }
     }
 
@@ -369,6 +407,11 @@ namespace Fhi.HelseId.Web.Services
             public string? PrivateJwk { get; set; }
             [JsonPropertyName("pkceRequired")]
             public bool PkceRequired { get; set; }
+        }
+
+        protected override JsonWebKey GetJsonWebKey()
+        {
+            return JsonWebKey;
         }
     }
 }
