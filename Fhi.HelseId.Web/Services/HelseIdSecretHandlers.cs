@@ -24,13 +24,18 @@ namespace Fhi.HelseId.Web.Services
     public abstract class SecretHandlerBase : IHelseIdSecretHandler
     {
         protected JsonWebKey? jwkSecurityKey;
-        protected IHelseIdWebKonfigurasjon? configAuth;
+        protected IHelseIdWebKonfigurasjon _configAuth;
 
         public const string ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
 
+        protected SecretHandlerBase(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
+        {
+            _configAuth = helseIdWebKonfigurasjon;
+        }
+
         public virtual void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options) { }
 
-        public virtual string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, jwkSecurityKey);
+        public virtual string GenerateClientAssertion => ClientAssertion.Generate(_configAuth.ClientId, _configAuth.Authority, jwkSecurityKey);
     }
 
     /// <summary>
@@ -38,9 +43,13 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkFileSecretHandler : SecretHandlerBase
     {
+        public HelseIdJwkFileSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
+        {
+        }
+
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            this._configAuth = configAuth;
             var jwk = File.ReadAllText(configAuth.ClientSecret);
             jwkSecurityKey = new JsonWebKey(jwk);
 
@@ -74,10 +83,14 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkSecretHandler : SecretHandlerBase
     {
+        public HelseIdJwkSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
+        {
+        }
+
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
             jwkSecurityKey = new JsonWebKey(configAuth.ClientSecret);
-            this.configAuth = configAuth;
+            this._configAuth = configAuth;
             options.Events.OnAuthorizationCodeReceived = ctx =>
             {
                 if (ctx.TokenEndpointRequest == null)
@@ -108,9 +121,13 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkAzureKeyVaultSecretHandler : SecretHandlerBase
     {
+        public HelseIdJwkAzureKeyVaultSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
+        {
+        }
+
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            this._configAuth = configAuth;
             var azureClientSettings = configAuth.ClientSecret.Split(';');
             if (azureClientSettings.Length != 2)
             {
@@ -164,11 +181,15 @@ namespace Fhi.HelseId.Web.Services
     {
         private RsaSecurityKey _rsaSecurityKey;
 
-        public override string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, _rsaSecurityKey);
+        public HelseIdRsaXmlSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
+        {
+        }
+
+        public override string GenerateClientAssertion => ClientAssertion.Generate(_configAuth.ClientId, _configAuth.Authority, _rsaSecurityKey);
 
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            this._configAuth = configAuth;
             var xml = File.ReadAllText(configAuth.ClientSecret);
             var rsa = RSA.Create();
             rsa.FromXmlString(xml);
@@ -203,11 +224,15 @@ namespace Fhi.HelseId.Web.Services
     {
         private X509SecurityKey _x509SecurityKey;
 
-        public override string GenerateClientAssertion => ClientAssertion.Generate(configAuth.ClientId, configAuth.Authority, _x509SecurityKey);
+        public HelseIdEnterpriseCertificateSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
+        {
+        }
+
+        public override string GenerateClientAssertion => ClientAssertion.Generate(_configAuth.ClientId, _configAuth.Authority, _x509SecurityKey);
 
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            this._configAuth = configAuth;
             var secretParts = configAuth.ClientSecret.Split(':');
             if (secretParts.Length != 2)
             {
@@ -268,23 +293,36 @@ namespace Fhi.HelseId.Web.Services
 
     public class HelseIdSharedSecretHandler : SecretHandlerBase
     {
+        public HelseIdSharedSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
+        {
+        }
+
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            this._configAuth = configAuth;
             options.ClientSecret = configAuth.ClientSecret;
         }
     }
 
-    public class HelseIdNoAuthorizationSecretHandler : SecretHandlerBase { }
+    public class HelseIdNoAuthorizationSecretHandler : SecretHandlerBase
+    {
+        public HelseIdNoAuthorizationSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
+        {
+        }
+    }
 
     /// <summary>
     /// For selvbetjening we expect ClientSecret to be a path to a file containing the full downloaded configuration file, including the private key in JWK format
     /// </summary>
     public class HelseIdSelvbetjeningSecretHandler : SecretHandlerBase
     {
+        public HelseIdSelvbetjeningSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
+        {
+        }
+
         public override void AddSecretConfiguration(IHelseIdWebKonfigurasjon configAuth, OpenIdConnectOptions options)
         {
-            this.configAuth = configAuth;
+            this._configAuth = configAuth;
             var selvbetjeningJson = File.ReadAllText(configAuth.ClientSecret);
 
             var selvbetjeningConfig = JsonSerializer.Deserialize<SelvbetjeningConfig>(selvbetjeningJson);
