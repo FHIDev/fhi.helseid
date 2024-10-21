@@ -20,7 +20,7 @@ namespace Fhi.HelseId.Refit
             {
                 if (!context.Response.Headers.ContainsKey(CorrelationIdHandler.CorrelationIdHeaderName))
                 {
-                    context.Response.Headers.Add(CorrelationIdHandler.CorrelationIdHeaderName, correlationId);
+                    context.Response.Headers.Append(CorrelationIdHandler.CorrelationIdHeaderName, correlationId);
                 }
 
                 return Task.CompletedTask;
