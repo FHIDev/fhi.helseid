@@ -1,0 +1,29 @@
+# .github/release.yml
+
+changelog:
+  categories:
+    - title: Breaking Changes 💥
+      labels:
+        - breaking
+    - title: Bugfixes 🐛
+      labels:
+        - bug
+    - title: Enhancements ✨
+      labels:
+        - enhancement
+    - title: Dataminimering 🔒
+      labels:
+        - datamin
+    - title: Documentation 📖
+      labels:
+        - documentation
+    - title: Internal Changes 🔧
+      labels:
+        - internal
+        - is:build
+    - title: Dependencies 📦
+      labels:
+        - dependencies
+    - title: Other Changes 🧾
+      labels:
+        - "*"
