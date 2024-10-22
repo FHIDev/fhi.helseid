@@ -13,7 +13,7 @@ namespace HprServiceReference
     
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Person", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Person : object
     {
@@ -275,7 +275,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Kode", Namespace="http://schemas.nhn.no/reg/Common/no")]
     public partial class Kode : object
     {
@@ -357,7 +357,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="AlternativId", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class AlternativId : object
     {
@@ -424,7 +424,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="FysiskAdresse", Namespace="http://schemas.nhn.no/reg/Common/no")]
     public partial class FysiskAdresse : object
     {
@@ -551,7 +551,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Godkjenning", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Godkjenning : object
     {
@@ -768,7 +768,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Utdannelse", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Utdannelse : object
     {
@@ -865,7 +865,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Periode", Namespace="http://schemas.nhn.no/reg/Common/no")]
     public partial class Periode : object
     {
@@ -902,7 +902,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Rekvisisjonsrett", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Rekvisisjonsrett : object
     {
@@ -999,7 +999,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Spesialitet", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Spesialitet : object
     {
@@ -1111,7 +1111,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Suspensjonsperiode", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Suspensjonsperiode : object
     {
@@ -1163,7 +1163,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Tilleggskompetanse", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Tilleggskompetanse : object
     {
@@ -1245,7 +1245,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Vilkår", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Vilkår : object
     {
@@ -1312,7 +1312,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Utdanningsinstitusjon", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Utdanningsinstitusjon : object
     {
@@ -1424,7 +1424,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Utdanningsinstitusjonshistorikk", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Utdanningsinstitusjonshistorikk : object
     {
@@ -1506,7 +1506,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="GenericFault", Namespace="http://register.nhn.no/Common")]
     public partial class GenericFault : object
     {
@@ -1543,7 +1543,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Søkeparametre", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Søkeparametre : object
     {
@@ -2435,7 +2435,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="PaginertResultatsett", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class PaginertResultatsett : object
     {
@@ -2502,7 +2502,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Endringslogginnslag", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class Endringslogginnslag : object
     {
@@ -2629,7 +2629,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="EndretEntitet", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class EndretEntitet : object
     {
@@ -2711,7 +2711,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="EndretVerdi", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class EndretVerdi : object
     {
@@ -2778,7 +2778,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="EksportData", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class EksportData : object
     {
@@ -2815,7 +2815,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="EksportFormat", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class EksportFormat : object
     {
@@ -2852,7 +2852,7 @@ namespace HprServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="LagretSøk", Namespace="http://schemas.nhn.no/reg/HPRv2")]
     public partial class LagretSøk : object
     {
@@ -2918,7 +2918,7 @@ namespace HprServiceReference
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="http://schemas.nhn.no/reg/HPRv2", ConfigurationName="HprServiceReference.IHPR2Service")]
     public interface IHPR2Service
     {
@@ -3177,13 +3177,13 @@ namespace HprServiceReference
         System.Threading.Tasks.Task<HprServiceReference.Person> SlåSammenAsync(int hprDestinasjon, int hprUtgår);
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     public interface IHPR2ServiceChannel : HprServiceReference.IHPR2Service, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     public partial class HPR2ServiceClient : System.ServiceModel.ClientBase<HprServiceReference.IHPR2Service>, HprServiceReference.IHPR2Service
     {
         
@@ -3485,26 +3485,8 @@ namespace HprServiceReference
             return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginOpen(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndOpen));
         }
         
-        public virtual System.Threading.Tasks.Task CloseAsync()
-        {
-            return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginClose(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndClose));
-        }
-        
         private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration)
         {
-            if ((endpointConfiguration == EndpointConfiguration.WSHttpBinding_IHPR2Service))
-            {
-                System.ServiceModel.Channels.CustomBinding result = new System.ServiceModel.Channels.CustomBinding();
-                System.ServiceModel.Channels.TextMessageEncodingBindingElement textBindingElement = new System.ServiceModel.Channels.TextMessageEncodingBindingElement();
-                result.Elements.Add(textBindingElement);
-                System.ServiceModel.Channels.HttpsTransportBindingElement httpsBindingElement = new System.ServiceModel.Channels.HttpsTransportBindingElement();
-                httpsBindingElement.AllowCookies = true;
-                httpsBindingElement.MaxBufferSize = int.MaxValue;
-                httpsBindingElement.MaxReceivedMessageSize = int.MaxValue;
-                httpsBindingElement.AuthenticationScheme = System.Net.AuthenticationSchemes.Basic;
-                result.Elements.Add(httpsBindingElement);
-                return result;
-            }
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IHPR2Service))
             {
                 System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
@@ -3516,18 +3498,28 @@ namespace HprServiceReference
                 result.Security.Transport.ClientCredentialType = System.ServiceModel.HttpClientCredentialType.Basic;
                 return result;
             }
+            if ((endpointConfiguration == EndpointConfiguration.WSHttpBinding_IHPR2Service))
+            {
+                System.ServiceModel.WSHttpBinding result = new System.ServiceModel.WSHttpBinding();
+                result.ReaderQuotas = System.Xml.XmlDictionaryReaderQuotas.Max;
+                result.MaxReceivedMessageSize = int.MaxValue;
+                result.AllowCookies = true;
+                result.Security.Mode = System.ServiceModel.SecurityMode.Transport;
+                result.Security.Transport.ClientCredentialType = System.ServiceModel.HttpClientCredentialType.Basic;
+                return result;
+            }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration)
         {
-            if ((endpointConfiguration == EndpointConfiguration.WSHttpBinding_IHPR2Service))
-            {
-                return new System.ServiceModel.EndpointAddress("https://register.utvikling.nhn.no/v2/HPR");
-            }
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IHPR2Service))
             {
                 return new System.ServiceModel.EndpointAddress("https://register.utvikling.nhn.no/v2/HPR/Basic");
+            }
+            if ((endpointConfiguration == EndpointConfiguration.WSHttpBinding_IHPR2Service))
+            {
+                return new System.ServiceModel.EndpointAddress("https://register.utvikling.nhn.no/v2/HPR");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }
@@ -3535,9 +3527,9 @@ namespace HprServiceReference
         public enum EndpointConfiguration
         {
             
-            WSHttpBinding_IHPR2Service,
-            
             BasicHttpBinding_IHPR2Service,
+            
+            WSHttpBinding_IHPR2Service,
         }
     }
 }

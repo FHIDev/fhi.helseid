@@ -1,32 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Id>Fhi.HelseId.TestSupport</Id>
     <IsTestProject>false</IsTestProject>
     <PackageDescription>Base classes for testing an implementation using Fhi.HelseId</PackageDescription>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectCapability Remove="TestContainer" />
   </ItemGroup>
-
-    
   <PropertyGroup>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-  
   <ItemGroup>
     <PackageReference Include="NUnit" />
     <PackageReference Include="morelinq" />
   </ItemGroup>
-  
   <ItemGroup>
     <ProjectReference Include="..\Fhi.HelseId.Api\Fhi.HelseId.Api.csproj" />
     <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
   </ItemGroup>
-
 </Project>

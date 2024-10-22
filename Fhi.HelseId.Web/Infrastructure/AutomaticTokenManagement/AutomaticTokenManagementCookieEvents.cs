@@ -18,7 +18,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
     private readonly TokenEndpointService _service;
     private readonly AutomaticTokenManagementOptions _tokenConfig;
     private readonly ILogger _logger;
-    private readonly ISystemClock _clock;
+    private readonly TimeProvider _clock;
     private readonly HelseIdWebKonfigurasjon _helseIdConfig;
     private readonly IRefreshTokenStore _refreshTokenStore;
 
@@ -28,7 +28,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         TokenEndpointService service,
         IOptions<AutomaticTokenManagementOptions> tokenOptions,
         ILogger<AutomaticTokenManagementCookieEvents> logger,
-        ISystemClock clock,
+        TimeProvider clock,
         IOptions<HelseIdWebKonfigurasjon> helseIdOptions,
         IRefreshTokenStore refreshTokenStore)
     {
@@ -89,10 +89,13 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         }
 
         var dtRefresh = dtExpires.Subtract(_tokenConfig.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
-        _logger.LogTrace("ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {refreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {utcNow}, refresh_token: {refreshToken}, NoOfTokensInStore {noOfRefreshTokens}", dtExpires, _tokenConfig.RefreshBeforeExpiration, dtRefresh, _clock.UtcNow, refreshToken.Value, _refreshTokenStore.RefreshTokens.Count);
+        var utcNow = _clock.GetUtcNow();
+
+        _logger.LogTrace("ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {refreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {utcNow}, refresh_token: {refreshToken}, NoOfTokensInStore {noOfRefreshTokens}", dtExpires, _tokenConfig.RefreshBeforeExpiration, dtRefresh, utcNow, refreshToken.Value, _refreshTokenStore.RefreshTokens.Count);
+
         if (_helseIdConfig.UseApis)
         {
-            if (dtRefresh < _clock.UtcNow)
+            if (dtRefresh < utcNow)
             {
                 var shouldRefresh = PendingRefreshTokenRequests.TryAdd(rfValue, true);
                 _logger.LogTrace("{class}:{method} - Should refresh: {shouldRefresh}, No Of tokens in PendingRefreshTokenRequests {count} ", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), shouldRefresh, PendingRefreshTokenRequests.Count);

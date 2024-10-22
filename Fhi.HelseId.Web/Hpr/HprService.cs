@@ -121,7 +121,7 @@ namespace Fhi.HelseId.Web.Hpr
             }
             catch (System.ServiceModel.CommunicationException e)
             {
-                var msg = "CommunicationException i aksess til Hpr register. "+e;
+                var msg = "CommunicationException i aksess til Hpr register. " + e;
                 LastErrorMessage = msg;
                 _logger.LogError(e, msg);
                 return null;
@@ -144,12 +144,12 @@ namespace Fhi.HelseId.Web.Hpr
         /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene. 
         /// </summary>
         public bool ErGyldig(Person person) => ErGyldigForKategorier(person, GodkjenteHelsepersonellkategorier.ToArray());
-        
+
         public bool ErGyldigForKategorier(Person person, params OId9060[] koder)
         {
             if (person == null)
                 return false;
-            return person.Godkjenninger.Any(g=>ErAktivGodkjenning(g,koder));
+            return person.Godkjenninger.Any(g => ErAktivGodkjenning(g, koder));
         }
 
         private bool ErAktivGodkjenning(Godkjenning g, params OId9060[] koder)
