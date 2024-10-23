@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Configuration;
@@ -21,6 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
 
@@ -80,7 +80,7 @@ public class HelseIdWebAuthBuilder
             _services.AddMemoryCache();
             _services.AddSingleton<IHprFactory, HprFactory>();
             _services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             if (HelseIdWebKonfigurasjon.UseDPoPTokens)
             {
