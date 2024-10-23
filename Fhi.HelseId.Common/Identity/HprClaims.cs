@@ -20,6 +20,8 @@ public static class ClaimsPrincipalExtensions
         user.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
     public static string? SecurityLevel(this ClaimsPrincipal user) =>
         user.Claims.FirstOrDefault(x => x.Type == IdentityClaims.SecurityLevel)?.Value;
+    public static string? SecurityLevelEnum(this ClaimsPrincipal user) =>
+        user.Claims.FirstOrDefault(x => x.Type == IdentityClaims.SecurityLevelEnum)?.Value;
     public static string? AssuranceLevel(this ClaimsPrincipal user) =>
         user.Claims.FirstOrDefault(x => x.Type == IdentityClaims.AssuranceLevel)?.Value;
     public static string? Network(this ClaimsPrincipal user) =>

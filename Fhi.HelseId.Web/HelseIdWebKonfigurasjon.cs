@@ -18,7 +18,7 @@ public interface IHelseIdHprFeatures
 
 public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientKonfigurasjon
 {
-
+    bool UseIdPorten { get; set; }
     string[] SecurityLevels { get; }
     bool UseProtectedPaths { get; set; }
     RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; set; }
@@ -39,7 +39,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
 {
     public string DevelopmentRedirectUri { get; set; } = "/";
 
-    public string[] SecurityLevels { get; set; } = ["3", "4"];
+    public string[] SecurityLevels { get; set; } = [];
 
 
     protected override IEnumerable<string> FixedScopes
@@ -90,6 +90,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
     public NoAuthenticationUser NoAuthenticationUser { get; set; } = new();
 
     public bool UseDPoPTokens { get; set; }
+    public bool UseIdPorten { get; set; } = true;
 
     public Uri UriToApiByName(string name)
     {
