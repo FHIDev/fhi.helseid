@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 
 namespace Fhi.HelseId.Api.ExtensionMethods;
@@ -70,7 +71,7 @@ public static class ServiceCollectionExtensions
             return false;
         }
 
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
         services.AddControllers(cfg => { cfg.Filters.Add(new AuthorizeFilter(Policies.HidOrApi)); })
             .AddJsonOptions(
                 options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
