@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
 using Fhi.HelseId.Api.Authorization;
 using Fhi.HelseId.Api.DPoP;

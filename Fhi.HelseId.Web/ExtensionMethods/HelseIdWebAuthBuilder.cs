@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Configuration;
