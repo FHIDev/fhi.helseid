@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using Fhi.HelseId.Common.Exceptions;
 using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web;
-using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Fhi.HelseId.Common;
 
@@ -26,14 +26,12 @@ public class AuthHeaderHandler : DelegatingHandler
 
     private readonly IHttpContextAccessor contextAccessor;
     private readonly ILogger<AuthHeaderHandler> logger;
-    private readonly IRefreshTokenStore refreshTokenStore;
     private readonly ICurrentUser user;
     private readonly HelseIdWebKonfigurasjon config;
     private readonly IAuthorizationHeaderSetter authorizationHeaderSetter;
 
     public AuthHeaderHandler(IHttpContextAccessor contextAccessor,
         ILogger<AuthHeaderHandler> logger,
-        IRefreshTokenStore refreshTokenStore,
         ICurrentUser user,
         IOptions<HelseIdWebKonfigurasjon> options,
         IAuthorizationHeaderSetter authorizationHeaderSetter)
@@ -42,7 +40,6 @@ public class AuthHeaderHandler : DelegatingHandler
         logger.LogMember();
         this.contextAccessor = contextAccessor;
         this.logger = logger;
-        this.refreshTokenStore = refreshTokenStore;
         this.user = user;
         this.authorizationHeaderSetter = authorizationHeaderSetter;
     }
@@ -56,10 +53,8 @@ public class AuthHeaderHandler : DelegatingHandler
 
         var ctx = contextAccessor.HttpContext ?? throw new NoContextException();
         logger.LogTrace("{class}.{method} - Starting", nameof(AuthHeaderHandler), nameof(SendAsync));
-        var token = await ctx.GetUserAccessTokenAsync(cancellationToken: cancellationToken);
+        var token = await ctx.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
-        if (config.UseRefreshTokenStore && refreshTokenStore.GetLatestToken(user) != null && !string.IsNullOrEmpty(refreshTokenStore.GetLatestToken(user)?.AccessToken) && refreshTokenStore.GetLatestToken(user)?.AccessToken != token)
-            token = refreshTokenStore.GetLatestToken(user)?.AccessToken;
         if (token == null)
         {
             logger.LogError("{class}.{method} No access token found in context. Make sure you have added the AddTokenManagement() to your Startup.cs", nameof(AuthHeaderHandler), nameof(SendAsync));

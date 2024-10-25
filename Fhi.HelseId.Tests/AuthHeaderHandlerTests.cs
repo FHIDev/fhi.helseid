@@ -1,22 +1,24 @@
-﻿using Fhi.HelseId.Common;
-using Fhi.HelseId.Web;
-using Fhi.HelseId.Web.DPoP;
-using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
-using Fhi.HelseId.Web.Services;
-using IdentityModel.AspNetCore.AccessTokenManagement;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
-using NSubstitute;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Claims;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common;
+using Fhi.HelseId.Web;
+using Fhi.HelseId.Web.Handlers;
+using Fhi.HelseId.Web.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Tests;
 public class AuthHeaderHandlerTests
@@ -28,20 +30,38 @@ public class AuthHeaderHandlerTests
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         var context = Substitute.For<HttpContext>();
+
         var services = new ServiceCollection();
-        var tokenService = Substitute.For<IUserAccessTokenManagementService>();
-        tokenService.GetUserAccessTokenAsync(
-            Arg.Any<ClaimsPrincipal>(), 
-            Arg.Any<UserAccessTokenParameters?>(),
-            Arg.Any<CancellationToken>()).Returns(Task.FromResult((string?)authToken));
-        services.AddSingleton(tokenService);
+
+        var logger = Substitute.For<ILoggerFactory>();
+        services.AddSingleton(logger);
+
+        //services.AddAuthentication("NoAuthentication")
+        //        .AddScheme<AuthenticationSchemeOptions, NoAuthenticationHandler>("NoAuthentication", null);
+
+        services.AddHttpContextAccessor();
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "TODO_your_issuer",
+                    ValidAudience = "TODO_your_audience",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("TODO_your_secret_key_here")),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
         context.RequestServices.Returns(services.BuildServiceProvider());
         httpContextAccessor.HttpContext.Returns(context);
 
         var handler = new AuthHeaderHandler(
             httpContextAccessor,
             NullLogger<AuthHeaderHandler>.Instance,
-            Substitute.For<IRefreshTokenStore>(),
             Substitute.For<ICurrentUser>(),
             Options.Create(new HelseIdWebKonfigurasjon()),
             new BearerAuthorizationHeaderSetter());
@@ -64,15 +84,12 @@ public class AuthHeaderHandlerTests
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         var context = Substitute.For<HttpContext>();
         var services = new ServiceCollection();
-        var tokenService = Substitute.For<IUserAccessTokenManagementService>();
-        services.AddSingleton(tokenService);
         context.RequestServices.Returns(services.BuildServiceProvider());
         httpContextAccessor.HttpContext.Returns(context);
 
         var handler = new AuthHeaderHandler(
             httpContextAccessor,
             NullLogger<AuthHeaderHandler>.Instance,
-            Substitute.For<IRefreshTokenStore>(),
             Substitute.For<ICurrentUser>(),
             Options.Create(new HelseIdWebKonfigurasjon()),
             new BearerAuthorizationHeaderSetter());
@@ -100,5 +117,3 @@ public class DummyInnerHandler : HttpClientHandler
         return Task.FromResult(response);
     }
 }
-
-

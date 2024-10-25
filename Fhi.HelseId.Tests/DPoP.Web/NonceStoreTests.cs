@@ -1,11 +1,11 @@
-﻿using Fhi.HelseId.Web.DPoP;
-using Microsoft.Extensions.Caching.Distributed;
-using NSubstitute;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.DPoP;
+using Microsoft.Extensions.Caching.Distributed;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Tests.DPoP.Web;
 
@@ -29,7 +29,7 @@ public class NonceStoreTests
         var method = "GET";
         var expectedNonce = "stored-nonce";
         var key = "DPoPNonce-" + url + method;
-        _cache.GetAsync(key).Returns(Task.FromResult(Encoding.UTF8.GetBytes(expectedNonce)));
+        _cache.GetAsync(key).Returns(Task.FromResult<byte[]?>(Encoding.UTF8.GetBytes(expectedNonce)));
 
         // Act
         var result = await _nonceStore.GetNonce(url, method);
@@ -45,7 +45,7 @@ public class NonceStoreTests
         var url = "https://example.com";
         var method = "GET";
         var key = "DPoPNonce-" + url + method;
-        _cache.GetAsync(key).Returns(Task.FromResult<byte[]>(null!));
+        _cache.GetAsync(key).Returns(Task.FromResult<byte[]?>(null));
 
         // Act
         var result = await _nonceStore.GetNonce(url, method);

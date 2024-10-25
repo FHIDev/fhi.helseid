@@ -1,33 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <id>Fhi.AuthControllers</id>
     <Configurations>Debug;Release</Configurations>
     <PackageDescription>Account controllers for use with OAuth and HelseId</PackageDescription>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Include="HtmlFiles\**\*.html" Pack="true" PackagePath="content" />
   </ItemGroup>
-  
   <ItemGroup>
     <None Include="Fhi.AuthControllers.props">
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
     </None>
   </ItemGroup>
-  
   <ItemGroup>
     <None Remove="Web\HprServiceReference\ConnectedService.json" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Update="HtmlFiles\Error.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -42,5 +36,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
 </Project>

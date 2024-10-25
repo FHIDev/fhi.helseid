@@ -106,6 +106,12 @@ public class TokenEndpointService : ITokenEndpointService
         if (string.IsNullOrEmpty(managementOptions.Scheme))
         {
             var scheme = await schemeProvider.GetDefaultChallengeSchemeAsync();
+
+            if (scheme == null)
+            {
+                throw new InvalidOperationException("No AuthenticationScheme was specified, and there was no DefaultChallengeScheme found.");
+            }
+
             return oidcOptions.Get(scheme.Name);
         }
         return oidcOptions.Get(managementOptions.Scheme);

@@ -16,8 +16,8 @@ namespace Fhi.HelseId.Web.Handlers
     {
         private readonly NoAuthenticationUser _noAuthenticationUserConfig;
 
-        public NoAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IOptions<HelseIdWebKonfigurasjon> helseIdWebOptions)
-            : base(options, logger, encoder, clock)
+        public NoAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, IOptions<HelseIdWebKonfigurasjon> helseIdWebOptions)
+            : base(options, logger, encoder)
         {
             _noAuthenticationUserConfig = helseIdWebOptions.Value.NoAuthenticationUser ?? throw new ArgumentException(nameof(HelseIdWebKonfigurasjon.NoAuthenticationUser));
         }

@@ -28,7 +28,7 @@ public class HttpClientBuilder
         if (webConfig.AuthUse)
             foreach (var api in webConfig.Apis)
             {
-                builder.Services.AddUserAccessTokenHttpClient(api.Name, configureClient: client =>
+                builder.Services.AddHttpClient(api.Name, configureClient: client =>
                     {
                         client.BaseAddress = api.Uri;
                         client.Timeout = TimeSpan.FromMinutes(api.Timeout);
