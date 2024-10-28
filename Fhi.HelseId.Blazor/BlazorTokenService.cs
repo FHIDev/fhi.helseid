@@ -46,9 +46,9 @@ public class BlazorTokenService : IBlazorTokenService
                     throw new Exception($"Unable to refresh token: {t.Error}");
                 }
 
-                _state.AccessToken = t.AccessToken!;
+                _state.AccessToken = t.AccessToken;
                 _state.TokenExpires = t.ExpiresAt;
-                _state.RefreshToken = t.RefreshToken!;
+                _state.RefreshToken = t.RefreshToken;
 
                 await UpdateContext();
             }
@@ -66,7 +66,7 @@ public class BlazorTokenService : IBlazorTokenService
     {
         await _contextHandler.NewContext(async context =>
         {
-            var auth = await context.AuthenticateAsync()!;
+            var auth = await context.AuthenticateAsync();
             if (!auth.Succeeded)
             {
                 await context.SignOutAsync();
