@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Fhi.HelseId.Common;
@@ -47,6 +47,12 @@ public class HelseIdWebAuthBuilder
         if (_helseIdWebKonfigurasjonSection == null)
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         var helseIdWebKonfigurasjon = _helseIdWebKonfigurasjonSection.Get<HelseIdWebKonfigurasjon>();
+        var baseScopes = _configuration.GetSection("HelseIdWebKonfigurasjon:BaseScopes");
+        if (baseScopes != null) // override the list if set by user
+            helseIdWebKonfigurasjon.BaseScopes = baseScopes.AsEnumerable().Select(x=>x.Value).Where(x=>x != null);
+        var securityLevels = _configuration.GetSection("HelseIdWebKonfigurasjon:SecurityLevels");
+        if (securityLevels != null) // override the list if set by user
+            helseIdWebKonfigurasjon.SecurityLevels = securityLevels.AsEnumerable().Select(x => x.Value).Where(x => x != null).ToArray();
         if (helseIdWebKonfigurasjon == null)
             throw new MissingConfigurationException($"Missing required configuration {nameof(HelseIdWebKonfigurasjon)}");
         HelseIdWebKonfigurasjon = helseIdWebKonfigurasjon;

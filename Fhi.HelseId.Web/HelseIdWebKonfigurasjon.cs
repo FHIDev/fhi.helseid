@@ -41,30 +41,28 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
 
     public string[] SecurityLevels { get; set; } = [];
 
+    public override IEnumerable<string> BaseScopes { get; set; } = [
+                    "openid",
+                    "profile",
+                    "helseid://scopes/identity/pid",
+                    "helseid://scopes/identity/pid_pseudonym",
+                    "helseid://scopes/identity/security_level"
+                ];
 
-    protected override IEnumerable<string> FixedScopes
-    {
-        get
-        {
-            var list = new List<string>
-            {
-                "openid",
-                "profile",
-                "helseid://scopes/identity/pid",
-                "helseid://scopes/identity/pid_pseudonym",
-                "helseid://scopes/identity/security_level"
-            };
-            if (UseHprNumber)
-            {
-                list.Add("helseid://scopes/hpr/hpr_number");
-            }
-            list.AddRange(base.FixedScopes);
-            return list;
-        }
-    }
 
-    public bool UseHpr { get; set; } = false;
-    public bool UseHprNumber { get; set; } = false;
+    private bool useHprNumber = false;
+    public bool UseHprNumber
+    { 
+        get { return useHprNumber; } 
+        set {
+            useHprNumber = value;
+            var hprString = "helseid://scopes/hpr/hpr_number";
+            if (value && !HprScope.Contains(hprString))
+            {
+                HprScope.Append(hprString);
+            } 
+        } 
+    } 
     public bool UseHprPolicy { get; set; } = false;
 
     public string HprUsername { get; set; } = "";
