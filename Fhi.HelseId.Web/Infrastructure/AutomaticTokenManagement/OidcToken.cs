@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 {
     public class OidcToken

@@ -8,6 +8,7 @@ using System.Web;
 using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Common.Exceptions;
 using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -25,8 +26,7 @@ namespace Fhi.HelseId.Web.Services
     {
         protected abstract SecurityKey GetSecurityKey();
 
-        //public const string ClientAssertionType = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer;
-        public const string ClientAssertionType = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
+        public const string ClientAssertionType = OAuthConstants.JwtBearerClientAssertionType;
 
         protected SecretHandlerBase(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -66,6 +67,9 @@ public class TokenEndpointService : ITokenEndpointService
     public async Task<OidcToken> RefreshTokenAsync(string refreshToken)
     {
         var oidcOptions = await GetOidcOptionsAsync();
+
+        ArgumentNullException.ThrowIfNull(oidcOptions.ConfigurationManager);
+
         var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
         var clientAssertion = secretHandler?.GenerateClientAssertion;
 
@@ -75,7 +79,7 @@ public class TokenEndpointService : ITokenEndpointService
             GrantType = OpenIdConnectGrantTypes.RefreshToken,
             RefreshToken = refreshToken,
             ClientAssertion = clientAssertion,
-            ClientAssertionType = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", // TODO: check if there is a const class for this somewhere
+            ClientAssertionType = OAuthConstants.JwtBearerClientAssertionType,
         };
 
         var requestMessage = new HttpRequestMessage(HttpMethod.Post, configuration.TokenEndpoint);

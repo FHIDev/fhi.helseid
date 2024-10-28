@@ -1,7 +1,8 @@
-﻿using Fhi.HelseId.Common.Identity;
+﻿using System.Web;
+using Fhi.HelseId.Common.Constants;
+using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web;
 using Microsoft.IdentityModel.Tokens;
-using System.Web;
 
 namespace Fhi.HelseId.Swagger;
 
@@ -35,7 +36,7 @@ public class TokenProxy : ITokenProxy
         var clientAssertion = ClientAssertion.Generate(config.ClientId, config.Authority, jwkSecurityKey);
 
         requestParameters["client_id"] = config.ClientId;
-        requestParameters["client_assertion_type"] = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
+        requestParameters["client_assertion_type"] = OAuthConstants.JwtBearerClientAssertionType;
         requestParameters["client_assertion"] = clientAssertion;
 
         var tokenUrl = $"{_swaggerHelseIdConfiguration.Authority}/connect/token";

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using System.Globalization;
+﻿using System.Globalization;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Fhi.HelseId.Blazor;
 
@@ -88,4 +88,3 @@ public class BlazorTokenService : IBlazorTokenService
         });
     }
 }
-
