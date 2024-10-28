@@ -33,12 +33,12 @@ public interface ITokenEndpointService
 /// </summary>
 public class TokenEndpointService : ITokenEndpointService
 {
-    private readonly AutomaticTokenManagementOptions managementOptions;
-    private readonly IOptionsSnapshot<OpenIdConnectOptions> oidcOptions;
-    private readonly IAuthenticationSchemeProvider schemeProvider;
-    private readonly HttpClient httpClient;
-    private readonly ILogger<TokenEndpointService> logger;
-    private readonly IHelseIdSecretHandler? secretHandler;
+    private readonly AutomaticTokenManagementOptions _managementOptions;
+    private readonly IOptionsSnapshot<OpenIdConnectOptions> _oidcOptions;
+    private readonly IAuthenticationSchemeProvider _schemeProvider;
+    private readonly HttpClient _httpClient;
+    private readonly ILogger<TokenEndpointService> _logger;
+    private readonly IHelseIdSecretHandler? _secretHandler;
 
     public TokenEndpointService(
         IOptions<AutomaticTokenManagementOptions> managementOptions,
@@ -50,12 +50,12 @@ public class TokenEndpointService : ITokenEndpointService
         IHelseIdSecretHandler secretHandler)
     {
         logger.LogMember();
-        this.secretHandler = secretHandler; //as HelseIdJwkSecretHandler;
-        this.managementOptions = managementOptions.Value;
-        this.oidcOptions = oidcOptions;
-        this.schemeProvider = schemeProvider;
-        this.httpClient = httpClient;
-        this.logger = logger;
+        _secretHandler = secretHandler; //as HelseIdJwkSecretHandler;
+        _managementOptions = managementOptions.Value;
+        _oidcOptions = oidcOptions;
+        _schemeProvider = schemeProvider;
+        _httpClient = httpClient;
+        _logger = logger;
         httpContextAccessor.HttpContext?.Features.Get<AuthorizationCodeReceivedContext>();
     }
 
@@ -71,7 +71,7 @@ public class TokenEndpointService : ITokenEndpointService
         ArgumentNullException.ThrowIfNull(oidcOptions.ConfigurationManager);
 
         var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
-        var clientAssertion = secretHandler?.GenerateClientAssertion;
+        var clientAssertion = _secretHandler?.GenerateClientAssertion;
 
         var tokenEndpointRequest = new OpenIdConnectMessage()
         {
@@ -87,19 +87,19 @@ public class TokenEndpointService : ITokenEndpointService
 
         try
         {
-            var responseMessage = await httpClient.SendAsync(requestMessage);
+            var responseMessage = await _httpClient.SendAsync(requestMessage);
             var responseContent = await responseMessage.Content.ReadAsStringAsync();
             var resultMessage = new OpenIdConnectMessage(responseContent);
 
-            var expiresOn = DateTimeOffset.Now + TimeSpan.FromSeconds(int.Parse(resultMessage.ExpiresIn));
+            var expiresAt = DateTimeOffset.Now + TimeSpan.FromSeconds(int.Parse(resultMessage.ExpiresIn));
             var tokenResponseJson = JsonConvert.SerializeObject(resultMessage);
 
-            return new OidcToken(resultMessage.AccessToken, resultMessage.RefreshToken, expiresOn, tokenResponseJson);
+            return new OidcToken(resultMessage.AccessToken, resultMessage.RefreshToken, expiresAt, tokenResponseJson);
         }
         catch (MsalServiceException ex)
         {
             var message = $"TokenEndPointService:RefreshTokenAsync. Error: {ex.Message}";
-            logger.LogError(ex, message);
+            _logger.LogError(ex, message);
 
             return new OidcToken(ex, message);
         }
@@ -107,25 +107,17 @@ public class TokenEndpointService : ITokenEndpointService
 
     private async Task<OpenIdConnectOptions> GetOidcOptionsAsync()
     {
-        if (string.IsNullOrEmpty(managementOptions.Scheme))
+        if (string.IsNullOrEmpty(_managementOptions.Scheme))
         {
-            var scheme = await schemeProvider.GetDefaultChallengeSchemeAsync();
+            var scheme = await _schemeProvider.GetDefaultChallengeSchemeAsync();
 
             if (scheme == null)
             {
                 throw new InvalidOperationException("No AuthenticationScheme was specified, and there was no DefaultChallengeScheme found.");
             }
 
-            return oidcOptions.Get(scheme.Name);
+            return _oidcOptions.Get(scheme.Name);
         }
-        return oidcOptions.Get(managementOptions.Scheme);
-    }
-}
-
-internal sealed class MsalHttpClientFactoryAdapter(HttpClient httpClient) : IMsalHttpClientFactory
-{
-    public HttpClient GetHttpClient()
-    {
-        return httpClient;
+        return _oidcOptions.Get(_managementOptions.Scheme);
     }
 }

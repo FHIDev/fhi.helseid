@@ -14,40 +14,40 @@ public interface IBlazorTokenService
 /// </summary>
 public class BlazorTokenService : IBlazorTokenService
 {
-    private const int CLOSE_TO_EXPIRE_SECONDS = 5; // acount for IO-delay from ExpiresIn is set extyernally until it is read
+    private const int CLOSE_TO_EXPIRE_SECONDS = 5; // Account for IO-delay from ExpiresIn is set externally until it is read
 
-    private readonly HelseIdState state;
-    private readonly TokenEndpointService tokenRefreshService;
-    private readonly BlazorContextService contextHandler;
+    private readonly HelseIdState _state;
+    private readonly TokenEndpointService _tokenRefreshService;
+    private readonly BlazorContextService _contextHandler;
 
     public BlazorTokenService(HelseIdState state, TokenEndpointService tokenRefreshService, BlazorContextService contextHandler)
     {
-        this.state = state;
-        this.tokenRefreshService = tokenRefreshService;
-        this.contextHandler = contextHandler;
+        _state = state;
+        _tokenRefreshService = tokenRefreshService;
+        _contextHandler = contextHandler;
     }
 
     public async Task<string?> GetToken()
     {
-        if (!state.HasBeenInitialized)
+        if (!_state.HasBeenInitialized)
         {
             throw new Exception("HelseIdState has not been populated. Have you remembered to wrap your App.razor code in <CascadingStates>...</CascadingStates>?");
         }
 
         // check if the token is expired (or close to expiring)
-        if (state.TokenExpires < DateTime.UtcNow.AddSeconds(-CLOSE_TO_EXPIRE_SECONDS))
+        if (_state.TokenExpires < DateTime.UtcNow.AddSeconds(-CLOSE_TO_EXPIRE_SECONDS))
         {
             try
             {
-                var t = await tokenRefreshService.RefreshTokenAsync(state.RefreshToken!);
+                var t = await _tokenRefreshService.RefreshTokenAsync(_state.RefreshToken);
                 if (t.IsError)
                 {
                     throw new Exception($"Unable to refresh token: {t.Error}");
                 }
 
-                state.AccessToken = t.AccessToken!;
-                state.TokenExpires = t.ExpiresOn;
-                state.RefreshToken = t.RefreshToken!;
+                _state.AccessToken = t.AccessToken!;
+                _state.TokenExpires = t.ExpiresAt;
+                _state.RefreshToken = t.RefreshToken!;
 
                 await UpdateContext();
             }
@@ -58,12 +58,12 @@ public class BlazorTokenService : IBlazorTokenService
             }
         }
 
-        return state.AccessToken;
+        return _state.AccessToken;
     }
 
     private async Task UpdateContext()
     {
-        await contextHandler.NewContext(async context =>
+        await _contextHandler.NewContext(async context =>
         {
             var auth = await context.AuthenticateAsync()!;
             if (!auth.Succeeded)
@@ -72,9 +72,9 @@ public class BlazorTokenService : IBlazorTokenService
                 return;
             }
 
-            auth.Properties.UpdateTokenValue("access_token", state.AccessToken);
-            auth.Properties.UpdateTokenValue("refresh_token", state.RefreshToken);
-            auth.Properties.UpdateTokenValue("expires_at", state.TokenExpires.ToString("o", CultureInfo.InvariantCulture));
+            auth.Properties.UpdateTokenValue("access_token", _state.AccessToken);
+            auth.Properties.UpdateTokenValue("refresh_token", _state.RefreshToken);
+            auth.Properties.UpdateTokenValue("expires_at", _state.TokenExpires.ToString("o", CultureInfo.InvariantCulture));
 
             await context.SignInAsync(auth.Principal, auth.Properties);
         });
@@ -82,7 +82,7 @@ public class BlazorTokenService : IBlazorTokenService
 
     private async Task SignOut()
     {
-        await contextHandler.NewContext(async context =>
+        await _contextHandler.NewContext(async context =>
         {
             await context.SignOutAsync();
         });

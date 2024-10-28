@@ -4,11 +4,11 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 {
     public record OidcToken
     {
-        public OidcToken(string accessToken, string refreshToken, DateTimeOffset expiresOn, string json)
+        public OidcToken(string accessToken, string refreshToken, DateTimeOffset expiresAt, string json)
         {
             AccessToken = accessToken;
             RefreshToken = refreshToken;
-            ExpiresOn = expiresOn;
+            ExpiresAt = expiresAt;
             IsError = false;
             Error = null;
             ErrorDescription = "";
@@ -18,7 +18,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         {
             AccessToken = "";
             RefreshToken = "";
-            ExpiresOn = DateTimeOffset.MinValue;
+            ExpiresAt = DateTimeOffset.MinValue;
             IsError = true;
             Error = ex;
             ErrorDescription = errorDescription;
@@ -26,7 +26,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
         }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
-        public DateTimeOffset ExpiresOn { get; set; }
+        public DateTimeOffset ExpiresAt { get; set; }
         public bool IsError { get; set; }
         public Exception? Error { get; set; }
         public string ErrorDescription { get; set; }

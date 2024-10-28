@@ -20,9 +20,9 @@ namespace Fhi.HelseId.Web.Infrastructure
             return updated;
         }
 
-        public static DateTimeOffset UpdateExpiresAt(this CookieValidatePrincipalContext ctx, DateTimeOffset expiresOn)
+        public static DateTimeOffset UpdateExpiresAt(this CookieValidatePrincipalContext ctx, DateTimeOffset expiresAt)
         {
-            var newExpiresAt = expiresOn;
+            var newExpiresAt = expiresAt;
             ctx.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
             return newExpiresAt;
         }
@@ -31,7 +31,7 @@ namespace Fhi.HelseId.Web.Infrastructure
         {
             ctx.UpdateAccessToken(tokenResponse.AccessToken);
             ctx.UpdateRefreshToken(tokenResponse.RefreshToken);
-            var newExpiresAt = ctx.UpdateExpiresAt(tokenResponse.ExpiresOn);
+            var newExpiresAt = ctx.UpdateExpiresAt(tokenResponse.ExpiresAt);
             return newExpiresAt;
         }
     }
