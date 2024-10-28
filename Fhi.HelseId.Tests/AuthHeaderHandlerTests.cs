@@ -22,14 +22,40 @@ namespace Fhi.HelseId.Tests;
 
 public class AuthHeaderHandlerTests
 {
-    HttpClient _client = null!;
-    string _authToken = null!;
 
-    [SetUp]
-    public void SetUp()
+    [Test]
+    public async Task HandlerAddsAuthToken()
     {
-        _authToken = Guid.NewGuid().ToString();
+        var authToken = Guid.NewGuid().ToString();
+        var client = SetupInfrastructure(authToken);
 
+        var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
+
+        var response = await client.SendAsync(request);
+
+        // The dummy client returns the authorization header value if any
+        var token = await response.Content.ReadAsStringAsync();
+        Assert.That(token, Is.EqualTo("Bearer " + authToken));
+    }
+
+    [Test]
+    public async Task HandlerDoesNotGetTokenWhenAnonymous()
+    {
+        var authToken = Guid.NewGuid().ToString();
+        var client = SetupInfrastructure(authToken);
+
+        var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
+        request.Options.TryAdd("Anonymous", "Anonymous");
+
+        var response = await client.SendAsync(request);
+
+        // The dummy client returns the authorization header value if any
+        var token = await response.Content.ReadAsStringAsync();
+        Assert.That(token, Is.EqualTo(""));
+    }
+
+    private HttpClient SetupInfrastructure(string authToken)
+    {
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         var context = Substitute.For<HttpContext>();
         var services = new ServiceCollection();
@@ -39,7 +65,7 @@ public class AuthHeaderHandlerTests
         authenticationProperties.StoreTokens([new AuthenticationToken
         {
             Name = OpenIdConnectParameterNames.AccessToken,
-            Value = _authToken
+            Value = authToken
         }]);
         var authResult = AuthenticateResult.Success(new AuthenticationTicket(
             claimsPrincipal,
@@ -62,45 +88,18 @@ public class AuthHeaderHandlerTests
 
         handler.InnerHandler = new DummyInnerHandler();
 
-        _client = new HttpClient(handler);
-    }
-
-    [TearDown]
-    public void TearDown() => _client.Dispose();
-
-    [Test]
-    public async Task HandlerAddsAuthToken()
-    {
-        var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
-
-        var response = await _client.SendAsync(request);
-
-        // The dummy client returns the authorization header value if any
-        var token = await response.Content.ReadAsStringAsync();
-        Assert.That(token, Is.EqualTo("Bearer " + _authToken));
-    }
-
-    [Test]
-    public async Task HandlerDoesNotGetTokenWhenAnonymous()
-    {
-        var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
-        request.Options.TryAdd("Anonymous", "Anonymous");
-
-        var response = await _client.SendAsync(request);
-
-        // The dummy client returns the authorization header value if any
-        var token = await response.Content.ReadAsStringAsync();
-        Assert.That(token, Is.EqualTo(""));
+        return new HttpClient(handler);
     }
 }
 
-public class DummyInnerHandler : HttpClientHandler
+internal class DummyInnerHandler : HttpClientHandler
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         // Get any auth header, and use its value as the content of the response
         var auth = request.Headers.FirstOrDefault(x => x.Key == "Authorization").Value?.FirstOrDefault() ?? "";
         var response = new HttpResponseMessage() { Content = new StringContent(auth) };
+        
         return Task.FromResult(response);
     }
 }
