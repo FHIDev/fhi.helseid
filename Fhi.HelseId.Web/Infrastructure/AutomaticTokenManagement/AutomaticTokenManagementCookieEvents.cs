@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -63,7 +64,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
             return;
         }
 
-        var expiresAt = tokens.SingleOrDefault(t => t.Name == "expires_at");
+        var expiresAt = tokens.SingleOrDefault(t => t.Name == OAuthConstants.ExpiresAt);
         if (expiresAt == null)
         {
             _logger.LogError("{class}:{method} -No expires_at value found in cookie properties.", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
+using Fhi.HelseId.Common.Constants;
 
 namespace Fhi.HelseId.Api.ExtensionMethods;
 
@@ -9,19 +10,19 @@ public static class TokenExtensions
 {
     public static async Task<string> AccessToken(this HttpContext ctx)
     {
-        var ret = await ctx.GetTokenAsync("access_token");
+        var ret = await ctx.GetTokenAsync(OAuthConstants.AccessToken);
         return ret ?? throw new NoTokenException("Missing access token");
     }
 
     public static async Task<string> IdentityToken(this HttpContext ctx)
     {
-        var ret = await ctx.GetTokenAsync("id_token");
+        var ret = await ctx.GetTokenAsync(OAuthConstants.IdToken);
         return ret ?? throw new NoTokenException("Missing identity token");
     }
 
     public static async Task<string> RefreshToken(this HttpContext ctx)
     {
-        var ret = await ctx.GetTokenAsync("refresh_token");
+        var ret = await ctx.GetTokenAsync(OAuthConstants.RefreshToken);
         return ret ?? throw new NoTokenException("Missing refresh token");
     }
 

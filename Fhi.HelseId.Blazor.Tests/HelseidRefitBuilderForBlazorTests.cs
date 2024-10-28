@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Fhi.HelseId.Web.Services;
@@ -50,7 +51,7 @@ public partial class HelseidRefitBuilderForBlazorTests
         Is.EqualTo(ContextCorrelationId));
 
         var logger = (TestLogger<LoggingDelegationHandler>)provider.GetRequiredService<ILogger<LoggingDelegationHandler>>();
-        Assert.That(logger.Entries.Any( x => x.Contains(ContextCorrelationId)), Is.True, "Correlation id not found: " + logger.Entries.First());
+        Assert.That(logger.Entries.Any(x => x.Contains(ContextCorrelationId)), Is.True, "Correlation id not found: " + logger.Entries.First());
     }
 
     [Test]
@@ -112,8 +113,8 @@ public partial class HelseidRefitBuilderForBlazorTests
         var authStore = Substitute.For<IAuthenticationService>();
         var authItems = new Dictionary<string, string?>()
         {
-            { ".Token.expires_at", DateTime.UtcNow.AddDays(1).ToString("u") },
-            { ".Token.access_token", AccessTokenValue },
+            { $".Token.{OAuthConstants.ExpiresAt}", DateTime.UtcNow.AddDays(1).ToString("u") },
+            { $".Token.{OAuthConstants.AccessToken}", AccessTokenValue },
         };
 
         var ticket = AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties(authItems), ""));

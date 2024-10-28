@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Microsoft.AspNetCore.Authentication;
 
@@ -72,9 +73,9 @@ public class BlazorTokenService : IBlazorTokenService
                 return;
             }
 
-            auth.Properties.UpdateTokenValue("access_token", _state.AccessToken);
-            auth.Properties.UpdateTokenValue("refresh_token", _state.RefreshToken);
-            auth.Properties.UpdateTokenValue("expires_at", _state.TokenExpires.ToString("o", CultureInfo.InvariantCulture));
+            auth.Properties.UpdateTokenValue(OAuthConstants.AccessToken, _state.AccessToken);
+            auth.Properties.UpdateTokenValue(OAuthConstants.RefreshToken, _state.RefreshToken);
+            auth.Properties.UpdateTokenValue(OAuthConstants.ExpiresAt, _state.TokenExpires.ToString("o", CultureInfo.InvariantCulture));
 
             await context.SignInAsync(auth.Principal, auth.Properties);
         });
