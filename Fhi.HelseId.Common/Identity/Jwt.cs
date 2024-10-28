@@ -12,10 +12,15 @@ namespace Fhi.HelseId.Common.Identity
 {
     public static class ClientAssertion
     {
-        public static string Generate(string clientId, string authority, SecurityKey securityKey)
+        public static string Generate(string clientId, string authority, SecurityKey securityKey, bool useIdPorten)
         {
-            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
-
+            SigningCredentials signingCredentials;
+            if (useIdPorten) {
+                signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
+            }
+            else {
+                signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512);
+            }
             var extraClaims = new List<Claim>
             {
                 new(JwtRegisteredClaimNames.Sub, clientId),

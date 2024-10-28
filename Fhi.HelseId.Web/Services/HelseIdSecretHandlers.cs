@@ -34,7 +34,7 @@ namespace Fhi.HelseId.Web.Services
 
         public virtual void AddSecretConfiguration(OpenIdConnectOptions options) { }
 
-        public virtual string GenerateClientAssertion => ClientAssertion.Generate(ConfigAuth.ClientId, ConfigAuth.Authority, GetSecurityKey());
+        public virtual string GenerateClientAssertion => ClientAssertion.Generate(ConfigAuth.ClientId, ConfigAuth.Authority, GetSecurityKey(), ConfigAuth.UseIdPorten);
 
         protected IHelseIdWebKonfigurasjon ConfigAuth { get; }
     }
