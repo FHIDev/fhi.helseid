@@ -22,7 +22,6 @@ namespace Fhi.HelseId.Tests;
 
 public class AuthHeaderHandlerTests
 {
-
     [Test]
     public async Task HandlerAddsAuthToken()
     {

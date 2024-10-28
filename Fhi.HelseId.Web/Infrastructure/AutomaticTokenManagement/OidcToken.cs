@@ -2,7 +2,7 @@
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 {
-    public class OidcToken
+    public record OidcToken
     {
         public OidcToken(string accessToken, string refreshToken, DateTimeOffset expiresOn, string json)
         {

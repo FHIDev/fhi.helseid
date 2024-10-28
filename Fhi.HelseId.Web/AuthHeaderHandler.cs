@@ -24,11 +24,11 @@ public class AuthHeaderHandler : DelegatingHandler
 {
     public const string AnonymousOptionKey = "Anonymous";
 
-    private readonly IHttpContextAccessor contextAccessor;
-    private readonly ILogger<AuthHeaderHandler> logger;
-    private readonly ICurrentUser user;
+    private readonly IHttpContextAccessor _contextAccessor;
+    private readonly ILogger<AuthHeaderHandler> _logger;
+    private readonly ICurrentUser _user;
     private readonly HelseIdWebKonfigurasjon config;
-    private readonly IAuthorizationHeaderSetter authorizationHeaderSetter;
+    private readonly IAuthorizationHeaderSetter _authorizationHeaderSetter;
 
     public AuthHeaderHandler(IHttpContextAccessor contextAccessor,
         ILogger<AuthHeaderHandler> logger,
@@ -38,41 +38,46 @@ public class AuthHeaderHandler : DelegatingHandler
     {
         config = options.Value;
         logger.LogMember();
-        this.contextAccessor = contextAccessor;
-        this.logger = logger;
-        this.user = user;
-        this.authorizationHeaderSetter = authorizationHeaderSetter;
+        _contextAccessor = contextAccessor;
+        _logger = logger;
+        _user = user;
+        _authorizationHeaderSetter = authorizationHeaderSetter;
     }
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (request.Options.Any(x => x.Key == AnonymousOptionKey))
         {
-            logger.LogTrace("{class}.{method} - Skipping Access token because of anonymous HttpRequestMessage options", nameof(AuthHeaderHandler), nameof(SendAsync));
+            _logger.LogTrace("{class}.{method} - Skipping Access token because of anonymous HttpRequestMessage options",
+                nameof(AuthHeaderHandler), nameof(SendAsync));
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
-        var ctx = contextAccessor.HttpContext ?? throw new NoContextException();
-        logger.LogTrace("{class}.{method} - Starting", nameof(AuthHeaderHandler), nameof(SendAsync));
+        var ctx = _contextAccessor.HttpContext ?? throw new NoContextException();
+        _logger.LogTrace("{class}.{method} - Starting", nameof(AuthHeaderHandler), nameof(SendAsync));
         var token = await ctx.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
         if (token == null)
         {
-            logger.LogError("{class}.{method} No access token found in context. Make sure you have added the AddTokenManagement() to your Startup.cs", nameof(AuthHeaderHandler), nameof(SendAsync));
+            _logger.LogError("{class}.{method} No access token found in context. Make sure you have added the" +
+                " AddTokenManagement() to your Startup.cs",
+                nameof(AuthHeaderHandler), nameof(SendAsync));
         }
         else
         {
-            logger.LogTrace("{class}.{method} - Found access token in context (hash:{hash})", nameof(AuthHeaderHandler), nameof(SendAsync), token.GetHashCode());
+            _logger.LogTrace("{class}.{method} - Found access token in context (hash:{hash})",
+                nameof(AuthHeaderHandler), nameof(SendAsync), token.GetHashCode());
         }
 
         if (!string.IsNullOrEmpty(token))
         {
-            await authorizationHeaderSetter.SetAuthorizationHeader(request, token);
+            await _authorizationHeaderSetter.SetAuthorizationHeader(request, token);
         }
 
         var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
-            logger.LogError("{class}.{method} Request to {url} failed with status code {statusCode}", nameof(AuthHeaderHandler), nameof(SendAsync), request.RequestUri, response.StatusCode);
+            _logger.LogError("{class}.{method} Request to {url} failed with status code {statusCode}",
+                nameof(AuthHeaderHandler), nameof(SendAsync), request.RequestUri, response.StatusCode);
         }
 
         return response;
