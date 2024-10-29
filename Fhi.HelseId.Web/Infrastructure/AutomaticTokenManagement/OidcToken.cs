@@ -1,34 +1,37 @@
 ﻿using System;
+using System.Net;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
 {
     public record OidcToken
     {
-        public OidcToken(string accessToken, string refreshToken, DateTimeOffset expiresAt, string json)
+        public OidcToken(HttpStatusCode httpStatusCode, string accessToken, string refreshToken, DateTimeOffset expiresAt, string json)
         {
+            HttpStatusCode = httpStatusCode;
             AccessToken = accessToken;
             RefreshToken = refreshToken;
             ExpiresAt = expiresAt;
             IsError = false;
-            Error = null;
             ErrorDescription = "";
             Json = json;
         }
-        public OidcToken(Exception ex, string errorDescription)
+
+        public OidcToken(HttpStatusCode httpStatusCode, string errorDescription, string json)
         {
+            HttpStatusCode = httpStatusCode;
             AccessToken = "";
             RefreshToken = "";
             ExpiresAt = DateTimeOffset.MinValue;
             IsError = true;
-            Error = ex;
             ErrorDescription = errorDescription;
-            Json = null;
+            Json = json;
         }
+
+        public HttpStatusCode HttpStatusCode { get; set; }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
         public DateTimeOffset ExpiresAt { get; set; }
         public bool IsError { get; set; }
-        public Exception? Error { get; set; }
         public string ErrorDescription { get; set; }
         public string? Json { get; set; }
     }

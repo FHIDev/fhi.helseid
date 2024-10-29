@@ -2,16 +2,13 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.Constants;
-using Fhi.HelseId.Common.ExtensionMethods;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Newtonsoft.Json;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
@@ -49,8 +46,7 @@ public class TokenEndpointService : ITokenEndpointService
         ILogger<TokenEndpointService> logger,
         IHelseIdSecretHandler secretHandler)
     {
-        logger.LogMember();
-        _secretHandler = secretHandler; //as HelseIdJwkSecretHandler;
+        _secretHandler = secretHandler;
         _managementOptions = managementOptions.Value;
         _oidcOptions = oidcOptions;
         _schemeProvider = schemeProvider;
@@ -68,7 +64,10 @@ public class TokenEndpointService : ITokenEndpointService
     {
         var oidcOptions = await GetOidcOptionsAsync();
 
-        ArgumentNullException.ThrowIfNull(oidcOptions.ConfigurationManager);
+        if (oidcOptions.ConfigurationManager == null)
+        {
+            throw new InvalidOperationException("oidcOptions.ConfigurationManager cannot be null.");
+        }
 
         var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
         var clientAssertion = _secretHandler?.GenerateClientAssertion;
@@ -82,27 +81,28 @@ public class TokenEndpointService : ITokenEndpointService
             ClientAssertionType = OAuthConstants.JwtBearerClientAssertionType,
         };
 
-        var requestMessage = new HttpRequestMessage(HttpMethod.Post, configuration.TokenEndpoint);
-        requestMessage.Content = new FormUrlEncodedContent(tokenEndpointRequest.Parameters);
+        var request = new HttpRequestMessage(HttpMethod.Post, configuration.TokenEndpoint);
+        request.Content = new FormUrlEncodedContent(tokenEndpointRequest.Parameters);
 
-        try
+        var response = await _httpClient.SendAsync(request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
         {
-            var responseMessage = await _httpClient.SendAsync(requestMessage);
-            var responseContent = await responseMessage.Content.ReadAsStringAsync();
-            var resultMessage = new OpenIdConnectMessage(responseContent);
+            _logger.LogError("StatusCode does not indicate success. StatusCode {@StatusCode}, ErrorDescription: {@ErrorDescription}, Json: {@Json}",
+                response.StatusCode,
+                response.ReasonPhrase,
+                responseContent);
 
-            var expiresAt = DateTimeOffset.Now + TimeSpan.FromSeconds(int.Parse(resultMessage.ExpiresIn));
-            var tokenResponseJson = JsonConvert.SerializeObject(resultMessage);
-
-            return new OidcToken(resultMessage.AccessToken, resultMessage.RefreshToken, expiresAt, tokenResponseJson);
+            return new OidcToken(response.StatusCode, response.ReasonPhrase ?? "StatusCode does not indicate success.", responseContent);
         }
-        catch (MsalServiceException ex)
-        {
-            var message = $"TokenEndPointService:RefreshTokenAsync. Error: {ex.Message}";
-            _logger.LogError(ex, message);
 
-            return new OidcToken(ex, message);
-        }
+        var resultMessage = new OpenIdConnectMessage(responseContent);
+        var expiresAt = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(int.Parse(resultMessage.ExpiresIn));
+
+        _logger.LogTrace("RefreshToken: {@RefreshToken}", responseContent);
+
+        return new OidcToken(response.StatusCode, resultMessage.AccessToken, resultMessage.RefreshToken, expiresAt, responseContent);
     }
 
     private async Task<OpenIdConnectOptions> GetOidcOptionsAsync()

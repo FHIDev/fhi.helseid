@@ -44,7 +44,7 @@ public class BlazorTokenService : IBlazorTokenService
                 var t = await _tokenRefreshService.RefreshTokenAsync(_state.RefreshToken);
                 if (t.IsError)
                 {
-                    throw new Exception($"Unable to refresh token: {t.Error}");
+                    throw new Exception($"Unable to refresh token. HttpStatusCode: {t.HttpStatusCode}, ErrorDescription: {t.ErrorDescription}");
                 }
 
                 _state.AccessToken = t.AccessToken;

@@ -93,7 +93,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
                         var response = await _service.RefreshTokenAsync(rfValue);
                         if (response.IsError)
                         {
-                            _logger.LogTrace("Error refreshing token: {error}, {errordesc}\n{json}", response.Error, response.ErrorDescription, response.Json);
+                            _logger.LogTrace("Error refreshing token: {@ErrorDescription}\n{@Json}", response.ErrorDescription, response.Json);
                             context.RejectPrincipal();
                             return;
                         }
