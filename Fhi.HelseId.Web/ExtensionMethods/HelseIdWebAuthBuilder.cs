@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
 
@@ -47,12 +48,14 @@ public class HelseIdWebAuthBuilder
         if (_helseIdWebKonfigurasjonSection == null)
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         var helseIdWebKonfigurasjon = _helseIdWebKonfigurasjonSection.Get<HelseIdWebKonfigurasjon>();
-        var baseScopes = _configuration.GetSection("HelseIdWebKonfigurasjon:BaseScopes");
-        if (baseScopes != null) // override the list if set by user
-            helseIdWebKonfigurasjon.BaseScopes = baseScopes.AsEnumerable().Select(x=>x.Value).Where(x=>x != null);
-        var securityLevels = _configuration.GetSection("HelseIdWebKonfigurasjon:SecurityLevels");
-        if (securityLevels != null) // override the list if set by user
-            helseIdWebKonfigurasjon.SecurityLevels = securityLevels.AsEnumerable().Select(x => x.Value).Where(x => x != null).ToArray();
+        var baseScopesSection = _configuration.GetSection("HelseIdWebKonfigurasjon:BaseScopes");
+        var baseScopes = baseScopesSection.AsEnumerable().Select(x => x.Value).Where(x => x != null);
+        if (baseScopes.Any()) // override the list if set by user
+            helseIdWebKonfigurasjon.BaseScopes = baseScopes;
+        var securityLevelsSection = _configuration.GetSection("HelseIdWebKonfigurasjon:SecurityLevels");
+        var securityLevels = securityLevelsSection.AsEnumerable().Select(x => x.Value).Where(x => x != null).ToArray();
+        if (securityLevels.Any()) // override the list if set by user
+            helseIdWebKonfigurasjon.SecurityLevels = securityLevels;
         if (helseIdWebKonfigurasjon == null)
             throw new MissingConfigurationException($"Missing required configuration {nameof(HelseIdWebKonfigurasjon)}");
         HelseIdWebKonfigurasjon = helseIdWebKonfigurasjon;
@@ -86,7 +89,7 @@ public class HelseIdWebAuthBuilder
             _services.AddMemoryCache();
             _services.AddSingleton<IHprFactory, HprFactory>();
             _services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             if (HelseIdWebKonfigurasjon.UseDPoPTokens)
             {
