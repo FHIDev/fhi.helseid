@@ -20,7 +20,6 @@
     <PackageReference Include="System.ServiceModel.Federation" />
     <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="System.ServiceModel.NetTcp" />
-    <PackageReference Include="IdentityModel.AspNetCore" />
     <PackageReference Include="System.ServiceModel.Security" />
     <PackageReference Include="System.Text.RegularExpressions" />
   </ItemGroup>

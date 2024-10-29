@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Fhi.HelseId.Common.Constants;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Fhi.HelseId.Blazor
 {
@@ -16,11 +18,11 @@ namespace Fhi.HelseId.Blazor
         {
             HasBeenInitialized = true;
 
-            var tokenExpiry = await context.GetTokenAsync("expires_at");
+            var tokenExpiry = await context.GetTokenAsync(OAuthConstants.ExpiresAt);
             DateTimeOffset.TryParse(tokenExpiry, out var expiresAt);
 
-            AccessToken = await context.GetTokenAsync("access_token") ?? "";
-            RefreshToken = await context.GetTokenAsync("refresh_token") ?? "";
+            AccessToken = await context.GetTokenAsync(OpenIdConnectParameterNames.AccessToken) ?? "";
+            RefreshToken = await context.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken) ?? "";
             TokenExpires = expiresAt;
             CorrelationId = GetCorrelationId(context);
         }
@@ -39,7 +41,7 @@ namespace Fhi.HelseId.Blazor
                 // if we did not find a correlation Id, set it to the default one so other code that reads correlation Id can see it
                 httpContext.Request.Headers.TryAdd(CorrelationIdHandler.CorrelationIdHeaderName, correlationId);
             }
-            
+
             if (!httpContext.Response.Headers.TryGetValue(CorrelationIdHandler.CorrelationIdHeaderName, out _))
             {
                 // if we did not find a correlation Id, set it to the default one so other code that reads correlation Id can see it

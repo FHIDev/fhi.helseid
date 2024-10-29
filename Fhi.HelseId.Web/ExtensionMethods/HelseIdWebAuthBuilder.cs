@@ -112,7 +112,6 @@ public class HelseIdWebAuthBuilder
         _services.AddSingleton(HelseIdWebKonfigurasjon);
         _services.Configure<HelseIdWebKonfigurasjon>(_helseIdWebKonfigurasjonSection);
         _services.AddHttpContextAccessor();
-        _services.AddSingleton<IRefreshTokenStore, RefreshTokenStore>();
         _services.AddSingleton(SecretHandler);
 
         (var authorizeFilter, string policyName) = AddAuthentication(configureAuthentication);
@@ -349,7 +348,6 @@ public class HelseIdWebAuthBuilder
     /// </summary>
     public HelseIdWebAuthBuilder AddOutgoingApis()
     {
-        _services.AddAccessTokenManagement();
         _services.AddTransient<AuthHeaderHandler>();
 
         return this;
@@ -369,7 +367,7 @@ public class HelseIdWebAuthBuilder
     }
 
     private IHttpClientBuilder AddHelseIdApiServices(IApiOutgoingKonfigurasjon api)
-        => _services.AddUserAccessTokenHttpClient(api.Name, configureClient: client =>
+        => _services.AddHttpClient(api.Name, configureClient: client =>
         {
             client.BaseAddress = api.Uri;
             client.Timeout = TimeSpan.FromMinutes(10);

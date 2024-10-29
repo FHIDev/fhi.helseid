@@ -24,7 +24,6 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; set; }
     ApiOutgoingKonfigurasjon[] Apis { get; set; }
     bool UseApis { get; }
-    bool UseRefreshTokenStore { get; }
     NoAuthenticationUser NoAuthenticationUser { get; }
 
     /// <summary>
@@ -73,8 +72,6 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
     public string HprUrl { get; set; } = "";
 
     public bool UseProtectedPaths { get; set; } = true;
-
-    public bool UseRefreshTokenStore { get; set; } = false;
 
     public bool UseApis => Apis.Any();
 

@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Fhi.HelseId.Common.ExtensionMethods;
+using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Web.Services;
-using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 
@@ -23,7 +22,7 @@ public interface ITokenEndpointService
     /// </summary>
     /// <param name="refreshToken">An OIDC refresh token</param>
     /// <returns>Result of the refresh attempt</returns>
-    Task<TokenResponse> RefreshTokenAsync(string refreshToken);
+    Task<OidcToken> RefreshTokenAsync(string refreshToken);
 }
 
 /// <summary>
@@ -31,12 +30,12 @@ public interface ITokenEndpointService
 /// </summary>
 public class TokenEndpointService : ITokenEndpointService
 {
-    private readonly AutomaticTokenManagementOptions managementOptions;
-    private readonly IOptionsSnapshot<OpenIdConnectOptions> oidcOptions;
-    private readonly IAuthenticationSchemeProvider schemeProvider;
-    private readonly HttpClient httpClient;
-    private readonly ILogger<TokenEndpointService> logger;
-    private readonly IHelseIdSecretHandler? secretHandler;
+    private readonly AutomaticTokenManagementOptions _managementOptions;
+    private readonly IOptionsSnapshot<OpenIdConnectOptions> _oidcOptions;
+    private readonly IAuthenticationSchemeProvider _schemeProvider;
+    private readonly HttpClient _httpClient;
+    private readonly ILogger<TokenEndpointService> _logger;
+    private readonly IHelseIdSecretHandler? _secretHandler;
 
     public TokenEndpointService(
         IOptions<AutomaticTokenManagementOptions> managementOptions,
@@ -47,13 +46,12 @@ public class TokenEndpointService : ITokenEndpointService
         ILogger<TokenEndpointService> logger,
         IHelseIdSecretHandler secretHandler)
     {
-        logger.LogMember();
-        this.secretHandler = secretHandler; //as HelseIdJwkSecretHandler;
-        this.managementOptions = managementOptions.Value;
-        this.oidcOptions = oidcOptions;
-        this.schemeProvider = schemeProvider;
-        this.httpClient = httpClient;
-        this.logger = logger;
+        _secretHandler = secretHandler;
+        _managementOptions = managementOptions.Value;
+        _oidcOptions = oidcOptions;
+        _schemeProvider = schemeProvider;
+        _httpClient = httpClient;
+        _logger = logger;
         httpContextAccessor.HttpContext?.Features.Get<AuthorizationCodeReceivedContext>();
     }
 
@@ -62,50 +60,64 @@ public class TokenEndpointService : ITokenEndpointService
     /// </summary>
     /// <param name="refreshToken">An OIDC refresh token</param>
     /// <returns>Result of the refresh attempt</returns>
-    public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
+    public async Task<OidcToken> RefreshTokenAsync(string refreshToken)
     {
-        var oidcOptions2 = await GetOidcOptionsAsync();
+        var oidcOptions = await GetOidcOptionsAsync();
 
-        if (oidcOptions2.ConfigurationManager == null)
+        if (oidcOptions.ConfigurationManager == null)
         {
-            throw new InvalidOperationException("ConfigurationManager cannot be null.");
+            throw new InvalidOperationException("oidcOptions.ConfigurationManager cannot be null.");
         }
 
-        var configuration = await oidcOptions2.ConfigurationManager.GetConfigurationAsync(default);
-        var clientAssertion = secretHandler?.GenerateClientAssertion;
-        logger.LogTrace(
-            $"TokenEndPointService:RefreshTokenAsync. TokenEndpointAddress: {configuration.TokenEndpoint} ClientId: {oidcOptions2.ClientId} ClientAssertion: {clientAssertion}");
-        var tokenClient = new TokenClient(httpClient, new TokenClientOptions
+        var configuration = await oidcOptions.ConfigurationManager.GetConfigurationAsync(default);
+        var clientAssertion = _secretHandler?.GenerateClientAssertion;
+
+        var tokenEndpointRequest = new OpenIdConnectMessage()
         {
-            Address = configuration.TokenEndpoint,
-            ClientId = oidcOptions2.ClientId,
-            ClientAssertion = new ClientAssertion
-            { Value = clientAssertion, Type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer },
-            ClientCredentialStyle = ClientCredentialStyle.PostBody,
-        });
-        var response = await tokenClient.RequestRefreshTokenAsync(refreshToken);
-        var tokenResponseJson = JsonConvert.SerializeObject(response);
-        logger.LogTrace("{class}.{method} : refreshtoken: {json}", nameof(TokenEndpointService), nameof(RefreshTokenAsync), tokenResponseJson);
-        if (response.IsError)
+            ClientId = oidcOptions.ClientId,
+            GrantType = OpenIdConnectGrantTypes.RefreshToken,
+            RefreshToken = refreshToken,
+            ClientAssertion = clientAssertion,
+            ClientAssertionType = OAuthConstants.JwtBearerClientAssertionType,
+        };
+
+        var request = new HttpRequestMessage(HttpMethod.Post, configuration.TokenEndpoint);
+        request.Content = new FormUrlEncodedContent(tokenEndpointRequest.Parameters);
+
+        var response = await _httpClient.SendAsync(request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
         {
-            logger.LogError($"TokenEndPointService:RefreshTokenAsync. Error: {response.Error} ErrorDescription: {response.ErrorDescription}");
+            _logger.LogError("StatusCode does not indicate success. StatusCode {@StatusCode}, ErrorDescription: {@ErrorDescription}, Json: {@Json}",
+                response.StatusCode,
+                response.ReasonPhrase,
+                responseContent);
+
+            return new OidcToken(response.StatusCode, response.ReasonPhrase ?? "StatusCode does not indicate success.", responseContent);
         }
-        return response;
+
+        var resultMessage = new OpenIdConnectMessage(responseContent);
+        var expiresAt = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(int.Parse(resultMessage.ExpiresIn));
+
+        _logger.LogTrace("RefreshToken: {@RefreshToken}", responseContent);
+
+        return new OidcToken(response.StatusCode, resultMessage.AccessToken, resultMessage.RefreshToken, expiresAt, responseContent);
     }
 
     private async Task<OpenIdConnectOptions> GetOidcOptionsAsync()
     {
-        if (string.IsNullOrEmpty(managementOptions.Scheme))
+        if (string.IsNullOrEmpty(_managementOptions.Scheme))
         {
-            var scheme = await schemeProvider.GetDefaultChallengeSchemeAsync();
+            var scheme = await _schemeProvider.GetDefaultChallengeSchemeAsync();
 
             if (scheme == null)
             {
                 throw new InvalidOperationException("No AuthenticationScheme was specified, and there was no DefaultChallengeScheme found.");
             }
 
-            return oidcOptions.Get(scheme.Name);
+            return _oidcOptions.Get(scheme.Name);
         }
-        return oidcOptions.Get(managementOptions.Scheme);
+        return _oidcOptions.Get(_managementOptions.Scheme);
     }
 }

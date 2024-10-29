@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System;
 using System.Globalization;
-using System;
-using IdentityModel.Client;
+using Fhi.HelseId.Common.Constants;
+using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Fhi.HelseId.Web.Infrastructure
 {
@@ -10,30 +12,29 @@ namespace Fhi.HelseId.Web.Infrastructure
     {
         public static bool UpdateAccessToken(this CookieValidatePrincipalContext ctx, string accessToken)
         {
-            bool updated = ctx.Properties.UpdateTokenValue("access_token", accessToken);
+            bool updated = ctx.Properties.UpdateTokenValue(OpenIdConnectParameterNames.AccessToken, accessToken);
             return updated;
         }
 
         public static bool UpdateRefreshToken(this CookieValidatePrincipalContext ctx, string refreshToken)
         {
-            bool updated = ctx.Properties.UpdateTokenValue("refresh_token", refreshToken);
+            bool updated = ctx.Properties.UpdateTokenValue(OpenIdConnectParameterNames.RefreshToken, refreshToken);
             return updated;
         }
 
-        public static DateTime UpdateExpiresAt(this CookieValidatePrincipalContext ctx, int expiresAt)
+        public static DateTimeOffset UpdateExpiresAt(this CookieValidatePrincipalContext ctx, DateTimeOffset expiresAt)
         {
-            var newExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(expiresAt);
-            ctx.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
+            var newExpiresAt = expiresAt;
+            ctx.Properties.UpdateTokenValue(OAuthConstants.ExpiresAt, newExpiresAt.ToString("o", CultureInfo.InvariantCulture));
             return newExpiresAt;
         }
 
-        public static DateTime UpdateTokens(this CookieValidatePrincipalContext ctx, TokenResponse tokenResponse)
+        public static DateTimeOffset UpdateTokens(this CookieValidatePrincipalContext ctx, OidcToken tokenResponse)
         {
             ctx.UpdateAccessToken(tokenResponse.AccessToken);
             ctx.UpdateRefreshToken(tokenResponse.RefreshToken);
-            var newExpiresAt = ctx.UpdateExpiresAt(tokenResponse.ExpiresIn);
+            var newExpiresAt = ctx.UpdateExpiresAt(tokenResponse.ExpiresAt);
             return newExpiresAt;
         }
-
     }
 }

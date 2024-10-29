@@ -1,9 +1,9 @@
-﻿using Fhi.HelseId.Common;
+﻿using System;
+using Fhi.HelseId.Common;
 using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
 
@@ -28,7 +28,7 @@ public class HttpClientBuilder
         if (webConfig.AuthUse)
             foreach (var api in webConfig.Apis)
             {
-                builder.Services.AddUserAccessTokenHttpClient(api.Name, configureClient: client =>
+                builder.Services.AddHttpClient(api.Name, configureClient: client =>
                     {
                         client.BaseAddress = api.Uri;
                         client.Timeout = TimeSpan.FromMinutes(api.Timeout);
@@ -65,4 +65,3 @@ public static class Extensions
     public static WebApplicationBuilder AddApisUsingHttpClient(this WebApplicationBuilder builder, Func<IServiceCollection, IApiOutgoingKonfigurasjon, IServiceCollection>? extra = null) 
         => new HttpClientBuilder(builder).AddApisUsingHttpClient(extra);
 }
-
