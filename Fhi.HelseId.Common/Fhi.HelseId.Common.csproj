@@ -1,14 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release</Configurations>
-    <id>Fhi.HelseId.Common</id>
     <PackageDescription>Common infrastructure for Fhi.HelseId</PackageDescription>
   </PropertyGroup>
-
   <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="\" />
     <None Include="..\images\fhi.png" Pack="true" PackagePath="" />
@@ -17,5 +14,4 @@
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
   </ItemGroup>
-
 </Project>

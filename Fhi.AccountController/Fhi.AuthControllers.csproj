@@ -3,7 +3,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <id>Fhi.AuthControllers</id>
     <Configurations>Debug;Release</Configurations>
     <PackageDescription>Account controllers for use with OAuth and HelseId</PackageDescription>
   </PropertyGroup>
