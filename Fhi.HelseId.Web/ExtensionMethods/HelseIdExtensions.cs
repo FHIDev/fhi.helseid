@@ -105,7 +105,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             {
                 if (helseIdWebKonfigurasjon.UseIdPorten)
                     return "idporten-loa-substantial";
-                else //(!helseIdWebKonfigurasjon.UseIdPorten)
+                else
                     return string.Join(' ', helseIdWebKonfigurasjon.SecurityLevels.Select(sl => $"Level{sl}"));
             }
         }

@@ -49,11 +49,11 @@ public class HelseIdWebAuthBuilder
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         var helseIdWebKonfigurasjon = _helseIdWebKonfigurasjonSection.Get<HelseIdWebKonfigurasjon>();
         var baseScopesSection = _configuration.GetSection("HelseIdWebKonfigurasjon:BaseScopes");
-        var baseScopes = baseScopesSection.AsEnumerable().Select(x => x.Value).Where(x => x != null);
+        var baseScopes = baseScopesSection.AsEnumerable().Select(x => x.Value).OfType<string>();
         if (baseScopes.Any()) // override the list if set by user
             helseIdWebKonfigurasjon.BaseScopes = baseScopes;
         var securityLevelsSection = _configuration.GetSection("HelseIdWebKonfigurasjon:SecurityLevels");
-        var securityLevels = securityLevelsSection.AsEnumerable().Select(x => x.Value).Where(x => x != null).ToArray();
+        string[] securityLevels = securityLevelsSection.AsEnumerable().Select(x => x.Value).OfType<string>().ToArray();
         if (securityLevels.Any()) // override the list if set by user
             helseIdWebKonfigurasjon.SecurityLevels = securityLevels;
         if (helseIdWebKonfigurasjon == null)
