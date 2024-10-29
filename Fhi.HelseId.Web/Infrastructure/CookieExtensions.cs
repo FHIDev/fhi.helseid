@@ -4,6 +4,7 @@ using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Fhi.HelseId.Web.Infrastructure
 {
@@ -11,13 +12,13 @@ namespace Fhi.HelseId.Web.Infrastructure
     {
         public static bool UpdateAccessToken(this CookieValidatePrincipalContext ctx, string accessToken)
         {
-            bool updated = ctx.Properties.UpdateTokenValue(OAuthConstants.AccessToken, accessToken);
+            bool updated = ctx.Properties.UpdateTokenValue(OpenIdConnectParameterNames.AccessToken, accessToken);
             return updated;
         }
 
         public static bool UpdateRefreshToken(this CookieValidatePrincipalContext ctx, string refreshToken)
         {
-            bool updated = ctx.Properties.UpdateTokenValue(OAuthConstants.RefreshToken, refreshToken);
+            bool updated = ctx.Properties.UpdateTokenValue(OpenIdConnectParameterNames.RefreshToken, refreshToken);
             return updated;
         }
 

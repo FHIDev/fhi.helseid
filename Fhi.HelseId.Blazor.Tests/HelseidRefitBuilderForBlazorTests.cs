@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.JSInterop;
 using NSubstitute;
 using NUnit.Framework;
@@ -114,7 +115,7 @@ public partial class HelseidRefitBuilderForBlazorTests
         var authItems = new Dictionary<string, string?>()
         {
             { $".Token.{OAuthConstants.ExpiresAt}", DateTime.UtcNow.AddDays(1).ToString("u") },
-            { $".Token.{OAuthConstants.AccessToken}", AccessTokenValue },
+            { $".Token.{OpenIdConnectParameterNames.AccessToken}", AccessTokenValue },
         };
 
         var ticket = AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties(authItems), ""));

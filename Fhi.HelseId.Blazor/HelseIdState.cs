@@ -1,6 +1,7 @@
 ﻿using Fhi.HelseId.Common.Constants;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Fhi.HelseId.Blazor
 {
@@ -20,8 +21,8 @@ namespace Fhi.HelseId.Blazor
             var tokenExpiry = await context.GetTokenAsync(OAuthConstants.ExpiresAt);
             DateTimeOffset.TryParse(tokenExpiry, out var expiresAt);
 
-            AccessToken = await context.GetTokenAsync(OAuthConstants.AccessToken) ?? "";
-            RefreshToken = await context.GetTokenAsync(OAuthConstants.RefreshToken) ?? "";
+            AccessToken = await context.GetTokenAsync(OpenIdConnectParameterNames.AccessToken) ?? "";
+            RefreshToken = await context.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken) ?? "";
             TokenExpires = expiresAt;
             CorrelationId = GetCorrelationId(context);
         }

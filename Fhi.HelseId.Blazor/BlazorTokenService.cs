@@ -2,6 +2,7 @@
 using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Fhi.HelseId.Blazor;
 
@@ -73,8 +74,8 @@ public class BlazorTokenService : IBlazorTokenService
                 return;
             }
 
-            auth.Properties.UpdateTokenValue(OAuthConstants.AccessToken, _state.AccessToken);
-            auth.Properties.UpdateTokenValue(OAuthConstants.RefreshToken, _state.RefreshToken);
+            auth.Properties.UpdateTokenValue(OpenIdConnectParameterNames.AccessToken, _state.AccessToken);
+            auth.Properties.UpdateTokenValue(OpenIdConnectParameterNames.RefreshToken, _state.RefreshToken);
             auth.Properties.UpdateTokenValue(OAuthConstants.ExpiresAt, _state.TokenExpires.ToString("o", CultureInfo.InvariantCulture));
 
             await context.SignInAsync(auth.Principal, auth.Properties);

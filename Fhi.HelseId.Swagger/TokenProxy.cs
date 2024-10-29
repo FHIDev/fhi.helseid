@@ -2,6 +2,7 @@
 using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Fhi.HelseId.Swagger;
@@ -35,9 +36,9 @@ public class TokenProxy : ITokenProxy
 
         var clientAssertion = ClientAssertion.Generate(config.ClientId, config.Authority, jwkSecurityKey);
 
-        requestParameters["client_id"] = config.ClientId;
-        requestParameters["client_assertion_type"] = OAuthConstants.JwtBearerClientAssertionType;
-        requestParameters["client_assertion"] = clientAssertion;
+        requestParameters[OpenIdConnectParameterNames.ClientId] = config.ClientId;
+        requestParameters[OpenIdConnectParameterNames.ClientAssertionType] = OAuthConstants.JwtBearerClientAssertionType;
+        requestParameters[OpenIdConnectParameterNames.ClientAssertion] = clientAssertion;
 
         var tokenUrl = $"{_swaggerHelseIdConfiguration.Authority}/connect/token";
         var result = await _tokenClient.PostAsync(tokenUrl, new FormUrlEncodedContent(requestParameters));
