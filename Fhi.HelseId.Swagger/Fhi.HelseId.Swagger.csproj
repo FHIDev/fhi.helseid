@@ -1,23 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <id>Fhi.HelseId.Swagger</id>
     <PackageDescription>Setup Swagger with HelseID Apis</PackageDescription>
   </PropertyGroup>
-
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="System.Text.RegularExpressions" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
   </ItemGroup>
-
 </Project>

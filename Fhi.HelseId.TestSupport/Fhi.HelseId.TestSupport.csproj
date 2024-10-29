@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Id>Fhi.HelseId.TestSupport</Id>
     <IsTestProject>false</IsTestProject>
     <PackageDescription>Base classes for testing an implementation using Fhi.HelseId</PackageDescription>
     <Nullable>enable</Nullable>
