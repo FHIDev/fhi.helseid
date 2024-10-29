@@ -95,11 +95,13 @@ public class HelseIdWebAuthBuilder
                 _services.AddTransient<RefreshTokenBackchannelHandler>();
                 _services.AddHttpClient<TokenEndpointService>()
                     .AddHttpMessageHandler<RefreshTokenBackchannelHandler>();
+                _services.AddTransient<IAuthorizationHeaderSetter, DPoPAuthorizationHeaderSetter>();
             }
             else
             {
                 _services.AddHostedService<DPoPComplianceWarning>();
                 _services.AddHttpClient<TokenEndpointService>();
+                _services.AddTransient<IAuthorizationHeaderSetter, BearerAuthorizationHeaderSetter>();
             }
         }
         else
