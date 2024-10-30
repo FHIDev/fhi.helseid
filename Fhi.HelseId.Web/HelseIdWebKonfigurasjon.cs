@@ -18,7 +18,7 @@ public interface IHelseIdHprFeatures
 
 public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientKonfigurasjon
 {
-
+    bool UseIdPorten { get; set; }
     string[] SecurityLevels { get; }
     bool UseProtectedPaths { get; set; }
     RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; set; }
@@ -38,32 +38,30 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
 {
     public string DevelopmentRedirectUri { get; set; } = "/";
 
-    public string[] SecurityLevels { get; set; } = ["3", "4"];
+    public string[] SecurityLevels { get; set; } = [];
+
+    public override IEnumerable<string> BaseScopes { get; set; } = [
+                    "openid",
+                    "profile",
+                    "helseid://scopes/identity/pid",
+                    "helseid://scopes/identity/pid_pseudonym",
+                    "helseid://scopes/identity/security_level"
+                ];
 
 
-    protected override IEnumerable<string> FixedScopes
-    {
-        get
-        {
-            var list = new List<string>
+    private bool useHprNumber = false;
+    public bool UseHprNumber
+    { 
+        get { return useHprNumber; } 
+        set {
+            useHprNumber = value;
+            var hprString = "helseid://scopes/hpr/hpr_number";
+            if (value && !HprScope.Contains(hprString))
             {
-                "openid",
-                "profile",
-                "helseid://scopes/identity/pid",
-                "helseid://scopes/identity/pid_pseudonym",
-                "helseid://scopes/identity/security_level"
-            };
-            if (UseHprNumber)
-            {
-                list.Add("helseid://scopes/hpr/hpr_number");
-            }
-            list.AddRange(base.FixedScopes);
-            return list;
-        }
-    }
-
-    public bool UseHpr { get; set; } = false;
-    public bool UseHprNumber { get; set; } = false;
+                HprScope.Append(hprString);
+            } 
+        } 
+    } 
     public bool UseHprPolicy { get; set; } = false;
 
     public string HprUsername { get; set; } = "";
@@ -87,6 +85,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
     public NoAuthenticationUser NoAuthenticationUser { get; set; } = new();
 
     public bool UseDPoPTokens { get; set; }
+    public bool UseIdPorten { get; set; } = true;
 
     public Uri UriToApiByName(string name)
     {

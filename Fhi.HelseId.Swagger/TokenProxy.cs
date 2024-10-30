@@ -34,7 +34,7 @@ public class TokenProxy : ITokenProxy
         var jwk = HttpUtility.UrlDecode(_swaggerHelseIdConfiguration.PrivateJwk);
         var jwkSecurityKey = new JsonWebKey(jwk);
 
-        var clientAssertion = ClientAssertion.Generate(config.ClientId, config.Authority, jwkSecurityKey);
+        var clientAssertion = ClientAssertion.Generate(config.ClientId, config.Authority, jwkSecurityKey, config.UseIdPorten);
 
         requestParameters[OpenIdConnectParameterNames.ClientId] = config.ClientId;
         requestParameters[OpenIdConnectParameterNames.ClientAssertionType] = OAuthConstants.JwtBearerClientAssertionType;

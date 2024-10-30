@@ -1,6 +1,7 @@
 ﻿using Fhi.HelseId.Common;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Fhi.HelseId.Common.Configuration
@@ -22,20 +23,16 @@ namespace Fhi.HelseId.Common.Configuration
 
     public abstract class HelseIdClientKonfigurasjon : HelseIdCommonKonfigurasjon, IHelseIdClientKonfigurasjon
     {
-        protected List<string>? AllTheScopes { get; private set; }
-
         public bool RewriteRedirectUriHttps { get; set; } = false;
         public string ClientId { get; set; } = "";
         public string ClientSecret { get; set; } = "";
         public string[] Scopes { get; set; } = [];
         public bool Debug { get; set; } = false;
+        public IEnumerable<string> HprScope { get; set; } = [];
 
-        public IEnumerable<string> AllScopes => FixedScopes.Concat(Scopes).Distinct();
+        public IEnumerable<string> AllScopes => BaseScopes.Concat(Scopes).Concat(HprScope).Distinct();
         
-        protected virtual IEnumerable<string> FixedScopes => new List<string>
-        {
-            "offline_access"
-        };
+        public virtual IEnumerable<string> BaseScopes { get; set; } = ["offline_access"];
 
         public string JsonWebKeySecret { get; set; } = "";
         public string RsaKeySecret { get; set; } = "";

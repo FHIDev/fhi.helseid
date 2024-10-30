@@ -53,7 +53,7 @@ namespace Fhi.HelseId.Web.Hpr
             this.logger = logger;
             var config = hprKonfigurasjon.Value;
             this.logger.LogDebug("Oppsett til HPR: {Url}", config.HprUrl);
-            if (!config.UseHpr)
+            if (!config.UseHprNumber)
             {
                 this.logger.LogInformation("HprFactory: Hpr er avslått, se konfigurasjon");
                 return;

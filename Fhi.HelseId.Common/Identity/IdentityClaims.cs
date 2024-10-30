@@ -20,6 +20,7 @@ public static class IdentityClaims
     public const string Pid = Prefix + "pid";
     public const string PidPseudonym = Prefix + "pid_pseudonym";
     public const string SecurityLevel = Prefix + "security_level";
+    public const string SecurityLevelEnum = "acr";
     public const string Network = Prefix + "network";
     public const string Name = "name";
     public const string Givenname = "given_name";

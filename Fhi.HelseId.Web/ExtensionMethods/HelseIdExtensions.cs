@@ -44,7 +44,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 #endif
             options.ResponseType = "code";
             options.TokenValidationParameters.ValidAudience = configAuth.ClientId;
-            options.TokenValidationParameters.ValidTypes = ["at+jwt", "JWT"];
+            if (!configAuth.UseIdPorten)
+                options.TokenValidationParameters.ValidTypes = ["at+jwt", "JWT"]; 
             options.CallbackPath = "/signin-callback";
             options.SignedOutCallbackPath = "/signout-callback";
             options.Scope.Clear();
@@ -102,7 +103,10 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             string GetAcrValues(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
             {
-                return string.Join(' ',helseIdWebKonfigurasjon.SecurityLevels.Select(sl => $"Level{sl}"));
+                if (helseIdWebKonfigurasjon.UseIdPorten)
+                    return "idporten-loa-substantial";
+                else
+                    return string.Join(' ', helseIdWebKonfigurasjon.SecurityLevels.Select(sl => $"Level{sl}"));
             }
         }
 
