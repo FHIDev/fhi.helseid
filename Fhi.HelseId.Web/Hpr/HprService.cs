@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Fhi.HelseId.Web.Hpr.Core;
 using HprServiceReference;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -12,7 +14,7 @@ namespace Fhi.HelseId.Web.Hpr
     public interface IHprService
     {
         Task<bool> SjekkGodkjenning(string hprnummer);
-        Task<Person?> HentPerson(string hprnummer);
+        Task<HprPerson?> HentPerson(string hprnummer);
 
         /// <summary>
         /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene.  
@@ -35,18 +37,19 @@ namespace Fhi.HelseId.Web.Hpr
         private readonly IHPR2ServiceChannel? _serviceClient;
         private readonly ILogger _logger;
         private readonly IMemoryCache _memoryCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public List<OId9060> GodkjenteHelsepersonellkategorier { get; }
 
         const string HprnummerAdmin = "000000000";
         public string LastErrorMessage { get; private set; } = "";
 
-        public HprService(IHprFactory helsepersonellFactory, IMemoryCache memoryCache, ILogger logger)
+        public HprService(IHprFactory helsepersonellFactory, IMemoryCache memoryCache, IHttpContextAccessor httpsContextAccessor, ILogger logger)
         {
             _logger = logger;
             _memoryCache = memoryCache;
-            _serviceClient = helsepersonellFactory.ServiceProxy;
             GodkjenteHelsepersonellkategorier = new List<OId9060>();
+            _httpContextAccessor = httpsContextAccessor;
         }
 
         public IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste)
@@ -79,14 +82,14 @@ namespace Fhi.HelseId.Web.Hpr
             if (hprnummer == HprnummerAdmin)
                 return true;
             var person = await HentPerson(hprnummer);
-            return person != null && ErGyldig(person);
+            return person.ErGyldig;
         }
 
-        public async Task<Person?> HentPerson(string hprnummer)
+        public async Task<HprPerson?> HentPerson(string hprnummer)
         {
             var cacheKey = $"fhi-helseid-{hprnummer}";
 
-            if (_memoryCache.TryGetValue(cacheKey, out Person? person))
+            if (_memoryCache.TryGetValue(cacheKey, out HprPerson? person))
             {
                 _logger.LogDebug("Person med Hpr-nummer {HprNummer} hentet fra cache", hprnummer);
                 return person;
@@ -104,19 +107,26 @@ namespace Fhi.HelseId.Web.Hpr
             return personFraRegister;
         }
 
-        private async Task<Person?> HentFraHprRegister(string hprnummer)
+        private async Task<HprPerson?> HentFraHprRegister(string hprnummer)
         {
-            if (_serviceClient == null)
-            {
-                const string msg = "Kunne ikke skape connection til Hpr register";
-                LastErrorMessage = msg;
-                _logger.LogError(msg);
-                return null;
-            }
-
             try
             {
-                var person = await _serviceClient.HentPersonAsync(Convert.ToInt32(hprnummer), null);
+                var user = _httpContextAccessor.HttpContext.User;                
+                var hprDetailsClaim = user.Claims.FirstOrDefault(x => x.Type == "helseid://claims/hpr/hpr_details");
+                var approvalResponse = JsonSerializer.Deserialize<ApprovalResponse>(hprDetailsClaim.Value);
+
+                var erGyldig = approvalResponse.approvals.Any();
+                var godkjenninger = approvalResponse.approvals
+                    .SelectMany(approval => Kodekonstanter.KodeList.Where(oid9060 => approval.profession == oid9060.Value));
+
+                var person = new HprPerson()
+                {
+                    HprNummer = hprnummer,
+                    ErGyldig = erGyldig,
+                    Godkjenninger = godkjenninger.ToList(),
+
+                };
+
                 return person;
             }
             catch (System.ServiceModel.CommunicationException e)
@@ -162,7 +172,7 @@ namespace Fhi.HelseId.Web.Hpr
         public async Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer)
         {
             var person = await HentPerson(hprnummer);
-            return HentGodkjenninger(person);
+            return person.Godkjenninger;
         }
 
         public IEnumerable<OId9060> HentGodkjenninger(Person? person)
