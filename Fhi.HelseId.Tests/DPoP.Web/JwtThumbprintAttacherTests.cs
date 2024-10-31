@@ -22,7 +22,6 @@ internal class JwtThumbprintAttacherTests
     [SetUp]
     public void SetUp()
     {
-        
         var rsaKey = new RsaSecurityKey(RSA.Create(2048));
         var proofKey = JsonWebKeyConverter.ConvertFromSecurityKey(rsaKey);
         _expectedThumbprint = proofKey.ComputeJwkThumbprint();
