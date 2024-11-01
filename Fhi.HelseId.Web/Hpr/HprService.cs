@@ -34,8 +34,8 @@ namespace Fhi.HelseId.Web.Hpr
     public class HprService : IHprService
     {
         private readonly IHPR2ServiceChannel? _serviceClient;
-        private readonly ILogger _logger;
         private readonly ICurrentUser _currentUser;
+        private readonly ILogger _logger;
 
         public List<OId9060> GodkjenteHelsepersonellkategorier { get; }
 
@@ -79,7 +79,14 @@ namespace Fhi.HelseId.Web.Hpr
             if (hprnummer == HprnummerAdmin)
                 return true;
             var person = await HentPerson(hprnummer);
-            return person.ErHprGodkjent;
+
+            // TODO: Skal denne også filtreres? Eller burde denne ligge i HprPerson?
+
+            var filteredGodkjenninger = person.HprGodkjenninger
+                .Where(personGodkjenninger => GodkjenteHelsepersonellkategorier
+                    .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
+
+            return filteredGodkjenninger.Any();
         }
 
         public async Task<HprPerson?> HentPerson(string hprnummer)
@@ -151,7 +158,14 @@ namespace Fhi.HelseId.Web.Hpr
         public async Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer)
         {
             var person = await HentPerson(hprnummer);
-            return person.HprGodkjenninger;
+
+            // TODO: Skal denne også filtreres?
+
+            var filteredGodkjenninger = person.HprGodkjenninger
+                .Where(personGodkjenninger => GodkjenteHelsepersonellkategorier
+                    .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
+
+            return filteredGodkjenninger;
         }
 
         public IEnumerable<OId9060> HentGodkjenninger(Person? person)
