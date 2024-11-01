@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.Constants;
 using Fhi.HelseId.Common.ExtensionMethods;
+using Fhi.HelseId.Web.Hpr.Core;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -74,7 +78,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
         var rfValue = refreshToken.Value;
 
         _logger.LogTrace("{class}:{method} - Using current token {token} expires at {expires}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), rfValue, dtExpires);
-        
+
         var dtRefresh = dtExpires.Subtract(_tokenConfig.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
         var utcNow = _clock.GetUtcNow();
 
@@ -205,6 +209,10 @@ public class UserByIdentity : ICurrentUser
         PidPseudonym = identity.Claims.SingleOrDefault(c => c.Type == "pid_pseudonym")?.Value ?? "";
         Id = identity.Claims.SingleOrDefault(c => c.Type == "id")?.Value ?? "";
         HprNummer = identity.Claims.SingleOrDefault(c => c.Type == "hpr_nummer")?.Value ?? "";
+        var hprDetailsClaim = identity.Claims.FirstOrDefault(x => x.Type == "helseid://claims/hpr/hpr_details");
+        var approvalResponse = JsonSerializer.Deserialize<ApprovalResponse>(hprDetailsClaim.Value);
+        HprGodkjenninger = approvalResponse.approvals.SelectMany(approval => Kodekonstanter.KodeList.Where(oid9060 => approval.profession == oid9060.Value)).ToList();
+        ErHprGodkjent = approvalResponse.approvals.Any();
         Pid = identity.Claims.SingleOrDefault(c => c.Type == "pid")?.Value ?? "";
         SecurityLevel = identity.Claims.SingleOrDefault(c => c.Type == "security_level")?.Value ?? "";
         AssuranceLevel = identity.Claims.SingleOrDefault(c => c.Type == "assurance_level")?.Value ?? "";
@@ -214,6 +222,8 @@ public class UserByIdentity : ICurrentUser
     public string Id { get; } = "";
     public string Name { get; } = "";
     public string HprNummer { get; } = "";
+    public List<OId9060> HprGodkjenninger { get; } = new List<OId9060>();
+    public bool ErHprGodkjent { get; } = false;
     public string PidPseudonym { get; } = "";
     public string Pid { get; } = "";
     public string SecurityLevel { get; } = "";

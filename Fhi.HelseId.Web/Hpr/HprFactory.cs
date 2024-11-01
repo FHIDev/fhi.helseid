@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using System.ServiceModel;
 using Fhi.HelseId.Web.Hpr.Core;
+using Fhi.HelseId.Web.Services;
 using HprServiceReference;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-
 namespace Fhi.HelseId.Web.Hpr
 {
-    public interface IHprFactory
-    {
-        IHPR2ServiceChannel? ServiceProxy { get; }
-        
-        [Obsolete("Use CreateHprService")]
-        IHprService CreateHprRepository();
-        IHprService CreateHprService();
-    }
+    //public interface IHprFactory
+    //{
+    //    IHPR2ServiceChannel? ServiceProxy { get; }
+
+    //    [Obsolete("Use CreateHprService")]
+    //    IHprService CreateHprRepository();
+    //    IHprService CreateHprService();
+    //}
 
     public interface IGodkjenteHprKategoriListe
     {
@@ -40,45 +39,32 @@ namespace Fhi.HelseId.Web.Hpr
         public IEnumerable<OId9060> Godkjenninger => godkjenninger;
     }
 
-    public class HprFactory : IHprFactory
-    {
-        private readonly IGodkjenteHprKategoriListe godkjenninger;
-        private readonly IMemoryCache memoryCache;
-        private readonly ILogger<HprFactory> logger;
-        private readonly IHttpContextAccessor httpContextAccessor;
+    //public class HprFactory : IHprFactory
+    //{
+    //    private readonly IGodkjenteHprKategoriListe _godkjenninger;
+    //    private readonly IMemoryCache _memoryCache;
+    //    private readonly ILogger<HprFactory> _logger;
+    //    private readonly ICurrentUser _currentUser;
 
+    //    public IHPR2ServiceChannel? ServiceProxy { get; }
 
-        public IHPR2ServiceChannel? ServiceProxy { get; }
+    //    public HprFactory(IOptions<HelseIdWebKonfigurasjon> hprKonfigurasjon, IGodkjenteHprKategoriListe godkjenninger, ICurrentUser currentUser, ILogger<HprFactory> logger)
+    //    {
+    //        _godkjenninger = godkjenninger;
+    //        _logger = logger;
+    //        _currentUser = currentUser;
+    //        var config = hprKonfigurasjon.Value;
+    //        _logger.LogDebug("Oppsett til HPR: {Url}", config.HprUrl);
+    //        if (!config.UseHpr)
+    //        {
+    //            _logger.LogInformation("HprFactory: Hpr er avslått, se konfigurasjon");
+    //            return;
+    //        }
+    //    }
 
-        public HprFactory(IOptions<HelseIdWebKonfigurasjon> hprKonfigurasjon, IGodkjenteHprKategoriListe godkjenninger, IMemoryCache memoryCache, IHttpContextAccessor httpContextAccessor, ILogger<HprFactory> logger)
-        {
-            this.godkjenninger = godkjenninger;
-            this.memoryCache = memoryCache;
-            this.logger = logger;
-            var config = hprKonfigurasjon.Value;
-            this.logger.LogDebug("Oppsett til HPR: {Url}", config.HprUrl);
-            if (!config.UseHpr)
-            {
-                this.logger.LogInformation("HprFactory: Hpr er avslått, se konfigurasjon");
-                return;
-            }
-            
-            var userName = config.HprUsername;
-            var passord = config.HprPassword;
-            var httpBinding = new WSHttpBinding(SecurityMode.Transport);
-            httpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+    //    public IHprService CreateHprService() => new HprService(_currentUser, _logger).LeggTilGodkjenteHelsepersonellkategorier(_godkjenninger);
 
-            var channelFactory = new ChannelFactory<IHPR2ServiceChannel>(httpBinding, new EndpointAddress(new Uri(config.HprUrl)));
-            channelFactory.Credentials.UserName.UserName = userName;
-            channelFactory.Credentials.UserName.Password = passord;
-            ServiceProxy = channelFactory.CreateChannel();
-            ServiceProxy.Open();
-        }
-
-
-        public IHprService CreateHprService() => new HprService(this, memoryCache, httpContextAccessor, logger).LeggTilGodkjenteHelsepersonellkategorier(godkjenninger);
-
-        [Obsolete("Use CreateHprService")]
-        public IHprService CreateHprRepository() => CreateHprService();
-    }
+    //    [Obsolete("Use CreateHprService")]
+    //    public IHprService CreateHprRepository() => CreateHprService();
+    //}
 }

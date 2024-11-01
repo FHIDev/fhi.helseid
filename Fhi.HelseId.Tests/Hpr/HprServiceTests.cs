@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Hpr.Core;
-using HprServiceReference;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
+using Fhi.HelseId.Web.Services;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -14,39 +12,29 @@ namespace Fhi.HelseId.Tests.Hpr
 {
     public class HprServiceTests
     {
-        private const int Hprnummer = 123456789;
+        private const string Hprnummer = "123456789";
 
-#pragma warning disable
-        private IHprFactory factory;
-#pragma warning disable
-        private IHPR2ServiceChannel channel;
-        private IMemoryCache memoryCache;
-        private IHttpContextAccessor httpContextAccessor;
-        private ILogger logger;
-
-        private HprService hprService;
+        private ICurrentUser _currentUser;
+        private ILogger<HprService> _logger;
+        private HprService _hprService;
 
         [SetUp]
         public void Setup()
         {
-            factory = Substitute.For<IHprFactory>();
-            channel = Substitute.For<IHPR2ServiceChannel>();
-            httpContextAccessor = Substitute.For<IHttpContextAccessor>();
-            factory.ServiceProxy.Returns(channel);
-            memoryCache = Substitute.For<IMemoryCache>();
-            logger = Substitute.For<ILogger>();
+            _currentUser = Substitute.For<ICurrentUser>();
+            _logger = Substitute.For<ILogger<HprService>>();
 
-            hprService = new HprService(factory, memoryCache, httpContextAccessor, logger);
+            _hprService = new HprService(_currentUser, _logger);
         }
 
         [Test]
         public async Task AtViKanLasteEnPerson()
         {
             var person = new TestLege(Hprnummer);
-            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = await hprService.HentPerson(Hprnummer.ToString());
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            var result = await _hprService.HentPerson(Hprnummer.ToString());
 
             Assert.That(result, Is.Not.Null);
             Assert.Multiple(() =>
@@ -61,11 +49,11 @@ namespace Fhi.HelseId.Tests.Hpr
         public async Task AtPersonErLege()
         {
             var person = new TestLege(Hprnummer);
-            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = await hprService.SjekkGodkjenning(Hprnummer.ToString());
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            var result = await _hprService.SjekkGodkjenning(Hprnummer);
 
             Assert.That(result);
         }
@@ -74,10 +62,10 @@ namespace Fhi.HelseId.Tests.Hpr
         public async Task AtPersonIkkeErLege()
         {
             var person = StubPersonAnnet.CreateStubPersonAnnet(Hprnummer);
-            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = await hprService.SjekkGodkjenning(Hprnummer.ToString());
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            var result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
 
             Assert.That(result, Is.False);
         }
@@ -86,10 +74,10 @@ namespace Fhi.HelseId.Tests.Hpr
         public async Task AtLegeErSuspendert()
         {
             var person = new TestLege(Hprnummer).Suspender();
-            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = await hprService.SjekkGodkjenning(Hprnummer.ToString());
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            var result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
 
             Assert.That(result, Is.False);
         }
@@ -99,9 +87,9 @@ namespace Fhi.HelseId.Tests.Hpr
         public async Task AtLegeHarAktivSuspansjonITillegg()
         {
             var person = new TestLege(Hprnummer).SuspenderTillegg();
-            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
-            var result = await hprService.SjekkGodkjenning(Hprnummer.ToString());
+            var result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
 
             Assert.That(result, Is.False);
         }
@@ -110,10 +98,10 @@ namespace Fhi.HelseId.Tests.Hpr
         public async Task AtLegeIkkeErAutorisert()
         {
             var person = new TestLege(Hprnummer).EndreTilUgyldig();
-            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = await hprService.SjekkGodkjenning(Hprnummer.ToString());
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            var result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
 
             Assert.That(result, Is.False);
         }
@@ -122,11 +110,11 @@ namespace Fhi.HelseId.Tests.Hpr
         public async Task AtFlereKategorierKanLeggesTil()
         {
             var person = new TestSykePleier(Hprnummer);
-            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = await hprService.SjekkGodkjenning(Hprnummer.ToString());
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            var result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
 
             Assert.That(result);
         }
@@ -135,19 +123,19 @@ namespace Fhi.HelseId.Tests.Hpr
         public async Task AtFlereGodkjenningerKanLesesFraPerson()
         {
             var person = new TestPersonMedFlereGodkjenninger(Hprnummer);
-            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
 
-            bool result = await hprService.SjekkGodkjenning(Hprnummer.ToString());
+            bool result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
 
             Assert.That(result, "Hprnummer ikke godkjent");
 
-            hprService.LeggTilGodkjenteHelsepersonellKategoriListe(new List<OId9060>
+            _hprService.LeggTilGodkjenteHelsepersonellKategoriListe(new List<OId9060>
                 {Kodekonstanter.OId9060Sykepleier, Kodekonstanter.OId9060Lege});
 
-            var godkjenninger = await hprService.HentGodkjenninger(Hprnummer.ToString());
+            var godkjenninger = await _hprService.HentGodkjenninger(Hprnummer.ToString());
 
             Assert.Multiple(() =>
             {
@@ -162,44 +150,16 @@ namespace Fhi.HelseId.Tests.Hpr
         public async Task AtViKanLeggeTilKategorierUtenDuplikater()
         {
             var person = new TestPersonMedFlereGodkjenninger(Hprnummer);
-            channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
 
-            hprService.LeggTilAlleKategorier();
-            var godkjenninger1 = await hprService.HentGodkjenninger(Hprnummer.ToString());
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
-            hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var godkjenninger2 = await hprService.HentGodkjenninger(Hprnummer.ToString());
+            _hprService.LeggTilAlleKategorier();
+            var godkjenninger1 = await _hprService.HentGodkjenninger(Hprnummer.ToString());
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            var godkjenninger2 = await _hprService.HentGodkjenninger(Hprnummer.ToString());
 
             Assert.That(godkjenninger1.Count, Is.EqualTo(godkjenninger2.Count()));
             Assert.That(godkjenninger2.Count, Is.EqualTo(2));
-        }
-
-        [Test]
-        public async Task AtViHenterFraCacheNårHprPersonErCachet()
-        {
-            var person = new TestPersonMedFlereGodkjenninger(Hprnummer);
-            channel.HentPersonAsync(Hprnummer, null).Returns(person);
-            memoryCache.TryGetValue(Arg.Any<object>(), out Arg.Any<Person>())
-                .Returns(true);
-
-            hprService.LeggTilAlleKategorier();
-            await hprService.HentGodkjenninger(Hprnummer.ToString());
-
-            channel.DidNotReceive().HentPersonAsync(Hprnummer, null);
-            memoryCache.DidNotReceive().Set(Arg.Any<object>(), person);
-        }
-
-        [Test]
-        public async Task AtViHenterFraServiceNårHprPersonIkkeErCachet()
-        {
-            var person = new TestPersonMedFlereGodkjenninger(Hprnummer);
-            channel.HentPersonAsync(Hprnummer, null).Returns(person);
-
-            hprService.LeggTilAlleKategorier();
-            await hprService.HentGodkjenninger(Hprnummer.ToString());
-
-            channel.Received().HentPersonAsync(Hprnummer, null);
-            memoryCache.Received().Set(Arg.Any<object>(), person);
         }
     }
 }

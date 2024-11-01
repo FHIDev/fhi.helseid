@@ -5,11 +5,11 @@ namespace Fhi.HelseId.Tests.Hpr
 {
     public class StubPersonAnnet
     {
-        internal static Person CreateStubPersonAnnet(int hpr)
+        internal static Person CreateStubPersonAnnet(string hpr)
         {
             var person = new Person
             {
-                HPRNummer = hpr,
+                HPRNummer = int.Parse(hpr),
                 FysiskeAdresser =
                     new[] { new FysiskAdresse { Gateadresse = "Hovedgata 23", Postkode = "1234", Poststed = "Oslo" } },
                 Godkjenninger = new[]

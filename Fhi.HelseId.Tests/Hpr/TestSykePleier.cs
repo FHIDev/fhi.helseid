@@ -5,9 +5,9 @@ namespace Fhi.HelseId.Tests.Hpr
 {
     internal class TestSykePleier : Person
     {
-        internal TestSykePleier(int hprnummer)
+        internal TestSykePleier(string hprnummer)
         {
-            HPRNummer = hprnummer;
+            HPRNummer = int.Parse(hprnummer);
             FysiskeAdresser =
                 new[] { new FysiskAdresse { Gateadresse = "Hovedgata 23", Postkode = "1234", Poststed = "Oslo" } };
             Godkjenninger = new[]
@@ -19,7 +19,6 @@ namespace Fhi.HelseId.Tests.Hpr
                     Gyldig = new Periode {Fra = DateTime.Today.AddDays(-1), Til = null},
                     Suspensjonsperioder = Array.Empty<Suspensjonsperiode>()
                 }
-
             };
         }
     }

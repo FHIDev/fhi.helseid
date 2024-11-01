@@ -69,16 +69,16 @@ public class HelseIdWebAuthBuilder
             _services.AddSingleton<IGodkjenteHprKategoriListe, NoHprApprovals>();
             if (HelseIdWebKonfigurasjon.UseHprPolicy)
             {
-                _services.AddSingleton<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
-                _services.AddSingleton<IAuthorizationHandler, HprAuthorizationHandler>();
+                _services.AddScoped<IAuthorizationHandler, HprGodkjenningAuthorizationHandler>();
+                _services.AddScoped<IAuthorizationHandler, HprAuthorizationHandler>();
             }
             else if (HelseIdWebKonfigurasjon.UseHprNumber)
-                _services.AddSingleton<IAuthorizationHandler, HprAuthorizationHandler>();
+                _services.AddScoped<IAuthorizationHandler, HprAuthorizationHandler>();
 
             _services.AddSingleton<IWhitelist>(HelseIdWebKonfigurasjon.Whitelist);
             _services.AddSingleton<IAutentiseringkonfigurasjon>(HelseIdWebKonfigurasjon);
             _services.AddMemoryCache();
-            _services.AddSingleton<IHprFactory, HprFactory>();
+            _services.AddScoped<IHprService, HprService>();
             _services.AddSingleton<IAuthorizationHandler, SecurityLevelClaimHandler>();
             JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 

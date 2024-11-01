@@ -5,9 +5,9 @@ namespace Fhi.HelseId.Tests.Hpr
 {
     internal class TestPersonMedFlereGodkjenninger : Person
     {
-        internal TestPersonMedFlereGodkjenninger(int hprnummer)
+        internal TestPersonMedFlereGodkjenninger(string hprnummer)
         {
-            HPRNummer = hprnummer;
+            HPRNummer = int.Parse(hprnummer);
             FysiskeAdresser =
                 new[] { new FysiskAdresse { Gateadresse = "Hovedgata 23", Postkode = "1234", Poststed = "Oslo" } };
             Godkjenninger = new[]

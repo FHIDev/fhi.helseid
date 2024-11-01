@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Fhi.HelseId.Web.Hpr.Core;
+﻿using Fhi.HelseId.Web.Hpr.Core;
+using Fhi.HelseId.Web.Services;
 using HprServiceReference;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.Hpr
 {
@@ -36,20 +35,18 @@ namespace Fhi.HelseId.Web.Hpr
     {
         private readonly IHPR2ServiceChannel? _serviceClient;
         private readonly ILogger _logger;
-        private readonly IMemoryCache _memoryCache;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICurrentUser _currentUser;
 
         public List<OId9060> GodkjenteHelsepersonellkategorier { get; }
 
         const string HprnummerAdmin = "000000000";
         public string LastErrorMessage { get; private set; } = "";
 
-        public HprService(IHprFactory helsepersonellFactory, IMemoryCache memoryCache, IHttpContextAccessor httpsContextAccessor, ILogger logger)
+        public HprService(ICurrentUser currentUser, ILogger<HprService> logger)
         {
             _logger = logger;
-            _memoryCache = memoryCache;
             GodkjenteHelsepersonellkategorier = new List<OId9060>();
-            _httpContextAccessor = httpsContextAccessor;
+            _currentUser = currentUser;
         }
 
         public IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste)
@@ -82,26 +79,17 @@ namespace Fhi.HelseId.Web.Hpr
             if (hprnummer == HprnummerAdmin)
                 return true;
             var person = await HentPerson(hprnummer);
-            return person.ErGyldig;
+            return person.ErHprGodkjent;
         }
 
         public async Task<HprPerson?> HentPerson(string hprnummer)
         {
-            var cacheKey = $"fhi-helseid-{hprnummer}";
-
-            if (_memoryCache.TryGetValue(cacheKey, out HprPerson? person))
-            {
-                _logger.LogDebug("Person med Hpr-nummer {HprNummer} hentet fra cache", hprnummer);
-                return person;
-            }
-
             var personFraRegister = await HentFraHprRegister(hprnummer);
 
             var cacheTidISekunder = 600;
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(TimeSpan.FromSeconds(cacheTidISekunder));
 
-            _memoryCache.Set(cacheKey, personFraRegister, cacheEntryOptions);
             _logger.LogDebug("Person med Hpr-nummer {HprNummer} hentet fra register og lagt til i cache i {CacheTid} sekunder", hprnummer, cacheTidISekunder);
 
             return personFraRegister;
@@ -111,20 +99,11 @@ namespace Fhi.HelseId.Web.Hpr
         {
             try
             {
-                var user = _httpContextAccessor.HttpContext.User;                
-                var hprDetailsClaim = user.Claims.FirstOrDefault(x => x.Type == "helseid://claims/hpr/hpr_details");
-                var approvalResponse = JsonSerializer.Deserialize<ApprovalResponse>(hprDetailsClaim.Value);
-
-                var erGyldig = approvalResponse.approvals.Any();
-                var godkjenninger = approvalResponse.approvals
-                    .SelectMany(approval => Kodekonstanter.KodeList.Where(oid9060 => approval.profession == oid9060.Value));
-
                 var person = new HprPerson()
                 {
                     HprNummer = hprnummer,
-                    ErGyldig = erGyldig,
-                    Godkjenninger = godkjenninger.ToList(),
-
+                    ErHprGodkjent = _currentUser.ErHprGodkjent,
+                    HprGodkjenninger = _currentUser.HprGodkjenninger
                 };
 
                 return person;
@@ -172,7 +151,7 @@ namespace Fhi.HelseId.Web.Hpr
         public async Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer)
         {
             var person = await HentPerson(hprnummer);
-            return person.Godkjenninger;
+            return person.HprGodkjenninger;
         }
 
         public IEnumerable<OId9060> HentGodkjenninger(Person? person)
