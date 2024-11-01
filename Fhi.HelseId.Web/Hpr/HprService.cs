@@ -1,30 +1,28 @@
-﻿using Fhi.HelseId.Web.Hpr.Core;
-using Fhi.HelseId.Web.Services;
-using HprServiceReference;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.Hpr.Core;
+using Fhi.HelseId.Web.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Web.Hpr
 {
     public interface IHprService
     {
-        Task<bool> SjekkGodkjenning(string hprnummer);
-        Task<HprPerson?> HentPerson(string hprnummer);
+        bool SjekkGodkjenning(string hprnummer);
+        HprPerson HentPerson(string hprnummer);
 
         /// <summary>
         /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene.  
         /// </summary>
-        bool ErGyldig(Person person);
+        bool ErGyldig(HprPerson person);
 
         IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny);
         IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste);
-        bool ErGyldigForKategorier(Person person, params OId9060[] koder);
+        bool ErGyldigForKategorier(HprPerson person, params OId9060[] koder);
         List<OId9060> GodkjenteHelsepersonellkategorier { get; }
-        Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer);
-        IEnumerable<OId9060> HentGodkjenninger(Person? person);
+        IEnumerable<OId9060> HentGodkjenninger(string hprnummer);
+        IEnumerable<OId9060> HentGodkjenninger(HprPerson person);
         IHprService LeggTilAlleKategorier();
     }
 
@@ -69,22 +67,18 @@ namespace Fhi.HelseId.Web.Hpr
             return this;
         }
 
-        public async Task<bool> SjekkGodkjenning(string hprnummer)
+        public bool SjekkGodkjenning(string hprnummer)
         {
             if (hprnummer == HprnummerAdmin)
                 return true;
-            var person = await HentPerson(hprnummer);
+            var person = HentPerson(hprnummer);
 
-            // TODO: Skal denne også filtreres? Eller burde denne ligge i HprPerson?
-
-            var filteredGodkjenninger = person.HprGodkjenninger
-                .Where(personGodkjenninger => GodkjenteHelsepersonellkategorier
-                    .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
+            var filteredGodkjenninger = HentGodkjenninger(person);
 
             return filteredGodkjenninger.Any();
         }
 
-        public async Task<HprPerson> HentPerson(string hprnummer)
+        public HprPerson HentPerson(string hprnummer)
         {
             var person = new HprPerson()
             {
@@ -99,43 +93,30 @@ namespace Fhi.HelseId.Web.Hpr
         /// <summary>
         /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene. 
         /// </summary>
-        public bool ErGyldig(Person person) => ErGyldigForKategorier(person, GodkjenteHelsepersonellkategorier.ToArray());
+        public bool ErGyldig(HprPerson person) => ErGyldigForKategorier(person, GodkjenteHelsepersonellkategorier.ToArray());
 
-        public bool ErGyldigForKategorier(Person person, params OId9060[] koder)
+        public bool ErGyldigForKategorier(HprPerson person, params OId9060[] koder)
         {
-            if (person == null)
-                return false;
-            return person.Godkjenninger.Any(g => ErAktivGodkjenning(g, koder));
+            var filteredGodkjenninger = person.HprGodkjenninger
+                .Where(personGodkjenninger => koder
+                    .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
+
+            return filteredGodkjenninger.Any();
         }
 
-        private bool ErAktivGodkjenning(Godkjenning g, params OId9060[] koder)
+        public IEnumerable<OId9060> HentGodkjenninger(string hprnummer)
         {
-            return koder.Select(x => x.ToString()).Contains(g.Helsepersonellkategori.Verdi)
-                   && g.Gyldig.Aktiv()
-                   && !g.Suspensjonsperioder.Any(s => s.Periode.Aktiv());
+            var person = HentPerson(hprnummer);
+            return HentGodkjenninger(person);
         }
 
-        public async Task<IEnumerable<OId9060>> HentGodkjenninger(string hprnummer)
+        public IEnumerable<OId9060> HentGodkjenninger(HprPerson person)
         {
-            var person = await HentPerson(hprnummer);
-
-            // TODO: Skal denne også filtreres?
-
             var filteredGodkjenninger = person.HprGodkjenninger
                 .Where(personGodkjenninger => GodkjenteHelsepersonellkategorier
                     .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
 
             return filteredGodkjenninger;
-        }
-
-        public IEnumerable<OId9060> HentGodkjenninger(Person? person)
-        {
-            if (person == null)
-                return new List<OId9060>();
-            var godkjenninger =
-                person.Godkjenninger.Where(o => ErAktivGodkjenning(o, GodkjenteHelsepersonellkategorier.ToArray()));
-            return Kodekonstanter.KodeList.Where(o =>
-                godkjenninger.FirstOrDefault(x => x.Helsepersonellkategori.Verdi == o.Value) != null);
         }
     }
 }
