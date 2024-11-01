@@ -210,11 +210,14 @@ public class UserByIdentity : ICurrentUser
         Id = identity.Claims.SingleOrDefault(c => c.Type == "id")?.Value ?? "";
         HprNummer = identity.Claims.SingleOrDefault(c => c.Type == "hpr_nummer")?.Value ?? "";        
         var hprDetailsClaim = identity.Claims.FirstOrDefault(x => x.Type == "helseid://claims/hpr/hpr_details");
+        // TODO: This is duplicated in CurrentHttpUser
         if (hprDetailsClaim != null)
         {
             var approvalResponse = JsonSerializer.Deserialize<ApprovalResponse>(hprDetailsClaim.Value);
-            HprGodkjenninger = approvalResponse.approvals.SelectMany(approval => Kodekonstanter.KodeList.Where(oid9060 => approval.profession == oid9060.Value)).ToList();
-            ErHprGodkjent = approvalResponse.approvals.Any();
+            HprGodkjenninger = approvalResponse.Approvals
+                .SelectMany(approval => Kodekonstanter.KodeList
+                    .Where(oid9060 => approval.Profession == oid9060.Value)).ToList();
+            ErHprGodkjent = approvalResponse.Approvals.Any();
         }
         Pid = identity.Claims.SingleOrDefault(c => c.Type == "pid")?.Value ?? "";
         SecurityLevel = identity.Claims.SingleOrDefault(c => c.Type == "security_level")?.Value ?? "";

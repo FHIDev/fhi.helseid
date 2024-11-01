@@ -1,27 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 public class ApprovalResponse
 {
-    public List<Approval> approvals { get; set; } = new List<Approval>();
-    public long hpr_number { get; set; }
+    [JsonPropertyName("approvals")]
+    public List<Approval> Approvals { get; set; } = new List<Approval>();
+    [JsonPropertyName("hpr_number")]
+    public long HprNumber { get; set; }
 
     public class Approval
     {
-        public string profession { get; set; } = string.Empty;
-        public Authorization authorization { get; set; } = new Authorization();
-        public List<RequisitionRight> requisition_rights { get; set; } = new List<RequisitionRight>();
-        public List<string> specialities { get; set; } = new List<string>();
+        [JsonPropertyName("profession")]
+        public string Profession { get; set; } = string.Empty;
+        [JsonPropertyName("authorization")]
+        public Authorization Authorization { get; set; } = new Authorization();
+        [JsonPropertyName("requisition_rights")]
+        public List<RequisitionRight> RequisitionRights { get; set; } = new List<RequisitionRight>();
+        [JsonPropertyName("specialities")]
+        public List<string> Specialities { get; set; } = new List<string>();
     }
 
     public class Authorization
     {
-        public string value { get; set; } = string.Empty;
-        public string description { get; set; } = string.Empty;
+        [JsonPropertyName("value")]
+        public string Value { get; set; } = string.Empty;
+        [JsonPropertyName("description")]
+        public string Description { get; set; } = string.Empty;
     }
 
     public class RequisitionRight
     {
-        public string value { get; set; } = string.Empty;
-        public string description { get; set; } = string.Empty;
+        [JsonPropertyName("value")]
+        public string Value { get; set; } = string.Empty;
+        [JsonPropertyName("description")]
+        public string Description { get; set; } = string.Empty;
     }
 }
