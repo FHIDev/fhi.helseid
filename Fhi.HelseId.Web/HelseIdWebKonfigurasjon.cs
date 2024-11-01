@@ -11,9 +11,6 @@ public interface IHelseIdHprFeatures
 {
     bool UseHprNumber { get; }
     bool UseHprPolicy { get; }
-    string HprUsername { get; set; }
-    string HprPassword { get; set; }
-    string HprUrl { get; set; }
 }
 
 public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientKonfigurasjon
@@ -65,11 +62,6 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
     public bool UseHpr { get; set; } = false;
     public bool UseHprNumber { get; set; } = false;
     public bool UseHprPolicy { get; set; } = false;
-
-    public string HprUsername { get; set; } = "";
-    public string HprPassword { get; set; } = "";
-
-    public string HprUrl { get; set; } = "";
 
     public bool UseProtectedPaths { get; set; } = true;
 

@@ -208,11 +208,14 @@ public class UserByIdentity : ICurrentUser
         Name = identity.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? "";
         PidPseudonym = identity.Claims.SingleOrDefault(c => c.Type == "pid_pseudonym")?.Value ?? "";
         Id = identity.Claims.SingleOrDefault(c => c.Type == "id")?.Value ?? "";
-        HprNummer = identity.Claims.SingleOrDefault(c => c.Type == "hpr_nummer")?.Value ?? "";
+        HprNummer = identity.Claims.SingleOrDefault(c => c.Type == "hpr_nummer")?.Value ?? "";        
         var hprDetailsClaim = identity.Claims.FirstOrDefault(x => x.Type == "helseid://claims/hpr/hpr_details");
-        var approvalResponse = JsonSerializer.Deserialize<ApprovalResponse>(hprDetailsClaim.Value);
-        HprGodkjenninger = approvalResponse.approvals.SelectMany(approval => Kodekonstanter.KodeList.Where(oid9060 => approval.profession == oid9060.Value)).ToList();
-        ErHprGodkjent = approvalResponse.approvals.Any();
+        if (hprDetailsClaim != null)
+        {
+            var approvalResponse = JsonSerializer.Deserialize<ApprovalResponse>(hprDetailsClaim.Value);
+            HprGodkjenninger = approvalResponse.approvals.SelectMany(approval => Kodekonstanter.KodeList.Where(oid9060 => approval.profession == oid9060.Value)).ToList();
+            ErHprGodkjent = approvalResponse.approvals.Any();
+        }
         Pid = identity.Claims.SingleOrDefault(c => c.Type == "pid")?.Value ?? "";
         SecurityLevel = identity.Claims.SingleOrDefault(c => c.Type == "security_level")?.Value ?? "";
         AssuranceLevel = identity.Claims.SingleOrDefault(c => c.Type == "assurance_level")?.Value ?? "";
