@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using Fhi.HelseId.Common.ExtensionMethods;
+using Fhi.HelseId.Common.Exceptions;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Hpr.Core;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Web.Services;
 
@@ -44,6 +43,10 @@ public class CurrentHttpUser : ICurrentUser
         if (hprDetailsClaim != null)
         {
             var approvalResponse = JsonSerializer.Deserialize<ApprovalResponse>(hprDetailsClaim.Value);
+            if (approvalResponse == null)
+            {
+                throw new HprClaimMissingException("HprDetails claim missing or could not be deserialized.");
+            }
             HprGodkjenninger = approvalResponse.Approvals
                 .SelectMany(approval => Kodekonstanter.KodeList
                     .Where(oid9060 => approval.Profession == oid9060.Value)).ToList();

@@ -55,7 +55,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             if (configAuth.UseHpr)
             {
                 options.GetClaimsFromUserInfoEndpoint = true;
-                options.ClaimActions.MapUniqueJsonKey("helseid://claims/hpr/hpr_details", "helseid://claims/hpr/hpr_details");
+                options.ClaimActions.MapUniqueJsonKey(ClaimsPrincipalExtensions.HprDetails, ClaimsPrincipalExtensions.HprDetails);
             }
 
             foreach (var scope in configAuth.AllScopes)

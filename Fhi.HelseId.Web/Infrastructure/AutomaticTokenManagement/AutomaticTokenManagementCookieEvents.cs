@@ -7,12 +7,13 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.Constants;
+using Fhi.HelseId.Common.Exceptions;
 using Fhi.HelseId.Common.ExtensionMethods;
+using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.Hpr.Core;
 using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -209,11 +210,15 @@ public class UserByIdentity : ICurrentUser
         PidPseudonym = identity.Claims.SingleOrDefault(c => c.Type == "pid_pseudonym")?.Value ?? "";
         Id = identity.Claims.SingleOrDefault(c => c.Type == "id")?.Value ?? "";
         HprNummer = identity.Claims.SingleOrDefault(c => c.Type == "hpr_nummer")?.Value ?? "";        
-        var hprDetailsClaim = identity.Claims.FirstOrDefault(x => x.Type == "helseid://claims/hpr/hpr_details");
+        var hprDetailsClaim = identity.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprDetails);
         // TODO: This is duplicated in CurrentHttpUser
         if (hprDetailsClaim != null)
         {
             var approvalResponse = JsonSerializer.Deserialize<ApprovalResponse>(hprDetailsClaim.Value);
+            if (approvalResponse == null)
+            {
+                throw new HprClaimMissingException("HprDetails claim missing or could not be deserialized.");
+            }
             HprGodkjenninger = approvalResponse.Approvals
                 .SelectMany(approval => Kodekonstanter.KodeList
                     .Where(oid9060 => approval.Profession == oid9060.Value)).ToList();
