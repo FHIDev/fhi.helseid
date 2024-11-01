@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Fhi.HelseId.Web.Hpr.Core;
 using Fhi.HelseId.Web.Services;
 using Microsoft.Extensions.Logging;
@@ -97,9 +96,7 @@ namespace Fhi.HelseId.Web.Hpr
 
         public bool ErGyldigForKategorier(HprPerson person, params OId9060[] koder)
         {
-            var filteredGodkjenninger = person.HprGodkjenninger
-                .Where(personGodkjenninger => koder
-                    .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
+            var filteredGodkjenninger = FilterGodkjenninger(person, koder);
 
             return filteredGodkjenninger.Any();
         }
@@ -112,11 +109,16 @@ namespace Fhi.HelseId.Web.Hpr
 
         public IEnumerable<OId9060> HentGodkjenninger(HprPerson person)
         {
-            var filteredGodkjenninger = person.HprGodkjenninger
-                .Where(personGodkjenninger => GodkjenteHelsepersonellkategorier
-                    .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
+            var filteredGodkjenninger = FilterGodkjenninger(person, GodkjenteHelsepersonellkategorier.ToArray());
 
             return filteredGodkjenninger;
+        }
+
+        private static IEnumerable<OId9060> FilterGodkjenninger(HprPerson person, OId9060[] koder)
+        {
+            return person.HprGodkjenninger
+                .Where(personGodkjenninger => koder
+                    .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
         }
     }
 }
