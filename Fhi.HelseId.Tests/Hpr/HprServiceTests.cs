@@ -30,26 +30,18 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public async Task AtViKanLasteEnPerson()
         {
-            var person = new TestLege(Hprnummer);
-            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
-
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = await _hprService.HentPerson(Hprnummer.ToString());
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
-            {
-                Assert.That(result.HprNummer, Is.EqualTo(Hprnummer));
-                //Assert.That(result.FysiskeAdresser.Length, Is.EqualTo(1)); // TODO: Can't get fysiske adresser from context?
-                //Assert.That(result.FysiskeAdresser[0].Gateadresse, Is.EqualTo(person.FysiskeAdresser[0].Gateadresse)); // TODO: Can't get fysiske adresser from context?
-            });
+            Assert.That(result.HprNummer, Is.EqualTo(Hprnummer));
         }
 
         [Test]
         public async Task AtPersonErLege()
         {
-            var person = new TestLege(Hprnummer);
-            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            _currentUser.ErHprGodkjent.Returns(true);
+            _currentUser.HprGodkjenninger.Returns(new List<OId9060> { Kodekonstanter.OId9060Lege });
 
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
@@ -61,44 +53,8 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public async Task AtPersonIkkeErLege()
         {
-            var person = StubPersonAnnet.CreateStubPersonAnnet(Hprnummer);
-            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
-
-            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
-
-            Assert.That(result, Is.False);
-        }
-
-        [Test]
-        public async Task AtLegeErSuspendert()
-        {
-            var person = new TestLege(Hprnummer).Suspender();
-            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
-
-            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
-
-            Assert.That(result, Is.False);
-        }
-
-        [Ignore("Usikker case")]
-        [Test]
-        public async Task AtLegeHarAktivSuspansjonITillegg()
-        {
-            var person = new TestLege(Hprnummer).SuspenderTillegg();
-            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
-
-            var result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
-
-            Assert.That(result, Is.False);
-        }
-
-        [Test]
-        public async Task AtLegeIkkeErAutorisert()
-        {
-            var person = new TestLege(Hprnummer).EndreTilUgyldig();
-            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            _currentUser.ErHprGodkjent.Returns(false);
+            _currentUser.HprGodkjenninger.Returns(new List<OId9060>());
 
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = await _hprService.SjekkGodkjenning(Hprnummer.ToString());
@@ -109,8 +65,8 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public async Task AtFlereKategorierKanLeggesTil()
         {
-            var person = new TestSykePleier(Hprnummer);
-            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            _currentUser.ErHprGodkjent.Returns(true);
+            _currentUser.HprGodkjenninger.Returns(new List<OId9060> { Kodekonstanter.OId9060Sykepleier });
 
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
@@ -122,8 +78,8 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public async Task AtFlereGodkjenningerKanLesesFraPerson()
         {
-            var person = new TestPersonMedFlereGodkjenninger(Hprnummer);
-            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            _currentUser.ErHprGodkjent.Returns(true);
+            _currentUser.HprGodkjenninger.Returns(new List<OId9060> { Kodekonstanter.OId9060Lege, Kodekonstanter.OId9060Sykepleier, Kodekonstanter.OId9060Jordmor });
 
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
@@ -149,8 +105,8 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public async Task AtViKanLeggeTilKategorierUtenDuplikater()
         {
-            var person = new TestPersonMedFlereGodkjenninger(Hprnummer);
-            //channel.HentPersonAsync(Arg.Any<int>(), null).Returns(person);
+            _currentUser.ErHprGodkjent.Returns(true);
+            _currentUser.HprGodkjenninger.Returns(new List<OId9060> { Kodekonstanter.OId9060Lege, Kodekonstanter.OId9060Sykepleier });
 
             _hprService.LeggTilAlleKategorier();
             var godkjenninger1 = await _hprService.HentGodkjenninger(Hprnummer.ToString());
