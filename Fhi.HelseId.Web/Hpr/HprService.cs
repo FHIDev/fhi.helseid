@@ -20,7 +20,6 @@ namespace Fhi.HelseId.Web.Hpr
         /// </summary>
         bool ErGyldig(Person person);
 
-        Task Close();
         IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny);
         IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste);
         bool ErGyldigForKategorier(Person person, params OId9060[] koder);
@@ -33,7 +32,6 @@ namespace Fhi.HelseId.Web.Hpr
 
     public class HprService : IHprService
     {
-        private readonly IHPR2ServiceChannel? _serviceClient;
         private readonly ICurrentUser _currentUser;
         private readonly ILogger _logger;
 
@@ -176,11 +174,6 @@ namespace Fhi.HelseId.Web.Hpr
                 person.Godkjenninger.Where(o => ErAktivGodkjenning(o, GodkjenteHelsepersonellkategorier.ToArray()));
             return Kodekonstanter.KodeList.Where(o =>
                 godkjenninger.FirstOrDefault(x => x.Helsepersonellkategori.Verdi == o.Value) != null);
-        }
-
-        public async Task Close()
-        {
-            if (_serviceClient is HPR2ServiceClient client) await client.CloseAsync();
         }
     }
 }
