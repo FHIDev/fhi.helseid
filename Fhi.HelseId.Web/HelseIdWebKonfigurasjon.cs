@@ -9,6 +9,7 @@ namespace Fhi.HelseId.Web;
 
 public interface IHelseIdHprFeatures
 {
+    bool UseHpr { get; }
     bool UseHprNumber { get; }
     bool UseHprPolicy { get; }
 }

@@ -52,8 +52,11 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             //options.CorrelationCookie.SameSite = SameSiteMode.Lax;
             //options.NonceCookie.SameSite = SameSiteMode.Lax;
 
-            options.GetClaimsFromUserInfoEndpoint = true;
-            options.ClaimActions.MapUniqueJsonKey("helseid://claims/hpr/hpr_details", "helseid://claims/hpr/hpr_details");
+            if (configAuth.UseHpr)
+            {
+                options.GetClaimsFromUserInfoEndpoint = true;
+                options.ClaimActions.MapUniqueJsonKey("helseid://claims/hpr/hpr_details", "helseid://claims/hpr/hpr_details");
+            }
 
             foreach (var scope in configAuth.AllScopes)
             {
