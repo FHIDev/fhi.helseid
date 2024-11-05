@@ -32,8 +32,6 @@ namespace Fhi.HelseId.Web.Hpr
 
         public List<OId9060> GodkjenteHelsepersonellkategorier { get; }
 
-        const string HprnummerAdmin = "000000000";
-
         public HprService(ICurrentUser currentUser, ILogger<HprService> logger)
         {
             _logger = logger;
@@ -68,8 +66,6 @@ namespace Fhi.HelseId.Web.Hpr
 
         public bool SjekkGodkjenning(string hprnummer)
         {
-            if (hprnummer == HprnummerAdmin)
-                return true;
             var person = HentPerson(hprnummer);
 
             var filteredGodkjenninger = HentGodkjenninger(person);
