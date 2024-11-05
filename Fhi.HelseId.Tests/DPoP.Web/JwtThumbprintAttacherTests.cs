@@ -1,4 +1,6 @@
-﻿using Fhi.HelseId.Web.DPoP;
+﻿using System.Security.Cryptography;
+using Fhi.HelseId.Web.DPoP;
+using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
@@ -11,18 +13,23 @@ namespace Fhi.HelseId.Tests.DPoP.Web;
 
 internal class JwtThumbprintAttacherTests
 {
-    private ProofKeyConfiguration _keyConfiguration;
     private JwtThumbprintAttacher _thumbprintAttacher;
     private RedirectContext _redirectContext;
-
+    private IHelseIdSecretHandler _secretHandler;
+    
+    private byte[] _expectedThumbprint;
+    
     [SetUp]
     public void SetUp()
     {
-        var proofKey = Substitute.For<JsonWebKey>();
-        proofKey.ComputeJwkThumbprint().Returns([1, 2, 3, 4, 5]);
-        _keyConfiguration = new ProofKeyConfiguration(proofKey);
-        _thumbprintAttacher = new JwtThumbprintAttacher(_keyConfiguration);
+        var rsaKey = new RsaSecurityKey(RSA.Create(2048));
+        var proofKey = JsonWebKeyConverter.ConvertFromSecurityKey(rsaKey);
+        _expectedThumbprint = proofKey.ComputeJwkThumbprint();
+        
         var authScheme = new AuthenticationScheme("test", "test", typeof(IAuthenticationHandler));
+        _secretHandler = Substitute.For<IHelseIdSecretHandler>();
+        _secretHandler.Secret.Returns(proofKey);
+        _thumbprintAttacher = new JwtThumbprintAttacher(_secretHandler);
         _redirectContext = new RedirectContext(
             Substitute.For<HttpContext>(),
             authScheme, new OpenIdConnectOptions(),
@@ -37,7 +44,7 @@ internal class JwtThumbprintAttacherTests
         _thumbprintAttacher.AttachThumbprint(_redirectContext);
 
         // Assert
-        var expectedThumbprint = Base64UrlEncoder.Encode([1, 2, 3, 4, 5]);
+        var expectedThumbprint = Base64UrlEncoder.Encode(_expectedThumbprint);
         Assert.That(_redirectContext.ProtocolMessage.Parameters["dpop_jkt"], Is.EqualTo(expectedThumbprint));
     }
 
