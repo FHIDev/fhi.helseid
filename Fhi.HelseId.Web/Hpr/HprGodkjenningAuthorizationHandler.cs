@@ -21,7 +21,7 @@ namespace Fhi.HelseId.Web.Hpr
             Logger = logger;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, HprGodkjenningAuthorizationRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HprGodkjenningAuthorizationRequirement requirement)
         {
             var currentUser = context.User;
             var userlogName = currentUser.Name().ObfuscateName();
@@ -30,14 +30,14 @@ namespace Fhi.HelseId.Web.Hpr
             {
                 Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er ikke autentisiert", userlogName);
                 context.Fail();
-                return;
+                return Task.CompletedTask;
             }
             var hprNummer = currentUser.HprNumber();
             if (hprNummer == null)
             {
                 Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} har ikke hprnummer.", userlogName);
                 SjekkWhitelist();
-                return;
+                return Task.CompletedTask;
             }
 
             var erGodkjent = _hprService.SjekkGodkjenning(hprNummer);
@@ -51,6 +51,8 @@ namespace Fhi.HelseId.Web.Hpr
                 Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er ikke godkjent.", userlogName);
                 SjekkWhitelist();
             }
+
+            return Task.CompletedTask;
 
             void SjekkWhitelist()
             {
