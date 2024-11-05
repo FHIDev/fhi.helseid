@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Fhi.HelseId.Web.Hpr;
 using Fhi.HelseId.Web.Hpr.Core;
 using Fhi.HelseId.Web.Services;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -15,16 +13,14 @@ namespace Fhi.HelseId.Tests.Hpr
         private const string Hprnummer = "123456789";
 
         private ICurrentUser _currentUser;
-        private ILogger<HprService> _logger;
         private HprService _hprService;
 
         [SetUp]
         public void Setup()
         {
             _currentUser = Substitute.For<ICurrentUser>();
-            _logger = Substitute.For<ILogger<HprService>>();
 
-            _hprService = new HprService(_currentUser, _logger);
+            _hprService = new HprService(_currentUser);
         }
 
         [Test]

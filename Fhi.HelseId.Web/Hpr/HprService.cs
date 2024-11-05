@@ -2,7 +2,6 @@
 using System.Linq;
 using Fhi.HelseId.Web.Hpr.Core;
 using Fhi.HelseId.Web.Services;
-using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Web.Hpr
 {
@@ -28,13 +27,11 @@ namespace Fhi.HelseId.Web.Hpr
     public class HprService : IHprService
     {
         private readonly ICurrentUser _currentUser;
-        private readonly ILogger _logger;
 
         public List<OId9060> GodkjenteHelsepersonellkategorier { get; }
 
-        public HprService(ICurrentUser currentUser, ILogger<HprService> logger)
+        public HprService(ICurrentUser currentUser)
         {
-            _logger = logger;
             GodkjenteHelsepersonellkategorier = new List<OId9060>();
             _currentUser = currentUser;
         }
