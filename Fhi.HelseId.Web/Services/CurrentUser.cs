@@ -64,7 +64,7 @@ public class CurrentHttpUser : ICurrentUser
     public string? Id { get; }
     public string? Name { get; }
     public string? HprNummer { get; }
-    public List<OId9060> HprGodkjenninger { get; }
+    public List<OId9060> HprGodkjenninger { get; } = new List<OId9060>();
     public bool ErHprGodkjent { get; }
     public string? PidPseudonym { get; }
     public string? Pid { get; }
