@@ -42,6 +42,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
     public string[] SecurityLevels { get; set; } = [];
 
     public override IEnumerable<string> BaseScopes { get; set; } = [
+                    "offline_access",
                     "openid",
                     "profile",
                     "helseid://scopes/identity/pid",
@@ -59,7 +60,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
             var hprString = "helseid://scopes/hpr/hpr_number";
             if (value && !HprScope.Contains(hprString))
             {
-                HprScope.Append(hprString);
+                HprScope.Add(hprString);
             } 
         } 
     } 

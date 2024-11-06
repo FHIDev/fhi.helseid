@@ -28,11 +28,11 @@ namespace Fhi.HelseId.Common.Configuration
         public string ClientSecret { get; set; } = "";
         public string[] Scopes { get; set; } = [];
         public bool Debug { get; set; } = false;
-        public IEnumerable<string> HprScope { get; set; } = [];
+        public List<string> HprScope { get; set; } = new List<string>();
 
         public IEnumerable<string> AllScopes => BaseScopes.Concat(Scopes).Concat(HprScope).Distinct();
         
-        public virtual IEnumerable<string> BaseScopes { get; set; } = ["offline_access"];
+        public virtual IEnumerable<string> BaseScopes { get; set; } = [];
 
         public string JsonWebKeySecret { get; set; } = "";
         public string RsaKeySecret { get; set; } = "";
