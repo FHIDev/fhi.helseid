@@ -1,13 +1,13 @@
-﻿using Fhi.HelseId.Common.DPoP;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.DPoP;
 using Fhi.HelseId.Web.Services;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Fhi.HelseId.Web.DPoP;
 
@@ -42,7 +42,7 @@ public class DPoPTokenCreator(
             claims.Add(new Claim("ath", ath));
         }
 
-        var jwk = secretHandler.Secret.AsDPoPJwkSecret();
+        var jwk = secretHandler.GetSecurityKey().AsDPoPJwkSecret();
         var signingCredentials = new SigningCredentials(jwk, jwk.Alg);
 
         var jwtSecurityToken = new JwtSecurityToken(claims: claims, signingCredentials: signingCredentials);

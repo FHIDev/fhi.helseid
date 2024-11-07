@@ -17,14 +17,14 @@ namespace Fhi.HelseId.Web.Services
 {
     public interface IHelseIdSecretHandler
     {
+        public JsonWebKey GetSecurityKey();
         void AddSecretConfiguration(OpenIdConnectOptions options);
         string GenerateClientAssertion { get; }
-        JsonWebKey Secret { get; }
     }
 
     public abstract class SecretHandlerBase : IHelseIdSecretHandler
     {
-        public JsonWebKey Secret { get; protected init; }
+        public abstract JsonWebKey GetSecurityKey();
 
         public const string ClientAssertionType = OAuthConstants.JwtBearerClientAssertionType;
 
@@ -35,7 +35,7 @@ namespace Fhi.HelseId.Web.Services
 
         public virtual void AddSecretConfiguration(OpenIdConnectOptions options) { }
 
-        public virtual string GenerateClientAssertion => ClientAssertion.Generate(ConfigAuth.ClientId, ConfigAuth.Authority, Secret);
+        public virtual string GenerateClientAssertion => ClientAssertion.Generate(ConfigAuth.ClientId, ConfigAuth.Authority, GetSecurityKey());
 
         protected IHelseIdWebKonfigurasjon ConfigAuth { get; }
     }
@@ -45,6 +45,9 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkFileSecretHandler : SecretHandlerBase
     {
+        JsonWebKey Secret { get; }
+        public override JsonWebKey GetSecurityKey() => Secret;
+
         public HelseIdJwkFileSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
             var jwk = File.ReadAllText(ConfigAuth.ClientSecret);
@@ -83,6 +86,9 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkSecretHandler : SecretHandlerBase
     {
+        private JsonWebKey Secret { get; }
+        public override JsonWebKey GetSecurityKey() => Secret;
+
         public HelseIdJwkSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
             Secret = new JsonWebKey(ConfigAuth.ClientSecret);
@@ -120,6 +126,9 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkAzureKeyVaultSecretHandler : SecretHandlerBase
     {
+        private JsonWebKey Secret { get; }
+        public override JsonWebKey GetSecurityKey() => Secret;
+
         public HelseIdJwkAzureKeyVaultSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
             var azureClientSettings = ConfigAuth.ClientSecret.Split(';');
@@ -171,14 +180,30 @@ namespace Fhi.HelseId.Web.Services
         }
     }
 
-    public class HelseIdNoAuthorizationSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
-        : SecretHandlerBase(helseIdWebKonfigurasjon);
+    public class HelseIdNoAuthorizationSecretHandler : SecretHandlerBase
+    {
+        public HelseIdNoAuthorizationSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
+        {
+        }
+
+        /// <summary>
+        /// Will never be called
+        /// </summary>
+        /// <returns></returns>
+        public override JsonWebKey GetSecurityKey()
+        {
+            throw new NotImplementedException("This method is not used and should not be called. If this happens, there is a missing check for AuthUse");
+        }
+    }
 
     /// <summary>
     /// For selvbetjening we expect ClientSecret to be a path to a file containing the full downloaded configuration file, including the private key in JWK format
     /// </summary>
     public class HelseIdSelvbetjeningSecretHandler : SecretHandlerBase
     {
+        private JsonWebKey Secret { get; }
+        public override JsonWebKey GetSecurityKey() => Secret;
+
         public HelseIdSelvbetjeningSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
             var selvbetjeningJson = File.ReadAllText(ConfigAuth.ClientSecret);

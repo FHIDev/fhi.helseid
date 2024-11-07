@@ -42,7 +42,7 @@ public class HelseIdWebAuthBuilder
     public HelseIdWebAuthBuilder(IConfiguration configuration, IServiceCollection services)
     {
         _services = services;
-        _configuration = configuration;        
+        _configuration = configuration;
         _helseIdWebKonfigurasjonSection = _configuration.GetSection(nameof(HelseIdWebKonfigurasjon));
         if (_helseIdWebKonfigurasjonSection == null)
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
