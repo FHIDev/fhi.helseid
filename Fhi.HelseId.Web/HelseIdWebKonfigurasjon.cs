@@ -9,6 +9,7 @@ namespace Fhi.HelseId.Web;
 
 public interface IHelseIdHprFeatures
 {
+    bool IncludeHprNumber { get; }
     bool UseHpr { get; }
     bool UseHprNumber { get; }
     bool UseHprPolicy { get; }
@@ -51,7 +52,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
                 "helseid://scopes/identity/pid_pseudonym",
                 "helseid://scopes/identity/security_level"
             };
-            if (UseHprNumber)
+            if (IncludeHprNumber || UseHprNumber || UseHprPolicy)
             {
                 list.Add("helseid://scopes/hpr/hpr_number");
             }
@@ -60,6 +61,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
         }
     }
 
+    public bool IncludeHprNumber { get; set; } = false;
     public bool UseHpr { get; set; } = false;
     public bool UseHprNumber { get; set; } = false;
     public bool UseHprPolicy { get; set; } = false;
