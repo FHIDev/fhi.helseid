@@ -63,7 +63,7 @@ namespace Fhi.HelseId.Web.Middleware
                     _logger.LogTrace("ProtectedPaths:User is not authenticated, ChallengeAsync called");
                     return;
                 }
-                
+
                 var authorizationResult = await authorizationService.AuthorizeAsync(httpContext.User, null, _policyName);
                 if (!authorizationResult.Succeeded)
                 {
