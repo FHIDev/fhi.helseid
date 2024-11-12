@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -20,11 +19,12 @@ namespace Fhi.HelseId.Web.Services
     {
         void AddSecretConfiguration(OpenIdConnectOptions options);
         string GenerateClientAssertion { get; }
+        JsonWebKey Secret { get; }
     }
 
     public abstract class SecretHandlerBase : IHelseIdSecretHandler
     {
-        protected abstract SecurityKey GetSecurityKey();
+        public JsonWebKey Secret { get; protected init; }
 
         public const string ClientAssertionType = OAuthConstants.JwtBearerClientAssertionType;
 
@@ -35,7 +35,7 @@ namespace Fhi.HelseId.Web.Services
 
         public virtual void AddSecretConfiguration(OpenIdConnectOptions options) { }
 
-        public virtual string GenerateClientAssertion => ClientAssertion.Generate(ConfigAuth.ClientId, ConfigAuth.Authority, GetSecurityKey());
+        public virtual string GenerateClientAssertion => ClientAssertion.Generate(ConfigAuth.ClientId, ConfigAuth.Authority, Secret);
 
         protected IHelseIdWebKonfigurasjon ConfigAuth { get; }
     }
@@ -45,11 +45,10 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkFileSecretHandler : SecretHandlerBase
     {
-        private SecurityKey JsonWebKey { get; }
         public HelseIdJwkFileSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
             var jwk = File.ReadAllText(ConfigAuth.ClientSecret);
-            JsonWebKey = new JsonWebKey(jwk);
+            Secret = new JsonWebKey(jwk);
         }
 
         public override void AddSecretConfiguration(OpenIdConnectOptions options)
@@ -77,8 +76,6 @@ namespace Fhi.HelseId.Web.Services
             };
 #endif
         }
-
-        protected override SecurityKey GetSecurityKey() => JsonWebKey;
     }
 
     /// <summary>
@@ -86,10 +83,9 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkSecretHandler : SecretHandlerBase
     {
-        private SecurityKey JsonWebKey { get; }
         public HelseIdJwkSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
-            JsonWebKey = new JsonWebKey(ConfigAuth.ClientSecret);
+            Secret = new JsonWebKey(ConfigAuth.ClientSecret);
         }
 
         public override void AddSecretConfiguration(OpenIdConnectOptions options)
@@ -117,8 +113,6 @@ namespace Fhi.HelseId.Web.Services
             };
 #endif
         }
-
-        protected override SecurityKey GetSecurityKey() => JsonWebKey;
     }
 
     /// <summary>
@@ -126,7 +120,6 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkAzureKeyVaultSecretHandler : SecretHandlerBase
     {
-        private SecurityKey JsonWebKey { get; }
         public HelseIdJwkAzureKeyVaultSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
             var azureClientSettings = ConfigAuth.ClientSecret.Split(';');
@@ -148,7 +141,7 @@ namespace Fhi.HelseId.Web.Services
             var secretClient = new SecretClient(new Uri(azureClientSettings[1]), new DefaultAzureCredential(), secretClientOptions);
             var secret = secretClient.GetSecret(azureClientSettings[0]);
 
-            JsonWebKey = new JsonWebKey(secret.Value.Value);
+            Secret = new JsonWebKey(secret.Value.Value);
         }
 
         public override void AddSecretConfiguration(OpenIdConnectOptions options)
@@ -176,101 +169,16 @@ namespace Fhi.HelseId.Web.Services
             };
 #endif
         }
-
-        protected override SecurityKey GetSecurityKey() => JsonWebKey;
     }
 
-    public class HelseIdEnterpriseCertificateSecretHandler : SecretHandlerBase
-    {
-        private readonly X509SecurityKey _x509SecurityKey;
-        public HelseIdEnterpriseCertificateSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
-        {
-            var secretParts = ConfigAuth.ClientSecret.Split(':');
-            if (secretParts.Length != 2)
-            {
-                throw new InvalidEnterpriseCertificateSecretException(ConfigAuth.ClientSecret);
-            }
-
-            var storeLocation = (StoreLocation)Enum.Parse(typeof(StoreLocation), secretParts[0]);
-            var thumbprint = secretParts[1];
-
-            var store = new X509Store(storeLocation);
-            store.Open(OpenFlags.ReadOnly);
-
-            var certificates = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, true);
-
-            if (certificates.Count == 0)
-            {
-                throw new Exception($"No certificate with thumbprint {thumbprint} found in store LocalMachine");
-            }
-
-            _x509SecurityKey = new X509SecurityKey(certificates[0]);
-        }
-
-        public override void AddSecretConfiguration(OpenIdConnectOptions options)
-        {
-            options.Events.OnAuthorizationCodeReceived = ctx =>
-            {
-                if (ctx.TokenEndpointRequest == null)
-                {
-                    throw new InvalidOperationException($"{nameof(ctx.TokenEndpointRequest)} cannot be null");
-                }
-
-                ctx.TokenEndpointRequest.ClientAssertionType = ClientAssertionType;
-                ctx.TokenEndpointRequest.ClientAssertion = GenerateClientAssertion;
-
-                return Task.CompletedTask;
-            };
-
-#if NET9_0
-            options.Events.OnPushAuthorization = ctx =>
-            {
-                ctx.ProtocolMessage.ClientAssertionType = ClientAssertionType;
-                ctx.ProtocolMessage.ClientAssertion = GenerateClientAssertion;
-
-                return Task.CompletedTask;
-            };
-#endif
-        }
-
-        public class InvalidEnterpriseCertificateSecretException : Exception
-        {
-            private const string StandardMessage = "For enterprise certificates we expect secret in the format STORE:Thumbprint. For example: 'LocalMachine:1234567890'";
-
-            public InvalidEnterpriseCertificateSecretException(string secret) : base(StandardMessage)
-            {
-                Secret = secret;
-            }
-
-            public string Secret { get; }
-        }
-
-        protected override SecurityKey GetSecurityKey() => _x509SecurityKey;
-    }
-
-    public class HelseIdNoAuthorizationSecretHandler : SecretHandlerBase
-    {
-
-        public HelseIdNoAuthorizationSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
-        {
-        }
-
-        /// <summary>
-        /// Will never be called
-        /// </summary>
-        /// <returns></returns>
-        protected override SecurityKey GetSecurityKey()
-        {
-            throw new NotImplementedException("This method is not used and should not be called. If this happens, there is a missing check for AuthUse");
-        }
-    }
+    public class HelseIdNoAuthorizationSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon)
+        : SecretHandlerBase(helseIdWebKonfigurasjon);
 
     /// <summary>
     /// For selvbetjening we expect ClientSecret to be a path to a file containing the full downloaded configuration file, including the private key in JWK format
     /// </summary>
     public class HelseIdSelvbetjeningSecretHandler : SecretHandlerBase
     {
-        private SecurityKey JsonWebKey { get; }
         public HelseIdSelvbetjeningSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
         {
             var selvbetjeningJson = File.ReadAllText(ConfigAuth.ClientSecret);
@@ -283,7 +191,7 @@ namespace Fhi.HelseId.Web.Services
 
             var jwk = HttpUtility.UrlDecode(selvbetjeningConfig.PrivateJwk);
 
-            JsonWebKey = new JsonWebKey(jwk);
+            Secret = new JsonWebKey(jwk);
         }
 
         public override void AddSecretConfiguration(OpenIdConnectOptions options)
@@ -339,7 +247,5 @@ namespace Fhi.HelseId.Web.Services
             [JsonPropertyName("pkceRequired")]
             public bool PkceRequired { get; set; }
         }
-
-        protected override SecurityKey GetSecurityKey() => JsonWebKey;
     }
 }

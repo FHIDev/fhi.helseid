@@ -10,25 +10,27 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.Services;
 
 namespace Fhi.HelseId.Tests.DPoP.Web;
 
 internal class DPoPTokenCreatorTests
 {
     private INonceStore _nonceStore;
-    private ProofKeyConfiguration _keyConfiguration;
     private DPoPTokenCreator _dPoPTokenCreator;
+    private IHelseIdSecretHandler _secretHandler;
 
     [SetUp]
     public void SetUp()
     {
         var rsaKey = new RsaSecurityKey(RSA.Create(2048));
         var jsonWebKey = JsonWebKeyConverter.ConvertFromRSASecurityKey(rsaKey);
-        var dpopJwk = JsonSerializer.Serialize(jsonWebKey);
 
         _nonceStore = Substitute.For<INonceStore>();
-        _keyConfiguration = new ProofKeyConfiguration(dpopJwk);
-        _dPoPTokenCreator = new DPoPTokenCreator(_nonceStore, _keyConfiguration);
+        _secretHandler = Substitute.For<IHelseIdSecretHandler>();
+        _secretHandler.Secret.Returns(jsonWebKey);
+
+        _dPoPTokenCreator = new DPoPTokenCreator(_nonceStore, _secretHandler);
     }
 
     [Test]

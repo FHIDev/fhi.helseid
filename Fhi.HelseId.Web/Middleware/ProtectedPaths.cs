@@ -36,6 +36,15 @@ namespace Fhi.HelseId.Web.Middleware
         {
             var path = httpContext.Request.Path;
             _logger.LogTrace($"ProtectedPaths: Checking path: {path}");
+            
+            /*
+            * This check is important to ensure that incoming HTTP-calls are authorized for static files.
+            * If the path to the static resource is not on the exclude list, it indicates that the user
+            * does not have access to that resource without a valid auth token and the associated rights.
+            * A side effect of this is that all calls to controllers will be authorized twice due to the
+            * AuthorizeAsync call, which is invoked both through this middleware and as a policy
+            * configured on the controllers themselves.
+             */
             if (!_excludedPaths.Any(path.StartsWithSegments))
             {
                 var endpoint = httpContext.GetEndpoint();

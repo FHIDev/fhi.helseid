@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.Services;
 
 namespace Fhi.HelseId.Web.DPoP;
 
@@ -19,7 +20,7 @@ public interface IDPoPTokenCreator
 
 public class DPoPTokenCreator(
     INonceStore nonceStore,
-    ProofKeyConfiguration keyConfiguration) : IDPoPTokenCreator
+    IHelseIdSecretHandler secretHandler) : IDPoPTokenCreator
 {
     public async Task<string> CreateSignedToken(HttpMethod method, string url, string? nonce = null, string? ath = null)
     {
@@ -41,7 +42,7 @@ public class DPoPTokenCreator(
             claims.Add(new Claim("ath", ath));
         }
 
-        var jwk = keyConfiguration.ProofKey;
+        var jwk = secretHandler.Secret.AsDPoPJwkSecret();
         var signingCredentials = new SigningCredentials(jwk, jwk.Alg);
 
         var jwtSecurityToken = new JwtSecurityToken(claims: claims, signingCredentials: signingCredentials);
