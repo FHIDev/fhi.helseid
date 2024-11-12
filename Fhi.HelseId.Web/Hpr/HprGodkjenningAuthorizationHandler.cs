@@ -40,7 +40,7 @@ namespace Fhi.HelseId.Web.Hpr
                 return Task.CompletedTask;
             }
 
-            var erGodkjent = _hprService.SjekkGodkjenning(hprNummer);
+            var erGodkjent = _hprService.SjekkGodkjenning();
             if (erGodkjent)
             {
                 Logger.LogTrace("HprGodkjenningAuthorizationHandler: {Name} autentisert", userlogName);

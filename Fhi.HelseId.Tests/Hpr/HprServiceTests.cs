@@ -24,16 +24,6 @@ namespace Fhi.HelseId.Tests.Hpr
         }
 
         [Test]
-        public void AtViKanLasteEnPerson()
-        {
-            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = _hprService.HentPerson(Hprnummer.ToString());
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.HprNummer, Is.EqualTo(Hprnummer));
-        }
-
-        [Test]
         public void AtPersonErLege()
         {
             _currentUser.ErHprGodkjent.Returns(true);
@@ -41,7 +31,7 @@ namespace Fhi.HelseId.Tests.Hpr
 
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = _hprService.SjekkGodkjenning(Hprnummer);
+            var result = _hprService.SjekkGodkjenning();
 
             Assert.That(result);
         }
@@ -53,7 +43,7 @@ namespace Fhi.HelseId.Tests.Hpr
             _currentUser.HprGodkjenninger.Returns(new List<OId9060>());
 
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = _hprService.SjekkGodkjenning(Hprnummer.ToString());
+            var result = _hprService.SjekkGodkjenning();
 
             Assert.That(result, Is.False);
         }
@@ -66,7 +56,7 @@ namespace Fhi.HelseId.Tests.Hpr
 
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var result = _hprService.SjekkGodkjenning(Hprnummer.ToString());
+            var result = _hprService.SjekkGodkjenning();
 
             Assert.That(result);
         }
@@ -80,14 +70,14 @@ namespace Fhi.HelseId.Tests.Hpr
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
 
-            bool result = _hprService.SjekkGodkjenning(Hprnummer.ToString());
+            bool result = _hprService.SjekkGodkjenning();
 
             Assert.That(result, "Hprnummer ikke godkjent");
 
-            _hprService.LeggTilGodkjenteHelsepersonellKategoriListe(new List<OId9060>
-                {Kodekonstanter.OId9060Sykepleier, Kodekonstanter.OId9060Lege});
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
 
-            var godkjenninger = _hprService.HentGodkjenninger(Hprnummer.ToString());
+            var godkjenninger = _hprService.HentGodkjenninger();
 
             Assert.Multiple(() =>
             {
@@ -105,10 +95,10 @@ namespace Fhi.HelseId.Tests.Hpr
             _currentUser.HprGodkjenninger.Returns(new List<OId9060> { Kodekonstanter.OId9060Lege, Kodekonstanter.OId9060Sykepleier });
 
             _hprService.LeggTilAlleKategorier();
-            var godkjenninger1 = _hprService.HentGodkjenninger(Hprnummer.ToString());
+            var godkjenninger1 = _hprService.HentGodkjenninger();
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
-            var godkjenninger2 = _hprService.HentGodkjenninger(Hprnummer.ToString());
+            var godkjenninger2 = _hprService.HentGodkjenninger();
 
             Assert.That(godkjenninger1.Count, Is.EqualTo(godkjenninger2.Count()));
             Assert.That(godkjenninger2.Count, Is.EqualTo(2));

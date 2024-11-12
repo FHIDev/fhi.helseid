@@ -7,21 +7,15 @@ namespace Fhi.HelseId.Web.Hpr
 {
     public interface IHprService
     {
-        bool SjekkGodkjenning(string hprnummer);
-        HprPerson HentPerson(string hprnummer);
-
-        /// <summary>
-        /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene.  
-        /// </summary>
-        bool ErGyldig(HprPerson person);
+        bool SjekkGodkjenning();
+        bool ErGyldigForKategorier(params OId9060[] koder);
+        IEnumerable<OId9060> HentGodkjenninger();
 
         IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny);
         IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste);
-        bool ErGyldigForKategorier(HprPerson person, params OId9060[] koder);
-        List<OId9060> GodkjenteHelsepersonellkategorier { get; }
-        IEnumerable<OId9060> HentGodkjenninger(string hprnummer);
-        IEnumerable<OId9060> HentGodkjenninger(HprPerson person);
         IHprService LeggTilAlleKategorier();
+
+        List<OId9060> GodkjenteHelsepersonellkategorier { get; }
     }
 
     public class HprService : IHprService
@@ -36,17 +30,33 @@ namespace Fhi.HelseId.Web.Hpr
             _currentUser = currentUser;
         }
 
-        public IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste)
+        public bool SjekkGodkjenning()
         {
-            LeggTilGodkjenteHelsepersonellKategoriListe(liste.Godkjenninger);
-            return this;
+            var filteredGodkjenninger = HentGodkjenninger();
+
+            return filteredGodkjenninger.Any();
         }
 
-        public IHprService LeggTilGodkjenteHelsepersonellKategoriListe(IEnumerable<OId9060> liste)
+        public bool ErGyldigForKategorier(params OId9060[] koder)
         {
-            foreach (var godkjent in liste)
-                LeggTilGodkjenteHelsepersonellkategori(godkjent);
-            return this;
+            var filteredGodkjenninger = FilterGodkjenninger(koder);
+
+            return filteredGodkjenninger.Any();
+        }
+
+        public IEnumerable<OId9060> HentGodkjenninger()
+        {
+            var filteredGodkjenninger = FilterGodkjenninger(GodkjenteHelsepersonellkategorier.ToArray());
+
+            return filteredGodkjenninger;
+        }
+
+        private IEnumerable<OId9060> FilterGodkjenninger(OId9060[] koder)
+        {
+            var person = HentPerson();
+            return person.HprGodkjenninger
+                .Where(personGodkjenninger => koder
+                    .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
         }
 
         public IHprService LeggTilGodkjenteHelsepersonellkategori(OId9060 ny)
@@ -55,63 +65,36 @@ namespace Fhi.HelseId.Web.Hpr
             return this;
         }
 
+        public IHprService LeggTilGodkjenteHelsepersonellkategorier(IGodkjenteHprKategoriListe liste)
+        {
+            LeggTilGodkjenteHelsepersonellKategoriListe(liste.Godkjenninger);
+            return this;
+        }
+
+        private IHprService LeggTilGodkjenteHelsepersonellKategoriListe(IEnumerable<OId9060> liste)
+        {
+            foreach (var godkjent in liste)
+                LeggTilGodkjenteHelsepersonellkategori(godkjent);
+            return this;
+        }
+
+
         public IHprService LeggTilAlleKategorier()
         {
             LeggTilGodkjenteHelsepersonellKategoriListe(Kodekonstanter.KodeList);
             return this;
         }
 
-        public bool SjekkGodkjenning(string hprnummer)
-        {
-            var person = HentPerson(hprnummer);
-
-            var filteredGodkjenninger = HentGodkjenninger(person);
-
-            return filteredGodkjenninger.Any();
-        }
-
-        public HprPerson HentPerson(string hprnummer)
+        private HprPerson HentPerson()
         {
             var person = new HprPerson()
             {
-                HprNummer = hprnummer,
+                HprNummer = _currentUser.HprNummer ?? string.Empty,
                 ErHprGodkjent = _currentUser.ErHprGodkjent,
                 HprGodkjenninger = _currentUser.HprGodkjenninger
             };
 
             return person;
-        }
-
-        /// <summary>
-        /// Sjekker om personen har gyldig aktiv autorisasjon som en av de godkjente kategoriene. 
-        /// </summary>
-        public bool ErGyldig(HprPerson person) => ErGyldigForKategorier(person, GodkjenteHelsepersonellkategorier.ToArray());
-
-        public bool ErGyldigForKategorier(HprPerson person, params OId9060[] koder)
-        {
-            var filteredGodkjenninger = FilterGodkjenninger(person, koder);
-
-            return filteredGodkjenninger.Any();
-        }
-
-        public IEnumerable<OId9060> HentGodkjenninger(string hprnummer)
-        {
-            var person = HentPerson(hprnummer);
-            return HentGodkjenninger(person);
-        }
-
-        public IEnumerable<OId9060> HentGodkjenninger(HprPerson person)
-        {
-            var filteredGodkjenninger = FilterGodkjenninger(person, GodkjenteHelsepersonellkategorier.ToArray());
-
-            return filteredGodkjenninger;
-        }
-
-        private static IEnumerable<OId9060> FilterGodkjenninger(HprPerson person, OId9060[] koder)
-        {
-            return person.HprGodkjenninger
-                .Where(personGodkjenninger => koder
-                    .FirstOrDefault(systemGodkjenninger => systemGodkjenninger.Value == personGodkjenninger.Value) != null);
         }
     }
 }
