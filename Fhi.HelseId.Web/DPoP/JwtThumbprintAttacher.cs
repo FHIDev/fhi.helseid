@@ -13,7 +13,7 @@ public class JwtThumbprintAttacher(IHelseIdSecretHandler secretHandler) : IProof
 {
     public void AttachThumbprint(RedirectContext ctx)
     {
-        var dpopSecret = secretHandler.Secret.AsDPoPJwkSecret();
+        var dpopSecret = secretHandler.GetSecurityKey().AsDPoPJwkSecret();
         var jkt = Base64UrlEncoder.Encode(dpopSecret.ComputeJwkThumbprint());
 
         ctx.Properties.Items[DPoPContext.ContextKey] = "true";
