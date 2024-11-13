@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSubstitute;
 
-namespace Fhi.HelseId.Tests.ComponentsTests.HprTests
+namespace Fhi.HelseId.Tests.FakeWebApplication
 {
     public class HelseIdWebApplication<T> : WebApplicationFactory<T> where T : class
     {

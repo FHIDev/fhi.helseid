@@ -3,14 +3,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Tests.Builders;
+using Fhi.HelseId.Tests.FakeWebApplication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace Fhi.HelseId.Tests.ComponentsTests.HprTests
+namespace Fhi.HelseId.Tests.Hpr
 {
     [TestFixture]
-    public class HprTests
+    public class HprConfigurationTests
     {
         [TestCase(true, true, true, 4)]
         [TestCase(true, false, true, 4)]
