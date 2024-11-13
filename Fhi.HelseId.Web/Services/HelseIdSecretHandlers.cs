@@ -45,7 +45,7 @@ namespace Fhi.HelseId.Web.Services
     /// </summary>
     public class HelseIdJwkFileSecretHandler : SecretHandlerBase
     {
-        JsonWebKey Secret { get; }
+        private JsonWebKey Secret { get; }
         public override JsonWebKey GetSecurityKey() => Secret;
 
         public HelseIdJwkFileSecretHandler(IHelseIdWebKonfigurasjon helseIdWebKonfigurasjon) : base(helseIdWebKonfigurasjon)
