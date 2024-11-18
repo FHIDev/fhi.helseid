@@ -29,6 +29,8 @@
     <PackageVersion Include="System.Text.Json" Version="9.0.0" />
     <!-- Direct reference, System.Text.RegularExpressions can be removed when transitive references are fixed. (4.3.0 was vulnerable) -->
     <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <!-- Direct reference, System.Security.Cryptography.Xml can be removed when transitive references are fixed. (4.4.0 was vulnerable) -->
+    <PackageVersion Include="System.Security.Cryptography.Xml" Version="8.0.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
