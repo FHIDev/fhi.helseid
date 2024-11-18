@@ -17,6 +17,6 @@
     <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\Fhi.HelseId.Blazor\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

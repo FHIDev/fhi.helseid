@@ -15,6 +15,6 @@
     <ProjectReference Include="..\Fhi.HelseId.Common\Fhi.HelseId.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\Fhi.HelseId.Api\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

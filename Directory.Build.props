@@ -21,7 +21,7 @@
       <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
     <ItemGroup>
-      <None Include="..\images\fhi.png" Pack="true" PackagePath="/" />
+      <None Include="..\images\fhi.png" Pack="true" PackagePath="\" />
     </ItemGroup>
   </Project>
   
