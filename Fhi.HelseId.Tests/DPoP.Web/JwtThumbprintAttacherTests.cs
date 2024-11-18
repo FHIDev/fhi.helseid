@@ -16,19 +16,19 @@ internal class JwtThumbprintAttacherTests
     private JwtThumbprintAttacher _thumbprintAttacher;
     private RedirectContext _redirectContext;
     private IHelseIdSecretHandler _secretHandler;
-    
+
     private byte[] _expectedThumbprint;
-    
+
     [SetUp]
     public void SetUp()
     {
         var rsaKey = new RsaSecurityKey(RSA.Create(2048));
         var proofKey = JsonWebKeyConverter.ConvertFromSecurityKey(rsaKey);
         _expectedThumbprint = proofKey.ComputeJwkThumbprint();
-        
+
         var authScheme = new AuthenticationScheme("test", "test", typeof(IAuthenticationHandler));
         _secretHandler = Substitute.For<IHelseIdSecretHandler>();
-        _secretHandler.Secret.Returns(proofKey);
+        _secretHandler.GetSecurityKey().Returns(proofKey);
         _thumbprintAttacher = new JwtThumbprintAttacher(_secretHandler);
         _redirectContext = new RedirectContext(
             Substitute.For<HttpContext>(),
