@@ -35,7 +35,7 @@ namespace Fhi.HelseId.Web.Hpr
             var hprNummer = currentUser.HprNumber();
             if (hprNummer == null)
             {
-                Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} har ikke hprnummer.", userlogName);
+                Logger.LogInformation("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} har ikke hprnummer.", userlogName);
                 SjekkWhitelist();
                 return Task.CompletedTask;
             }
@@ -48,7 +48,7 @@ namespace Fhi.HelseId.Web.Hpr
             }
             else
             {
-                Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er ikke godkjent.", userlogName);
+                Logger.LogInformation("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er ikke godkjent.", userlogName);
                 SjekkWhitelist();
             }
 
@@ -58,7 +58,7 @@ namespace Fhi.HelseId.Web.Hpr
             {
                 if (_whitelist.IsWhite(currentUser.PidPseudonym() ?? ""))
                 {
-                    Logger.LogWarning("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er whitelisted.", userlogName);
+                    Logger.LogInformation("HprGodkjenningAuthorizationHandler: Bruker {UserlogName} er whitelisted.", userlogName);
                     context.Succeed(requirement);
                     return;
                 }

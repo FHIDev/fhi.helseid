@@ -41,8 +41,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.TestSupport", "Fhi.HelseId.TestSupport\Fhi.HelseId.TestSupport.csproj", "{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.AuthControllers", "Fhi.AccountController\Fhi.AuthControllers.csproj", "{CBEAEB34-70DC-4A9F-8EFD-0EBB11C18DF3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Refit", "Fhi.HelseId.Refit\Fhi.HelseId.Refit.csproj", "{7271D958-E93F-4EC0-BBFA-991531F42CD7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Blazor", "Fhi.HelseId.Blazor\Fhi.HelseId.Blazor.csproj", "{FFC0B4DA-7D53-467F-BBAC-59CBCBDA1078}"
@@ -58,6 +56,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Api", "Fhi.HelseId.Api\Fhi.HelseId.Api.csproj", "{04BB2B1B-EB1D-4CE7-A1C4-5A3BEDF2BD2A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fhi.HelseId.Integration.Tests", "Fhi.HelseId.Integration.Tests\Fhi.HelseId.Integration.Tests.csproj", "{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fhi.AuthControllers", "Fhi.AuthControllers\Fhi.AuthControllers.csproj", "{9C9D21B9-C0C3-6C0F-2C81-D1FCBC09CA67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,10 +77,6 @@ Global
 		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDA0E41D-AB40-4ED7-8670-8E95211FDE6D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBEAEB34-70DC-4A9F-8EFD-0EBB11C18DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBEAEB34-70DC-4A9F-8EFD-0EBB11C18DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBEAEB34-70DC-4A9F-8EFD-0EBB11C18DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBEAEB34-70DC-4A9F-8EFD-0EBB11C18DF3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7271D958-E93F-4EC0-BBFA-991531F42CD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7271D958-E93F-4EC0-BBFA-991531F42CD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7271D958-E93F-4EC0-BBFA-991531F42CD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -113,6 +109,10 @@ Global
 		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59D32EF3-BBE6-44CF-B976-A2CF7E1CA09C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C9D21B9-C0C3-6C0F-2C81-D1FCBC09CA67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C9D21B9-C0C3-6C0F-2C81-D1FCBC09CA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C9D21B9-C0C3-6C0F-2C81-D1FCBC09CA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C9D21B9-C0C3-6C0F-2C81-D1FCBC09CA67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,16 +1,15 @@
-﻿using Fhi.HelseId.Common.DPoP;
-using Fhi.HelseId.Web.DPoP;
-using Microsoft.IdentityModel.Tokens;
-using NSubstitute;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.DPoP;
+using Fhi.HelseId.Web.DPoP;
 using Fhi.HelseId.Web.Services;
+using Microsoft.IdentityModel.Tokens;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Tests.DPoP.Web;
 
@@ -28,7 +27,7 @@ internal class DPoPTokenCreatorTests
 
         _nonceStore = Substitute.For<INonceStore>();
         _secretHandler = Substitute.For<IHelseIdSecretHandler>();
-        _secretHandler.Secret.Returns(jsonWebKey);
+        _secretHandler.GetSecurityKey().Returns(jsonWebKey);
 
         _dPoPTokenCreator = new DPoPTokenCreator(_nonceStore, _secretHandler);
     }
