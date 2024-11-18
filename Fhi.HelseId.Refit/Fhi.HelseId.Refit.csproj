@@ -8,8 +8,10 @@
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
     <PackageReference Include="Refit" />
     <PackageReference Include="Refit.HttpClientFactory" />
+    <PackageReference Include="System.Security.Cryptography.Xml" />
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
   <ItemGroup>
