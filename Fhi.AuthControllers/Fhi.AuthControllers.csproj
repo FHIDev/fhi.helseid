@@ -17,9 +17,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Web\HprServiceReference\ConnectedService.json" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
   </ItemGroup>
   <ItemGroup>
