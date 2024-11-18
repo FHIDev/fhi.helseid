@@ -1,34 +1,35 @@
-﻿using Fhi.HelseId.Common.DPoP;
-using Fhi.HelseId.Web.DPoP;
-using Microsoft.IdentityModel.Tokens;
-using NSubstitute;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.DPoP;
+using Fhi.HelseId.Web.DPoP;
+using Fhi.HelseId.Web.Services;
+using Microsoft.IdentityModel.Tokens;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Tests.DPoP.Web;
 
 internal class DPoPTokenCreatorTests
 {
     private INonceStore _nonceStore;
-    private ProofKeyConfiguration _keyConfiguration;
     private DPoPTokenCreator _dPoPTokenCreator;
+    private IHelseIdSecretHandler _secretHandler;
 
     [SetUp]
     public void SetUp()
     {
         var rsaKey = new RsaSecurityKey(RSA.Create(2048));
         var jsonWebKey = JsonWebKeyConverter.ConvertFromRSASecurityKey(rsaKey);
-        var dpopJwk = JsonSerializer.Serialize(jsonWebKey);
 
         _nonceStore = Substitute.For<INonceStore>();
-        _keyConfiguration = new ProofKeyConfiguration(dpopJwk);
-        _dPoPTokenCreator = new DPoPTokenCreator(_nonceStore, _keyConfiguration);
+        _secretHandler = Substitute.For<IHelseIdSecretHandler>();
+        _secretHandler.GetSecurityKey().Returns(jsonWebKey);
+
+        _dPoPTokenCreator = new DPoPTokenCreator(_nonceStore, _secretHandler);
     }
 
     [Test]

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+﻿using Fhi.HelseId.Web.Services;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Fhi.HelseId.Web.DPoP;
@@ -8,11 +9,12 @@ public interface IProofRedirector
     void AttachThumbprint(RedirectContext ctx);
 }
 
-public class JwtThumbprintAttacher(ProofKeyConfiguration keyConfiguration) : IProofRedirector
+public class JwtThumbprintAttacher(IHelseIdSecretHandler secretHandler) : IProofRedirector
 {
     public void AttachThumbprint(RedirectContext ctx)
     {
-        var jkt = Base64UrlEncoder.Encode(keyConfiguration.ProofKey.ComputeJwkThumbprint());
+        var dpopSecret = secretHandler.GetSecurityKey().AsDPoPJwkSecret();
+        var jkt = Base64UrlEncoder.Encode(dpopSecret.ComputeJwkThumbprint());
 
         ctx.Properties.Items[DPoPContext.ContextKey] = "true";
         ctx.ProtocolMessage.Parameters["dpop_jkt"] = jkt;
