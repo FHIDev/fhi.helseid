@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-      <VersionPrefix>7.1.2</VersionPrefix>
+      <VersionPrefix>8.0.0</VersionPrefix>
       <authors>Folkehelseinstituttet (FHI), Norsk Helsenett (NHN)</authors>
       <Copyright>(c) 2020-2024 Folkehelseinstituttet (FHI), Norsk Helsenett (NHN)</Copyright>
       <projectUrl>https://github.com/folkehelseinstituttet/Fhi.HelseId</projectUrl>
