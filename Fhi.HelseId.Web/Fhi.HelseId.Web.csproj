@@ -15,7 +15,6 @@
     <PackageReference Include="AspNetCore.DataProtection.SqlServer" />
     <PackageReference Include="System.Formats.Asn1" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" />
-    <PackageReference Include="System.Text.RegularExpressions" />
     <PackageReference Include="System.Security.Cryptography.Xml" />
   </ItemGroup>
   <ItemGroup>
