@@ -20,6 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="morelinq" />
+    <PackageReference Include="System.Security.Cryptography.Xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fhi.HelseId.Api\Fhi.HelseId.Api.csproj" />
