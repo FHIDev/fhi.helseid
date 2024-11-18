@@ -6,7 +6,7 @@ The component requires minimum .NET 8.0.
 # How to use
 
 # How to contribute
-See [CONTRIBUTING.md](https://github.com/FHIDev/fhi.helseid/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/FHIDev/Fhi.HelseId/blob/main/CONTRIBUTING.md)
 
 # Additional links
 * [Wiki](https://github.com/folkehelseinstituttet/fhi.helseid/wiki)
