@@ -31,7 +31,6 @@ namespace Fhi.HelseId.Api.Handlers
             var scopeClaims = context.User.FindAll("scope").ToList();
             if (scopeClaims.Count == 0) 
             {
-                context.Fail(new AuthorizationFailureReason(this, "missing scope"));
                 logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiSingleScopeHandler}: No scopes found",nameof(ApiSingleScopeHandler));
                 return Task.CompletedTask;
             }

@@ -1,6 +1,6 @@
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
-using Fhi.HelseId.Integration.Tests.Extensions;
+using Fhi.HelseId.Integration.TestFramework.Extensions;
 using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
 using System.Net;
@@ -43,12 +43,15 @@ public class TokenValidationTests
     [Test]
     public async Task InvalidSigningKey_Returns401Unauthorized()
     {
-        var testToken = await TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultToken().InvalidSigningKey());
+        var testToken = await TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultToken(HelseIdConfig.ApiName).InvalidSigningKey());
 
         using var client = Factory.CreateClient().AddBearerAuthorizationHeader(testToken);
         var response = await client.GetAsync("api/test");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        var authHeader = response.Headers.WwwAuthenticate.FirstOrDefault();
+        Assert.That(authHeader?.Parameter, Contains.Substring("error=\"invalid_token\", error_description=\"The signature key was not found\""));
+
     }
 
     [Test]

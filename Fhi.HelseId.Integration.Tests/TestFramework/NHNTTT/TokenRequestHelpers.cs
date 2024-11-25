@@ -8,9 +8,9 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
 internal static class TTTTokenRequests
 {
 
-    internal static TokenRequest DefaultToken()
+    internal static TokenRequest DefaultToken(string audience = "fhi:api-name")
     {
-        return DefaultToken(["fhi:scope"]);
+        return DefaultToken(["fhi:scope"], audience: audience);
     }
 
 

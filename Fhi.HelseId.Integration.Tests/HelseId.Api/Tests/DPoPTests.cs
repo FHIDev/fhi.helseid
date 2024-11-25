@@ -1,21 +1,21 @@
 using Fhi.ClientCredentialsKeypairs;
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
+using Fhi.HelseId.Integration.Tests.Extensions;
 using Fhi.HelseId.Integration.Tests.HelseId.Api.Setup;
 using Fhi.HelseId.Integration.Tests.TestFramework;
 using System.Net;
 using System.Text.Json;
 
-namespace Fhi.HelseId.Integration.Tests.HelseId.Api.AppInitiatedTests;
+namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
 /// <summary>
-/// Need to go through if is as intended
+/// Puropse of these tests is to verify that RequireDPoPTokens setting works as intended. It should not accept JWT access_token when DPoP is required. 
 /// </summary>
 public class DPoPTests 
 {
-    
     [Test]
-    public async Task GIVEN_AllowDpopTokens_is_true_RequireDPoPTokens_is_false_WHEN_request_contains_dpop_proof_and_validates_ok_THEN_Returns200Ok()
+    public async Task ApiCallWithDpopToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
     {
         var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(
             allowDPoPTokens: true, 
@@ -23,17 +23,16 @@ public class DPoPTests
             audience: "fhi:helseid.testing.api",
             allowedScopes: "fhi:helseid.testing.api/all");
 
-        using var client = CreateDirectHttpClient(config, useDpop: true);
+        var client = CreateDirectHttpClient(config, useDpop: true);
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         Assert.That(responseBody, Is.EqualTo("Hello world!"));
     }
-    
 
     [Test]
-    public async Task GIVEN_AllowDpopTokens_is_true_RequireDPoPTokens_is_false_WHEN_no_dpop_proof_and_validates_ok_THEN_Returns200Ok()
+    public async Task ApiCallWithBearerToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
     {
         var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(
             allowDPoPTokens: true, 
@@ -54,7 +53,7 @@ public class DPoPTests
     /// </summary>
     /// <returns></returns>
     [Test]
-    public async Task GIVEN_AllowDpopTokens_is_true_RequireDPoPTokens_is_true_WHEN_no_dpop_proof_and_validates_ok_THEN_Returns401()
+    public async Task ApiCallWithBearerToken_ApiAcceptsOnlyDPoP_THEN_Returns401()
     {
         var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(
             allowDPoPTokens: true, 
@@ -64,7 +63,6 @@ public class DPoPTests
 
         using var client = CreateDirectHttpClient(config, useDpop: false);
         var response = await client.GetAsync("api/test");
-        var responseBody = await response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }

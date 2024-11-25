@@ -26,10 +26,7 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Setup
 
             return config;
         }
-
-
     }
-
 }
     
 

@@ -17,8 +17,6 @@
 
         public bool? WithoutDefaultUserClaims { get; set; }
 
-        public IssuerEnvironment? IssuerEnvironment { get; set; }
-
         public bool? CreateDPoPTokenWithDPoPProof { get; set; }
 
         public bool? CreateTillitsrammeverkClaims { get; set; }

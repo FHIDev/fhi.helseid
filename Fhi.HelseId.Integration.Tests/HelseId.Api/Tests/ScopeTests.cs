@@ -1,6 +1,6 @@
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
-using Fhi.HelseId.Integration.Tests.Extensions;
+using Fhi.HelseId.Integration.TestFramework.Extensions;
 using Fhi.HelseId.Integration.Tests.HelseId.Api.Setup;
 using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
@@ -13,9 +13,8 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Api.AppInitiatedTests;
 /// </summary>
 public class ScopeTests
 {
-  
     [Test]
-    public async Task GIVEN_single_scope_configured_WHEN_token_contains_single_scope_THEN_Returns200Ok()
+    public async Task SingleScopeIsConfigured_RequestContainsTokenTokenWithTheSingleScope_Returns200Ok()
     {
         var scope = "fhi:helseid.testing.api/all";
         HelseIdApiKonfigurasjon config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: scope, audience:scope);
@@ -30,12 +29,12 @@ public class ScopeTests
     }
 
     [Test]
-    public async Task GIVEN_multiple_scopes_configured_WHEN_token_contains_one_of_the_configured_scopes_THEN_Returns200Ok()
+    public async Task MultipleScopesIsconfigured_RequestContainsTokenWithOneOfTheConfiguredScopes_Returns200Ok()
     {
-        var audience = "fhi:api-scope/access";
-        HelseIdApiKonfigurasjon config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: audience, audience: audience);
+        var audience = "fhi:helseid.testing.api";
+        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: $"{audience}/all,{audience}/person", audience: audience);
 
-        var testToken = await GetTestToken([audience], audience);
+        var testToken = await GetTestToken([$"{audience}/all"], audience);
         using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
 
         var response = await client.GetAsync("api/test");
@@ -46,11 +45,11 @@ public class ScopeTests
     }
 
     [Test]
-    public async Task GIVEN_multiple_scopes_configured_WHEN_token_contain_all_configured_scopes_THEN_Returns200Ok()
+    public async Task MultipleScopesIsconfigured_RequestContainsTokenWithAllOfTheConfiguredScopes_Returns200Ok()
     {
-        var audience = "fhi:helseid.testing.api/all";
-        HelseIdApiKonfigurasjon config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: $"{audience},fhi:helseid.testing.api/person", audience:audience);
-        var testToken = await GetTestToken(["fhi:helseid.testing.api/all", "fhi:helseid.testing.api/person"], audience);
+        var audience = "fhi:helseid.testing.api";
+        HelseIdApiKonfigurasjon config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: $"{audience}/all,{audience}/person", audience:audience);
+        var testToken = await GetTestToken([$"{audience}/all", $"{audience}/person"], audience);
 
         using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
         var response = await client.GetAsync("api/test");
@@ -61,14 +60,14 @@ public class ScopeTests
     }
 
     /// <summary>
-    /// TODO: Should have WWW-Authenticate header with error message
+    /// This case is also a bit strange since audience will validate ok. The audience of an access_token
     /// </summary>
     /// <returns></returns>
     [Test]
-    public async Task GIVEN_multiple_scopes_configured_WHEN_token_does_not_contain_any_configured_scopes_THEN_Returns403()
+    public async Task MultipleScopesIsconfigured_RequestContainsTokenDoesNotContainAnyOfTheConfiguredScopes_Returns403()
     {
-        var audience = "fhi:api-scope/access";
-        HelseIdApiKonfigurasjon config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: $"{audience},fhi:helseid.testing.api/person", audience:audience);
+        var audience = "fhi:api-scope";
+        HelseIdApiKonfigurasjon config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: $"{audience},{audience}/person", audience:audience);
         var testToken = await GetTestToken(["fhi:non-valid-scope"], audience);
 
         using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
@@ -79,7 +78,6 @@ public class ScopeTests
 
     }
 
-    #region Helpers
     private static TestWebApplicationFactory CreateHelseApiTestFactory(HelseIdApiKonfigurasjon config)
     {
         return new(services =>
@@ -93,8 +91,4 @@ public class ScopeTests
     {
         return TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultToken(scopes, audience));
     }
-
-    
-
-    #endregion Helpers
 }

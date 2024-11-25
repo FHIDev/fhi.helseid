@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace Fhi.HelseId.Integration.Tests.Extensions
+namespace Fhi.HelseId.Integration.TestFramework.Extensions
 {
     internal static class HttpClientExtensions
     {

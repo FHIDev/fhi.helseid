@@ -44,7 +44,6 @@ internal static class TTTTokenService
             return tokenResponse?.SuccessResponse.AccessTokenJwt ?? string.Empty;
         }
 
-        var problem = responseString.Deserialize<ProblemDetails>();
         response.EnsureSuccessStatusCode();
         return responseString;
     }
