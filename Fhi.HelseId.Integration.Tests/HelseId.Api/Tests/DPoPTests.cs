@@ -67,7 +67,7 @@ public class DPoPTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
 
-    private HttpClient CreateDirectHttpClient(HelseIdApiKonfigurasjon apiConfig, bool useDpop = true)
+    private  static HttpClient CreateDirectHttpClient(HelseIdApiKonfigurasjon apiConfig, bool useDpop = true)
     {
         var configString = File.ReadAllText("HelseId.Api/Tests/Fhi.HelseId.Testing.Api.json");
         var config = JsonSerializer.Deserialize<ClientCredentialsConfiguration>(configString)
@@ -84,10 +84,12 @@ public class DPoPTests
         return factory.CreateDefaultClient(factory.ClientOptions.BaseAddress, handler);
     }
 
-    private HttpAuthHandler BuildProvider(ClientCredentialsConfiguration config, bool useDpop)
+    private static HttpAuthHandler BuildProvider(ClientCredentialsConfiguration config, bool useDpop)
     {
-        var apiConfig = new ClientCredentialsKeypairs.Api();
-        apiConfig.UseDpop = useDpop;
+        var apiConfig = new ClientCredentialsKeypairs.Api
+        {
+            UseDpop = useDpop
+        };
         var store = new AuthenticationService(config, apiConfig);
         var tokenProvider = new AuthenticationStore(store, config);
         var authHandler = new HttpAuthHandler(tokenProvider);

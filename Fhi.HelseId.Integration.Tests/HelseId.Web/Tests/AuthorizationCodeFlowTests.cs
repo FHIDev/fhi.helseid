@@ -1,7 +1,7 @@
 ﻿using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.HelseId.Integration.Tests.TestFramework;
 
-namespace Fhi.HelseId.Integration.Tests.HelseId.Web.UserInitiatedTests
+namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
 {
 
     public class AuthorizationCodeFlowTests

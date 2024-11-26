@@ -5,12 +5,12 @@ using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
 using System.Net;
 
-namespace Fhi.HelseId.Integration.Tests.HelseId.Api.AppInitiatedTests;
+namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
 public class TokenValidationTests 
 {
 
-    private static readonly HelseIdApiKonfigurasjon HelseIdConfig = new HelseIdApiKonfigurasjon
+    private static readonly HelseIdApiKonfigurasjon HelseIdConfig = new()
     {
         Authority = "https://helseid-sts.test.nhn.no/",
         ApiName = "fhi:helseid.testing.api",

@@ -6,7 +6,7 @@ using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
 using System.Net;
 
-namespace Fhi.HelseId.Integration.Tests.HelseId.Api.AppInitiatedTests;
+namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
 /// <summary>
 /// Purpose of the test is to if multi scope and single scope authorization of configured API scopes works.
@@ -72,7 +72,6 @@ public class ScopeTests
 
         using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
         var response = await client.GetAsync("api/test");
-        var responseBody = await response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
 
