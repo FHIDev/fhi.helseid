@@ -3,7 +3,7 @@ name: Fhi.HelseId.Nuget
 on:
   push:
     branches:
-      - master
+      - main
 
 defaults:
   run:
