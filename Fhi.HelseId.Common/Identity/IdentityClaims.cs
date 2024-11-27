@@ -2,15 +2,10 @@
 
 public static class ClientClaims
 {
-
     public const string Prefix = HelseIdUriPrefixes.Claims + "client/";
 
     public const string ClientName = Prefix + "client_name";
-
-
 }
-
-
 
 public static class IdentityClaims
 {

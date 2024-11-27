@@ -151,7 +151,6 @@ namespace Fhi.HelseId.Common.Identity
 
         private static List<string> GenerateX5c(X509Certificate2 certificate)
         {
-
             var x5C = new List<string>();
 
             var chain = GetCertificateChain(certificate);
