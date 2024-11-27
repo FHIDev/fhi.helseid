@@ -20,6 +20,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Analyzers" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="morelinq" />
+    <PackageReference Include="StyleCop.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Security.Cryptography.Xml" />
   </ItemGroup>
   <ItemGroup>
