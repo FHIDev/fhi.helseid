@@ -11,7 +11,7 @@ namespace Fhi.HelseId.Integration.Tests.Setup
         where TProgram : class
     {
         public readonly ConfigurableWebApplicationFactory<TProgram> Factory = new(config);
-        internal Dictionary<TokenType, string> _tokens = new();
+        private Dictionary<TokenType, string> _tokens = new();
 
         [OneTimeSetUp]
         public async Task CreateTokens()
