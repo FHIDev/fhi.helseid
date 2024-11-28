@@ -10,7 +10,6 @@ namespace Fhi.HelseId.Common.Middleware
     public class UnhandledExceptionLoggerMiddleware
     {
         private readonly RequestDelegate next;
-        private ILogger Logger { get; }
 
         public UnhandledExceptionLoggerMiddleware(RequestDelegate next, ILogger<UnhandledExceptionLoggerMiddleware> logger)
         {
@@ -18,6 +17,8 @@ namespace Fhi.HelseId.Common.Middleware
             Logger = logger;
             this.next = next;
         }
+
+        private ILogger Logger { get; }
 
         public async Task Invoke(HttpContext context)
         {
