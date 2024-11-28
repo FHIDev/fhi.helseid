@@ -38,6 +38,6 @@ namespace Fhi.HelseId.Common.Configuration
         public string JsonWebKeySecret { get; set; } = "";
         public string RsaKeySecret { get; set; } = "";
 
-        public Whitelist Whitelist { get; set; } = new ();
+        public Whitelist Whitelist { get; set; } = new();
     }
 }
