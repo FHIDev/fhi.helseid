@@ -11,6 +11,7 @@ namespace Fhi.HelseId.Common.Middleware
     {
         private readonly RequestDelegate next;
         private readonly string redirectPage;
+        private ILogger Logger { get; }
 
         public RedirectOnExceptionMiddleware(RequestDelegate next, string redirectPage, ILogger<RedirectOnExceptionMiddleware> logger)
         {
@@ -19,8 +20,6 @@ namespace Fhi.HelseId.Common.Middleware
             this.next = next;
             this.redirectPage = redirectPage;
         }
-
-        private ILogger Logger { get; }
 
         public async Task Invoke(HttpContext context)
         {
