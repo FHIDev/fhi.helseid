@@ -80,7 +80,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
 
         _logger.LogTrace("{class}:{method} - Using current token {token} expires at {expires}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), rfValue, dtExpires);
 
-        var dtRefresh = dtExpires.Subtract(_tokenConfig.RefreshBeforeExpiration); //.Subtract(new TimeSpan(0,7,0)); // For testing it faster
+        var dtRefresh = dtExpires.Subtract(_tokenConfig.RefreshBeforeExpiration); // .Subtract(new TimeSpan(0,7,0)); // For testing it faster
         var utcNow = _clock.GetUtcNow();
 
         _logger.LogTrace("ValidatePrincipal: expires_at: {dtExpires}, refresh_before: {refreshBeforeExpiration}, refresh_at: {dtRefresh}, now: {utcNow}, refresh_token: {refreshToken}", dtExpires, _tokenConfig.RefreshBeforeExpiration, dtRefresh, utcNow, refreshToken.Value);
@@ -209,8 +209,9 @@ public class UserByIdentity : ICurrentUser
         Name = identity.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? "";
         PidPseudonym = identity.Claims.SingleOrDefault(c => c.Type == "pid_pseudonym")?.Value ?? "";
         Id = identity.Claims.SingleOrDefault(c => c.Type == "id")?.Value ?? "";
-        HprNummer = identity.Claims.SingleOrDefault(c => c.Type == "hpr_nummer")?.Value ?? "";        
+        HprNummer = identity.Claims.SingleOrDefault(c => c.Type == "hpr_nummer")?.Value ?? "";
         var hprDetailsClaim = identity.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprDetails);
+
         // TODO: This is duplicated in CurrentHttpUser
         if (hprDetailsClaim != null)
         {
