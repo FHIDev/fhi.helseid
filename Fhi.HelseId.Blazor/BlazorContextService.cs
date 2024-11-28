@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Concurrent;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
-using System.Collections.Concurrent;
 
 namespace Fhi.HelseId.Blazor;
 

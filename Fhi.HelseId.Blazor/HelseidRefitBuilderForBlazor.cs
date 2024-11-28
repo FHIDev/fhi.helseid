@@ -1,8 +1,8 @@
-﻿using Fhi.HelseId.Web;
-using Refit;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Fhi.HelseId.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Refit;
 
 namespace Fhi.HelseId.Blazor
 {

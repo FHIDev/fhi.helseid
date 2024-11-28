@@ -1,11 +1,11 @@
-﻿using Fhi.HelseId.Web.DPoP;
-using Microsoft.AspNetCore.Http;
-using NSubstitute;
-using NUnit.Framework;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.DPoP;
+using Microsoft.AspNetCore.Http;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Tests.DPoP.Web;
 

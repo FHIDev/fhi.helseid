@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Fhi.HelseId.Common.Exceptions;
+using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Refit;
 using Microsoft.Extensions.DependencyInjection;
-using Fhi.HelseId.Common.Exceptions;
-using Fhi.HelseId.Common.Identity;
+using Refit;
 
 namespace Fhi.HelseId.Blazor
 {
@@ -16,7 +16,7 @@ namespace Fhi.HelseId.Blazor
         {
             var config = builder.Configuration
                 .GetSection(configSection ?? nameof(HelseIdWebKonfigurasjon))
-                .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon)); ;
+                .Get<HelseIdWebKonfigurasjon?>() ?? throw new MissingConfigurationException(nameof(HelseIdWebKonfigurasjon));
 
             return new HelseidRefitBuilderForBlazor(builder.Services, config, builderOptions, refitSettings);
         }
