@@ -1,6 +1,4 @@
-﻿using Fhi.HelseId.Common;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Fhi.HelseId.Common.Configuration
