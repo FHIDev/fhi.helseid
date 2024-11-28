@@ -20,6 +20,7 @@ public class DPoPProofValidator(IReplayCache replayCache) : IDPoPProofValidator
 {
     // This is the number of seconds that we allow for the DPoP proof to expire
     private TimeSpan ProofTokenValidityDuration { get; } = TimeSpan.FromSeconds(1);
+
     // This is the maximum difference between the client's clock and this application's clock
     private TimeSpan ClientClockSkew { get; set; } = TimeSpan.FromSeconds(5);
     private const string ReplayCachePurpose = "DPoPJwtBearerEvents-DPoPReplay-jti-";
@@ -252,6 +253,7 @@ public class DPoPProofValidator(IReplayCache replayCache) : IDPoPProofValidator
     {
         var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var start = now + (int)ClientClockSkew.TotalSeconds;
+
         // The 'issued at' time is in the future
         if (start < issuedAtTime)
         {
@@ -260,6 +262,7 @@ public class DPoPProofValidator(IReplayCache replayCache) : IDPoPProofValidator
 
         var expiration = issuedAtTime + (int)ProofTokenValidityDuration.TotalSeconds;
         var end = now - (int)ClientClockSkew.TotalSeconds;
+
         // The DPoP proof has expired
         if (expiration < end)
         {
