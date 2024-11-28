@@ -109,6 +109,7 @@ public class HelseIdWebAuthBuilder
             _services.AddAuthentication("NoAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, NoAuthenticationHandler>("NoAuthentication", null);
         }
+
         _services.AddScoped<ICurrentUser, CurrentHttpUser>();
         _services.AddSingleton(HelseIdWebKonfigurasjon);
         _services.Configure<HelseIdWebKonfigurasjon>(_helseIdWebKonfigurasjonSection);

@@ -64,6 +64,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             {
                 options.Scope.Add(scope.Trim());
             }
+
             options.SaveTokens = true;
 
             options.Events.OnRedirectToIdentityProvider = ctx =>

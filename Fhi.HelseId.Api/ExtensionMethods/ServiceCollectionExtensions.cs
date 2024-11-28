@@ -88,6 +88,7 @@ public static class ServiceCollectionExtensions
             else
                 AddHelseIdApiServicesNoAuth(services, api);
         }
+
         return services;
     }
 

@@ -75,6 +75,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
             _logger.LogError("{class}:{method} -No expires_at value found in cookie properties.", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal));
             return;
         }
+
         var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
         var rfValue = refreshToken.Value;
 
@@ -102,6 +103,7 @@ public class AutomaticTokenManagementCookieEvents : CookieAuthenticationEvents
                             context.RejectPrincipal();
                             return;
                         }
+
                         var newExpiresAt = context.UpdateTokens(response);
                         _logger.LogTrace("{class}.{method} - SignInAsync now as it expires at: {newExpiresAt}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), newExpiresAt);
                         _logger.LogTrace("{class}.{method} - Refresh tokens: Current {current}, New {new}", nameof(AutomaticTokenManagementCookieEvents), nameof(ValidatePrincipal), rfValue, response.RefreshToken);
@@ -206,6 +208,7 @@ public class UserByIdentity : ICurrentUser
         {
             return;
         }
+
         Name = identity.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? "";
         PidPseudonym = identity.Claims.SingleOrDefault(c => c.Type == "pid_pseudonym")?.Value ?? "";
         Id = identity.Claims.SingleOrDefault(c => c.Type == "id")?.Value ?? "";
@@ -220,11 +223,13 @@ public class UserByIdentity : ICurrentUser
             {
                 throw new HprClaimMissingException("HprDetails claim missing or could not be deserialized.");
             }
+
             HprGodkjenninger = approvalResponse.Approvals
                 .SelectMany(approval => Kodekonstanter.KodeList
                     .Where(oid9060 => approval.Profession == oid9060.Value)).ToList();
             ErHprGodkjent = approvalResponse.Approvals.Any();
         }
+
         Pid = identity.Claims.SingleOrDefault(c => c.Type == "pid")?.Value ?? "";
         SecurityLevel = identity.Claims.SingleOrDefault(c => c.Type == "security_level")?.Value ?? "";
         AssuranceLevel = identity.Claims.SingleOrDefault(c => c.Type == "assurance_level")?.Value ?? "";

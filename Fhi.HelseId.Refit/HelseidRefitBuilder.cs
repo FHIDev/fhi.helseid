@@ -50,15 +50,18 @@ namespace Fhi.HelseId.Refit
                     services.AddTransient<IAuthorizationHeaderSetter, BearerAuthorizationHeaderSetter>();
                 }
             }
+
             if (this.builderOptions.HtmlEncodeFhiHeaders)
             {
                 AddHandler<FhiHeaderDelegationHandler>();
             }
+
             if (this.builderOptions.UseCorrelationId)
             {
                 AddHandler<CorrelationIdHandler>();
                 services.AddHttpContextAccessor();
             }
+
             if (this.builderOptions.UseAnonymizationLogger)
             {
                 AddHandler<LoggingDelegationHandler>();
@@ -77,6 +80,7 @@ namespace Fhi.HelseId.Refit
                 delegationHandlers.Add(type);
                 services.AddTransient<T>();
             }
+
             return this;
         }
 

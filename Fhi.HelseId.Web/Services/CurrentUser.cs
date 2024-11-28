@@ -48,6 +48,7 @@ public class CurrentHttpUser : ICurrentUser
             {
                 throw new HprClaimMissingException("HprDetails claim missing or could not be deserialized.");
             }
+
             HprGodkjenninger = approvalResponse.Approvals
                 .SelectMany(approval => Kodekonstanter.KodeList
                     .Where(oid9060 => approval.Profession == oid9060.Value)).ToList();

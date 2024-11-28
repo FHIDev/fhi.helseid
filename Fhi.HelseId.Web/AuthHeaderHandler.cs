@@ -43,6 +43,7 @@ public class AuthHeaderHandler : DelegatingHandler
         _user = user;
         _authorizationHeaderSetter = authorizationHeaderSetter;
     }
+
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (request.Options.Any(x => x.Key == AnonymousOptionKey))

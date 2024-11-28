@@ -20,6 +20,7 @@ namespace Fhi.HelseId.Api.Authorization
         {
             this.httpContextAccessor = httpContextAccessor;
         }
+
         public async Task<JwtSecurityToken?> GetAccessTokenAsJwtSecurityToken()
         {
             var accessToken = await GetAccessToken();

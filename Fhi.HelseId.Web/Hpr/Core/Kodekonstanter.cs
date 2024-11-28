@@ -13,6 +13,7 @@ namespace Fhi.HelseId.Web.Hpr.Core
             Value = value;
             Description = description;
         }
+
         public override string ToString() => Value;
     }
 

@@ -118,6 +118,7 @@ public class TokenEndpointService : ITokenEndpointService
 
             return _oidcOptions.Get(scheme.Name);
         }
+
         return _oidcOptions.Get(_managementOptions.Scheme);
     }
 }

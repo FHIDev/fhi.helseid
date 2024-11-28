@@ -35,6 +35,7 @@ namespace Fhi.HelseId.TestSupport.Config
         {
             Assert.That(config, Is.Not.Null, $"Configuration for {configNameOf} in {ConfigFile} is not valid");
         }
+
         protected override void Guard()
         {
         }

@@ -32,6 +32,7 @@ namespace Fhi.HelseId.Web.Hpr
                 context.Fail();
                 return Task.CompletedTask;
             }
+
             var hprNummer = currentUser.HprNumber();
             if (hprNummer == null)
             {
@@ -62,6 +63,7 @@ namespace Fhi.HelseId.Web.Hpr
                     context.Succeed(requirement);
                     return;
                 }
+
                 context.Fail();
             }
         }

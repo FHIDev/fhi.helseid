@@ -19,6 +19,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement
             {
                 throw new InvalidOperationException("Field 'scheme' cannot be null");
             }
+
             _scheme = scheme;
         }
 

@@ -50,6 +50,7 @@ public class HttpClientBuilder
                 extra?.Invoke(builder.Services, api);
             }
         }
+
         return builder;
     }
 }

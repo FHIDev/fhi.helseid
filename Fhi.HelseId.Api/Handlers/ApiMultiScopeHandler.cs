@@ -32,11 +32,13 @@ namespace Fhi.HelseId.Api.Handlers
             {
                 logger.LogTrace($"Fhi.HelseId.Api.Handlers.{nameof(ApiMultiScopeHandler)}: Scope claim: {claim.Value}");
             }
+
             if (!scopeClaims.Any())
             {
                 logger.LogError($"Fhi.HelseId.Api.Handlers.{nameof(ApiMultiScopeHandler)}: No scopes found, access denied");
                 return Task.CompletedTask;
             }
+
             var scopes = scopeClaims.Select(o => o.Value.Trim().ToLower());
             var allowedScopes = _configAuth.ApiScope.Split(",").Select(o => o.Trim().ToLower()).ToList();
             if (!allowedScopes.Any())
@@ -44,10 +46,12 @@ namespace Fhi.HelseId.Api.Handlers
                 logger.LogError("No scopes defined in configuration");
                 return Task.CompletedTask;
             }
+
             foreach (var allowedScope in allowedScopes)
             {
                 logger.LogTrace("Fhi.HelseId.Api.Handlers.{class}: Allowed scope: {allowedScope}", nameof(ApiMultiScopeHandler), allowedScope);
             }
+
             var matches = scopes.Intersect(allowedScopes);
             if (matches.Any())
             {

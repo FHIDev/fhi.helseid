@@ -18,6 +18,7 @@ public static class DPoPExtensions
         {
             return false;
         }
+
         token = authorization.Substring(DPoPAuthorizationSchema.Length);
         return true;
     }

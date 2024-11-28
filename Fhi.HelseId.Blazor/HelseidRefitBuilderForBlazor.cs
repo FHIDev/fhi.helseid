@@ -45,14 +45,17 @@ namespace Fhi.HelseId.Blazor
             {
                 AddHandler<BlazorTokenHandler>();
             }
+
             if (this.builderOptions.HtmlEncodeFhiHeaders)
             {
                 AddHandler<FhiHeaderDelegationHandler>();
             }
+
             if (this.builderOptions.UseCorrelationId)
             {
                 AddHandler<CorrelationIdHandler>();
             }
+
             if (this.builderOptions.UseAnonymizationLogger)
             {
                 AddHandler<LoggingDelegationHandler>();
@@ -71,6 +74,7 @@ namespace Fhi.HelseId.Blazor
                 delegationHandlers.Add(type);
                 services.AddTransient<T>();
             }
+
             return this;
         }
 
