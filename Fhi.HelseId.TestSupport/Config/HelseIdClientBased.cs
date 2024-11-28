@@ -5,7 +5,7 @@ namespace Fhi.HelseId.TestSupport.Config;
 
 public abstract class HelseIdClientBased : BaseConfigTests
 {
-    protected HelseIdClientBased(string configFile, bool test, AppSettingsUsage useOfAppsettings) : base(configFile, test,useOfAppsettings)
+    protected HelseIdClientBased(string configFile, bool test, AppSettingsUsage useOfAppsettings) : base(configFile, test, useOfAppsettings)
     {
     }
 

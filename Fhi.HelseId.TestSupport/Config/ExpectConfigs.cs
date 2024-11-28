@@ -55,7 +55,7 @@ namespace Fhi.HelseId.TestSupport.Config
     /// </summary>
     public abstract class ExpectHelseIdApiConfig : ExpectConfigs<HelseIdApiKonfigurasjon>
     {
-        protected ExpectHelseIdApiConfig(string filename, AppSettingsUsage useOfAppsettings) : base(filename, nameof(HelseIdApiKonfigurasjon),useOfAppsettings)
+        protected ExpectHelseIdApiConfig(string filename, AppSettingsUsage useOfAppsettings) : base(filename, nameof(HelseIdApiKonfigurasjon), useOfAppsettings)
         {
         }
     }
