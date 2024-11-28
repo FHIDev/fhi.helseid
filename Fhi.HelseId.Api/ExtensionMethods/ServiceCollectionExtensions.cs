@@ -79,7 +79,7 @@ public static class ServiceCollectionExtensions
     /// Use this for Apis that need to send access tokens onwards
     /// Default UseAuth, but can be set to false using the useAuth parameter
     /// </summary>
-    public static IServiceCollection AddHelseIdAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<ApiOutgoingKonfigurasjon> apis,bool useAuth=true)
+    public static IServiceCollection AddHelseIdAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<ApiOutgoingKonfigurasjon> apis, bool useAuth = true)
     {
         services.AddScoped<AuthHeaderHandlerForApi>();
         foreach (var api in apis)

@@ -32,12 +32,12 @@ public class CurrentHttpUser : ICurrentUser
         Id = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value ?? "";
         HprNummer = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)
             ?.Value ?? "";
-        Fornavn= httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Givenname)?.Value??"";
-        Etternavn = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Familyname)?.Value??"";
+        Fornavn = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Givenname)?.Value ?? "";
+        Etternavn = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Familyname)?.Value ?? "";
         Pid = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value ?? "";
-        PidPseudonym = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.PidPseudonym)?.Value??"";
+        PidPseudonym = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.PidPseudonym)?.Value ?? "";
         Scopes = httpContext.User.FindAll("scope").Select(o => o.Value).ToList();
-        ClientName = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClientClaims.ClientName)?.Value??"";
+        ClientName = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClientClaims.ClientName)?.Value ?? "";
     }
 
     public string Id { get; }

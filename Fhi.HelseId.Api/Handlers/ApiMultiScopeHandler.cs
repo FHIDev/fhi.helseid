@@ -24,9 +24,9 @@ namespace Fhi.HelseId.Api.Handlers
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context, SecurityLevelOrApiRequirement requirement)
         {
-            var clientId = context.User.FindFirst("client_id")?.Value??"???";
-            var clientName = context.User.FindFirst("helseid://claims/client/client_name")?.Value??"???";
-            logger.LogInformation("ApiMultiScopeHandler: Validating, Request ClientId {clientId} ClientName {clientName}",clientId,clientName);
+            var clientId = context.User.FindFirst("client_id")?.Value ?? "???";
+            var clientName = context.User.FindFirst("helseid://claims/client/client_name")?.Value ?? "???";
+            logger.LogInformation("ApiMultiScopeHandler: Validating, Request ClientId {clientId} ClientName {clientName}", clientId, clientName);
             var scopeClaims = context.User.FindAll("scope").Where(s => s.Value.StartsWith(_configAuth.ApiName)).ToList();
             foreach (var claim in scopeClaims)
             {
@@ -37,8 +37,8 @@ namespace Fhi.HelseId.Api.Handlers
                 logger.LogError($"Fhi.HelseId.Api.Handlers.{nameof(ApiMultiScopeHandler)}: No scopes found, access denied");
                 return Task.CompletedTask;
             }
-            var scopes = scopeClaims.Select(o=>o.Value.Trim().ToLower());
-            var allowedScopes = _configAuth.ApiScope.Split(",").Select(o=>o.Trim().ToLower()).ToList();
+            var scopes = scopeClaims.Select(o => o.Value.Trim().ToLower());
+            var allowedScopes = _configAuth.ApiScope.Split(",").Select(o => o.Trim().ToLower()).ToList();
             if (!allowedScopes.Any())
             {
                 logger.LogError("No scopes defined in configuration");
@@ -56,7 +56,7 @@ namespace Fhi.HelseId.Api.Handlers
             }
             else
             {
-                logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiMultiScopeHandler}: Missing or invalid scope {scopeClaims}, access denied", nameof(ApiMultiScopeHandler),string.Join(',',scopeClaims));
+                logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiMultiScopeHandler}: Missing or invalid scope {scopeClaims}, access denied", nameof(ApiMultiScopeHandler), string.Join(',', scopeClaims));
             }
 
             return Task.CompletedTask;
