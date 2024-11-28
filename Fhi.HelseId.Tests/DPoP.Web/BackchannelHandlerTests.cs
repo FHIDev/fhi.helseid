@@ -77,6 +77,6 @@ public class TestableBackchannelHandler : BackchannelHandler
     // Public method to expose the protected SendAsync for testing purposes
     public async Task<HttpResponseMessage> SendTestAsync(HttpRequestMessage request)
     {
-        return await base.SendAsync(request, CancellationToken.None);
+        return await SendAsync(request, CancellationToken.None);
     }
 }
