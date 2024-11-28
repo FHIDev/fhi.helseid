@@ -19,9 +19,7 @@ internal class TokenCreator
                 {
                     kv.Key,
                     Value = await GetHelseIdToken(kv.Value),
-                })
-            )
-        ).ToDictionary(t => t.Key, t => t.Value);
+                }))).ToDictionary(t => t.Key, t => t.Value);
     }
 
     internal static async Task<string> GetHelseIdToken(TokenRequest request)
@@ -37,8 +35,7 @@ internal class TokenCreator
         var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             "Bearer",
-            helseIdTttToken
-        );
+            helseIdTttToken);
         return httpClient;
     }
 
@@ -49,9 +46,7 @@ internal class TokenCreator
 
         if (config == null)
         {
-            throw new Exception(
-                $"No valid HelseID configuration was found in {HelseIdTttConfigFile}"
-            );
+            throw new Exception($"No valid HelseID configuration was found in {HelseIdTttConfigFile}");
         }
 
         var apiConfig = new ClientCredentialsKeypairs.Api();
@@ -61,9 +56,7 @@ internal class TokenCreator
         var jwtAccessToken = auth.GetAccessToken(HttpMethod.Get, apiConfig.Url);
         if (string.IsNullOrEmpty(jwtAccessToken.AccessToken))
         {
-            throw new Exception(
-                "Could not get any valid access token from HelseId for HelseId TTT"
-            );
+            throw new Exception("Could not get any valid access token from HelseId for HelseId TTT");
         }
 
         return jwtAccessToken.AccessToken;

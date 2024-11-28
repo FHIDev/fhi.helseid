@@ -27,9 +27,8 @@ namespace Fhi.HelseId.Integration.Tests.Setup
             }
         }
 
-        public static string GetDirectoryForCaller(
-            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = ""
-        ) => sourceFilePath[..sourceFilePath.LastIndexOf('\\')];
+        public static string GetDirectoryForCaller([System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
+            => sourceFilePath[..sourceFilePath.LastIndexOf('\\')];
 
         public HttpClient CreateDirectHttpClient(bool useDpop = true)
         {
@@ -57,8 +56,7 @@ namespace Fhi.HelseId.Integration.Tests.Setup
             var client = Factory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
-                _tokens[tokenType]
-            );
+                _tokens[tokenType]);
             return client;
         }
 
@@ -68,12 +66,10 @@ namespace Fhi.HelseId.Integration.Tests.Setup
             var outputJson = new { Header = jwtTokenObj.Header, Payload = jwtTokenObj.Payload };
             string outputJsonString = JsonSerializer.Serialize(
                 outputJson,
-                new JsonSerializerOptions { WriteIndented = true }
-            );
+                new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(
                 Path.Combine(path, $"{tokenIdentifier}-contents.json"),
-                outputJsonString
-            );
+                outputJsonString);
         }
     }
 }
