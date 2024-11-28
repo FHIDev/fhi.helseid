@@ -1,7 +1,7 @@
-using NUnit.Framework;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Blazor.Tests;
 

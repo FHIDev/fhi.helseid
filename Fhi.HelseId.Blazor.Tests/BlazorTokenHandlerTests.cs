@@ -1,10 +1,10 @@
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Blazor.Tests;
 
