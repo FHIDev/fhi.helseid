@@ -62,10 +62,11 @@ public class AuthHeaderHandlerTests
         var claimsPrincipal = new ClaimsPrincipal();
         var authenticationProperties = new AuthenticationProperties();
         authenticationProperties.StoreTokens([new AuthenticationToken
-        {
-            Name = OpenIdConnectParameterNames.AccessToken,
-            Value = authToken
-        }]);
+            {
+                Name = OpenIdConnectParameterNames.AccessToken,
+                Value = authToken
+            }
+        ]);
         var authResult = AuthenticateResult.Success(new AuthenticationTicket(
             claimsPrincipal,
             authenticationProperties,
