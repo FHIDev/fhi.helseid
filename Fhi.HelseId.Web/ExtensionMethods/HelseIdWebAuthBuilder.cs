@@ -126,7 +126,7 @@ public class HelseIdWebAuthBuilder
     {
         MvcBuilder = _services.AddControllers(config =>
         {
-            //Unsure about this
+            // TODO: Unsure about this
             if (HelseIdWebKonfigurasjon.AuthUse && authorizeFilter is not null)
             {
                 config.Filters.Add(authorizeFilter!);
