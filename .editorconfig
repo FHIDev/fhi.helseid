@@ -7,20 +7,16 @@ indent_size = 4
 dotnet_diagnostic.CS1591.severity = none
 dotnet_sort_system_directives_first = true
 
-#[*.csproj]
-#indent_style = space
-#indent_size = 2
-# EditorConfig supports all Visual Studio-supported languages except for XML support EditorConfig editor settings.
-# https://learn.microsoft.com/en-us/visualstudio/ide/create-portable-custom-editor-options?view=vs-2022
+[*.csproj]
+indent_size = 2
+indent_style = space
 
-#[*.props]
-#indent_style = space
-#indent_size = 2
-# EditorConfig supports all Visual Studio-supported languages except for XML support EditorConfig editor settings.
-# https://learn.microsoft.com/en-us/visualstudio/ide/create-portable-custom-editor-options?view=vs-2022
+[*.props]
+indent_style = space
+indent_size = 2
 
 ### StyleCop.Analyzers ###
-
+[*.cs]
 # SA1101: Prefix local calls with this
 dotnet_diagnostic.SA1101.severity = none
 
