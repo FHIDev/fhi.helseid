@@ -9,7 +9,7 @@ namespace Fhi.HelseId.Web.Hpr.Core
 
         public string Value { get; }
 
-        internal OId9060(string value,string description = "")
+        internal OId9060(string value, string description = "")
         {
             Value = value;
             Description = description;
