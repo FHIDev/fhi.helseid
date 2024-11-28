@@ -8,7 +8,8 @@ public class TestLogger<T> : ILogger<T>
 {
     public List<string> Entries = [];
 
-    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
+    public IDisposable? BeginScope<TState>(TState state)
+        where TState : notnull
     {
         return null;
     }
