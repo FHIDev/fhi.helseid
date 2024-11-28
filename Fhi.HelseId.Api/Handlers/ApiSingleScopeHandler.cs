@@ -29,7 +29,7 @@ namespace Fhi.HelseId.Api.Handlers
             var clientName = context.User.FindFirst("helseid://claims/client/client_name")?.Value ?? "???";
             logger.LogInformation("ApiSingleScopeHandler: Validating, Request ClientId {clientId} ClientName {clientName}",clientId,clientName);
             var scopeClaims = context.User.FindAll("scope").ToList();
-            if (scopeClaims.Count == 0) 
+            if (scopeClaims.Count == 0)
             {
                 logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiSingleScopeHandler}: No scopes found",nameof(ApiSingleScopeHandler));
                 return Task.CompletedTask;

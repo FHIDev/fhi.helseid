@@ -231,7 +231,7 @@ public class HelseIdWebAuthBuilder
     }
 
     /// <summary>
-    /// Add this to the app section, used to trigger the authentication login process for files and endpoints that are otherwise not protected. Enable this by setting UseProtectedPaths. 
+    /// Add this to the app section, used to trigger the authentication login process for files and endpoints that are otherwise not protected. Enable this by setting UseProtectedPaths.
     /// </summary>
     /// <param name="app"></param>
     /// <param name="excludeList"></param>
@@ -330,7 +330,7 @@ public class HelseIdWebAuthBuilder
 
     /// <summary>
     /// Determine the preceding policy from configuration.
-    /// Will return the most "restrictive" policy configured, or 
+    /// Will return the most "restrictive" policy configured, or
     /// Policies.HidOrApi if no policies are configured.
     /// </summary>
     /// <returns></returns>

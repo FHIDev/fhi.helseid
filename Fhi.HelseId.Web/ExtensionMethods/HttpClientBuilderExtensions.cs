@@ -50,7 +50,6 @@ public class HttpClientBuilder
         }
         return builder;
     }
-    
 }
 
 public static class Extensions
@@ -62,6 +61,6 @@ public static class Extensions
     /// <param name="builder"></param>
     /// <param name="extra">Optional function which will be added for each api</param>
     /// <returns>WebApplicationBuilder</returns>
-    public static WebApplicationBuilder AddApisUsingHttpClient(this WebApplicationBuilder builder, Func<IServiceCollection, IApiOutgoingKonfigurasjon, IServiceCollection>? extra = null) 
+    public static WebApplicationBuilder AddApisUsingHttpClient(this WebApplicationBuilder builder, Func<IServiceCollection, IApiOutgoingKonfigurasjon, IServiceCollection>? extra = null)
         => new HttpClientBuilder(builder).AddApisUsingHttpClient(extra);
 }

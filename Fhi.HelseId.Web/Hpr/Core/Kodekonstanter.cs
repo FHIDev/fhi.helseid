@@ -8,7 +8,7 @@ namespace Fhi.HelseId.Web.Hpr.Core
         public string Description { get; }
 
         public string Value { get; }
-    
+
         internal OId9060(string value,string description="")
         {
             Value = value;
@@ -31,7 +31,6 @@ namespace Fhi.HelseId.Web.Hpr.Core
         public const string IkkeSatt = "N/A";
         public const string UkjentOrgIdent = "-1";
 
-        
         public const string OId3101Mann = "1";
         public const string OId3101MannBeskrivelse = "Mann";
         public const string OId3101Kvinne = "2";

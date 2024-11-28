@@ -57,8 +57,6 @@ public static class ServiceCollectionExtensions
         }
     }
 
-        
-
     /// <summary>
     /// Use this for either User or Client credentials
     /// </summary>
@@ -77,7 +75,6 @@ public static class ServiceCollectionExtensions
         return true;
     }
 
-       
     /// <summary>
     /// Use this for Apis that need to send access tokens onwards
     /// Default UseAuth, but can be set to false using the useAuth parameter

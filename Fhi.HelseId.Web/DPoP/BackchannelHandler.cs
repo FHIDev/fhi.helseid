@@ -17,7 +17,7 @@ public class BackchannelHandler(
     {
         var httpContext = httpContextAccessor.HttpContext;
         var requestHasJktContext = httpContext!.Items.ContainsKey(DPoPContext.ContextKey);
-        
+
         if (requestHasJktContext)
         {
             SetDPoPHeader(request);
@@ -25,7 +25,7 @@ public class BackchannelHandler(
 
         var response = await base.SendAsync(request, cancellationToken);
         var nonce = GetNonce(response.Headers);
-           
+
         // If the STS returned a 400 bad request and provided a nonce, we can resend the request
         // with a DPoP header using the provided nonce from the STS.
         if (response.StatusCode == System.Net.HttpStatusCode.BadRequest && !string.IsNullOrEmpty(nonce))

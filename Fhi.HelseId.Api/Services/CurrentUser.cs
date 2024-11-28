@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Fhi.HelseId.Common.Identity;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace Fhi.HelseId.Api.Services;
 
 /// <summary>
-/// For Api only 
+/// For Api only
 /// </summary>
 public interface ICurrentUser
 {
@@ -45,7 +44,7 @@ public class CurrentHttpUser : ICurrentUser
     public string HprNummer { get; }
     public string Name => $"{Fornavn} {Etternavn}";
     public string Pid { get; }
-    public string PidPseudonym { get; } 
+    public string PidPseudonym { get; }
     public IEnumerable<string> Scopes { get; }
 
     public string Fornavn { get; set; }

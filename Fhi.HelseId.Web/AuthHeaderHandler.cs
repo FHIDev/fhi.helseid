@@ -17,7 +17,7 @@ namespace Fhi.HelseId.Common;
 
 /// <summary>
 /// This is to be used with either User or Client credentials
-/// See https://github.com/reactiveui/refit#bearer-authentication  
+/// See https://github.com/reactiveui/refit#bearer-authentication
 /// </summary>
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public class AuthHeaderHandler : DelegatingHandler
