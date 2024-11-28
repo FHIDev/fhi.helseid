@@ -19,7 +19,7 @@ namespace Fhi.HelseId.Api.Handlers
         {
             _configAuth = configAuth;
             this.logger = logger;
-            logger.LogTrace("Fhi.HelseId.Api.Handlers.{class}: Enabled for {requirement}", nameof(ApiSingleScopeHandler),nameof(SecurityLevelOrApiRequirement));
+            logger.LogTrace("Fhi.HelseId.Api.Handlers.{class}: Enabled for {requirement}", nameof(ApiSingleScopeHandler), nameof(SecurityLevelOrApiRequirement));
         }
 
         protected override Task HandleRequirementAsync(
@@ -27,11 +27,11 @@ namespace Fhi.HelseId.Api.Handlers
         {
             var clientId = context.User.FindFirst("client_id")?.Value ?? "???";
             var clientName = context.User.FindFirst("helseid://claims/client/client_name")?.Value ?? "???";
-            logger.LogInformation("ApiSingleScopeHandler: Validating, Request ClientId {clientId} ClientName {clientName}",clientId,clientName);
+            logger.LogInformation("ApiSingleScopeHandler: Validating, Request ClientId {clientId} ClientName {clientName}", clientId, clientName);
             var scopeClaims = context.User.FindAll("scope").ToList();
             if (scopeClaims.Count == 0)
             {
-                logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiSingleScopeHandler}: No scopes found",nameof(ApiSingleScopeHandler));
+                logger.LogError("Fhi.HelseId.Api.Handlers.{nameofApiSingleScopeHandler}: No scopes found", nameof(ApiSingleScopeHandler));
                 return Task.CompletedTask;
             }
 
