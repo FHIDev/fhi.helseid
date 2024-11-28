@@ -27,7 +27,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods;
 public class HelseIdWebAuthBuilder
 {
     private readonly IServiceCollection _services;
-    private IConfiguration _configuration { get; }
+    private IConfiguration Configuration { get; }
     private readonly IConfigurationSection _helseIdWebKonfigurasjonSection;
     public IHelseIdWebKonfigurasjon HelseIdWebKonfigurasjon { get; }
     public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; }
@@ -42,8 +42,8 @@ public class HelseIdWebAuthBuilder
     public HelseIdWebAuthBuilder(IConfiguration configuration, IServiceCollection services)
     {
         _services = services;
-        _configuration = configuration;
-        _helseIdWebKonfigurasjonSection = _configuration.GetSection(nameof(HelseIdWebKonfigurasjon));
+        Configuration = configuration;
+        _helseIdWebKonfigurasjonSection = Configuration.GetSection(nameof(HelseIdWebKonfigurasjon));
         if (_helseIdWebKonfigurasjonSection == null)
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         var helseIdWebKonfigurasjon = _helseIdWebKonfigurasjonSection.Get<HelseIdWebKonfigurasjon>();
