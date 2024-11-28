@@ -9,7 +9,7 @@ public abstract class HelseIdClientBased : BaseConfigTests
     {
     }
 
-    protected abstract HelseIdClientKonfigurasjon HelseIdClientKonfigurasjon { get;}
+    protected abstract HelseIdClientKonfigurasjon HelseIdClientKonfigurasjon { get; }
 
     [Test]
     public void ThatClientIdIsSet()

@@ -15,7 +15,7 @@ namespace Fhi.HelseId.Tests
         public void Init()
         {
             whitelist = new Whitelist
-                {new White {Name = "Per", PidPseudonym = "1234"}, new White {Name = "Arne", PidPseudonym = "5678"}};
+                { new White { Name = "Per", PidPseudonym = "1234" }, new White { Name = "Arne", PidPseudonym = "5678" } };
             user = Substitute.For<ICurrentUser>();
             user.PidPseudonym.Returns("5678");
         }
