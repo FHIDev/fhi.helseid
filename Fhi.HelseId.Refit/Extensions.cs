@@ -28,7 +28,8 @@ public static class Extensions
     /// </summary>
     /// <param name="app"></param>
     /// <returns></returns>
-    public static T UseCorrelationId<T>(this T app) where T : IApplicationBuilder
+    public static T UseCorrelationId<T>(this T app)
+        where T : IApplicationBuilder
     {
         var options = app.ApplicationServices.GetService<HelseidRefitBuilderOptions>();
         if (options == null)

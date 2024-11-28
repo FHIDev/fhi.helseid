@@ -10,7 +10,8 @@ namespace Fhi.HelseId.TestSupport.Config
     /// Verifies that they are actually present and valid
     /// </summary>
     /// <typeparam name="T">The expected configuration type</typeparam>
-    public abstract class ExpectConfigs<T> : SetupBaseConfigTests where T : HelseIdCommonKonfigurasjon
+    public abstract class ExpectConfigs<T> : SetupBaseConfigTests
+        where T : HelseIdCommonKonfigurasjon
     {
         private readonly string configNameOf;
         private readonly IConfigurationSection section;

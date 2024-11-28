@@ -17,7 +17,8 @@ namespace Fhi.HelseId.Blazor
             services.AddScoped<IStateHandler, StateHandler>();
         }
 
-        public StateHandlerBuilder AddScopedState<T>() where T : class, IScopedState
+        public StateHandlerBuilder AddScopedState<T>()
+            where T : class, IScopedState
         {
             Options.StateTypes.Add(typeof(T));
             Services.AddScoped<T>();

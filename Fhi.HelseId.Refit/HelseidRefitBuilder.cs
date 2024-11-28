@@ -68,7 +68,8 @@ namespace Fhi.HelseId.Refit
         /// <summary>
         /// Add delegating handlers to the Refit client. Also adds the handler to the service collection as Transient
         /// </summary>
-        public HelseidRefitBuilder AddHandler<T>() where T : DelegatingHandler
+        public HelseidRefitBuilder AddHandler<T>()
+            where T : DelegatingHandler
         {
             var type = typeof(T);
             if (!delegationHandlers.Any(x => x == type))
@@ -87,7 +88,8 @@ namespace Fhi.HelseId.Refit
         /// <param name="nameOfService">Name of the service that will serve the Refit Api</param>
         /// <param name="extra"></param>
         /// <returns></returns>
-        public HelseidRefitBuilder AddRefitClient<T>(string? nameOfService = null, Func<IHttpClientBuilder, IHttpClientBuilder>? extra = null) where T : class
+        public HelseidRefitBuilder AddRefitClient<T>(string? nameOfService = null, Func<IHttpClientBuilder, IHttpClientBuilder>? extra = null)
+            where T : class
         {
             var name = nameOfService ?? typeof(T).Name;
 

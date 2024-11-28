@@ -9,7 +9,8 @@ using NSubstitute;
 
 namespace Fhi.HelseId.Tests.FakeWebApplication
 {
-    public class HelseIdWebApplication<T> : WebApplicationFactory<T> where T : class
+    public class HelseIdWebApplication<T> : WebApplicationFactory<T>
+        where T : class
     {
         public Dictionary<string, string?> _inMemory { get; set; }
 
