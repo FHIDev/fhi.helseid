@@ -6,6 +6,8 @@ indent_style = space
 indent_size = 4
 dotnet_diagnostic.CS1591.severity = none
 dotnet_sort_system_directives_first = true
+end_of_line = crlf
+insert_final_newline = false
 
 [*.{csproj,props,xml,yml}]
 indent_style = space
