@@ -89,5 +89,4 @@ public class BackchannelConfigurationTests
         Assert.That(_backchannelHandler.InnerHandler, Is.Null);
         Assert.That(_options.BackchannelHttpHandler, Is.Null);
     }
-
 }

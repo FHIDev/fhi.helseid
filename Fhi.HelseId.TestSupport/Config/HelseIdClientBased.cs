@@ -35,5 +35,4 @@ public abstract class HelseIdClientBased : BaseConfigTests
         Guard();
         Assert.That(HelseIdClientKonfigurasjon.AuthUse, $"{ConfigFile} AuthUse should be true, but is false");
     }
-
 }

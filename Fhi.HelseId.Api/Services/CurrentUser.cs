@@ -51,5 +51,4 @@ public class CurrentHttpUser : ICurrentUser
     public string Etternavn { get; set; }
 
     public string ClientName { get; set; }
-
 }

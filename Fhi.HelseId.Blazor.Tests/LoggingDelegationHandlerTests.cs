@@ -23,6 +23,5 @@ public class LoggingDelegationHandlerTests
 
         Assert.That(logger.Entries.Single(),
             Contains.Substring("with response 200 OK with CorrelationId TESTCORR"));
-
     }
 }
