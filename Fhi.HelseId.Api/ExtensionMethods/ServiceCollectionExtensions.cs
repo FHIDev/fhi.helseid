@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-
 namespace Fhi.HelseId.Api.ExtensionMethods;
 
 public static class ServiceCollectionExtensions

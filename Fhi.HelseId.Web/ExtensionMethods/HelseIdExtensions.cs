@@ -116,7 +116,6 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             }
         }
 
-
         /// <summary>
         /// Setter default helse-id opsjoner for automatisk token management,parameter for refresh tid i minutter
         /// </summary>

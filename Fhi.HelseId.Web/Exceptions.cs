@@ -4,7 +4,6 @@ namespace Fhi.HelseId.Web;
 
 public class ConfigurationException(string message) : Exception(message);
 
-
 public class InvalidAzureKeyVaultSettingsException() : Exception(StandardMessage)
 {
     private const string StandardMessage = "For Azure Key Vault Secret we expect ClientSecret in the format <name of secret>;<uri to vault>. For example: 'MySecret;https://<your-unique-key-vault-name>.vault.azure.net/'";

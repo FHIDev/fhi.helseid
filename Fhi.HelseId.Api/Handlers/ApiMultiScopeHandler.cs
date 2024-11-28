@@ -62,7 +62,4 @@ namespace Fhi.HelseId.Api.Handlers
             return Task.CompletedTask;
         }
     }
-
-
-
 }

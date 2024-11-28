@@ -80,7 +80,6 @@ namespace Fhi.HelseId.Refit
             return this;
         }
 
-
         /// <summary>
         /// Adds a Refit client interface and which service name to bind to, and an optional extra configuration
         /// </summary>

@@ -2,7 +2,6 @@
 
 namespace Fhi.HelseId.Common.Configuration;
 
-
 public interface IApiOutgoingKonfigurasjon
 {
     string Name { get; set; }
@@ -12,7 +11,6 @@ public interface IApiOutgoingKonfigurasjon
     [System.Text.Json.Serialization.JsonIgnore]
     [Newtonsoft.Json.JsonIgnore]
     Uri Uri { get; }
-
 
     /// <summary>
     /// Default 10 minutes

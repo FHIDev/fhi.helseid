@@ -18,7 +18,6 @@ namespace Fhi.HelseId.Tests
             Config = GetIConfigurationRoot(TestContext.CurrentContext.TestDirectory);
         }
 
-
         public IConfigurationRoot GetIConfigurationRoot(string outputPath)
         {
             return new ConfigurationBuilder()

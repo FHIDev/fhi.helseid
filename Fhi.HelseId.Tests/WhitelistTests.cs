@@ -20,7 +20,6 @@ namespace Fhi.HelseId.Tests
             user.PidPseudonym.Returns("5678");
         }
 
-
         [Test]
         public void ThatItFindsCorrectItemByUser()
         {

@@ -28,7 +28,6 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     public bool UseDPoPTokens { get; }
 }
 
-
 public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKonfigurasjon
 {
     private bool _useHprNumber = false;
