@@ -29,7 +29,7 @@ namespace Fhi.HelseId.Common.Configuration
         public bool Debug { get; set; } = false;
 
         public IEnumerable<string> AllScopes => FixedScopes.Concat(Scopes).Distinct();
-        
+
         protected virtual IEnumerable<string> FixedScopes => new List<string>
         {
             "offline_access"
