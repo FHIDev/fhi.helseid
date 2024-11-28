@@ -68,6 +68,5 @@ namespace Fhi.HelseId.Web.Hpr.Core
         public const string OId8116DufBeskrivelseUtvidet = "Database for utlendingsforvaltningen";
         public const string OId8116FhnBeskrivelse = "Felles hjelpenummer";
         public const string OId8116XxxBeskrivelse = "Annet";
-
     }
 }

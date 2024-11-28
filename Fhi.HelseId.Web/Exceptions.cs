@@ -14,5 +14,4 @@ public class InvalidApiNameException : Exception
     public InvalidApiNameException() { }
     public InvalidApiNameException(string message) : base(message) { }
     public InvalidApiNameException(string message, Exception inner) : base(message, inner) { }
-
 }
