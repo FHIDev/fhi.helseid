@@ -2,7 +2,6 @@
 // ReSharper disable InconsistentNaming
 namespace Fhi.HelseId.Web.Hpr.Core
 {
-
     public class OId9060
     {
         public string Description { get; }
