@@ -162,6 +162,7 @@ namespace Fhi.HelseId.Common.Identity
                     x5C.Add(x509Base64);
                 }
             }
+
             return x5C;
         }
 
