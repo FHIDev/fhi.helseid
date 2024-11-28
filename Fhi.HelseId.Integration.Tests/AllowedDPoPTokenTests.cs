@@ -1,5 +1,5 @@
-using Fhi.HelseId.Api;
 using System.Net;
+using Fhi.HelseId.Api;
 
 namespace Fhi.HelseId.Integration.Tests.Setup;
 

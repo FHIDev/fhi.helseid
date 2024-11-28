@@ -1,7 +1,7 @@
 ﻿using Fhi.HelseId.Api;
+using Fhi.HelseId.Api.ExtensionMethods;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Fhi.HelseId.Api.ExtensionMethods;
 
 namespace Fhi.HelseId.Integration.Tests;
 
