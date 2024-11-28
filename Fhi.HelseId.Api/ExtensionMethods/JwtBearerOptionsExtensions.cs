@@ -1,8 +1,7 @@
-﻿using Fhi.HelseId.Api.DPoP;
+﻿using System.Threading.Tasks;
+using Fhi.HelseId.Api.DPoP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Api.ExtensionMethods;
 

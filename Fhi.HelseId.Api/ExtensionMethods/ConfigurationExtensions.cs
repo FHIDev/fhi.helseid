@@ -1,5 +1,5 @@
-﻿using Fhi.HelseId.Common.ExtensionMethods;
-using Fhi.HelseId.Common.Exceptions;
+﻿using Fhi.HelseId.Common.Exceptions;
+using Fhi.HelseId.Common.ExtensionMethods;
 using Microsoft.Extensions.Configuration;
 
 namespace Fhi.HelseId.Api.ExtensionMethods

@@ -13,10 +13,11 @@ public interface IApiOutgoingKonfigurasjon
     [Newtonsoft.Json.JsonIgnore]
     Uri Uri { get; }
 
+
     /// <summary>
     /// Default 10 minutes
     /// </summary>
-    int Timeout { get; set; }
+    int Timeout { get; set; } // TODO: How is this default 10 minutes?
 }
 
 /// <summary>

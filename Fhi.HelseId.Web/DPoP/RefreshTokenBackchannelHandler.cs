@@ -1,9 +1,9 @@
-﻿using Fhi.HelseId.Common.DPoP;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.DPoP;
 
 namespace Fhi.HelseId.Web.DPoP;
 

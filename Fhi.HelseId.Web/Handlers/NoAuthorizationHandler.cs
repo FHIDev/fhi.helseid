@@ -1,6 +1,6 @@
-﻿using Fhi.HelseId.Common.Configuration;
+﻿using System.Threading.Tasks;
+using Fhi.HelseId.Common.Configuration;
 using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.Handlers
 {

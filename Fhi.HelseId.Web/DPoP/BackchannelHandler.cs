@@ -1,10 +1,10 @@
-﻿using Fhi.HelseId.Common.DPoP;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.DPoP;
+using Microsoft.AspNetCore.Http;
 
 namespace Fhi.HelseId.Web.DPoP;
 
