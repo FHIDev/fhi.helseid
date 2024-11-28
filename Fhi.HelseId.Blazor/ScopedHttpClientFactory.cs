@@ -22,7 +22,7 @@ namespace Fhi.HelseId.Blazor
         private readonly bool disposeHandlers;
 
         /// <summary>
-        /// HttpClientFactory for creating scoped HttpClients with a list of delegation handlers. 
+        /// HttpClientFactory for creating scoped HttpClients with a list of delegation handlers.
         /// </summary>
         /// <param name="disposeHandlers">Set a http client handler builder to be used for creating transient clients</param>
         /// <param name="httpClientHandlerBuilder">true if the inner handler should be disposed of by HttpClient.Dispose; if you intend to reuse the inner handler.</param>

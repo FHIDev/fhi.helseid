@@ -41,7 +41,7 @@ namespace Fhi.HelseId.TestSupport.Config
 
     /// <summary>
     /// Checks that the config file contains an API configuration
-    /// Setup as parametrized fixture with configuration filename 
+    /// Setup as parametrized fixture with configuration filename
     /// Verifies that they are actually present and valid
     /// Code example:
     /// [TestFixture("appsettings.json")]

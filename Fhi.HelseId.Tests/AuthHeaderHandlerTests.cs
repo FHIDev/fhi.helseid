@@ -98,7 +98,7 @@ internal class DummyInnerHandler : HttpClientHandler
         // Get any auth header, and use its value as the content of the response
         var auth = request.Headers.FirstOrDefault(x => x.Key == "Authorization").Value?.FirstOrDefault() ?? "";
         var response = new HttpResponseMessage() { Content = new StringContent(auth) };
-        
+
         return Task.FromResult(response);
     }
 }

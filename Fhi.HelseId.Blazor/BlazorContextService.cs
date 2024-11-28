@@ -6,19 +6,19 @@ using Microsoft.JSInterop;
 namespace Fhi.HelseId.Blazor;
 
 /*
- * This code aims to solve some Blazor<>HelseId problems 
+ * This code aims to solve some Blazor<>HelseId problems
  * - The lifetime of the helse-id access token is max 600s, so it can time out before the user makes new Http-requests
  * - The code that should try to refresh the access token relies on IHttpContextAccessor, which is not available in Blazor
  * = We only have a valid Access&Refresh token for 600s after the first HelseId login, even though the cookie is valid for a lot longer.
- * 
+ *
  * As Blazor uses SignalR, we will not normally have access to the HttpContext during the SPA's lifetime.
  * If we try to use the refresh_token to get a new access_token that will succeed and we can store it in the UserState,
  * but we are then not able to update  the refresh_token stored in the users cookie since we do not have a valid HttpContext to access the cookie through.
  * If they refresh the page they will then have an invalid refresh_token (and access_token) from the old cookie and all requests will fail.
- * 
+ *
  * Read more about stale refresh tokens in blazor:
  * https://stackoverflow.com/questions/72868249/how-to-handle-user-oidc-tokens-in-blazor-server-when-the-browser-is-refreshed-an
- * 
+ *
  * Instead of the above proposed solution, the code beneth aims to solve the HttpContext-problem once and for all, so we will not have further problems with it in the future.
  * We do this by creating a service which we can use to create a NEW HttpContext where we have access to reading/setting cookies.
 */

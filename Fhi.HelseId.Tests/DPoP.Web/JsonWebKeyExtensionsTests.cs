@@ -13,7 +13,7 @@ public class JsonWebKeyExtensionsTests
         // Arrange
         var rsaKey = new RsaSecurityKey(RSA.Create(2048));
         var proofKey = JsonWebKeyConverter.ConvertFromSecurityKey(rsaKey);
-        
+
         // Act
         var key = proofKey.AsDPoPJwkSecret();
         key.Kty = "test";
@@ -29,7 +29,7 @@ public class JsonWebKeyExtensionsTests
         var rsaKey = new RsaSecurityKey(RSA.Create(2048));
         var proofKey = JsonWebKeyConverter.ConvertFromSecurityKey(rsaKey);
         proofKey.Alg = null;
-        
+
         // Act
         var key = proofKey.AsDPoPJwkSecret();
 
