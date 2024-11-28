@@ -9,8 +9,8 @@ namespace Fhi.HelseId.Tests.DPoP.Api;
 
 public class InMemoryReplayCacheTests
 {
-    private InMemoryReplayCache _replayCache;
-    private IDistributedCache _distributedCacheMock;
+    private InMemoryReplayCache _replayCache = null!;
+    private IDistributedCache _distributedCacheMock = null!;
 
     private const string Purpose = "test-purpose";
     private const string Handle = "test-handle";

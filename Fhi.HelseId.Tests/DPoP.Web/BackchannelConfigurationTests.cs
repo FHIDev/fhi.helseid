@@ -10,11 +10,11 @@ namespace Fhi.HelseId.Tests.DPoP.Web;
 
 public class BackchannelConfigurationTests
 {
-    private BackchannelHandler _backchannelHandler;
-    private BackchannelConfiguration _backchannelConfiguration;
-    private OpenIdConnectOptions _options;
-    private IHttpContextAccessor _httpContextAccessor;
-    private IDPoPTokenCreator _tokenHelper;
+    private BackchannelHandler _backchannelHandler = null!;
+    private BackchannelConfiguration _backchannelConfiguration = null!;
+    private OpenIdConnectOptions _options = null!;
+    private IHttpContextAccessor _httpContextAccessor = null!;
+    private IDPoPTokenCreator _tokenHelper = null!;
 
     [SetUp]
     public void SetUp()

@@ -11,7 +11,7 @@ namespace Fhi.HelseId.Tests;
 
 public class AuthorizationHeaderSetterTests
 {
-    private HttpRequestMessage _request;
+    private HttpRequestMessage _request = null!;
 
     [SetUp]
     public void SetUp()

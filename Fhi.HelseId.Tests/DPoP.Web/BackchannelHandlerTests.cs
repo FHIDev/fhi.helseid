@@ -11,10 +11,10 @@ namespace Fhi.HelseId.Tests.DPoP.Web;
 
 internal class BackchannelHandlerTests
 {
-    private IHttpContextAccessor _httpContextAccessor;
-    private IDPoPTokenCreator _tokenHelper;
-    private HttpRequestMessage _request;
-    private DefaultHttpContext _context;
+    private IHttpContextAccessor _httpContextAccessor = null!;
+    private IDPoPTokenCreator _tokenHelper = null!;
+    private HttpRequestMessage _request = null!;
+    private DefaultHttpContext _context = null!;
 
     [SetUp]
     public void SetUp()
