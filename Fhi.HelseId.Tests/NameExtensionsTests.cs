@@ -16,4 +16,3 @@ namespace Fhi.HelseId.Tests
         }
     }
 }
-

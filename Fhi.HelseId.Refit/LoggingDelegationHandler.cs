@@ -54,4 +54,3 @@ public class LoggingDelegationHandler : DelegatingHandler
         return Regex.Replace(sourceToAnonymize, "\\d{11}", "***********");
     }
 }
-
