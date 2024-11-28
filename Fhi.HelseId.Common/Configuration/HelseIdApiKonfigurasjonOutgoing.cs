@@ -31,7 +31,7 @@ public class ApiOutgoingKonfigurasjon : IApiOutgoingKonfigurasjon
 
     [System.Text.Json.Serialization.JsonIgnore]
     [Newtonsoft.Json.JsonIgnore]
-    public Uri Uri => new(Url);
+    public Uri Uri => new (Url);
 
     public int Timeout { get; set; } = 10;  // Default 10 minutes
 }
