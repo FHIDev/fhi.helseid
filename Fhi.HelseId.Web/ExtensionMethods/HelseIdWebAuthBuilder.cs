@@ -337,7 +337,7 @@ public class HelseIdWebAuthBuilder
     private string DeterminePrecedingPolicy()
         => new[]
             {
-                new { PolicyActive = HelseIdWebKonfigurasjon.RequireHprNumber && HelseIdWebKonfigurasjon.RequireValidHprAuthorization, Policy = Policies.GodkjentHprKategoriPolicy},
+                new { PolicyActive = HelseIdWebKonfigurasjon.RequireHprNumber && HelseIdWebKonfigurasjon.RequireValidHprAuthorization, Policy = Policies.GodkjentHprKategoriPolicy },
                 new { PolicyActive = HelseIdWebKonfigurasjon.RequireHprNumber, Policy = Policies.HprNummer },
                 new { PolicyActive = true, Policy = Policies.HidOrApi },
                 new { PolicyActive = true, Policy = Policies./*Hid*/Authenticated }
