@@ -5,7 +5,6 @@ using Fhi.HelseId.Web.Services;
 
 namespace Fhi.AuthControllers
 {
-
     [Route("User")]
     [ApiController]
     [AllowAnonymous]
@@ -19,7 +18,7 @@ namespace Fhi.AuthControllers
             this.logger = logger;
             this.currentUser = currentUser;
         }
-        
+
         [HttpGet]
         public ActionResult<ICurrentUser> GetUser()
         {

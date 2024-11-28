@@ -36,7 +36,6 @@ namespace Fhi.HelseId.TestSupport.Config
         }
         protected override void Guard()
         {
-
         }
     }
 
@@ -57,9 +56,6 @@ namespace Fhi.HelseId.TestSupport.Config
     {
         protected ExpectHelseIdApiConfig(string filename, AppSettingsUsage useOfAppsettings) : base(filename, nameof(HelseIdApiKonfigurasjon),useOfAppsettings)
         {
-
         }
     }
-
-    
 }
