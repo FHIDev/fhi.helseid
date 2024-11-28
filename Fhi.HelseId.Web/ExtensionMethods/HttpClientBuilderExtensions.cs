@@ -26,6 +26,7 @@ public class HttpClientBuilder
     public WebApplicationBuilder AddApisUsingHttpClient(Func<IServiceCollection, IApiOutgoingKonfigurasjon, IServiceCollection>? extra = null)
     {
         if (webConfig.AuthUse)
+        {
             foreach (var api in webConfig.Apis)
             {
                 builder.Services.AddHttpClient(api.Name, configureClient: client =>
@@ -36,6 +37,7 @@ public class HttpClientBuilder
                     .AddHttpMessageHandler<AuthHeaderHandler>();
                 extra?.Invoke(builder.Services, api);
             }
+        }
         else
         {
             foreach (var api in webConfig.Apis)
