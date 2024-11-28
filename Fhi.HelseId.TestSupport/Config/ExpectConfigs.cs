@@ -13,8 +13,8 @@ namespace Fhi.HelseId.TestSupport.Config
     public abstract class ExpectConfigs<T> : SetupBaseConfigTests where T : HelseIdCommonKonfigurasjon
     {
         private readonly string configNameOf;
-        readonly IConfigurationSection section;
-        readonly T? config;
+        private readonly IConfigurationSection section;
+        private readonly T? config;
 
         protected ExpectConfigs(string file, string configNameOf, AppSettingsUsage useOfAppsettings) : base(file, useOfAppsettings)
         {

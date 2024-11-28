@@ -8,8 +8,8 @@ namespace Fhi.HelseId.Tests
 {
     public class WhitelistTests
     {
-        Whitelist? whitelist;
-        ICurrentUser? user;
+        private Whitelist? whitelist;
+        private ICurrentUser? user;
 
         [SetUp]
         public void Init()
