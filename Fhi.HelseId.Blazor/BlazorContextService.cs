@@ -27,7 +27,7 @@ public class BlazorContextService
 {
     public const string NEW_CONTEXT_URL = "/_blazor/httpcontext";
 
-    private static ConcurrentDictionary<string, Func<HttpContext, Task>> ActionMap = new();
+    private static ConcurrentDictionary<string, Func<HttpContext, Task>> _actionMap = new();
     private readonly IJSRuntime jsRuntime;
 
     public BlazorContextService(IJSRuntime jsRuntime)
@@ -37,15 +37,15 @@ public class BlazorContextService
 
     public async Task ConnectContext(HttpContext context, string id)
     {
-        var action = ActionMap[id];
+        var action = _actionMap[id];
         await action(context);
-        ActionMap.TryRemove(id, out _);
+        _actionMap.TryRemove(id, out _);
     }
 
     public async Task NewContext(Func<HttpContext, Task> action)
     {
         var id = Guid.NewGuid().ToString();
-        ActionMap[id] = action;
+        _actionMap[id] = action;
         await jsRuntime.InvokeVoidAsync("fetch", $"{NEW_CONTEXT_URL}/{id}");
     }
 }
