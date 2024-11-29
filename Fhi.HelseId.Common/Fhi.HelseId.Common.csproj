@@ -10,6 +10,9 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Fhi.HelseId.Common\README.md" Pack="true" PackagePath="\" />
