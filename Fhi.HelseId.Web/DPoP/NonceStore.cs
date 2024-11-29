@@ -15,7 +15,7 @@ public class NonceStore(IDistributedCache store) : INonceStore
 {
     private static readonly TimeSpan ExpirationTime = TimeSpan.FromHours(1);
     private const string StoreKey = "DPoPNonce-";
-    private static Encoding _nonceEncoding = Encoding.UTF8;
+    private static Encoding NonceEncoding = Encoding.UTF8;
 
     public async Task<string> GetNonce(string url, string method)
     {
@@ -24,7 +24,7 @@ public class NonceStore(IDistributedCache store) : INonceStore
 
         if (storedNonce != null)
         {
-            return _nonceEncoding.GetString(storedNonce);
+            return NonceEncoding.GetString(storedNonce);
         }
 
         return "";
@@ -38,7 +38,7 @@ public class NonceStore(IDistributedCache store) : INonceStore
         };
 
         var key = ToStoreKey(url, method);
-        var encoded = _nonceEncoding.GetBytes(nonce);
+        var encoded = NonceEncoding.GetBytes(nonce);
 
         await store.SetAsync(key, encoded, options);
     }
