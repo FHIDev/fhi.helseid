@@ -115,7 +115,7 @@ public class HelseIdWebAuthBuilder
         _services.AddHttpContextAccessor();
         _services.AddSingleton(SecretHandler);
 
-        (var authorizeFilter, string policyName) = AddAuthentication(configureAuthentication);
+        (var authorizeFilter, string policyName) = AddAuthenticationAndAuthorization(configureAuthentication);
 
         AddControllers(configureMvc, authorizeFilter);
 
@@ -193,36 +193,38 @@ public class HelseIdWebAuthBuilder
     /// <summary>
     /// Add Authentication to the services section
     /// </summary>
-    private AuthenticationBuilder AddHelseIdAuthentication()
+    private AuthenticationBuilder AddHelseIdAuthentication(ConfigureAuthentication? configureAuthentication = null)
     {
+        const double tokenRefreshBeforeExpirationTime = 2;
         var builder = _services.AddAuthentication(options =>
         {
             options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = HelseIdContext.Scheme;
-        });
+        })
+        .AddCookie(options =>
+        {
+            options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon);
+
+            configureAuthentication?.ConfigureCookieAuthentication?.Invoke(options);
+        })
+        .AddOpenIdConnect(HelseIdContext.Scheme, options =>
+        {
+            options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon, SecretHandler);
+
+            configureAuthentication?.ConfigureOpenIdConnect?.Invoke(options);
+        })
+        .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
+
 
         return builder;
     }
 
-    protected virtual (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(ConfigureAuthentication? configureAuthentication = null)
+    internal (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthenticationAndAuthorization(ConfigureAuthentication? configureAuthentication = null)
     {
-        const double tokenRefreshBeforeExpirationTime = 2;
+
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
-            AddHelseIdAuthentication()
-                .AddCookie(options =>
-                {
-                    options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon);
-
-                    configureAuthentication?.ConfigureCookieAuthentication?.Invoke(options);
-                })
-                .AddOpenIdConnect(HelseIdContext.Scheme, options =>
-                {
-                    options.DefaultHelseIdOptions(HelseIdWebKonfigurasjon, RedirectPagesKonfigurasjon, SecretHandler);
-
-                    configureAuthentication?.ConfigureOpenIdConnect?.Invoke(options);
-                })
-                .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
+            AddHelseIdAuthentication(configureAuthentication);
         }
 
         (var authPolicy, string policyName) = AddHelseIdAuthorizationPolicy();
