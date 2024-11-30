@@ -4,9 +4,9 @@ using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using System.Text.Encodings.Web;
 using Microsoft.IdentityModel.JsonWebTokens;
-using Fhi.HelseId.Integration.Tests.TestFramework.Extensions;
+using Fhi.TestFramework.Extensions;
 
-namespace Fhi.HelseId.Integration.Tests.TestFramework.AuthenticationScheme.TestAuthenticationScheme
+namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
 {
     /// <summary>
     /// Authentication handler to simulate loggedin user
@@ -22,13 +22,14 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.AuthenticationScheme.TestA
         {
             if (Options.AccessToken is not null)
             {
-                var accessTokenJwt = new JsonWebToken(Options.AccessToken);
                 var authProperties = new AuthenticationProperties();
                 authProperties.Items["id_token"] = Options.IdToken;
                 authProperties.Items["access_token"] = Options.AccessToken;
                 authProperties.IsPersistent = true;
-                
-                var ticket = accessTokenJwt.CreateAuthenticationTicket(Scheme.Name, authProperties);
+
+                IEnumerable<Claim> claims = CreateClaims();
+                var claimsIdentity = new ClaimsIdentity(claims, Scheme.Name);
+                var ticket = claimsIdentity.CreateAuthenticationTicket(Scheme.Name, authProperties);
                 return Task.FromResult(AuthenticateResult.Success(ticket));
             }
 
@@ -42,7 +43,12 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.AuthenticationScheme.TestA
             return Task.FromResult(AuthenticateResult.Fail(new Exception("")));
         }
 
-
+        private IEnumerable<Claim> CreateClaims()
+        {
+            var accessTokenJwt = new JsonWebToken(Options.AccessToken);
+            var idTokenJwt = new JsonWebToken(Options.IdToken);
+            return accessTokenJwt.Claims.Concat(idTokenJwt.Claims);
+        }
 
         protected override Task HandleSignInAsync(ClaimsPrincipal user, AuthenticationProperties? properties)
         {

@@ -1,10 +1,10 @@
-﻿using Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
+﻿using Fhi.TestFramework.NHNTTT;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 
-namespace Fhi.HelseId.Integration.Tests.TestFramework.CookieScheme
+namespace Fhi.TestFramework.AuthenticationSchemes.CookieScheme
 {
-   
+
     internal class FakeCookieManager : ICookieManager
     {
         public void AppendResponseCookie(HttpContext context, string key, string? value, CookieOptions options)
@@ -19,7 +19,7 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.CookieScheme
 
         public string GetRequestCookie(HttpContext context, string key)
         {
-            var task = TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultToken("fhi-api-access"));
+            var task = TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken("fhi-api-access"));
 
             return task.Result;
 

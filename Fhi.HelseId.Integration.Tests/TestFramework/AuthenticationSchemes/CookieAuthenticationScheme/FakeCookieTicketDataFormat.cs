@@ -1,8 +1,9 @@
-﻿using Fhi.HelseId.Integration.Tests.TestFramework.Extensions;
+﻿using System.Security.Claims;
+using Fhi.TestFramework.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace Fhi.HelseId.Integration.Tests.TestFramework.CookieScheme
+namespace Fhi.TestFramework.AuthenticationSchemes.CookieScheme
 {
     internal class FakeCookieTicketDataFormat : ISecureDataFormat<AuthenticationTicket>
     {
@@ -20,7 +21,8 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.CookieScheme
         {
                
             var jwt = new JsonWebToken(protectedText);
-            AuthenticationTicket ticket = jwt.CreateAuthenticationTicket("scheme");
+            var claimsIdentity = new ClaimsIdentity(jwt.Claims, "scheme");
+            AuthenticationTicket ticket = claimsIdentity.CreateAuthenticationTicket("scheme", null);
 
             return ticket;
         }

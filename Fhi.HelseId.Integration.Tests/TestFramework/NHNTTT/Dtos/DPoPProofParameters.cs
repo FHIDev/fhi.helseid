@@ -1,4 +1,4 @@
-﻿namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
+﻿namespace Fhi.TestFramework.NHNTTT.Dtos
 {
     internal record DPoPProofParameters
     {
@@ -8,7 +8,7 @@
 
         public string? PrivateKeyForProofCreation { get; set; }
 
-        public InvalidDPoPProofParameters? InvalidDPoPProofParameters { get; set; }
+        //public InvalidDPoPProofParameters? InvalidDPoPProofParameters { get; set; }
 
     }
 }

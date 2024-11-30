@@ -1,18 +1,16 @@
 ﻿
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Fhi.HelseId.Integration.Tests.TestFramework.AuthenticationScheme
+//TODO: This is under construction. Will be needed when testing OIDC scheme
+namespace Fhi.TestFramework.AuthenticationSchemes.OIDCScheme
 {
     class TestStateDataFormat : ISecureDataFormat<AuthenticationProperties>
     {
-        private AuthenticationProperties Data { get; set; } = new AuthenticationProperties();
-
         public string Protect(AuthenticationProperties data)
         {
             return "protected_state";
@@ -30,8 +28,10 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.AuthenticationScheme
                     { ".xsrf", "correlationId" },
                     { OpenIdConnectDefaults.RedirectUriForCodePropertiesKey, "redirect_uri" },
                     { "testkey", "testvalue" }
-                });
-            properties.RedirectUri = "http://testhost/redirect";
+                })
+            {
+                RedirectUri = "http://testhost/redirect"
+            };
             return properties;
         }
 
@@ -40,8 +40,6 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.AuthenticationScheme
             throw new NotImplementedException();
         }
     }
-
-
 
     class TestTokenHandler : TokenHandler
     {
@@ -63,25 +61,4 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.AuthenticationScheme
     }
 
 
-
-    class TestBackchannel : HttpMessageHandler
-    {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            if (string.Equals("/tokens", request.RequestUri?.AbsolutePath, StringComparison.Ordinal))
-            {
-                return Task.FromResult(new HttpResponseMessage()
-                {
-                    Content =
-                   new StringContent("{ \"id_token\": \"my_id_token\", \"access_token\": \"my_access_token\" }", Encoding.ASCII, "application/json")
-                });
-            }
-            if (string.Equals("/user", request.RequestUri?.AbsolutePath, StringComparison.Ordinal))
-            {
-                return Task.FromResult(new HttpResponseMessage() { Content = new StringContent("{ }", Encoding.ASCII, "application/json") });
-            }
-
-            throw new NotImplementedException(request.RequestUri?.ToString());
-        }
-    }
 }

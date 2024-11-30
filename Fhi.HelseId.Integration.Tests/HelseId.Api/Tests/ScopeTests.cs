@@ -1,9 +1,9 @@
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
-using Fhi.HelseId.Integration.TestFramework.Extensions;
 using Fhi.HelseId.Integration.Tests.HelseId.Api.Setup;
 using Fhi.HelseId.Integration.Tests.TestFramework;
-using Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
+using Fhi.TestFramework.Extensions;
+using Fhi.TestFramework.NHNTTT;
 using System.Net;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
@@ -17,9 +17,9 @@ public class ScopeTests
     public async Task SingleScopeIsConfigured_RequestContainsTokenTokenWithTheSingleScope_Returns200Ok()
     {
         var scope = "fhi:helseid.testing.api/all";
-        HelseIdApiKonfigurasjon config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: scope, audience:scope);
+        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: scope, audience:scope);
         var testToken = await GetTestToken([scope], config.ApiName);
-        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
+        var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
 
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -88,6 +88,6 @@ public class ScopeTests
 
     private static Task<string> GetTestToken(ICollection<string> scopes, string audience)
     {
-        return TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultToken(scopes, audience));
+        return TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken(scopes, audience));
     }
 }

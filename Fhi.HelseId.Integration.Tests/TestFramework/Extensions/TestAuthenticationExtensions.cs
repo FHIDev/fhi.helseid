@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
-using Fhi.HelseId.Integration.Tests.TestFramework.AuthenticationScheme.TestAuthenticationScheme;
 
-namespace Fhi.IntegrationTests.Extensions.DependencyInjection
+namespace Fhi.TestFramework.Extensions.DependencyInjection
 {
     internal static class TestAuthenticationExtensions
     {

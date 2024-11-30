@@ -4,11 +4,11 @@
 
 - Treat tests as production code
 - It should be understandable what the tests do and follow AAA(Arange, Act, Assert) pattern
-- Test names should follow the GWT(Given, When, Then), but without including GWT
+- Test names should follow the [GWT(Given, When, Then)](https://martinfowler.com/bliki/GivenWhenThen.html), but without including GWT 
 
 ```
     [Test]
-    public async Task CallTestApiEnpointPerson_ConfiguredXXisTrue_ReturnYYinResponse()
+    public async Task ConfiguredXXisTrue__CallTestApiEnpointPerson_ReturnYYinResponse()
     {
         // Arrange
         var appsettingsConfig = new Dictionary<string, string?>
@@ -44,7 +44,7 @@ This allows to test different configurations and to simulate different usages by
 
 ```
  [Test]
-        public async Task SampleSetup_WithOverrideOpenIdConnectConfigurationInTests()
+        public async Task SampleSetup_WithOverideOpenIdConnectConfigurationInTests()
         {
             //Configure appsettings
             var appsettingsConfig = new Dictionary<string, string?>
@@ -72,7 +72,7 @@ This allows to test different configurations and to simulate different usages by
 
 ```
     [Test]
-        public async Task SampleSetup_WithOverrideOpenIdConnectConfigurationInTests()
+        public async Task SampleSetup_WithOverideOpenIdConnectConfigurationInTests()
         {
             var appsettingsConfig = new Dictionary<string, string?>
             {
@@ -122,8 +122,15 @@ This allows to test different configurations and to simulate different usages by
 
 ```
 
+#### Sample of fake authentication using test authentication scheme
 
-#### Sample of fake authentication
+
+```
+
+```
+
+
+#### Sample of fake authentication using cookie
 
 
 ```
@@ -149,7 +156,5 @@ public async Task Overriding_CookieAuth()
 
     var testClient = appFactory.CreateClient();
     var response = await testClient.GetAsync("/api/test");
-            
-            
 }
 ```

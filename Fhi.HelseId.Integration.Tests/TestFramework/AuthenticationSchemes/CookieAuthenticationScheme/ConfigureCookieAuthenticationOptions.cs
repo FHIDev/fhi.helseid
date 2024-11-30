@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
 
-namespace Fhi.HelseId.Integration.Tests.TestFramework.CookieScheme
+namespace Fhi.TestFramework.AuthenticationSchemes.CookieScheme
 {
     
     internal class ConfigureCookieAuthenticationOptions : IConfigureNamedOptions<CookieAuthenticationOptions>

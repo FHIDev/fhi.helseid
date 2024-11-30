@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using System.Text.Json;
-using Fhi.HelseId.Integration.Tests.Extensions;
-using Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos;
+using Fhi.TestFramework.Extensions;
+using Fhi.TestFramework.NHNTTT.Dtos;
 
-namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
+namespace Fhi.TestFramework.NHNTTT;
 
 /// <summary>
 /// Test token tjeneseten (TTT) https://utviklerportal.nhn.no/informasjonstjenester/helseid/tilgang-til-helseid/test-token-tjenesten/docs/test-token-tjenesten_no_nnmd/
@@ -32,7 +32,7 @@ internal static class TTTTokenService
         string baseUri = "https://helseid-ttt.test.nhn.no",
         string authKey = "1814d016-9ffe-4334-a6e1-94eff536360b")
     {
-        HttpClient client = new HttpClient() { BaseAddress = new Uri(baseUri) };
+        HttpClient client = new() { BaseAddress = new Uri(baseUri) };
         client.DefaultRequestHeaders.Add("X-Auth-Key", authKey);
 
         var content = tokenRequest.Serialize();

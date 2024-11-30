@@ -1,27 +1,25 @@
 ﻿using System.Net;
 using System.Web;
 using Fhi.HelseId.Integration.Tests.TestFramework;
+using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.ExtensionMethods;
+using Fhi.TestFramework.Extensions;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
 {
-
+    /// <summary>
+    /// The purpose of these tests is to test the buildt in OIDC authentication scheme in AddHelseIdWebAuthentication
+    /// </summary>
     public class AuthenticationTests
     {
         [Test]
-        public async Task NoAuthCookieOnApiCall_DefaultHelseIdConfiguration_Return401WithRedirectToIdentityProvider()
+        public async Task DefaultHelseIdConfiguration_NoAuthCookieOnApiCall_Return401WithRedirectToIdentityProvider()
         {
-            var appsettingsConfig = new Dictionary<string, string?>
+            var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues()
+                .CreateConfigurationRoot();
+            var appFactory = new TestWebApplicationFactory(config, services =>
             {
-                {"HelseIdWebKonfigurasjon:AuthUse", "true" },
-                { "HelseIdWebKonfigurasjon:Authority", "https://helseid-sts.test.nhn.no/" },
-                { "HelseIdWebKonfigurasjon:ClientId", "1234" },
-            };
-            var testConfiguration = appsettingsConfig.BuildInMemoryConfiguration();
-
-            var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
-            {
-                services.AddHelseIdWebAuthentication(testConfiguration)
+                services.AddHelseIdWebAuthentication(config)
                .Build();
             });
 
@@ -37,37 +35,26 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
 
 
         /// <summary>
+        /// Test signin callback with token
         /// https://github.com/dotnet/aspnetcore/blob/81a2bab8704d87d324039b42eb1bab0d977f25b8/src/Security/Authentication/test/OpenIdConnect/OpenIdConnectEventTests_Handler.cs
         /// </summary>
         /// <returns></returns>
         [Test]
         [Ignore("Will be implemented later")]
-        public async Task TokenRecivedOnRequest_XX()
+        public async Task DefaultHelseIdConfiguration_InvalidTokenRecieved_()
         {
 
-            var appsettingsConfig = new Dictionary<string, string?>
+            var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues();
+            
+            var configRoot = config.CreateConfigurationRoot();
+            var appFactory = new TestWebApplicationFactory(configRoot, services =>
             {
-                {"HelseIdWebKonfigurasjon:AuthUse", "true" },
-                { "HelseIdWebKonfigurasjon:Authority", "https://helseid-sts.test.nhn.no/" },
-                { "HelseIdWebKonfigurasjon:ClientId", "1234" },
-            };
-            var testConfiguration = appsettingsConfig.BuildInMemoryConfiguration();
-
-            var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
-            {
-
-                services.AddHelseIdWebAuthentication(testConfiguration)
+                services.AddHelseIdWebAuthentication(configRoot)
                .Build();
-
-                //services.AddSingleton<IConfigureOptions<OpenIdConnectOptions>, ConfigureOidcOptions>();
-
             });
 
-
-            var testClient = appFactory.CreateClient();
-            var testResponse = await testClient.GetAsync("/api/test");
-            var stringcontent = testResponse.Content.ReadAsStringAsync();
-
+            var client = appFactory.CreateClient();
+            var response = await client.PostAsync("/signin-callback", null);
         }
 
 

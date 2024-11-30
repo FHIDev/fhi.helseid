@@ -1,25 +1,42 @@
-using Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos;
+using Fhi.TestFramework.NHNTTT.Dtos;
 
-namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
+namespace Fhi.TestFramework.NHNTTT;
 
 /// <summary>
 /// TODO: Should distinguish between token for app2app (client_credential) and token for end-users (authorization_code with PKCE)
 /// </summary>
 internal static class TTTTokenRequests
 {
-
-    internal static TokenRequest DefaultToken(string audience = "fhi:api-name")
+    internal static TokenRequest IdToken(string clientId, ICollection<string> scopes, string? pid = "05898597468", string? hprNummer = "", string? securityLevel = "4")
     {
-        return DefaultToken(["fhi:scope"], audience: audience);
+        return new TokenRequest(clientId)
+        {
+            SetPidPseudonym = false,
+            GeneralClaimsParameters = new GeneralClaimsParameters(scopes),
+            GetPersonFromPersontjenesten = true,
+            WithoutDefaultUserClaims = true,
+            UserClaimsParameters = new UserClaimsParameters()
+            {
+                HprNumber = hprNummer,
+                SecurityLevel = securityLevel,
+                Pid = pid,
+                Subject = "OCW6BpVN57vnbxBUE8WOOTM9FrkCaBixlD2y8FgYCag="
+            }
+        };
+    }
+
+    internal static TokenRequest DefaultAccessToken(string audience = "fhi:api-name")
+    {
+        return DefaultAccessToken(["fhi:scope"], audience: audience);
     }
 
 
-    internal static TokenRequest DefaultToken(
+    internal static TokenRequest DefaultAccessToken(
         ICollection<string> scopes,
         string audience = "fhi:api-name",
         bool setPidPseudonym = false,
         bool createDPoPTokenWithDPoPProof = false) =>
-        new TokenRequest(audience)
+        new(audience)
         {
             SetPidPseudonym = setPidPseudonym,
             CreateDPoPTokenWithDPoPProof = createDPoPTokenWithDPoPProof,

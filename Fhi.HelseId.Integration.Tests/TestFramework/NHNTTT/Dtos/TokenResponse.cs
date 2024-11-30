@@ -1,4 +1,4 @@
-﻿namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
+﻿namespace Fhi.TestFramework.NHNTTT.Dtos
 {
     internal class TokenResponse
     {

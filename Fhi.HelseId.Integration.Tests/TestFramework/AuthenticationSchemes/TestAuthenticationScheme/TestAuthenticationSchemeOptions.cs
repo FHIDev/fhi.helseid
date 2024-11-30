@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 
-namespace Fhi.HelseId.Integration.Tests.TestFramework.AuthenticationScheme.TestAuthenticationScheme
+namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
 {
     internal class TestAuthenticationSchemeOptions : AuthenticationSchemeOptions
     {
