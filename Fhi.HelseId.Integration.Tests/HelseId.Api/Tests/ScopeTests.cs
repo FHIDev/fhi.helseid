@@ -16,15 +16,14 @@ public class ScopeTests
     [Test]
     public async Task SingleScopeIsConfigured_RequestContainsTokenTokenWithTheSingleScope_Returns200Ok()
     {
-        var scope = "fhi:helseid.testing.api/all";
-        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: scope, audience:scope);
-        var testToken = await GetTestToken([scope], config.ApiName);
-        var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
-
+        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: "fhi:helseid.testing.api").WithAllowedScopes("fhi:helseid.testing.api");
+        var accessToken = await GetTestToken(["fhi:helseid.testing.api"], config.ApiName);
+        
+        var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
-        var responseBody = await response.Content.ReadAsStringAsync();
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        var responseBody = await response.Content.ReadAsStringAsync();
         Assert.That(responseBody, Is.EqualTo("Hello world!"));
     }
 
@@ -32,11 +31,11 @@ public class ScopeTests
     public async Task MultipleScopesIsconfigured_RequestContainsTokenWithOneOfTheConfiguredScopes_Returns200Ok()
     {
         var audience = "fhi:helseid.testing.api";
-        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: $"{audience}/all,{audience}/person", audience: audience);
+        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: audience).WithAllowedScopes($"{audience}/all,{audience}/person");
+        var accessToken = await GetTestToken([$"{audience}/all"], config.ApiName);
 
-        var testToken = await GetTestToken([$"{audience}/all"], audience);
-        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
 
+        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -48,10 +47,11 @@ public class ScopeTests
     public async Task MultipleScopesIsconfigured_RequestContainsTokenWithAllOfTheConfiguredScopes_Returns200Ok()
     {
         var audience = "fhi:helseid.testing.api";
-        HelseIdApiKonfigurasjon config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: $"{audience}/all,{audience}/person", audience:audience);
-        var testToken = await GetTestToken([$"{audience}/all", $"{audience}/person"], audience);
+        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: audience).WithAllowedScopes($"{audience}/all,{audience}/person");
+        var accessToken = await GetTestToken([$"{audience}/all", $"{audience}/person"], config.ApiName);
 
-        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
+
+        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -67,10 +67,10 @@ public class ScopeTests
     public async Task MultipleScopesIsconfigured_RequestContainsTokenDoesNotContainAnyOfTheConfiguredScopes_Returns403()
     {
         var audience = "fhi:api-scope";
-        HelseIdApiKonfigurasjon config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(allowedScopes: $"{audience},{audience}/person", audience:audience);
-        var testToken = await GetTestToken(["fhi:non-valid-scope"], audience);
+        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: audience).WithAllowedScopes($"{audience}/all,{audience}/person");
+        var accessToken = await GetTestToken(["fhi:non-valid-scope"], audience);
 
-        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(testToken);
+        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));

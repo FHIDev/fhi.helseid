@@ -16,11 +16,7 @@ public class DPoPTests
     [Test]
     public async Task ApiCallWithDpopToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
     {
-        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(
-            allowDPoPTokens: true, 
-            requireDPoPTokens: false,
-            audience: "fhi:helseid.testing.api",
-            allowedScopes: "fhi:helseid.testing.api/all");
+        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues().WithDpopValues(true, false);
 
         var client = CreateDirectHttpClient(config, useDpop: true);
         var response = await client.GetAsync("api/test");
@@ -33,11 +29,7 @@ public class DPoPTests
     [Test]
     public async Task ApiCallWithBearerToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
     {
-        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(
-            allowDPoPTokens: true, 
-            requireDPoPTokens: false,
-            audience: "fhi:helseid.testing.api",
-            allowedScopes: "fhi:helseid.testing.api/all");
+        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues().WithDpopValues(true, false);
 
         using var client = CreateDirectHttpClient(config, useDpop: false);
         var response = await client.GetAsync("api/test");
@@ -54,11 +46,7 @@ public class DPoPTests
     [Test]
     public async Task ApiCallWithBearerToken_ApiAcceptsOnlyDPoP_THEN_Returns401()
     {
-        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(
-            allowDPoPTokens: true, 
-            requireDPoPTokens: true,
-            audience: "fhi:helseid.testing.api",
-            allowedScopes: "fhi:helseid.testing.api/all");
+        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues().WithDpopValues(true, true);
 
         using var client = CreateDirectHttpClient(config, useDpop: false);
         var response = await client.GetAsync("api/test");

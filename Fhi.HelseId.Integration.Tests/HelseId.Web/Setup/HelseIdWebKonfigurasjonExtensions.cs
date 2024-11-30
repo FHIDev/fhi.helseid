@@ -2,7 +2,7 @@
 namespace Fhi.HelseId.Web
 {
 
-    internal partial class HelseIdWebKonfigurasjonBuilder
+    internal class HelseIdWebKonfigurasjonBuilder
     {
         internal static HelseIdWebKonfigurasjon Create
         {
