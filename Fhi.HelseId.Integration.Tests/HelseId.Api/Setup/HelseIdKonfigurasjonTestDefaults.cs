@@ -32,7 +32,7 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Setup
         internal static HelseIdApiKonfigurasjon WithDpopValues(this HelseIdApiKonfigurasjon config, bool allowDpopTokens, bool requireDPoPToken)
         {
             config.AllowDPoPTokens = allowDpopTokens;
-            config.RequireContextIdentity = requireDPoPToken;
+            config.RequireDPoPTokens = requireDPoPToken;
             return config;
         }
 
