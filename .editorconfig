@@ -10,14 +10,7 @@ indent_size = 4
 dotnet_diagnostic.CS1591.severity = none
 dotnet_sort_system_directives_first = true
 
-[*.csproj]
-indent_style = space
-indent_size = 2
-
-[*.props]
-indent_style = space
-indent_size = 2
 
 [*.yml]
 indent_style = space
-indent_size = 2  
+indent_size = 2
