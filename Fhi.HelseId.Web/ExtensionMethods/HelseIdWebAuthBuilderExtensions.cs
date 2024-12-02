@@ -21,7 +21,7 @@ public static class HelseIdWebAuthBuilderExtensions
     }
 
     /// <summary>
-    /// Use this when working with legacy non-minimal app
+    /// Use this when working with non-minimal app
     /// </summary>
     public static HelseIdWebAuthBuilder AddHelseIdWebAuthentication(this IServiceCollection services, IConfiguration config)
     {

@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fhi.HelseId.Api\Fhi.HelseId.Api.csproj" />
+    <ProjectReference Include="..\Fhi.HelseId.Web\Fhi.HelseId.Web.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector" />
@@ -27,10 +28,7 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Fhi.HelseId.Testing.Api.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Setup/HelseID Configuration 983744516-HelseID TTT-klient.json">
+    <None Update="HelseId.Api\Tests\Fhi.HelseId.Testing.Api.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
