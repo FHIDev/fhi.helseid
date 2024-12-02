@@ -3,7 +3,6 @@ using Microsoft.Extensions.Options;
 
 namespace Fhi.TestFramework.AuthenticationSchemes.CookieScheme
 {
-    
     internal class ConfigureCookieAuthenticationOptions : IConfigureNamedOptions<CookieAuthenticationOptions>
     {
         public void Configure(string? name, CookieAuthenticationOptions options)

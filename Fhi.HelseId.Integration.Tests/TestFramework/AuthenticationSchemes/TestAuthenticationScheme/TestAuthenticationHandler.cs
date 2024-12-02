@@ -15,7 +15,6 @@ namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
     {
         public TestAuthenticationHandler(IOptionsMonitor<TestAuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder) : base(options, logger, encoder)
         {
-
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -39,7 +38,6 @@ namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
                 return Task.FromResult(AuthenticateResult.Success(ticket));
             }
 
-
             return Task.FromResult(AuthenticateResult.Fail(new Exception("")));
         }
 
@@ -60,5 +58,4 @@ namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
             throw new NotImplementedException();
         }
     }
-
 }

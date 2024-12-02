@@ -33,7 +33,6 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
             Assert.That(queryParams["redirect_uri"], Is.EqualTo("http://localhost/signin-callback"));
         }
 
-
         /// <summary>
         /// Test signin callback with token
         /// https://github.com/dotnet/aspnetcore/blob/81a2bab8704d87d324039b42eb1bab0d977f25b8/src/Security/Authentication/test/OpenIdConnect/OpenIdConnectEventTests_Handler.cs
@@ -43,9 +42,7 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
         [Ignore("Will be implemented later")]
         public async Task DefaultHelseIdConfiguration_InvalidTokenRecieved_()
         {
-
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues();
-            
             var configRoot = config.CreateConfigurationRoot();
             var appFactory = new TestWebApplicationFactory(configRoot, services =>
             {
@@ -56,10 +53,7 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
             var client = appFactory.CreateClient();
             var response = await client.PostAsync("/signin-callback", null);
         }
-
-
     }
-
 }
 
 

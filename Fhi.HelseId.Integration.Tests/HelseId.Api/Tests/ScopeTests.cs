@@ -74,7 +74,6 @@ public class ScopeTests
         var response = await client.GetAsync("api/test");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
-
     }
 
     private static TestWebApplicationFactory CreateHelseApiTestFactory(HelseIdApiKonfigurasjon config)

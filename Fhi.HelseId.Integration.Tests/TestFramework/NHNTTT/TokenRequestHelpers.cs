@@ -30,7 +30,6 @@ internal static class TTTTokenRequests
         return DefaultAccessToken(["fhi:scope"], audience: audience);
     }
 
-
     internal static TokenRequest DefaultAccessToken(
         ICollection<string> scopes,
         string audience = "fhi:api-name",
@@ -53,7 +52,6 @@ internal static class TTTTokenRequests
         return tokenRequest;
     }
 
-
     internal static TokenRequest InvalidApiScopeToken(this TokenRequest tokenRequest)
     {
         tokenRequest.GeneralClaimsParameters = new GeneralClaimsParameters(["fhi:helseid.testing.api/some"], default, default, default, default, default, null, default, default, default, default, default, default);
@@ -65,11 +63,9 @@ internal static class TTTTokenRequests
         tokenRequest.SignJwtWithInvalidSigningKey = true;
         return tokenRequest;
     }
-
     internal static TokenRequest InvalidIssuer(this TokenRequest tokenRequest)
     {
         tokenRequest.SetInvalidIssuer = true;
         return tokenRequest;
     }
-
 }

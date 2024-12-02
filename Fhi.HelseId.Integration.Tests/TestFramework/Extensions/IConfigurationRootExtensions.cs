@@ -36,6 +36,5 @@ namespace Fhi.TestFramework.Extensions
             var testConfiguration = appsettingsConfig.BuildInMemoryConfiguration();
             return testConfiguration;
         }
-
     }
 }

@@ -3,7 +3,6 @@ using Fhi.HelseId.Api;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Setup
 {
-
     internal class HelseIdApiKonfigurasjonBuilder
     {
         internal static HelseIdApiKonfigurasjon Create
@@ -11,10 +10,8 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Setup
             get
             {
                 return new HelseIdApiKonfigurasjon();
-
             }
         }
-
     }
 
     internal static class HelseIdApiKonfigurasjonExtensions

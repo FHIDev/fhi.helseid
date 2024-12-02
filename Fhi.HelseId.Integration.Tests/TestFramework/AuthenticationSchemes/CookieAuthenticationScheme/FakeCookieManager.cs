@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 
 namespace Fhi.TestFramework.AuthenticationSchemes.CookieScheme
 {
-
     internal class FakeCookieManager : ICookieManager
     {
         public void AppendResponseCookie(HttpContext context, string key, string? value, CookieOptions options)
@@ -22,8 +21,6 @@ namespace Fhi.TestFramework.AuthenticationSchemes.CookieScheme
             var task = TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken("fhi-api-access"));
 
             return task.Result;
-
         }
     }
-
 }

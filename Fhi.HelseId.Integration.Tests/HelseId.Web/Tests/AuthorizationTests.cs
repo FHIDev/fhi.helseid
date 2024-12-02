@@ -86,6 +86,5 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
 
             return (accessToken, idToken);
         }
-
     }
 }

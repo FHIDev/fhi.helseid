@@ -23,7 +23,7 @@
             ..   
         });
 
-        // ACT
+        // Act
         var client = appFactory.CreateClient();
         var response = await client.GetAsync("api/person");
 

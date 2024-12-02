@@ -19,7 +19,6 @@ namespace Fhi.TestFramework.AuthenticationSchemes.CookieScheme
 
         public AuthenticationTicket? Unprotect(string? protectedText)
         {
-               
             var jwt = new JsonWebToken(protectedText);
             var claimsIdentity = new ClaimsIdentity(jwt.Claims, "scheme");
             AuthenticationTicket ticket = claimsIdentity.CreateAuthenticationTicket("scheme", null);

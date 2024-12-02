@@ -22,7 +22,6 @@ namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
         /// </summary>
         public IEnumerable<Claim>? UserClaims { get; set; }
     }
-
 }
 
 

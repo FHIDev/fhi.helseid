@@ -25,6 +25,5 @@ namespace Fhi.TestFramework.Extensions.DependencyInjection
             return builder.AddScheme<TestAuthenticationSchemeOptions, TestAuthenticationHandler>(authenticationScheme, authenticationScheme, options);
 
         }
-
     }
 }

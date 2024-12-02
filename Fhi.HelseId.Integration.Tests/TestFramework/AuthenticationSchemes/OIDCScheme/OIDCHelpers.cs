@@ -59,6 +59,4 @@ namespace Fhi.TestFramework.AuthenticationSchemes.OIDCScheme
             return new JsonWebToken(token);
         }
     }
-
-
 }
