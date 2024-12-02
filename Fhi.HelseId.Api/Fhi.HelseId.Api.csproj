@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
-    <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release</Configurations>
     <PackageDescription>Authentication and authorization component for access to NHN HelseId</PackageDescription>

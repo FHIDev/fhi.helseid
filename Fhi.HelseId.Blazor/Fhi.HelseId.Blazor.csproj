@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <PackageDescription>Setup Blazor with helseid Apis</PackageDescription>
     <PackageReadmeFile>README.md</PackageReadmeFile>

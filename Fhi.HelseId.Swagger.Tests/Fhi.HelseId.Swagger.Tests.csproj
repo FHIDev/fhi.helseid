@@ -1,14 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -25,9 +21,7 @@
     </PackageReference>
     <PackageReference Include="System.Security.Cryptography.Xml" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Fhi.HelseId.Swagger\Fhi.HelseId.Swagger.csproj" />
   </ItemGroup>
-
 </Project>
