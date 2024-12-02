@@ -18,7 +18,7 @@ namespace Fhi.TestFramework.AuthenticationSchemes.CookieScheme
 
         public string GetRequestCookie(HttpContext context, string key)
         {
-            var task = TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken("fhi-api-access"));
+            var task = TTTService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken("fhi-api-access"));
 
             return task.Result;
         }

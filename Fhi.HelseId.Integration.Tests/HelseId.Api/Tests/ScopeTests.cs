@@ -87,6 +87,6 @@ public class ScopeTests
 
     private static Task<string> GetTestToken(ICollection<string> scopes, string audience)
     {
-        return TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken(scopes, audience));
+        return TTTService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken(scopes, audience));
     }
 }

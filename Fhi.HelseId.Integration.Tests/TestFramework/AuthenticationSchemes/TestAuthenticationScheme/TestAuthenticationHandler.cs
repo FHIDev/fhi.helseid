@@ -32,13 +32,13 @@ namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
                 return Task.FromResult(AuthenticateResult.Success(ticket));
             }
 
-            if (Options.ClaimsIssuer is not null) 
+            if (Options.UserClaims is not null) 
             {
                 var ticket = new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity(Options.UserClaims, "TestAuthentication")), Scheme.Name);
                 return Task.FromResult(AuthenticateResult.Success(ticket));
             }
 
-            return Task.FromResult(AuthenticateResult.Fail(new Exception("")));
+            return Task.FromResult(AuthenticateResult.Fail("TestAuthenticationSchemeOptions has not set UserClaims or AccessToken not set"));
         }
 
         private IEnumerable<Claim> CreateClaims()

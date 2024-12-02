@@ -81,8 +81,8 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
           string audience = "fhi:api",
           string? securityLevel = "4")
         {
-            var accessToken = await TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken(scopes.ToList(), audience));
-            var idToken = await TTTTokenService.GetHelseIdToken(TTTTokenRequests.IdToken(clientId, scopes.ToList(), securityLevel: securityLevel));
+            var accessToken = await TTTService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken(scopes.ToList(), audience));
+            var idToken = await TTTService.GetHelseIdToken(TTTTokenRequests.IdToken(clientId, scopes.ToList(), securityLevel: securityLevel));
 
             return (accessToken, idToken);
         }

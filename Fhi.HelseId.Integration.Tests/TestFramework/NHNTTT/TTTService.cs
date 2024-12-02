@@ -9,7 +9,7 @@ namespace Fhi.TestFramework.NHNTTT;
 /// Test token tjeneseten (TTT) https://utviklerportal.nhn.no/informasjonstjenester/helseid/tilgang-til-helseid/test-token-tjenesten/docs/test-token-tjenesten_no_nnmd/
 /// See swagger https://helseid-ttt.test.nhn.no/swagger/index.html#/TokenService
 /// </summary>
-internal static class TTTTokenService
+internal static class TTTService
 {
     /// <summary>
     /// Get a test token from NHN Test-token-tjenesten

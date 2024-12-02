@@ -15,7 +15,8 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
         [Test]
         public async Task DefaultHelseIdConfiguration_NoAuthCookieOnApiCall_Return401WithRedirectToIdentityProvider()
         {
-            var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues()
+            var config = HelseIdWebKonfigurasjonBuilder.Create
+                .AddDefaultValues()
                 .CreateConfigurationRoot();
             var appFactory = new TestWebApplicationFactory(config, services =>
             {
@@ -28,7 +29,7 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
             var response = await client.GetAsync("/api/test");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-            var queryParams = HttpUtility.ParseQueryString(response.Headers.Location is not null ? response.Headers.Location.Query : string.Empty );
+            var queryParams = HttpUtility.ParseQueryString(response.Headers.Location!.Query);
             Assert.That(queryParams["scope"], Is.EqualTo("openid profile helseid://scopes/identity/pid helseid://scopes/identity/pid_pseudonym helseid://scopes/identity/security_level offline_access"));
             Assert.That(queryParams["redirect_uri"], Is.EqualTo("http://localhost/signin-callback"));
         }

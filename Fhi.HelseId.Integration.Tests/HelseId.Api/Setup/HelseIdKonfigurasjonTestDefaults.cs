@@ -26,10 +26,15 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Setup
             return config;
         }
 
-        internal static HelseIdApiKonfigurasjon WithDpopValues(this HelseIdApiKonfigurasjon config, bool allowDpopTokens, bool requireDPoPToken)
+        internal static HelseIdApiKonfigurasjon WithRequireDPoPTokens(this HelseIdApiKonfigurasjon config, bool requireDPoPToken)
+        {
+            config.RequireDPoPTokens = requireDPoPToken;
+            return config;
+        }
+
+        internal static HelseIdApiKonfigurasjon WithAllowDPoPTokens(this HelseIdApiKonfigurasjon config, bool allowDpopTokens)
         {
             config.AllowDPoPTokens = allowDpopTokens;
-            config.RequireDPoPTokens = requireDPoPToken;
             return config;
         }
 

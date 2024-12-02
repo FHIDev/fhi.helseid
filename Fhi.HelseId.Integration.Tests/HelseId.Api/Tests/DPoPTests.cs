@@ -13,11 +13,13 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 /// </summary>
 public class DPoPTests 
 {
+    
     [Test]
     public async Task ApiCallWithDpopToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
     {
-        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: "fhi:helseid.testing.api", allowedScopes: "fhi:helseid.testing.api/all")
-            .WithDpopValues(true, false);
+        var config = CreateConfig()
+            .WithAllowDPoPTokens(true)
+            .WithRequireDPoPTokens(false);
 
         var client = CreateDirectHttpClient(config, useDpop: true);
         var response = await client.GetAsync("api/test");
@@ -27,11 +29,14 @@ public class DPoPTests
         Assert.That(responseBody, Is.EqualTo("Hello world!"));
     }
 
+   
+
     [Test]
     public async Task ApiCallWithBearerToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
     {
-        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: "fhi:helseid.testing.api", allowedScopes: "fhi:helseid.testing.api/all")
-            .WithDpopValues(true, false);
+        var config = CreateConfig()
+            .WithAllowDPoPTokens(true)
+            .WithRequireDPoPTokens(false);
 
         using var client = CreateDirectHttpClient(config, useDpop: false);
         var response = await client.GetAsync("api/test");
@@ -48,8 +53,9 @@ public class DPoPTests
     [Test]
     public async Task ApiCallWithBearerToken_ApiAcceptsOnlyDPoP_THEN_Returns401()
     {
-        var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: "fhi:helseid.testing.api", allowedScopes: "fhi:helseid.testing.api/all")
-            .WithDpopValues(true, true);
+        var config = CreateConfig()
+            .WithAllowDPoPTokens(true)
+            .WithRequireDPoPTokens(true);
 
         using var client = CreateDirectHttpClient(config, useDpop: false);
         var response = await client.GetAsync("api/test");
@@ -84,6 +90,21 @@ public class DPoPTests
         var tokenProvider = new AuthenticationStore(store, config);
         var authHandler = new HttpAuthHandler(tokenProvider);
         return authHandler;
+    }
+
+    /// <summary>
+    /// Create HelseId with values required by all clients. 
+    /// The CreateDirectHttpClient creates token by TTT with fhi:helseid.testing.api scope so audience and allowed 
+    /// scope must be set to not get 401 with invalid_token
+    /// </summary>
+    /// <returns></returns>
+    private static HelseIdApiKonfigurasjon CreateConfig()
+    {
+        var audienceSetInTTTgeneratedToken = "fhi:helseid.testing.api";
+        var scopeSetInTTTgeneratedToken = "fhi:helseid.testing.api/all";
+
+        return HelseIdApiKonfigurasjonBuilder.Create
+                    .DefaultValues(audience: audienceSetInTTTgeneratedToken, allowedScopes: scopeSetInTTTgeneratedToken);
     }
 
 }

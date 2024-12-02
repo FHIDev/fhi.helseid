@@ -8,7 +8,9 @@
 
         public string? PrivateKeyForProofCreation { get; set; }
 
-        //public InvalidDPoPProofParameters? InvalidDPoPProofParameters { get; set; }
+        //// Removed the implementation as it was wrong. This is a property in TTT that 
+        ////will be reimplemented correct when tests for Dpop is in place
+        ////public InvalidDPoPProofParameters? InvalidDPoPProofParameters { get; set; }
 
     }
 }

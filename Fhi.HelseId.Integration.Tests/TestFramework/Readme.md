@@ -8,7 +8,7 @@
 
 ```
     [Test]
-    public async Task ConfiguredXXisTrue__CallTestApiEnpointPerson_ReturnYYinResponse()
+    public async Task ConfiguredXXisTrue_CallTestApiEnpointPerson_ReturnYYinResponse()
     {
         // Arrange
         var appsettingsConfig = new Dictionary<string, string?>
@@ -44,7 +44,7 @@ This allows to test different configurations and to simulate different usages by
 
 ```
  [Test]
-        public async Task SampleSetup_WithOverideOpenIdConnectConfigurationInTests()
+        public async Task Given_When_Then()
         {
             //Configure appsettings
             var appsettingsConfig = new Dictionary<string, string?>
@@ -56,12 +56,11 @@ This allows to test different configurations and to simulate different usages by
             // Use testframeork application factory to override configurations and services
             var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
             {
-                //Mock services   
+                //Add overriding of services here   
             });
 
-            // Create HttpClient
+            
             var client = appFactory.CreateClient();
-            // Call an endpoint
             var response = await client.GetAsync("xxx");
       }
 
@@ -72,7 +71,7 @@ This allows to test different configurations and to simulate different usages by
 
 ```
     [Test]
-        public async Task SampleSetup_WithOverideOpenIdConnectConfigurationInTests()
+        public async Task Given_When_Then()
         {
             var appsettingsConfig = new Dictionary<string, string?>
             {
@@ -126,6 +125,44 @@ This allows to test different configurations and to simulate different usages by
 
 
 ```
+    [Test]
+    public async Task Given_When_Then()
+    {
+        //// Create configuration of HelseId
+        var appsettingsConfig = new Dictionary<string, string?>
+        {
+            ...
+        };
+        var testConfiguration = appsettingsConfig.BuildInMemoryConfiguration();
+        //// Generate access_token and id_token from TTT based on the application configuration
+        var (AccessToken, IdToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: "2");
+
+        var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
+        {
+            //// Add fake authentication where User contains claims from access_token and id_token
+            services.AddFakeTestAuthenticationScheme(AccessToken, IdToken);
+            services.AddHelseIdWebAuthentication(testConfiguration)
+            .Build();
+        });
+
+
+        var testClient = appFactory.CreateClient();
+        var response = await testClient.GetAsync("/api/test");
+    
+        //Assert...
+    }
+
+    private static async Task<(string AccessToken, string IdToken)> CreateAccessAndIdToken(
+    string clientId,
+    IEnumerable<string> scopes,
+    string audience = "fhi:api",
+    string? securityLevel = "4")
+    {
+        var accessToken = await TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken(scopes.ToList(), audience));
+        var idToken = await TTTTokenService.GetHelseIdToken(TTTTokenRequests.IdToken(clientId, scopes.ToList(), securityLevel: securityLevel));
+
+        return (accessToken, idToken);
+    }
 
 ```
 
@@ -135,7 +172,7 @@ This allows to test different configurations and to simulate different usages by
 
 ```
 [Test]
-public async Task Overriding_CookieAuth()
+public async Task Given_When_Then()
 {
     var appsettingsConfig = new Dictionary<string, string?>
     {

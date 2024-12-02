@@ -27,11 +27,11 @@ namespace Fhi.TestFramework.Extensions
         {
             var appsettingsConfig = new Dictionary<string, string?>
                 {
-                    { "HelseIdWebKonfigurasjon:AuthUse", authUse.ToString() },
-                    { "HelseIdWebKonfigurasjon:Authority",  authority},
-                    { "HelseIdWebKonfigurasjon:ClientId", clientId },
-                    { "HelseIdWebKonfigurasjon:Scopes", scopes },
-                    { "HelseIdWebKonfigurasjon:SecurityLevels",  securityLevel}
+                    { $"{nameof(HelseIdWebKonfigurasjon)}:{nameof(HelseIdWebKonfigurasjon.AuthUse)}", authUse.ToString() },
+                    { $"{nameof(HelseIdWebKonfigurasjon)}:{nameof(HelseIdWebKonfigurasjon.Authority)}",  authority},
+                    { $"{nameof(HelseIdWebKonfigurasjon)}:{nameof(HelseIdWebKonfigurasjon.ClientId)}", clientId },
+                    { $"{nameof(HelseIdWebKonfigurasjon)}:{nameof(HelseIdWebKonfigurasjon.Scopes)}", scopes },
+                    { $"{nameof(HelseIdWebKonfigurasjon)}:{nameof(HelseIdWebKonfigurasjon.SecurityLevels)}",  securityLevel}
                 };
             var testConfiguration = appsettingsConfig.BuildInMemoryConfiguration();
             return testConfiguration;

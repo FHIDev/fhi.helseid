@@ -115,7 +115,7 @@ public class HelseIdWebAuthBuilder
         _services.AddHttpContextAccessor();
         _services.AddSingleton(SecretHandler);
 
-        (var authorizeFilter, string policyName) = AddAuthenticationAndAuthorization(configureAuthentication);
+        (var authorizeFilter, string policyName) = AddAuthentication(configureAuthentication);
 
         AddControllers(configureMvc, authorizeFilter);
 
@@ -219,9 +219,13 @@ public class HelseIdWebAuthBuilder
         return builder;
     }
 
-    internal (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthenticationAndAuthorization(ConfigureAuthentication? configureAuthentication = null)
+    /// <summary>
+    /// Adds authentication and authorization
+    /// </summary>
+    /// <param name="configureAuthentication"></param>
+    /// <returns></returns>
+    protected virtual (AuthorizeFilter AuthorizeFilter, string PolicyName) AddAuthentication(ConfigureAuthentication? configureAuthentication = null)
     {
-
         if (HelseIdWebKonfigurasjon.AuthUse)
         {
             AddHelseIdAuthentication(configureAuthentication);
