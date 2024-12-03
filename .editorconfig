@@ -38,7 +38,7 @@ dotnet_diagnostic.SA1116.severity = suggestion
 dotnet_diagnostic.SA1117.severity = suggestion
 
 # SA1128: Put constructor initializers on their own line
-dotnet_diagnostic.SA1128.severity = suggestion
+dotnet_diagnostic.SA1128.severity = none
 
 # SA1201: A constructor should not follow a method
 dotnet_diagnostic.SA1201.severity = suggestion
