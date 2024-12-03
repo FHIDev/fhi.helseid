@@ -74,7 +74,7 @@ dotnet_diagnostic.SA1502.severity = none
 dotnet_diagnostic.SA1503.severity = suggestion
 
 # SA1518: File may not end with a newline character
-dotnet_diagnostic.SA1518.severity = none
+dotnet_diagnostic.SA1518.severity = suggestion
 
 # SA1516: Elements should be separated by blank line
 dotnet_diagnostic.SA1516.severity = none
