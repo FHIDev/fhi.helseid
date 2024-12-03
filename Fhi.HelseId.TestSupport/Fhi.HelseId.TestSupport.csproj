@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <IsTestProject>false</IsTestProject>
-    <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <PackageDescription>Base classes for testing an implementation using Fhi.HelseId</PackageDescription>
     <PackageReadmeFile>README.md</PackageReadmeFile>
