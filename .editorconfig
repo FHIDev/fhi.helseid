@@ -41,7 +41,7 @@ dotnet_diagnostic.SA1117.severity = suggestion
 dotnet_diagnostic.SA1128.severity = none
 
 # SA1201: A constructor should not follow a method
-dotnet_diagnostic.SA1201.severity = suggestion
+dotnet_diagnostic.SA1201.severity = none
 
 # SA1202: 'protected' members should come before 'private' members
 dotnet_diagnostic.SA1202.severity = suggestion
