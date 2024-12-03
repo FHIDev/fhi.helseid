@@ -116,4 +116,4 @@ dotnet_diagnostic.SA1633.severity = none
 dotnet_diagnostic.SA1642.severity = none
 
 # SA1649: File name should match first type name
-dotnet_diagnostic.SA1649.severity = suggestion
+dotnet_diagnostic.SA1649.severity = none
