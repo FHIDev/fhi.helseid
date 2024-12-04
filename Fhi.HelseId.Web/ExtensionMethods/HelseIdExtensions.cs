@@ -31,7 +31,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             // This is because it overrides the events set here.
         }
 
-        public static void DefaultHelseIdOptions(this OpenIdConnectOptions options,
+        public static OpenIdConnectOptions DefaultHelseIdOptions(this OpenIdConnectOptions options,
             IHelseIdWebKonfigurasjon configAuth,
             IRedirectPagesKonfigurasjon redirectPagesKonfigurasjon,
             IHelseIdSecretHandler secretHandler)
@@ -115,6 +115,8 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             {
                 return string.Join(' ', helseIdWebKonfigurasjon.SecurityLevels.Select(sl => $"Level{sl}"));
             }
+
+            return options;
         }
 
         /// <summary>

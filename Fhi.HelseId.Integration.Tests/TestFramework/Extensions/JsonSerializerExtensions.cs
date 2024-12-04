@@ -1,11 +1,11 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Fhi.HelseId.Integration.Tests.Extensions
+namespace Fhi.TestFramework.Extensions
 {
     internal static class JsonSerializerExtensions
     {
-        public static JsonSerializerOptions Options = new JsonSerializerOptions()
+        public static JsonSerializerOptions Options = new()
         {
             PropertyNameCaseInsensitive = true,
             IncludeFields = true,

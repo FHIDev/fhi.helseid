@@ -1,9 +1,9 @@
 using System.Net;
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
-using Fhi.HelseId.Integration.TestFramework.Extensions;
 using Fhi.HelseId.Integration.Tests.TestFramework;
-using Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
+using Fhi.TestFramework.Extensions;
+using Fhi.TestFramework.NHNTTT;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
@@ -28,7 +28,7 @@ public class TokenValidationTests
     [Test]
     public async Task ExpiredToken_Returns401Unauthorized()
     {
-        var testToken = await TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultToken().ExpiredToken());
+        var testToken = await TTTService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken().ExpiredToken());
         using var client = Factory.CreateClient().AddBearerAuthorizationHeader(testToken);
 
         var response = await client.GetAsync("api/test");
@@ -42,7 +42,7 @@ public class TokenValidationTests
     [Test]
     public async Task InvalidSigningKey_Returns401Unauthorized()
     {
-        var testToken = await TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultToken(HelseIdConfig.ApiName).InvalidSigningKey());
+        var testToken = await TTTService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken(HelseIdConfig.ApiName).InvalidSigningKey());
 
         using var client = Factory.CreateClient().AddBearerAuthorizationHeader(testToken);
         var response = await client.GetAsync("api/test");
@@ -55,7 +55,7 @@ public class TokenValidationTests
     [Test]
     public async Task InvalidIssuer_Returns401Unauthorized()
     {
-        var testToken = await TTTTokenService.GetHelseIdToken(TTTTokenRequests.DefaultToken().InvalidIssuer());
+        var testToken = await TTTService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken().InvalidIssuer());
         using var client = Factory.CreateClient().AddBearerAuthorizationHeader(testToken);
 
         var response = await client.GetAsync("api/test");

@@ -8,31 +8,31 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework
 {
     public class TestWebApplicationFactory : WebApplicationFactory<Program>
     {
-        private IConfiguration? _configuration;
-        private Action<IServiceCollection> _serviceCollection;
+        private IConfiguration? Configuration { get; }
+        private Action<IServiceCollection> ServiceCollection { get; }
 
         public TestWebApplicationFactory(IConfiguration configuration, Action<IServiceCollection> services)
         {
-            _configuration = configuration;
-            _serviceCollection = services;
+            Configuration = configuration;
+            ServiceCollection = services;
         }
 
         public TestWebApplicationFactory(Action<IServiceCollection> services)
         {
-            _serviceCollection = services;
+            ServiceCollection = services;
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            if (_configuration is not null)
+            if (Configuration is not null)
             {
                 builder.ConfigureAppConfiguration((context, config) =>
                 {
-                    config.AddConfiguration(_configuration);
+                    config.AddConfiguration(Configuration);
                 });
             }
 
-            builder.ConfigureTestServices(_serviceCollection.Invoke);
+            builder.ConfigureTestServices(ServiceCollection.Invoke);
         }
     }
 }
