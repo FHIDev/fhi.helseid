@@ -24,7 +24,6 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
                .Build();
             });
 
-
             var client = appFactory.CreateClient();
             var response = await client.GetAsync("/api/test");
 

@@ -90,8 +90,8 @@ public class DPoPTests
     }
 
     /// <summary>
-    /// Create HelseId with values required by all clients. 
-    /// The CreateDirectHttpClient creates token by TTT with fhi:helseid.testing.api scope so audience and allowed 
+    /// Create HelseId with values required by all clients.
+    /// The CreateDirectHttpClient creates token by TTT with fhi:helseid.testing.api scope so audience and allowed.
     /// scope must be set to not get 401 with invalid_token
     /// </summary>
     /// <returns></returns>
@@ -103,5 +103,4 @@ public class DPoPTests
         return HelseIdApiKonfigurasjonBuilder.Create
                     .DefaultValues(audience: audienceSetInTTTgeneratedToken, allowedScopes: scopeSetInTTTgeneratedToken);
     }
-
 }

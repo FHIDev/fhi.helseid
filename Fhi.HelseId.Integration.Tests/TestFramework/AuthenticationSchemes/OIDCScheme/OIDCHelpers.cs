@@ -1,15 +1,14 @@
-﻿
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-//TODO: This is under construction. Will be needed when testing OIDC scheme
+// TODO: This is under construction. Will be needed when testing OIDC scheme
 namespace Fhi.TestFramework.AuthenticationSchemes.OIDCScheme
 {
-    class TestStateDataFormat : ISecureDataFormat<AuthenticationProperties>
+    internal class TestStateDataFormat : ISecureDataFormat<AuthenticationProperties>
     {
         public string Protect(AuthenticationProperties data)
         {
@@ -41,7 +40,7 @@ namespace Fhi.TestFramework.AuthenticationSchemes.OIDCScheme
         }
     }
 
-    class TestTokenHandler : TokenHandler
+    internal class TestTokenHandler : TokenHandler
     {
         public override Task<TokenValidationResult> ValidateTokenAsync(string token, TokenValidationParameters validationParameters)
         {

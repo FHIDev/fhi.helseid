@@ -16,21 +16,21 @@ namespace Fhi.HelseId.Api
         /// OIDC authority for HelseID
         /// </summary>
         [Required]
-        string Authority { get;  }
+        string Authority { get; }
 
         /// <summary>
         /// Name of the API provided by this application
         /// </summary>
         [Required]
-        string ApiName { get;  }
+        string ApiName { get; }
 
         /// <summary>
         /// Scope for access to the API by a person
         /// </summary>
         [Required]
-        string ApiScope { get;  }
+        string ApiScope { get; }
 
-        bool UseHttps { get;  }
+        bool UseHttps { get; }
         bool RequireContextIdentity { get; }
 
         /// <summary>

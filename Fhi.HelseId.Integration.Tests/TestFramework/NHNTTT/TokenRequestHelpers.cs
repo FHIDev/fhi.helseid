@@ -7,6 +7,15 @@ namespace Fhi.TestFramework.NHNTTT;
 /// </summary>
 internal static class TTTTokenRequests
 {
+    /// <summary>
+    /// Generates a basic Id token with pid and userclaims specified
+    /// </summary>
+    /// <param name="clientId"></param>
+    /// <param name="scopes"></param>
+    /// <param name="pid"></param>
+    /// <param name="hprNummer"></param>
+    /// <param name="securityLevel"></param>
+    /// <returns></returns>
     internal static TokenRequest IdToken(string clientId, ICollection<string> scopes, string? pid = "05898597468", string? hprNummer = "", string? securityLevel = "4")
     {
         return new TokenRequest(clientId)
@@ -63,6 +72,7 @@ internal static class TTTTokenRequests
         tokenRequest.SignJwtWithInvalidSigningKey = true;
         return tokenRequest;
     }
+
     internal static TokenRequest InvalidIssuer(this TokenRequest tokenRequest)
     {
         tokenRequest.SetInvalidIssuer = true;

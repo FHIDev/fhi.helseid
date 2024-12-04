@@ -17,12 +17,12 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
         public async Task SecurityLevelConfigured_AuthenticatedUserCallingAPIWithMissingSecurityLevelInToken_Return403()
         {
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues().WithSecurityLevel(["3"]);
-            var (AccessToken, IdToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: null);
+            var (accessToken, idToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: null);
 
             var testConfiguration = config.CreateConfigurationRoot();
             var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
             {
-                services.AddFakeTestAuthenticationScheme(AccessToken, IdToken);
+                services.AddFakeTestAuthenticationScheme(accessToken, idToken);
                 services.AddHelseIdWebAuthentication(testConfiguration).Build();
             });
             var client = appFactory.CreateClient();
@@ -39,12 +39,12 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
         public async Task SecurityLevelConfigured_AuthenticatedUserCallingAPIWithSecurityLevelInTokenThatIsHigherThanConfigured_Return200()
         {
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues().WithSecurityLevel(["3"]);
-            var (AccessToken, IdToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: "4");
+            var (accessToken, idToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: "4");
 
             var testConfiguration = config.CreateConfigurationRoot();
             var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
             {
-                services.AddFakeTestAuthenticationScheme(AccessToken, IdToken);
+                services.AddFakeTestAuthenticationScheme(accessToken, idToken);
                 services.AddHelseIdWebAuthentication(testConfiguration).Build();
             });
             var client = appFactory.CreateClient();
@@ -61,12 +61,12 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
         public async Task SecurityLevelConfigured_AuthenticatedUserCallingAPIWithSecurityLevelInTokenThatIsLowerThanConfigured_Return403()
         {
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues().WithSecurityLevel(["4"]);
-            var (AccessToken, IdToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: "2");
+            var (accessToken, idToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: "2");
 
             var testConfiguration = config.CreateConfigurationRoot();
             var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
             {
-                services.AddFakeTestAuthenticationScheme(AccessToken, IdToken);
+                services.AddFakeTestAuthenticationScheme(accessToken, idToken);
                 services.AddHelseIdWebAuthentication(testConfiguration).Build();
             });
             var client = appFactory.CreateClient();

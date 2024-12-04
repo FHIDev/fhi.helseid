@@ -4,7 +4,6 @@ using Fhi.HelseId.Api.ExtensionMethods;
 using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.TestFramework.Extensions;
 using Fhi.TestFramework.NHNTTT;
-using System.Net;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 

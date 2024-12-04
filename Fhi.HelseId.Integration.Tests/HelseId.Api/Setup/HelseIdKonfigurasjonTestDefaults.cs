@@ -15,7 +15,7 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Setup
 
     internal static class HelseIdApiKonfigurasjonExtensions
     {
-        internal static HelseIdApiKonfigurasjon DefaultValues(this HelseIdApiKonfigurasjon config, string audience = "fhi:api", string allowedScopes = "fhi:api/scope" )
+        internal static HelseIdApiKonfigurasjon DefaultValues(this HelseIdApiKonfigurasjon config, string audience = "fhi:api", string allowedScopes = "fhi:api/scope")
         {
             config.Authority = "https://helseid-sts.test.nhn.no";
             config.AuthUse = true;

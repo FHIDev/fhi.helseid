@@ -216,7 +216,6 @@ public class HelseIdWebAuthBuilder
         })
         .AddAutomaticTokenManagement(options => options.DefaultHelseIdOptions(tokenRefreshBeforeExpirationTime));   // For å kunne ha en lengre sesjon,  håndterer refresh token
 
-
         return builder;
     }
 

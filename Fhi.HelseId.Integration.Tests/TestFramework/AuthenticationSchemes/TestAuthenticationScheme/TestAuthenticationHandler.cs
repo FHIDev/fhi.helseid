@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
-using System.Security.Claims;
-using Microsoft.Extensions.Logging;
+﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Fhi.TestFramework.Extensions;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
 {
@@ -32,7 +32,7 @@ namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
                 return Task.FromResult(AuthenticateResult.Success(ticket));
             }
 
-            if (Options.UserClaims is not null) 
+            if (Options.UserClaims is not null)
             {
                 var ticket = new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity(Options.UserClaims, "TestAuthentication")), Scheme.Name);
                 return Task.FromResult(AuthenticateResult.Success(ticket));

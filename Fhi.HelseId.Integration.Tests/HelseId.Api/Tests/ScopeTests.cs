@@ -5,7 +5,6 @@ using Fhi.HelseId.Integration.Tests.HelseId.Api.Setup;
 using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.TestFramework.Extensions;
 using Fhi.TestFramework.NHNTTT;
-using System.Net;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
@@ -19,7 +18,7 @@ public class ScopeTests
     {
         var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: "fhi:helseid.testing.api").WithAllowedScopes("fhi:helseid.testing.api");
         var accessToken = await GetTestToken(["fhi:helseid.testing.api"], config.ApiName);
-        
+
         var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
 
@@ -35,7 +34,6 @@ public class ScopeTests
         var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: audience).WithAllowedScopes($"{audience}/all,{audience}/person");
         var accessToken = await GetTestToken([$"{audience}/all"], config.ApiName);
 
-
         using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -50,7 +48,6 @@ public class ScopeTests
         var audience = "fhi:helseid.testing.api";
         var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: audience).WithAllowedScopes($"{audience}/all,{audience}/person");
         var accessToken = await GetTestToken([$"{audience}/all", $"{audience}/person"], config.ApiName);
-
 
         using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");

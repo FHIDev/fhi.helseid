@@ -16,14 +16,17 @@ namespace Fhi.TestFramework.Extensions.DependencyInjection
         /// <returns></returns>
         internal static AuthenticationBuilder AddTestAuthentication(this AuthenticationBuilder builder, string authenticationScheme, string? accessToken = null, string? idToken = null)
         {
-            return builder.AddTestAuthentication(authenticationScheme, options => { options.AccessToken = accessToken; options.IdToken = idToken; });
+            return builder.AddTestAuthentication(authenticationScheme, options =>
+            {
+                options.AccessToken = accessToken;
+                options.IdToken = idToken;
+            });
         }
 
         internal static AuthenticationBuilder AddTestAuthentication(this AuthenticationBuilder builder, string authenticationScheme, Action<TestAuthenticationSchemeOptions>? options)
         {
             builder.Services.AddOptions<TestAuthenticationSchemeOptions>(authenticationScheme);
             return builder.AddScheme<TestAuthenticationSchemeOptions, TestAuthenticationHandler>(authenticationScheme, authenticationScheme, options);
-
         }
     }
 }

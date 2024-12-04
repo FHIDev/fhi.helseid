@@ -31,6 +31,7 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework
                     config.AddConfiguration(Configuration);
                 });
             }
+
             builder.ConfigureTestServices(ServiceCollection.Invoke);
         }
     }

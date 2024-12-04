@@ -4,10 +4,10 @@ namespace Fhi.HelseId.Web
 {
     public interface IRedirectPagesKonfigurasjon
     {
-        string Forbidden { get;  }
-        string LoggedOut { get;  }
-        string Error { get;  }
-        string Statuscode { get;  }
+        string Forbidden { get; }
+        string LoggedOut { get; }
+        string Error { get; }
+        string Statuscode { get; }
     }
 
     /// <summary>
