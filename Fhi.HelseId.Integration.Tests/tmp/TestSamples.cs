@@ -19,6 +19,12 @@ namespace Fhi.HelseId.Integration.Tests.tmp
 
             var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
             {
+                services.AddAuthorization(options =>
+                {
+                    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                });
                 services.AddHelseIdWebAuthentication(testConfiguration).Build();
             }, app =>
             {
@@ -27,7 +33,7 @@ namespace Fhi.HelseId.Integration.Tests.tmp
                 app.UseAuthorization();
                 app.UseEndpoints(endpoints =>
                 {
-                    endpoints.MapGet("/api/test", [Authorize] () => "Hello world!");
+                    endpoints.MapGet("/api/test", () => "Hello world!");
 
                 });
                 app.UseHttpsRedirection();
@@ -36,7 +42,7 @@ namespace Fhi.HelseId.Integration.Tests.tmp
             var client = appFactory.CreateClient();
             var response = await client.GetAsync("/api/test");
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
         }
 
         [Test]
@@ -83,6 +89,12 @@ namespace Fhi.HelseId.Integration.Tests.tmp
             var builder = WebApplication.CreateBuilder(new string[] { });
             builder.WebHost.UseTestServer();
             builder.Configuration.AddConfiguration(testConfiguration);
+            builder.Services.AddAuthorization(options =>
+            {
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+            });
             builder.AddHelseIdWebAuthentication().Build();
 
             var app = builder.Build();
