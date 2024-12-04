@@ -1,7 +1,7 @@
-﻿using Fhi.HelseId.Common.DPoP;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.DPoP;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Fhi.HelseId.Api.DPoP;
 

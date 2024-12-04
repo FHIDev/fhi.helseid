@@ -7,12 +7,10 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT;
 /// </summary>
 internal static class TTTTokenRequests
 {
-
     internal static TokenRequest DefaultToken(string audience = "fhi:api-name")
     {
         return DefaultToken(["fhi:scope"], audience: audience);
     }
-
 
     internal static TokenRequest DefaultToken(
         ICollection<string> scopes,
@@ -36,7 +34,6 @@ internal static class TTTTokenRequests
         return tokenRequest;
     }
 
-
     internal static TokenRequest InvalidApiScopeToken(this TokenRequest tokenRequest)
     {
         tokenRequest.GeneralClaimsParameters = new GeneralClaimsParameters(["fhi:helseid.testing.api/some"], default, default, default, default, default, null, default, default, default, default, default, default);
@@ -54,5 +51,4 @@ internal static class TTTTokenRequests
         tokenRequest.SetInvalidIssuer = true;
         return tokenRequest;
     }
-
 }

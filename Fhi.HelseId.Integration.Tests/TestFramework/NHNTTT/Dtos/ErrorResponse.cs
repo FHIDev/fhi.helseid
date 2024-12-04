@@ -3,7 +3,5 @@
     internal record ErrorResponse
     {
         public string? ErrorMessage { get; set; }
-
     }
-
 }

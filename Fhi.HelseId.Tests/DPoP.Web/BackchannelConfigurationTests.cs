@@ -1,20 +1,20 @@
-﻿using Fhi.HelseId.Common.Identity;
+﻿using System.Net.Http;
+using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.DPoP;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using NUnit.Framework;
-using System.Net.Http;
 
 namespace Fhi.HelseId.Tests.DPoP.Web;
 
 public class BackchannelConfigurationTests
 {
-    private BackchannelHandler _backchannelHandler;
-    private BackchannelConfiguration _backchannelConfiguration;
-    private OpenIdConnectOptions _options;
-    private IHttpContextAccessor _httpContextAccessor;
-    private IDPoPTokenCreator _tokenHelper;
+    private BackchannelHandler _backchannelHandler = null!;
+    private BackchannelConfiguration _backchannelConfiguration = null!;
+    private OpenIdConnectOptions _options = null!;
+    private IHttpContextAccessor _httpContextAccessor = null!;
+    private IDPoPTokenCreator _tokenHelper = null!;
 
     [SetUp]
     public void SetUp()
@@ -89,5 +89,4 @@ public class BackchannelConfigurationTests
         Assert.That(_backchannelHandler.InnerHandler, Is.Null);
         Assert.That(_options.BackchannelHttpHandler, Is.Null);
     }
-
 }

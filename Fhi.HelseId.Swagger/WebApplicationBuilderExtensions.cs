@@ -6,7 +6,7 @@ namespace Fhi.HelseId.Swagger;
 public static class WebApplicationBuilderExtensions
 {
     /// <summary>
-    /// 
+    /// TODO
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="swaggerAuthConfig"></param>

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
+﻿namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
 {
     internal enum InvalidDPoPProofParameters
     {
-
         [System.Runtime.Serialization.EnumMember(Value = @"0")]
         _0___None = 0,
 
@@ -47,7 +40,5 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
 
         [System.Runtime.Serialization.EnumMember(Value = @"12")]
         _12___SetAnInvalidSignature = 12,
-
     }
-
 }

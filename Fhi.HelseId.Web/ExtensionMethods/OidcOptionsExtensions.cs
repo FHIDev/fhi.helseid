@@ -1,6 +1,6 @@
-﻿using Fhi.HelseId.Web.DPoP;
+﻿using System.Threading.Tasks;
+using Fhi.HelseId.Web.DPoP;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.ExtensionMethods;
 

@@ -32,5 +32,4 @@
             Result = result;
         }
     }
-
 }

@@ -19,7 +19,5 @@
             get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
-
     }
-
 }

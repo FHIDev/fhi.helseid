@@ -11,9 +11,9 @@ namespace Fhi.HelseId.Blazor
         /// </summary>
         /// <param name="name">Client name. Not needed for default HttpClientHandler, but might be used in a custom httpClientHandlerBuilder.</param>
         /// <param name="provider">The scoped service provider to create handlers from.</param>
-        /// <param name="DelegationHandlers">A list of handlers to use for the client.</param>
+        /// <param name="delegationHandlers">A list of handlers to use for the client.</param>
         /// <returns></returns>
-        HttpClient CreateHttpClient(string name, IServiceProvider provider, List<Type> DelegationHandlers);
+        HttpClient CreateHttpClient(string name, IServiceProvider provider, List<Type> delegationHandlers);
     }
 
     public class ScopedHttpClientFactory : IScopedHttpClientFactory
@@ -22,7 +22,7 @@ namespace Fhi.HelseId.Blazor
         private readonly bool disposeHandlers;
 
         /// <summary>
-        /// HttpClientFactory for creating scoped HttpClients with a list of delegation handlers. 
+        /// HttpClientFactory for creating scoped HttpClients with a list of delegation handlers.
         /// </summary>
         /// <param name="disposeHandlers">Set a http client handler builder to be used for creating transient clients</param>
         /// <param name="httpClientHandlerBuilder">true if the inner handler should be disposed of by HttpClient.Dispose; if you intend to reuse the inner handler.</param>
@@ -32,16 +32,16 @@ namespace Fhi.HelseId.Blazor
             this.disposeHandlers = disposeHandlers;
         }
 
-        public HttpClient CreateHttpClient(string name, IServiceProvider provider, List<Type> DelegationHandlers)
+        public HttpClient CreateHttpClient(string name, IServiceProvider provider, List<Type> delegationHandlers)
         {
-            if (DelegationHandlers.Count == 0)
+            if (delegationHandlers.Count == 0)
             {
                 return new HttpClient();
             }
 
-            var mainHandler = (DelegatingHandler)provider.GetRequiredService(DelegationHandlers.First());
+            var mainHandler = (DelegatingHandler)provider.GetRequiredService(delegationHandlers.First());
             var outer = mainHandler;
-            foreach (var handlerType in DelegationHandlers.Skip(1))
+            foreach (var handlerType in delegationHandlers.Skip(1))
             {
                 if (outer.InnerHandler != null)
                 {

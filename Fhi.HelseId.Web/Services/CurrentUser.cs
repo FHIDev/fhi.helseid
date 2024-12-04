@@ -36,9 +36,10 @@ public class CurrentHttpUser : ICurrentUser
         var httpContext = httpContextAccessor.HttpContext
                 ?? throw new NoHttpContextException($"{nameof(CurrentHttpUser)}.ctor : No HttpContext found. This has to be called when there is a request");
         Id = httpContext.User.Claims.FirstOrDefault(x => x.Type == IdentityClaims.Pid)?.Value;
-        
+
         HprNummer = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprNummer)?.Value;
         var hprDetailsClaim = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimsPrincipalExtensions.HprDetails);
+
         // TODO: This is duplicated in UserByIdentity
         if (hprDetailsClaim != null)
         {
@@ -47,6 +48,7 @@ public class CurrentHttpUser : ICurrentUser
             {
                 throw new HprClaimMissingException("HprDetails claim missing or could not be deserialized.");
             }
+
             HprGodkjenninger = approvalResponse.Approvals
                 .SelectMany(approval => Kodekonstanter.KodeList
                     .Where(oid9060 => approval.Profession == oid9060.Value)).ToList();

@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 
 namespace Fhi.HelseId.Refit;
 
@@ -54,4 +54,3 @@ public class LoggingDelegationHandler : DelegatingHandler
         return Regex.Replace(sourceToAnonymize, "\\d{11}", "***********");
     }
 }
-

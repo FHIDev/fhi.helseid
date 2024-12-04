@@ -27,7 +27,7 @@ namespace Fhi.HelseId.Common.Middleware
             }
             catch (Exception ex)
             {
-                //SerilogUserInfoEnricher.EnrichWithUserInfo(context);
+                // SerilogUserInfoEnricher.EnrichWithUserInfo(context);
                 Logger.LogError(ex, "Unhandled exception");
                 throw;
             }

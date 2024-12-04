@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using Fhi.HelseId.Web.ExtensionMethods;
+﻿using Fhi.HelseId.Web.ExtensionMethods;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Tests
 {
@@ -16,4 +16,3 @@ namespace Fhi.HelseId.Tests
         }
     }
 }
-

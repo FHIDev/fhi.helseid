@@ -8,8 +8,8 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework
 {
     public class TestWebApplicationFactory : WebApplicationFactory<Program>
     {
-        private IConfiguration? _configuration { get; }
-        private Action<IServiceCollection> _serviceCollection { get; }
+        private IConfiguration? _configuration;
+        private Action<IServiceCollection> _serviceCollection;
 
         public TestWebApplicationFactory(IConfiguration configuration, Action<IServiceCollection> services)
         {
@@ -31,11 +31,8 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework
                     config.AddConfiguration(_configuration);
                 });
             }
+
             builder.ConfigureTestServices(_serviceCollection.Invoke);
         }
     }
 }
-
-
-
-

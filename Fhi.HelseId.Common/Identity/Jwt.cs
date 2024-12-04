@@ -1,12 +1,12 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 
 namespace Fhi.HelseId.Common.Identity
 {
@@ -151,7 +151,6 @@ namespace Fhi.HelseId.Common.Identity
 
         private static List<string> GenerateX5c(X509Certificate2 certificate)
         {
-
             var x5C = new List<string>();
 
             var chain = GetCertificateChain(certificate);
@@ -163,6 +162,7 @@ namespace Fhi.HelseId.Common.Identity
                     x5C.Add(x509Base64);
                 }
             }
+
             return x5C;
         }
 

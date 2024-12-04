@@ -45,6 +45,5 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
         public string? PatientsDepartmentId { get; set; }
 
         public string? PatientsDepartmentName { get; set; }
-
     }
 }

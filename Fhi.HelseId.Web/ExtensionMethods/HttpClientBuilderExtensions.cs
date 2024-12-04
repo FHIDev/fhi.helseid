@@ -23,9 +23,10 @@ public class HttpClientBuilder
     /// </summary>
     /// <param name="extra">Optional function which will be added for each api</param>
     /// <returns>WebApplicationBuilder</returns>
-    public WebApplicationBuilder AddApisUsingHttpClient(Func<IServiceCollection, IApiOutgoingKonfigurasjon,IServiceCollection>? extra = null)
+    public WebApplicationBuilder AddApisUsingHttpClient(Func<IServiceCollection, IApiOutgoingKonfigurasjon, IServiceCollection>? extra = null)
     {
         if (webConfig.AuthUse)
+        {
             foreach (var api in webConfig.Apis)
             {
                 builder.Services.AddHttpClient(api.Name, configureClient: client =>
@@ -34,8 +35,9 @@ public class HttpClientBuilder
                         client.Timeout = TimeSpan.FromMinutes(api.Timeout);
                     })
                     .AddHttpMessageHandler<AuthHeaderHandler>();
-                extra?.Invoke(builder.Services,api);
+                extra?.Invoke(builder.Services, api);
             }
+        }
         else
         {
             foreach (var api in webConfig.Apis)
@@ -45,12 +47,12 @@ public class HttpClientBuilder
                     client.BaseAddress = api.Uri;
                     client.Timeout = TimeSpan.FromMinutes(api.Timeout);
                 });
-                extra?.Invoke(builder.Services,api);
+                extra?.Invoke(builder.Services, api);
             }
         }
+
         return builder;
     }
-    
 }
 
 public static class Extensions
@@ -62,6 +64,6 @@ public static class Extensions
     /// <param name="builder"></param>
     /// <param name="extra">Optional function which will be added for each api</param>
     /// <returns>WebApplicationBuilder</returns>
-    public static WebApplicationBuilder AddApisUsingHttpClient(this WebApplicationBuilder builder, Func<IServiceCollection, IApiOutgoingKonfigurasjon, IServiceCollection>? extra = null) 
+    public static WebApplicationBuilder AddApisUsingHttpClient(this WebApplicationBuilder builder, Func<IServiceCollection, IApiOutgoingKonfigurasjon, IServiceCollection>? extra = null)
         => new HttpClientBuilder(builder).AddApisUsingHttpClient(extra);
 }

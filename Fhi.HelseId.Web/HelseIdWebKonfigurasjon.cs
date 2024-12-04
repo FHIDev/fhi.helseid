@@ -28,7 +28,6 @@ public interface IHelseIdWebKonfigurasjon : IHelseIdHprFeatures, IHelseIdClientK
     public bool UseDPoPTokens { get; }
 }
 
-
 public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKonfigurasjon
 {
     private bool _useHprNumber = false;
@@ -54,6 +53,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
             {
                 list.Add("helseid://scopes/hpr/hpr_number");
             }
+
             list.AddRange(base.FixedScopes);
             return list;
         }
@@ -70,6 +70,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
             {
                 IncludeHprNumber = value;
             }
+
             _useHprNumber = value;
         }
     }
@@ -84,6 +85,7 @@ public class HelseIdWebKonfigurasjon : HelseIdClientKonfigurasjon, IHelseIdWebKo
                 IncludeHprNumber = value;
                 RequireHprNumber = value;
             }
+
             _requireValidHprAuthorization = value;
         }
     }

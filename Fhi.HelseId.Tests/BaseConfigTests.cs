@@ -12,12 +12,11 @@ namespace Fhi.HelseId.Tests
         /// Call from SetUp in implementation class
         /// </summary>
         /// <param name="configfilename"></param>
-        public void Init(string configfilename= "appsettings.test.json")
+        public void Init(string configfilename = "appsettings.test.json")
         {
             ConfigFilename = configfilename;
             Config = GetIConfigurationRoot(TestContext.CurrentContext.TestDirectory);
         }
-
 
         public IConfigurationRoot GetIConfigurationRoot(string outputPath)
         {

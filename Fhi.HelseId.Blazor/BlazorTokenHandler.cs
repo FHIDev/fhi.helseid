@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Fhi.HelseId.Blazor;
 

@@ -56,7 +56,6 @@ public class WebApplicationBuilderExtensionsTests
         Assert.That(builder.Services, Has.Some.Matches<ServiceDescriptor>(sd => sd.ServiceType == typeof(SwaggerHelseIdConfiguration)));
     }
 
-
     [Test]
     public void SwaggerTokenServicesAreNotRegisteredForUnspecifiedEnvironments()
     {

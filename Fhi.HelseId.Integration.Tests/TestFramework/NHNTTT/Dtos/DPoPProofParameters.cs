@@ -9,6 +9,5 @@
         public string? PrivateKeyForProofCreation { get; set; }
 
         public InvalidDPoPProofParameters? InvalidDPoPProofParameters { get; set; }
-
     }
 }

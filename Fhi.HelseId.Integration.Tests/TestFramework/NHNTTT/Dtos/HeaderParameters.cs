@@ -3,7 +3,5 @@
     internal record HeaderParameters
     {
         public string? Typ { get; set; }
-
     }
-
 }

@@ -30,7 +30,7 @@ namespace Fhi.HelseId.Web.Handlers
                 return Task.CompletedTask;
             }
 
-            var securityLevelClaim = (context.User.FindFirst(c => c.Type.ToLowerInvariant() == IdentityClaims.SecurityLevel));
+            var securityLevelClaim = context.User.FindFirst(c => c.Type.ToLowerInvariant() == IdentityClaims.SecurityLevel);
 
             if (securityLevelClaim != null)
             {

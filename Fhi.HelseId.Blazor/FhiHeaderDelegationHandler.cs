@@ -24,4 +24,3 @@ public class FhiHeaderDelegationHandler : DelegatingHandler
         return base.SendAsync(request, cancellationToken);
     }
 }
-

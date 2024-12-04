@@ -7,7 +7,5 @@
         public int? ExpirationTimeInSeconds { get; set; }
 
         public int? ExpirationTimeInDays { get; set; }
-
     }
-
 }

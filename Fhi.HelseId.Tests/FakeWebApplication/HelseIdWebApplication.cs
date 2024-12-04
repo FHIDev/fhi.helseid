@@ -9,13 +9,14 @@ using NSubstitute;
 
 namespace Fhi.HelseId.Tests.FakeWebApplication
 {
-    public class HelseIdWebApplication<T> : WebApplicationFactory<T> where T : class
+    public class HelseIdWebApplication<T> : WebApplicationFactory<T>
+        where T : class
     {
-        public Dictionary<string, string?> _inMemory { get; set; }
+        public Dictionary<string, string?> InMemory { get; set; }
 
         public HelseIdWebApplication(Dictionary<string, string?> config)
         {
-            _inMemory = config;
+            InMemory = config;
         }
 
         protected override IHost CreateHost(IHostBuilder builder)
@@ -32,7 +33,7 @@ namespace Fhi.HelseId.Tests.FakeWebApplication
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            foreach (var keyValue in _inMemory)
+            foreach (var keyValue in InMemory)
             {
                 Environment.SetEnvironmentVariable(keyValue.Key, keyValue.Value);
             }

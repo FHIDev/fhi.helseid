@@ -15,8 +15,8 @@ namespace Fhi.HelseId.Tests
         [TestCase("vg:paper/read", false)]
         [TestCase("fhi:grunndata.personoppslagapi/whatever", false)]
         [TestCase("fhi:grunndata.personoppslagapi/all, fhi:grunndata.personoppslagapi/grunndata", true)]
-        [TestCase("fhi:grunndata.personoppslagapi/grunndata, fhi:grunndata.personoppslagapi/sysvak",true)]
-        public async Task AuthHandlerTest(string configScopes,bool expected)
+        [TestCase("fhi:grunndata.personoppslagapi/grunndata, fhi:grunndata.personoppslagapi/sysvak", true)]
+        public async Task AuthHandlerTest(string configScopes, bool expected)
         {
             var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {

@@ -47,5 +47,4 @@ internal static class TTTTokenService
         response.EnsureSuccessStatusCode();
         return responseString;
     }
-
 }

@@ -1,7 +1,7 @@
-﻿using Fhi.HelseId.Common.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Fhi.HelseId.Common.Identity;
 
 namespace Fhi.HelseId.Common.Configuration
 {

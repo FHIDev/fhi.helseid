@@ -12,7 +12,7 @@ namespace Fhi.HelseId.Web.DataProtection
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        public static void AddSqlDataProtection(this IServiceCollection services , IConfiguration configuration)
+        public static void AddSqlDataProtection(this IServiceCollection services, IConfiguration configuration)
         {
             var dataProtectionConfig = configuration.GetDataProtectionConfig();
             if (!dataProtectionConfig.Enabled)

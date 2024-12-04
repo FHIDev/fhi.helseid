@@ -1,5 +1,5 @@
-﻿using Fhi.HelseId.Web.Hpr.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Fhi.HelseId.Web.Hpr.Core;
 
 namespace Fhi.HelseId.Web.Hpr
 {
