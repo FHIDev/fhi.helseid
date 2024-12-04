@@ -1,9 +1,9 @@
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Blazor.Tests;
 

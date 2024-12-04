@@ -2,18 +2,18 @@
 // ReSharper disable InconsistentNaming
 namespace Fhi.HelseId.Web.Hpr.Core
 {
-
     public class OId9060
     {
         public string Description { get; }
 
         public string Value { get; }
-    
-        internal OId9060(string value,string description="")
+
+        internal OId9060(string value, string description = "")
         {
             Value = value;
             Description = description;
         }
+
         public override string ToString() => Value;
     }
 
@@ -31,7 +31,6 @@ namespace Fhi.HelseId.Web.Hpr.Core
         public const string IkkeSatt = "N/A";
         public const string UkjentOrgIdent = "-1";
 
-        
         public const string OId3101Mann = "1";
         public const string OId3101MannBeskrivelse = "Mann";
         public const string OId3101Kvinne = "2";
@@ -70,6 +69,5 @@ namespace Fhi.HelseId.Web.Hpr.Core
         public const string OId8116DufBeskrivelseUtvidet = "Database for utlendingsforvaltningen";
         public const string OId8116FhnBeskrivelse = "Felles hjelpenummer";
         public const string OId8116XxxBeskrivelse = "Annet";
-
     }
 }

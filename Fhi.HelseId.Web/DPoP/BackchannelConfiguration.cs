@@ -1,7 +1,7 @@
-﻿using Fhi.HelseId.Common.Identity;
+﻿using System.Net.Http;
+using Fhi.HelseId.Common.Identity;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Options;
-using System.Net.Http;
 
 namespace Fhi.HelseId.Web.DPoP;
 

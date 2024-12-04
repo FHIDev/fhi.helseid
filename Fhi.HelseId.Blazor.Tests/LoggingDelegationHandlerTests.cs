@@ -1,7 +1,7 @@
-using NUnit.Framework;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Blazor.Tests;
 
@@ -23,6 +23,5 @@ public class LoggingDelegationHandlerTests
 
         Assert.That(logger.Entries.Single(),
             Contains.Substring("with response 200 OK with CorrelationId TESTCORR"));
-
     }
 }

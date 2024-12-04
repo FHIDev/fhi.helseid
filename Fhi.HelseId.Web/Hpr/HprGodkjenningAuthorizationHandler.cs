@@ -1,9 +1,9 @@
-﻿using Fhi.HelseId.Common.Configuration;
+﻿using System.Threading.Tasks;
+using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Web.Hpr
 {
@@ -32,6 +32,7 @@ namespace Fhi.HelseId.Web.Hpr
                 context.Fail();
                 return Task.CompletedTask;
             }
+
             var hprNummer = currentUser.HprNumber();
             if (hprNummer == null)
             {
@@ -62,6 +63,7 @@ namespace Fhi.HelseId.Web.Hpr
                     context.Succeed(requirement);
                     return;
                 }
+
                 context.Fail();
             }
         }

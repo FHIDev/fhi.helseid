@@ -2,7 +2,6 @@
 using Fhi.HelseId.Common.Configuration;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Web.ExtensionMethods;
-using Fhi.HelseId.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
@@ -27,8 +26,8 @@ namespace Fhi.HelseId.Web.Hpr
         {
             var currentUser = context.User;
             var userlogName = currentUser.Name().ObfuscateName();
-            Logger.LogTrace("HprAuthorizationHandler: Checking {Name} with {PidPs}", userlogName,currentUser.PidPseudonym());
-            if (currentUser.HprNumber()==null && !whitelist.IsWhite(currentUser?.PidPseudonym() ?? ""))
+            Logger.LogTrace("HprAuthorizationHandler: Checking {Name} with {PidPs}", userlogName, currentUser.PidPseudonym());
+            if (currentUser.HprNumber() == null && !whitelist.IsWhite(currentUser?.PidPseudonym() ?? ""))
             {
                 Logger.LogWarning("HprAuthorizationHandler: Failed. No HprNumber");
                 context.Fail();

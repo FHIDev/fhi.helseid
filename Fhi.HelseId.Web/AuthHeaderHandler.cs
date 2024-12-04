@@ -17,7 +17,7 @@ namespace Fhi.HelseId.Common;
 
 /// <summary>
 /// This is to be used with either User or Client credentials
-/// See https://github.com/reactiveui/refit#bearer-authentication  
+/// See https://github.com/reactiveui/refit#bearer-authentication
 /// </summary>
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public class AuthHeaderHandler : DelegatingHandler
@@ -43,6 +43,7 @@ public class AuthHeaderHandler : DelegatingHandler
         _user = user;
         _authorizationHeaderSetter = authorizationHeaderSetter;
     }
+
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (request.Options.Any(x => x.Key == AnonymousOptionKey))

@@ -18,7 +18,7 @@ namespace Fhi.HelseId.Web.Infrastructure.AutomaticTokenManagement;
 public interface ITokenEndpointService
 {
     /// <summary>
-    /// Performs a request using the refresh_token grant type, normally trough a TokenClient using OpenID Connect / OAuth 2 
+    /// Performs a request using the refresh_token grant type, normally trough a TokenClient using OpenID Connect / OAuth 2
     /// </summary>
     /// <param name="refreshToken">An OIDC refresh token</param>
     /// <returns>Result of the refresh attempt</returns>
@@ -118,6 +118,7 @@ public class TokenEndpointService : ITokenEndpointService
 
             return _oidcOptions.Get(scheme.Name);
         }
+
         return _oidcOptions.Get(_managementOptions.Scheme);
     }
 }

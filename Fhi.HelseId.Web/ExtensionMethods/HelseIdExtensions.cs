@@ -26,6 +26,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             options.Cookie.IsEssential = true;
             options.Cookie.SecurePolicy = configAuth.UseHttps ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
             options.AccessDeniedPath = redirectPagesKonfigurasjon.Forbidden;
+
             // NOTE: options.Events must be set in AddAutomaticTokenManagement.
             // This is because it overrides the events set here.
         }
@@ -49,8 +50,9 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             options.CallbackPath = "/signin-callback";
             options.SignedOutCallbackPath = "/signout-callback";
             options.Scope.Clear();
-            //options.CorrelationCookie.SameSite = SameSiteMode.Lax;
-            //options.NonceCookie.SameSite = SameSiteMode.Lax;
+
+            //// options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+            //// options.NonceCookie.SameSite = SameSiteMode.Lax;
 
             if (configAuth.RequireHprNumber)
             {
@@ -62,11 +64,12 @@ namespace Fhi.HelseId.Web.ExtensionMethods
             {
                 options.Scope.Add(scope.Trim());
             }
+
             options.SaveTokens = true;
 
             options.Events.OnRedirectToIdentityProvider = ctx =>
             {
-                //API requests should get a 401 status instead of being redirected to login
+                // API requests should get a 401 status instead of being redirected to login
                 if (ctx.Request.Path.StartsWithSegments("/api"))
                 {
                     ctx.Response.Headers["Location"] = ctx.ProtocolMessage.CreateAuthenticationRequestUrl();
@@ -115,7 +118,6 @@ namespace Fhi.HelseId.Web.ExtensionMethods
 
             return options;
         }
-
 
         /// <summary>
         /// Setter default helse-id opsjoner for automatisk token management,parameter for refresh tid i minutter

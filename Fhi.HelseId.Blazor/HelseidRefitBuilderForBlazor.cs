@@ -1,8 +1,8 @@
-﻿using Fhi.HelseId.Web;
-using Refit;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Fhi.HelseId.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Refit;
 
 namespace Fhi.HelseId.Blazor
 {
@@ -45,14 +45,17 @@ namespace Fhi.HelseId.Blazor
             {
                 AddHandler<BlazorTokenHandler>();
             }
+
             if (this.builderOptions.HtmlEncodeFhiHeaders)
             {
                 AddHandler<FhiHeaderDelegationHandler>();
             }
+
             if (this.builderOptions.UseCorrelationId)
             {
                 AddHandler<CorrelationIdHandler>();
             }
+
             if (this.builderOptions.UseAnonymizationLogger)
             {
                 AddHandler<LoggingDelegationHandler>();
@@ -62,7 +65,8 @@ namespace Fhi.HelseId.Blazor
         /// <summary>
         /// Add delegating handlers to the Refit client. Also adds the handler to the service collection as Transient
         /// </summary>
-        public HelseidRefitBuilderForBlazor AddHandler<T>() where T : DelegatingHandler
+        public HelseidRefitBuilderForBlazor AddHandler<T>()
+            where T : DelegatingHandler
         {
             var type = typeof(T);
             if (!delegationHandlers.Any(x => x == type))
@@ -70,6 +74,7 @@ namespace Fhi.HelseId.Blazor
                 delegationHandlers.Add(type);
                 services.AddTransient<T>();
             }
+
             return this;
         }
 
@@ -80,7 +85,8 @@ namespace Fhi.HelseId.Blazor
         /// <param name="nameOfService">Name of the service that will serve the Refit Api</param>
         /// <param name="extra"></param>
         /// <returns></returns>
-        public HelseidRefitBuilderForBlazor AddRefitClient<T>(string? nameOfService = null, Func<HttpClient, HttpClient>? extra = null) where T : class
+        public HelseidRefitBuilderForBlazor AddRefitClient<T>(string? nameOfService = null, Func<HttpClient, HttpClient>? extra = null)
+            where T : class
         {
             var name = nameOfService ?? typeof(T).Name;
 

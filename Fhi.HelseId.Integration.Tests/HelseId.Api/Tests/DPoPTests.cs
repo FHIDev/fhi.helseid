@@ -1,19 +1,18 @@
+using System.Net;
+using System.Text.Json;
 using Fhi.ClientCredentialsKeypairs;
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
 using Fhi.HelseId.Integration.Tests.HelseId.Api.Setup;
 using Fhi.HelseId.Integration.Tests.TestFramework;
-using System.Net;
-using System.Text.Json;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
 /// <summary>
-/// Puropse of these tests is to verify that RequireDPoPTokens setting works as intended. It should not accept JWT access_token when DPoP is required. 
+/// Puropse of these tests is to verify that RequireDPoPTokens setting works as intended. It should not accept JWT access_token when DPoP is required.
 /// </summary>
-public class DPoPTests 
+public class DPoPTests
 {
-    
     [Test]
     public async Task ApiCallWithDpopToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
     {
@@ -28,8 +27,6 @@ public class DPoPTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         Assert.That(responseBody, Is.EqualTo("Hello world!"));
     }
-
-   
 
     [Test]
     public async Task ApiCallWithBearerToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
@@ -63,7 +60,7 @@ public class DPoPTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
 
-    private  static HttpClient CreateDirectHttpClient(HelseIdApiKonfigurasjon apiConfig, bool useDpop = true)
+    private static HttpClient CreateDirectHttpClient(HelseIdApiKonfigurasjon apiConfig, bool useDpop = true)
     {
         var configString = File.ReadAllText("HelseId.Api/Tests/Fhi.HelseId.Testing.Api.json");
         var config = JsonSerializer.Deserialize<ClientCredentialsConfiguration>(configString)

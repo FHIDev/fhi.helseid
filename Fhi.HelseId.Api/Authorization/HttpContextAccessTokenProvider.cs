@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using Fhi.HelseId.Api.ExtensionMethods;
 using Microsoft.AspNetCore.Http;
 
-// Code based on https://github.com/HelseID/HelseID.Samples/tree/master/HelseId.Core.BFF.Sample, originally written by Magnus Bjerke Vik 
-
+// Code based on https://github.com/HelseID/HelseID.Samples/tree/master/HelseId.Core.BFF.Sample, originally written by Magnus Bjerke Vik
 namespace Fhi.HelseId.Api.Authorization
 {
     public class HttpContextAccessTokenProvider : IAccessTokenProvider
@@ -21,6 +20,7 @@ namespace Fhi.HelseId.Api.Authorization
         {
             this.httpContextAccessor = httpContextAccessor;
         }
+
         public async Task<JwtSecurityToken?> GetAccessTokenAsJwtSecurityToken()
         {
             var accessToken = await GetAccessToken();

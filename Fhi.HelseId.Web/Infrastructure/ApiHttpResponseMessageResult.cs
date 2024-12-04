@@ -23,7 +23,7 @@ namespace Fhi.HelseId.Web.Infrastructure
 
         public async Task ExecuteResultAsync(ActionContext context)
         {
-            context.HttpContext.Response.StatusCode = (int) _responseMessage.StatusCode;
+            context.HttpContext.Response.StatusCode = (int)_responseMessage.StatusCode;
 
             TransformLocationHeaders(context.HttpContext.Response);
 

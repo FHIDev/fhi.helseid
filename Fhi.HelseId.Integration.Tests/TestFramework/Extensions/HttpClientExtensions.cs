@@ -8,8 +8,7 @@ namespace Fhi.TestFramework.Extensions
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
-                token
-            );
+                token);
 
             return client;
         }

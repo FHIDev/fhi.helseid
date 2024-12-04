@@ -47,5 +47,4 @@ internal static class TTTService
         response.EnsureSuccessStatusCode();
         return responseString;
     }
-
 }

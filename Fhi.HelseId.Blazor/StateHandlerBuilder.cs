@@ -6,21 +6,22 @@ namespace Fhi.HelseId.Blazor
     {
         public StateHandlerOptions Options;
 
-        private IServiceCollection Services;
+        private IServiceCollection _services;
 
         public StateHandlerBuilder(IServiceCollection services, StateHandlerOptions options)
         {
             Options = options;
-            Services = services;
+            _services = services;
 
             services.AddSingleton(Options);
             services.AddScoped<IStateHandler, StateHandler>();
         }
 
-        public StateHandlerBuilder AddScopedState<T>() where T : class, IScopedState
+        public StateHandlerBuilder AddScopedState<T>()
+            where T : class, IScopedState
         {
             Options.StateTypes.Add(typeof(T));
-            Services.AddScoped<T>();
+            _services.AddScoped<T>();
             return this;
         }
     }

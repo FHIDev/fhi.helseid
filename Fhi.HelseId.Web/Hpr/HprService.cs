@@ -78,7 +78,6 @@ namespace Fhi.HelseId.Web.Hpr
             return this;
         }
 
-
         public IHprService LeggTilAlleKategorier()
         {
             LeggTilGodkjenteHelsepersonellKategoriListe(Kodekonstanter.KodeList);

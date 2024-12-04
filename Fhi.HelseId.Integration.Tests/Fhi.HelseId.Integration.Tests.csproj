@@ -21,6 +21,10 @@
     <PackageReference Include="NUnit.Analyzers" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Fhi.ClientCredentialsKeypairs" />
+    <PackageReference Include="StyleCop.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <!-- Direct reference, System.Text.Json can be removed when transitive references are fixed. (8.0.4 was vulnerable) -->
     <PackageReference Include="System.Text.Json" /> 
   </ItemGroup>

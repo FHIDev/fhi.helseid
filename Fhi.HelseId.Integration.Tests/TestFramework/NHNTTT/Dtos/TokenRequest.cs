@@ -45,7 +45,5 @@
         public DPoPProofParameters? DPoPProofParameters { get; set; }
 
         public ICollection<ApiSpecificClaim>? ApiSpecificClaims { get; set; }
-
     }
-
 }

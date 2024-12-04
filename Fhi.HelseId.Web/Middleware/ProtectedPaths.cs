@@ -36,7 +36,7 @@ namespace Fhi.HelseId.Web.Middleware
         {
             var path = httpContext.Request.Path;
             _logger.LogTrace($"ProtectedPaths: Checking path: {path}");
-            
+
             /*
             * This check is important to ensure that incoming HTTP-calls are authorized for static files.
             * If the path to the static resource is not on the exclude list, it indicates that the user
@@ -55,7 +55,7 @@ namespace Fhi.HelseId.Web.Middleware
                     await _next(httpContext);
                     return;
                 }
-                
+
                 if (httpContext.User.Identity is not { IsAuthenticated: true })
                 {
                     var redirectUri = httpContext.Request.GetEncodedPathAndQuery();

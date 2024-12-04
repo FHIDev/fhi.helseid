@@ -62,10 +62,11 @@ public class AuthHeaderHandlerTests
         var claimsPrincipal = new ClaimsPrincipal();
         var authenticationProperties = new AuthenticationProperties();
         authenticationProperties.StoreTokens([new AuthenticationToken
-        {
-            Name = OpenIdConnectParameterNames.AccessToken,
-            Value = authToken
-        }]);
+            {
+                Name = OpenIdConnectParameterNames.AccessToken,
+                Value = authToken
+            }
+        ]);
         var authResult = AuthenticateResult.Success(new AuthenticationTicket(
             claimsPrincipal,
             authenticationProperties,
@@ -98,7 +99,7 @@ internal class DummyInnerHandler : HttpClientHandler
         // Get any auth header, and use its value as the content of the response
         var auth = request.Headers.FirstOrDefault(x => x.Key == "Authorization").Value?.FirstOrDefault() ?? "";
         var response = new HttpResponseMessage() { Content = new StringContent(auth) };
-        
+
         return Task.FromResult(response);
     }
 }

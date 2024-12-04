@@ -1,6 +1,4 @@
-﻿
-
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Fhi.TestFramework.Extensions

@@ -14,7 +14,7 @@ public static class JsonWebKeyExtensions
         var json = JsonSerializer.Serialize(key);
         var clonedKey = JsonSerializer.Deserialize<JsonWebKey>(json)!;
         clonedKey.Alg ??= "PS256";
-        
+
         return clonedKey;
     }
 }

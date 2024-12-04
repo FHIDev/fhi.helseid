@@ -1,20 +1,20 @@
-﻿using Fhi.HelseId.Web.DPoP;
-using Microsoft.AspNetCore.Http;
-using NSubstitute;
-using NUnit.Framework;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Fhi.HelseId.Web.DPoP;
+using Microsoft.AspNetCore.Http;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Tests.DPoP.Web;
 
 internal class BackchannelHandlerTests
 {
-    private IHttpContextAccessor _httpContextAccessor;
-    private IDPoPTokenCreator _tokenHelper;
-    private HttpRequestMessage _request;
-    private DefaultHttpContext _context;
+    private IHttpContextAccessor _httpContextAccessor = null!;
+    private IDPoPTokenCreator _tokenHelper = null!;
+    private HttpRequestMessage _request = null!;
+    private DefaultHttpContext _context = null!;
 
     [SetUp]
     public void SetUp()
@@ -77,6 +77,6 @@ public class TestableBackchannelHandler : BackchannelHandler
     // Public method to expose the protected SendAsync for testing purposes
     public async Task<HttpResponseMessage> SendTestAsync(HttpRequestMessage request)
     {
-        return await base.SendAsync(request, CancellationToken.None);
+        return await SendAsync(request, CancellationToken.None);
     }
 }

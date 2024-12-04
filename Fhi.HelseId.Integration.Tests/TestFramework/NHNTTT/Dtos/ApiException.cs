@@ -18,5 +18,4 @@
     {
         public TResult Result { get; private set; } = result;
     }
-
 }

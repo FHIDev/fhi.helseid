@@ -29,6 +29,5 @@
         public string? Subject { get; set; }
 
         public string? Sid { get; set; }
-
     }
 }

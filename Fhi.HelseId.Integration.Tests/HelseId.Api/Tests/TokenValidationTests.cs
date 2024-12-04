@@ -1,3 +1,4 @@
+using System.Net;
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
 using Fhi.HelseId.Integration.Tests.TestFramework;
@@ -7,9 +8,8 @@ using System.Net;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
-public class TokenValidationTests 
+public class TokenValidationTests
 {
-
     private static readonly HelseIdApiKonfigurasjon HelseIdConfig = new()
     {
         Authority = "https://helseid-sts.test.nhn.no/",
@@ -31,7 +31,7 @@ public class TokenValidationTests
     {
         var testToken = await TTTService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken().ExpiredToken());
         using var client = Factory.CreateClient().AddBearerAuthorizationHeader(testToken);
-        
+
         var response = await client.GetAsync("api/test");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
@@ -51,7 +51,6 @@ public class TokenValidationTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
         var authHeader = response.Headers.WwwAuthenticate.FirstOrDefault();
         Assert.That(authHeader?.Parameter, Contains.Substring("error=\"invalid_token\", error_description=\"The signature key was not found\""));
-
     }
 
     [Test]
@@ -59,11 +58,9 @@ public class TokenValidationTests
     {
         var testToken = await TTTService.GetHelseIdToken(TTTTokenRequests.DefaultAccessToken().InvalidIssuer());
         using var client = Factory.CreateClient().AddBearerAuthorizationHeader(testToken);
-        
+
         var response = await client.GetAsync("api/test");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
-
-    
 }

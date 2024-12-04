@@ -39,8 +39,7 @@ namespace Fhi.HelseId.Common.Middleware
     {
         public static IApplicationBuilder UseRedirectOnException(
             this IApplicationBuilder builder,
-            string redirectPage
-        )
+            string redirectPage)
         {
             return builder.UseMiddleware<RedirectOnExceptionMiddleware>(redirectPage);
         }

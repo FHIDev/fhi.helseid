@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-
 namespace Fhi.HelseId.Api.ExtensionMethods;
 
 public static class ServiceCollectionExtensions
@@ -57,8 +56,6 @@ public static class ServiceCollectionExtensions
         }
     }
 
-        
-
     /// <summary>
     /// Use this for either User or Client credentials
     /// </summary>
@@ -77,12 +74,11 @@ public static class ServiceCollectionExtensions
         return true;
     }
 
-       
     /// <summary>
     /// Use this for Apis that need to send access tokens onwards
     /// Default UseAuth, but can be set to false using the useAuth parameter
     /// </summary>
-    public static IServiceCollection AddHelseIdAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<ApiOutgoingKonfigurasjon> apis,bool useAuth=true)
+    public static IServiceCollection AddHelseIdAuthenticationServicesForApis(this IServiceCollection services, IEnumerable<ApiOutgoingKonfigurasjon> apis, bool useAuth = true)
     {
         services.AddScoped<AuthHeaderHandlerForApi>();
         foreach (var api in apis)
@@ -92,6 +88,7 @@ public static class ServiceCollectionExtensions
             else
                 AddHelseIdApiServicesNoAuth(services, api);
         }
+
         return services;
     }
 

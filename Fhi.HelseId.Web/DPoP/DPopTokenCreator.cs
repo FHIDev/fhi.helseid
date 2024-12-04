@@ -15,7 +15,6 @@ public interface IDPoPTokenCreator
 {
     Task<string> CreateSignedToken(HttpMethod method, string url, string? nonce = null, string? ath = null);
     Task<int> DoStuffAsync(HttpMethod methodm, string? param = null, string? param2 = null);
-
 }
 
 public class DPoPTokenCreator(

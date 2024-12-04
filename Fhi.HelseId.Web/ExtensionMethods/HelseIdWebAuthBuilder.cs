@@ -27,7 +27,7 @@ namespace Fhi.HelseId.Web.ExtensionMethods;
 public class HelseIdWebAuthBuilder
 {
     private readonly IServiceCollection _services;
-    private IConfiguration _configuration { get; }
+    private IConfiguration Configuration { get; }
     private readonly IConfigurationSection _helseIdWebKonfigurasjonSection;
     public IHelseIdWebKonfigurasjon HelseIdWebKonfigurasjon { get; }
     public RedirectPagesKonfigurasjon RedirectPagesKonfigurasjon { get; }
@@ -42,8 +42,8 @@ public class HelseIdWebAuthBuilder
     public HelseIdWebAuthBuilder(IConfiguration configuration, IServiceCollection services)
     {
         _services = services;
-        _configuration = configuration;
-        _helseIdWebKonfigurasjonSection = _configuration.GetSection(nameof(HelseIdWebKonfigurasjon));
+        Configuration = configuration;
+        _helseIdWebKonfigurasjonSection = Configuration.GetSection(nameof(HelseIdWebKonfigurasjon));
         if (_helseIdWebKonfigurasjonSection == null)
             throw new MissingConfigurationException($"Missing required configuration section {nameof(HelseIdWebKonfigurasjon)}");
         var helseIdWebKonfigurasjon = _helseIdWebKonfigurasjonSection.Get<HelseIdWebKonfigurasjon>();
@@ -109,6 +109,7 @@ public class HelseIdWebAuthBuilder
             _services.AddAuthentication("NoAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, NoAuthenticationHandler>("NoAuthentication", null);
         }
+
         _services.AddScoped<ICurrentUser, CurrentHttpUser>();
         _services.AddSingleton(HelseIdWebKonfigurasjon);
         _services.Configure<HelseIdWebKonfigurasjon>(_helseIdWebKonfigurasjonSection);
@@ -126,7 +127,7 @@ public class HelseIdWebAuthBuilder
     {
         MvcBuilder = _services.AddControllers(config =>
         {
-            //Unsure about this
+            // TODO: Unsure about this
             if (HelseIdWebKonfigurasjon.AuthUse && authorizeFilter is not null)
             {
                 config.Filters.Add(authorizeFilter!);
@@ -237,7 +238,7 @@ public class HelseIdWebAuthBuilder
     }
 
     /// <summary>
-    /// Add this to the app section, used to trigger the authentication login process for files and endpoints that are otherwise not protected. Enable this by setting UseProtectedPaths. 
+    /// Add this to the app section, used to trigger the authentication login process for files and endpoints that are otherwise not protected. Enable this by setting UseProtectedPaths.
     /// </summary>
     /// <param name="app"></param>
     /// <param name="excludeList"></param>
@@ -336,14 +337,14 @@ public class HelseIdWebAuthBuilder
 
     /// <summary>
     /// Determine the preceding policy from configuration.
-    /// Will return the most "restrictive" policy configured, or 
+    /// Will return the most "restrictive" policy configured, or
     /// Policies.HidOrApi if no policies are configured.
     /// </summary>
     /// <returns></returns>
     private string DeterminePrecedingPolicy()
         => new[]
             {
-                new { PolicyActive = HelseIdWebKonfigurasjon.RequireHprNumber && HelseIdWebKonfigurasjon.RequireValidHprAuthorization, Policy = Policies.GodkjentHprKategoriPolicy},
+                new { PolicyActive = HelseIdWebKonfigurasjon.RequireHprNumber && HelseIdWebKonfigurasjon.RequireValidHprAuthorization, Policy = Policies.GodkjentHprKategoriPolicy },
                 new { PolicyActive = HelseIdWebKonfigurasjon.RequireHprNumber, Policy = Policies.HprNummer },
                 new { PolicyActive = true, Policy = Policies.HidOrApi },
                 new { PolicyActive = true, Policy = Policies./*Hid*/Authenticated }

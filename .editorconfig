@@ -1,15 +1,117 @@
-; Top-most EditorConfig file
+# Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
 [*.cs]
 indent_style = space
 indent_size = 4
-
-
-[*.cs]
 dotnet_diagnostic.CS1591.severity = none
 dotnet_sort_system_directives_first = true
+end_of_line = crlf
 
-[*.yml]
+[*.{csproj,props,xml,yml}]
 indent_style = space
-indent_size = 2  
+indent_size = 2
+
+### StyleCop.Analyzers ###
+[*.cs]
+# SA1101: Prefix local calls with this
+dotnet_diagnostic.SA1101.severity = none
+
+# SA1116: The parameters should all be placed on the same line or each parameter should be placed on its own line
+dotnet_diagnostic.SA1116.severity = suggestion
+
+# SA1117: The parameters should begin on the line after the declaration, whenever the parameter span across multiple lines
+dotnet_diagnostic.SA1117.severity = suggestion
+
+# SA1122: Use string.Empty for empty strings
+dotnet_diagnostic.SA1122.severity = none
+
+# SA1128: Put constructor initializers on their own line
+dotnet_diagnostic.SA1128.severity = none
+
+# SA1200: Using directive should appear within a namespace declaration
+dotnet_diagnostic.SA1200.severity = none
+
+# SA1201: A constructor should not follow a method
+dotnet_diagnostic.SA1201.severity = none
+
+# SA1202: 'protected' members should come before 'private' members
+dotnet_diagnostic.SA1202.severity = suggestion
+
+# SA1203: 'public' members should come before 'private' members
+dotnet_diagnostic.SA1203.severity = suggestion
+
+# SA1204: Static members should appear before non-static members
+dotnet_diagnostic.SA1204.severity = suggestion
+
+# SA1306: The name of a field in C# does not begin with a lower-case letter
+dotnet_diagnostic.SA1306.severity = suggestion
+
+# SA1309: A field name in C# begins with an underscore
+dotnet_diagnostic.SA1309.severity = none
+
+# SA1310: A field name in C# contains an underscore
+dotnet_diagnostic.SA1310.severity = suggestion
+
+# SA1401: Field should be private
+dotnet_diagnostic.SA1401.severity = suggestion
+
+# SA1402: File may only contain a single type
+dotnet_diagnostic.SA1402.severity = suggestion
+
+# SA1413: Use trailing comma in multi-line initializers
+dotnet_diagnostic.SA1413.severity = none
+
+# SA1502: Element should not be on a single line
+dotnet_diagnostic.SA1502.severity = none
+
+# SA1503: Braces should not be omitted
+dotnet_diagnostic.SA1503.severity = suggestion
+
+# SA1518: File may not end with a newline character
+dotnet_diagnostic.SA1518.severity = suggestion
+
+# SA1516: Elements should be separated by blank line
+dotnet_diagnostic.SA1516.severity = none
+
+# SA1520: Use braces consistently
+dotnet_diagnostic.SA1520.severity = suggestion
+
+# SA1611: A C# method, constructor, delegate or indexer element is missing documentation for one or more of its parameters
+dotnet_diagnostic.SA1611.severity = suggestion
+
+# SA1600: Elements should be documented
+dotnet_diagnostic.SA1600.severity = suggestion
+
+# SA1601: Partial elements should be documented
+dotnet_diagnostic.SA1601.severity = suggestion
+
+# SA1602: Enumeration items should be documented
+dotnet_diagnostic.SA1602.severity = suggestion
+
+# SA1614: Element parameter documentation should have text
+dotnet_diagnostic.SA1614.severity = suggestion
+
+# SA1615: Element return value should be documented
+dotnet_diagnostic.SA1615.severity = suggestion
+
+# SA1616: Element return value documentation should have text
+dotnet_diagnostic.SA1616.severity = suggestion
+
+# SA1618: The documentation for type parameter 'T' is missing
+dotnet_diagnostic.SA1618.severity = suggestion
+
+# SA1623: The property's documentation summary text should begin with: 'Gets or sets'
+dotnet_diagnostic.SA1623.severity = none
+
+# SA1629: Documentation text should end with a period
+dotnet_diagnostic.SA1629.severity = suggestion
+
+# SA1633: Code should not contain multiple blank lines in a row
+dotnet_diagnostic.SA1633.severity = none
+
+# SA1642: Constructor summary documentation should begin with standard text
+dotnet_diagnostic.SA1642.severity = none
+
+# SA1649: File name should match first type name
+dotnet_diagnostic.SA1649.severity = none

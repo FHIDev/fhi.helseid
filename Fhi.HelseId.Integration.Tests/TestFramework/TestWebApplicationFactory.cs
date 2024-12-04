@@ -35,7 +35,3 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework
         }
     }
 }
-
-
-
-

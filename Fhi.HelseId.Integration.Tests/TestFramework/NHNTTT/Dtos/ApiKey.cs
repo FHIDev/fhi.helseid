@@ -5,7 +5,5 @@
         public string? Key { get; set; }
 
         public string? OwnerId { get; set; }
-
     }
-
 }
