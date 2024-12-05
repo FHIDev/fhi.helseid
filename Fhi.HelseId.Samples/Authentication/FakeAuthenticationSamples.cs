@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Fhi.HelseId.Common.Identity;
 using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.HelseId.Web;
