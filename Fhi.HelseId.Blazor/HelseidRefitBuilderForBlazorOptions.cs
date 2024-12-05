@@ -12,7 +12,7 @@
         public bool UseDefaultTokenHandler { get; set; } = true;
 
         /// <summary>
-        /// Adds propagation and handling of correlation ids to all Refit-Requests. 
+        /// Adds propagation and handling of correlation ids to all Refit-Requests.
         /// Remember to add "app.UseCorrelationId()" in your startup code.
         /// </summary>
         public bool UseCorrelationId { get; set; } = true;
@@ -31,7 +31,7 @@
         public bool UseAnonymizationLogger { get; set; } = true;
 
         /// <summary>
-        /// Function for retrieving a correlation id 
+        /// Function for retrieving a correlation id
         /// </summary>
         public Func<IServiceProvider, string>? CustomCorrelationIdFunc { get; set; }
 

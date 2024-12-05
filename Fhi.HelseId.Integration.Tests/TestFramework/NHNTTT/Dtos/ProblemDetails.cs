@@ -1,4 +1,4 @@
-﻿namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
+﻿namespace Fhi.TestFramework.NHNTTT.Dtos
 {
     internal record ProblemDetails
     {
@@ -19,7 +19,5 @@
             get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
-
     }
-
 }

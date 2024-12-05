@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Fhi.HelseId.Web;
 
 public class ConfigurationException(string message) : Exception(message);
-
 
 public class InvalidAzureKeyVaultSettingsException() : Exception(StandardMessage)
 {
@@ -13,15 +11,7 @@ public class InvalidAzureKeyVaultSettingsException() : Exception(StandardMessage
 
 public class InvalidApiNameException : Exception
 {
-    //
-    // For guidelines regarding the creation of new exception types, see
-    //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
-    // and
-    //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
-    //
-
     public InvalidApiNameException() { }
     public InvalidApiNameException(string message) : base(message) { }
     public InvalidApiNameException(string message, Exception inner) : base(message, inner) { }
-
 }

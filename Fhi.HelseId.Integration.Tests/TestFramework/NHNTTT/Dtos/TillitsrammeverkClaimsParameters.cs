@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
+﻿namespace Fhi.TestFramework.NHNTTT.Dtos
 {
     internal record TillitsrammeverkClaimsParameters
     {
@@ -45,6 +39,5 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
         public string? PatientsDepartmentId { get; set; }
 
         public string? PatientsDepartmentName { get; set; }
-
     }
 }

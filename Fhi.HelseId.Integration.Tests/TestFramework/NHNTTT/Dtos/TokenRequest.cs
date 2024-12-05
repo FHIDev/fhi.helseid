@@ -1,13 +1,8 @@
-﻿namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
+﻿namespace Fhi.TestFramework.NHNTTT.Dtos
 {
-    internal class TokenRequest
+    internal class TokenRequest(string audience)
     {
-        public TokenRequest(string audience)
-        {
-            Audience = audience;
-        }
-
-        public string? Audience { get; set; }
+        public string? Audience { get; set; } = audience;
 
         public ParametersGeneration? ClientClaimsParametersGeneration { get; set; }
 
@@ -50,7 +45,5 @@
         public DPoPProofParameters? DPoPProofParameters { get; set; }
 
         public ICollection<ApiSpecificClaim>? ApiSpecificClaims { get; set; }
-
     }
-
 }

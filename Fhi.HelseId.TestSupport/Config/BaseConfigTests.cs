@@ -25,4 +25,3 @@ namespace Fhi.HelseId.TestSupport.Config
         }
     }
 }
-

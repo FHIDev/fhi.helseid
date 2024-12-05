@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Fhi.HelseId.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Fhi.HelseId.Web.Services;
 
 namespace Fhi.AuthControllers
 {
-
     [Route("User")]
     [ApiController]
     [AllowAnonymous]
@@ -19,7 +18,7 @@ namespace Fhi.AuthControllers
             this.logger = logger;
             this.currentUser = currentUser;
         }
-        
+
         [HttpGet]
         public ActionResult<ICurrentUser> GetUser()
         {

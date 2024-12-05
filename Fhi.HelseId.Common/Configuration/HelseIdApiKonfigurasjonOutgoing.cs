@@ -2,7 +2,6 @@
 
 namespace Fhi.HelseId.Common.Configuration;
 
-
 public interface IApiOutgoingKonfigurasjon
 {
     string Name { get; set; }
@@ -16,7 +15,7 @@ public interface IApiOutgoingKonfigurasjon
     /// <summary>
     /// Default 10 minutes
     /// </summary>
-    int Timeout { get; set; }
+    int Timeout { get; set; } // TODO: How is this default 10 minutes?
 }
 
 /// <summary>

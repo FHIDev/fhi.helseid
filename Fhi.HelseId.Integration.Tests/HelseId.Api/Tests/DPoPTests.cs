@@ -1,27 +1,24 @@
+using System.Net;
+using System.Text.Json;
 using Fhi.ClientCredentialsKeypairs;
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
-using Fhi.HelseId.Integration.Tests.Extensions;
 using Fhi.HelseId.Integration.Tests.HelseId.Api.Setup;
 using Fhi.HelseId.Integration.Tests.TestFramework;
-using System.Net;
-using System.Text.Json;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
 /// <summary>
-/// Puropse of these tests is to verify that RequireDPoPTokens setting works as intended. It should not accept JWT access_token when DPoP is required. 
+/// Puropse of these tests is to verify that RequireDPoPTokens setting works as intended. It should not accept JWT access_token when DPoP is required.
 /// </summary>
-public class DPoPTests 
+public class DPoPTests
 {
     [Test]
     public async Task ApiCallWithDpopToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
     {
-        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(
-            allowDPoPTokens: true, 
-            requireDPoPTokens: false,
-            audience: "fhi:helseid.testing.api",
-            allowedScopes: "fhi:helseid.testing.api/all");
+        var config = CreateConfig()
+            .WithAllowDPoPTokens(true)
+            .WithRequireDPoPTokens(false);
 
         var client = CreateDirectHttpClient(config, useDpop: true);
         var response = await client.GetAsync("api/test");
@@ -34,11 +31,9 @@ public class DPoPTests
     [Test]
     public async Task ApiCallWithBearerToken_ApiAcceptsBothDpopAndBearer_Returns200Ok()
     {
-        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(
-            allowDPoPTokens: true, 
-            requireDPoPTokens: false,
-            audience: "fhi:helseid.testing.api",
-            allowedScopes: "fhi:helseid.testing.api/all");
+        var config = CreateConfig()
+            .WithAllowDPoPTokens(true)
+            .WithRequireDPoPTokens(false);
 
         using var client = CreateDirectHttpClient(config, useDpop: false);
         var response = await client.GetAsync("api/test");
@@ -55,11 +50,9 @@ public class DPoPTests
     [Test]
     public async Task ApiCallWithBearerToken_ApiAcceptsOnlyDPoP_THEN_Returns401()
     {
-        var config = HelseIdApiKonfigurasjonExtensions.CreateHelseIdApiKonfigurasjon(
-            allowDPoPTokens: true, 
-            requireDPoPTokens: true,
-            audience: "fhi:helseid.testing.api",
-            allowedScopes: "fhi:helseid.testing.api/all");
+        var config = CreateConfig()
+            .WithAllowDPoPTokens(true)
+            .WithRequireDPoPTokens(true);
 
         using var client = CreateDirectHttpClient(config, useDpop: false);
         var response = await client.GetAsync("api/test");
@@ -67,7 +60,7 @@ public class DPoPTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
 
-    private  static HttpClient CreateDirectHttpClient(HelseIdApiKonfigurasjon apiConfig, bool useDpop = true)
+    private static HttpClient CreateDirectHttpClient(HelseIdApiKonfigurasjon apiConfig, bool useDpop = true)
     {
         var configString = File.ReadAllText("HelseId.Api/Tests/Fhi.HelseId.Testing.Api.json");
         var config = JsonSerializer.Deserialize<ClientCredentialsConfiguration>(configString)
@@ -96,4 +89,18 @@ public class DPoPTests
         return authHandler;
     }
 
+    /// <summary>
+    /// Create HelseId with values required by all clients.
+    /// The CreateDirectHttpClient creates token by TTT with fhi:helseid.testing.api scope so audience and allowed.
+    /// scope must be set to not get 401 with invalid_token
+    /// </summary>
+    /// <returns></returns>
+    private static HelseIdApiKonfigurasjon CreateConfig()
+    {
+        var audienceSetInTTTgeneratedToken = "fhi:helseid.testing.api";
+        var scopeSetInTTTgeneratedToken = "fhi:helseid.testing.api/all";
+
+        return HelseIdApiKonfigurasjonBuilder.Create
+                    .DefaultValues(audience: audienceSetInTTTgeneratedToken, allowedScopes: scopeSetInTTTgeneratedToken);
+    }
 }

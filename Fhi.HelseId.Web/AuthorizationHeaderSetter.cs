@@ -1,8 +1,8 @@
-﻿using Fhi.HelseId.Common.DPoP;
-using Fhi.HelseId.Web.DPoP;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Fhi.HelseId.Common.DPoP;
+using Fhi.HelseId.Web.DPoP;
 
 namespace Fhi.HelseId.Web;
 

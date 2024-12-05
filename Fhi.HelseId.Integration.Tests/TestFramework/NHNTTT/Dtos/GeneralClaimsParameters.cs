@@ -1,4 +1,4 @@
-﻿namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
+﻿namespace Fhi.TestFramework.NHNTTT.Dtos
 {
     internal record GeneralClaimsParameters(ICollection<string> Scope,
         string? ClientId,
@@ -14,10 +14,8 @@
         string? CnfJkt,
         string? CnfPublicKey)
     {
-        internal GeneralClaimsParameters(ICollection<string> Scope) : this(Scope, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, null, null, null, string.Empty, string.Empty, string.Empty, string.Empty)
+        internal GeneralClaimsParameters(ICollection<string> scope) : this(scope, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, null, null, null, string.Empty, string.Empty, string.Empty, string.Empty)
         {
-
         }
     }
-
 }

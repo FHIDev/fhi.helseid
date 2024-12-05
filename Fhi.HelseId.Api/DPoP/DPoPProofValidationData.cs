@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
 
 namespace Fhi.HelseId.Api.DPoP;
 

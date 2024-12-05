@@ -1,16 +1,16 @@
-﻿using Fhi.HelseId.Api.DPoP;
+﻿using System;
+using System.Threading.Tasks;
+using Fhi.HelseId.Api.DPoP;
 using Microsoft.Extensions.Caching.Distributed;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
 namespace Fhi.HelseId.Tests.DPoP.Api;
 
 public class InMemoryReplayCacheTests
 {
-    private InMemoryReplayCache _replayCache;
-    private IDistributedCache _distributedCacheMock;
+    private InMemoryReplayCache _replayCache = null!;
+    private IDistributedCache _distributedCacheMock = null!;
 
     private const string Purpose = "test-purpose";
     private const string Handle = "test-handle";

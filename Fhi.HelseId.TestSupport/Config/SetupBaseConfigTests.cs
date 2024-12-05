@@ -19,6 +19,7 @@ namespace Fhi.HelseId.TestSupport.Config
             AppSettingsIsTestWhenDev, // When developing, appsettings is development,  require seperate prod
             AppSettingsIsExplicit // Use only the specified appsettings.
         }
+
         protected string ConfigFile { get; }
 
         protected bool ConfigIsAppsettings => ConfigFile.Equals("appsettings.json", System.StringComparison.InvariantCultureIgnoreCase);
@@ -28,6 +29,7 @@ namespace Fhi.HelseId.TestSupport.Config
             UseOfAppsettings = appSettingsUsage;
             Config = GetIConfigurationRoot(TestContext.CurrentContext.TestDirectory);
         }
+
         protected IConfigurationRoot Config;
         public AppSettingsUsage UseOfAppsettings { get; }
 
@@ -41,6 +43,7 @@ namespace Fhi.HelseId.TestSupport.Config
             {
                 c.AddJsonFile(Path.Combine(outputPath, "appsettings.json"));
             }
+
             c.AddJsonFile(ConfigFile, optional: true);
             return c.Build();
         }

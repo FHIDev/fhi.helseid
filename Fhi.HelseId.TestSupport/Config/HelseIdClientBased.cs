@@ -5,11 +5,11 @@ namespace Fhi.HelseId.TestSupport.Config;
 
 public abstract class HelseIdClientBased : BaseConfigTests
 {
-    protected HelseIdClientBased(string configFile, bool test, AppSettingsUsage useOfAppsettings) : base(configFile, test,useOfAppsettings)
+    protected HelseIdClientBased(string configFile, bool test, AppSettingsUsage useOfAppsettings) : base(configFile, test, useOfAppsettings)
     {
     }
 
-    protected abstract HelseIdClientKonfigurasjon HelseIdClientKonfigurasjon { get;}
+    protected abstract HelseIdClientKonfigurasjon HelseIdClientKonfigurasjon { get; }
 
     [Test]
     public void ThatClientIdIsSet()
@@ -35,5 +35,4 @@ public abstract class HelseIdClientBased : BaseConfigTests
         Guard();
         Assert.That(HelseIdClientKonfigurasjon.AuthUse, $"{ConfigFile} AuthUse should be true, but is false");
     }
-
 }

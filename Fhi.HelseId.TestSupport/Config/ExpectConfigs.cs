@@ -10,11 +10,12 @@ namespace Fhi.HelseId.TestSupport.Config
     /// Verifies that they are actually present and valid
     /// </summary>
     /// <typeparam name="T">The expected configuration type</typeparam>
-    public abstract class ExpectConfigs<T> : SetupBaseConfigTests where T : HelseIdCommonKonfigurasjon
+    public abstract class ExpectConfigs<T> : SetupBaseConfigTests
+        where T : HelseIdCommonKonfigurasjon
     {
         private readonly string configNameOf;
-        readonly IConfigurationSection section;
-        readonly T? config;
+        private readonly IConfigurationSection section;
+        private readonly T? config;
 
         protected ExpectConfigs(string file, string configNameOf, AppSettingsUsage useOfAppsettings) : base(file, useOfAppsettings)
         {
@@ -34,15 +35,15 @@ namespace Fhi.HelseId.TestSupport.Config
         {
             Assert.That(config, Is.Not.Null, $"Configuration for {configNameOf} in {ConfigFile} is not valid");
         }
+
         protected override void Guard()
         {
-
         }
     }
 
     /// <summary>
     /// Checks that the config file contains an API configuration
-    /// Setup as parametrized fixture with configuration filename 
+    /// Setup as parametrized fixture with configuration filename
     /// Verifies that they are actually present and valid
     /// Code example:
     /// [TestFixture("appsettings.json")]
@@ -55,11 +56,8 @@ namespace Fhi.HelseId.TestSupport.Config
     /// </summary>
     public abstract class ExpectHelseIdApiConfig : ExpectConfigs<HelseIdApiKonfigurasjon>
     {
-        protected ExpectHelseIdApiConfig(string filename, AppSettingsUsage useOfAppsettings) : base(filename, nameof(HelseIdApiKonfigurasjon),useOfAppsettings)
+        protected ExpectHelseIdApiConfig(string filename, AppSettingsUsage useOfAppsettings) : base(filename, nameof(HelseIdApiKonfigurasjon), useOfAppsettings)
         {
-
         }
     }
-
-    
 }

@@ -39,8 +39,7 @@ namespace Fhi.HelseId.Api
                     {
                         options.EnableDPoP(configAuth.RequireDPoPTokens);
                     }
-                }
-            );
+                });
 
             if (!configAuth.RequireDPoPTokens)
             {
@@ -73,8 +72,7 @@ namespace Fhi.HelseId.Api
 
                     config.AddPolicy(Policies.Authenticated, authenticatedPolicy);
                     config.AddPolicy(Policies.HidOrApi, hidOrApiPolicy);
-                }
-            );
+                });
         }
 
         /// <summary>
@@ -92,8 +90,7 @@ namespace Fhi.HelseId.Api
                     config.DefaultPolicy = hidOrApiPolicy;
 
                     config.AddPolicy(Policies.HidOrApi, hidOrApiPolicy);
-                }
-            );
+                });
         }
     }
 }

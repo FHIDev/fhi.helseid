@@ -12,7 +12,7 @@ public class HelseidRefitBuilderOptions
     public bool UseDefaultTokenHandler { get; set; } = true;
 
     /// <summary>
-    /// Adds propagation and handling of correlation ids to all Refit-Requests. 
+    /// Adds propagation and handling of correlation ids to all Refit-Requests.
     /// Remember to add "app.UseCorrelationId()" in your startup code.
     /// </summary>
     public bool UseCorrelationId { get; set; } = true;

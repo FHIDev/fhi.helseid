@@ -20,7 +20,7 @@ namespace Fhi.HelseId.TestSupport.Config
         public void ThatScopesDontExceedLimit()
         {
             Guard();
-            
+
             const int maxScopeLengthInHelseId = 600;
             string scopes = HelseIdApiKonfigurasjonUnderTest.ApiScope;
             Assert.That(scopes.Length, Is.LessThanOrEqualTo(maxScopeLengthInHelseId), $"Combined scopes in {ConfigFile} have a maximum length of 600 - including separators, this is {scopes.Length}");

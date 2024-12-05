@@ -1,4 +1,4 @@
-﻿namespace Fhi.HelseId.Integration.Tests.TestFramework.NHNTTT.Dtos
+﻿namespace Fhi.TestFramework.NHNTTT.Dtos
 {
     internal record UserClaimsParameters
     {
@@ -29,6 +29,5 @@
         public string? Subject { get; set; }
 
         public string? Sid { get; set; }
-
     }
 }

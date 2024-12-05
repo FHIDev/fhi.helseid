@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace Fhi.HelseId.Integration.TestFramework.Extensions
+namespace Fhi.TestFramework.Extensions
 {
     internal static class HttpClientExtensions
     {
@@ -8,8 +8,7 @@ namespace Fhi.HelseId.Integration.TestFramework.Extensions
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer",
-                token
-            );
+                token);
 
             return client;
         }

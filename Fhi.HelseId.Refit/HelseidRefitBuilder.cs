@@ -1,9 +1,9 @@
-﻿using Fhi.HelseId.Web;
-using Refit;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.DependencyInjection;
 using Fhi.HelseId.Common;
+using Fhi.HelseId.Web;
+using Microsoft.Extensions.DependencyInjection;
+using Refit;
 
 namespace Fhi.HelseId.Refit
 {
@@ -50,15 +50,18 @@ namespace Fhi.HelseId.Refit
                     services.AddTransient<IAuthorizationHeaderSetter, BearerAuthorizationHeaderSetter>();
                 }
             }
+
             if (this.builderOptions.HtmlEncodeFhiHeaders)
             {
                 AddHandler<FhiHeaderDelegationHandler>();
             }
+
             if (this.builderOptions.UseCorrelationId)
             {
                 AddHandler<CorrelationIdHandler>();
                 services.AddHttpContextAccessor();
             }
+
             if (this.builderOptions.UseAnonymizationLogger)
             {
                 AddHandler<LoggingDelegationHandler>();
@@ -68,7 +71,8 @@ namespace Fhi.HelseId.Refit
         /// <summary>
         /// Add delegating handlers to the Refit client. Also adds the handler to the service collection as Transient
         /// </summary>
-        public HelseidRefitBuilder AddHandler<T>() where T : DelegatingHandler
+        public HelseidRefitBuilder AddHandler<T>()
+            where T : DelegatingHandler
         {
             var type = typeof(T);
             if (!delegationHandlers.Any(x => x == type))
@@ -76,9 +80,9 @@ namespace Fhi.HelseId.Refit
                 delegationHandlers.Add(type);
                 services.AddTransient<T>();
             }
+
             return this;
         }
-
 
         /// <summary>
         /// Adds a Refit client interface and which service name to bind to, and an optional extra configuration
@@ -87,7 +91,8 @@ namespace Fhi.HelseId.Refit
         /// <param name="nameOfService">Name of the service that will serve the Refit Api</param>
         /// <param name="extra"></param>
         /// <returns></returns>
-        public HelseidRefitBuilder AddRefitClient<T>(string? nameOfService = null, Func<IHttpClientBuilder, IHttpClientBuilder>? extra = null) where T : class
+        public HelseidRefitBuilder AddRefitClient<T>(string? nameOfService = null, Func<IHttpClientBuilder, IHttpClientBuilder>? extra = null)
+            where T : class
         {
             var name = nameOfService ?? typeof(T).Name;
 
