@@ -39,10 +39,10 @@ internal class DPoPTokenCreatorTests
         var method = HttpMethod.Get;
         var url = "https://example.com";
         var nonce = "test-nonce";
-        _nonceStore.SetNonce(url, method.ToString(), nonce).Returns(Task.CompletedTask);
+        _nonceStore!.SetNonce(url, method.ToString(), nonce).Returns(Task.CompletedTask);
 
         // Act
-        var token = await _dPoPTokenCreator.CreateSignedToken(method, url, nonce);
+        var token = await _dPoPTokenCreator!.CreateSignedToken(method, url, nonce);
 
         // Assert
         var handler = new JwtSecurityTokenHandler();
@@ -58,10 +58,10 @@ internal class DPoPTokenCreatorTests
         var method = HttpMethod.Get;
         var url = "https://example.com";
         var generatedNonce = "generated-nonce";
-        _nonceStore.GetNonce(url, method.ToString()).Returns(Task.FromResult(generatedNonce));
+        _nonceStore!.GetNonce(url, method.ToString()).Returns(Task.FromResult(generatedNonce));
 
         // Act
-        var token = await _dPoPTokenCreator.CreateSignedToken(method, url);
+        var token = await _dPoPTokenCreator!.CreateSignedToken(method, url);
 
         // Assert
         var handler = new JwtSecurityTokenHandler();
@@ -78,10 +78,10 @@ internal class DPoPTokenCreatorTests
         var url = "https://example.com";
         var nonce = "test-nonce";
         var iat = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-        _nonceStore.SetNonce(url, method.ToString(), nonce).Returns(Task.CompletedTask);
+        _nonceStore!.SetNonce(url, method.ToString(), nonce).Returns(Task.CompletedTask);
 
         // Act
-        var token = await _dPoPTokenCreator.CreateSignedToken(method, url, nonce);
+        var token = await _dPoPTokenCreator!.CreateSignedToken(method, url, nonce);
 
         // Assert
         var handler = new JwtSecurityTokenHandler();
@@ -99,10 +99,10 @@ internal class DPoPTokenCreatorTests
         var method = HttpMethod.Get;
         var url = "https://example.com";
         var nonce = "test-nonce";
-        _nonceStore.SetNonce(url, method.ToString(), nonce).Returns(Task.CompletedTask);
+        _nonceStore!.SetNonce(url, method.ToString(), nonce).Returns(Task.CompletedTask);
 
         // Act
-        var token = await _dPoPTokenCreator.CreateSignedToken(method, url, nonce);
+        var token = await _dPoPTokenCreator!.CreateSignedToken(method, url, nonce);
 
         // Assert
         var handler = new JwtSecurityTokenHandler();

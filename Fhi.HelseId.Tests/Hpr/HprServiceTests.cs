@@ -26,10 +26,10 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public void AtPersonErLege()
         {
-            _currentUser.ErHprGodkjent.Returns(true);
+            _currentUser!.ErHprGodkjent.Returns(true);
             _currentUser.HprGodkjenninger.Returns(new List<OId9060> { Kodekonstanter.OId9060Lege });
 
-            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            _hprService!.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = _hprService.SjekkGodkjenning();
 
@@ -39,10 +39,10 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public void AtPersonIkkeErLege()
         {
-            _currentUser.ErHprGodkjent.Returns(false);
+            _currentUser!.ErHprGodkjent.Returns(false);
             _currentUser.HprGodkjenninger.Returns(new List<OId9060>());
 
-            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
+            _hprService!.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = _hprService.SjekkGodkjenning();
 
             Assert.That(result, Is.False);
@@ -51,10 +51,10 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public void AtFlereKategorierKanLeggesTil()
         {
-            _currentUser.ErHprGodkjent.Returns(true);
+            _currentUser!.ErHprGodkjent.Returns(true);
             _currentUser.HprGodkjenninger.Returns(new List<OId9060> { Kodekonstanter.OId9060Sykepleier });
 
-            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            _hprService!.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
             var result = _hprService.SjekkGodkjenning();
 
@@ -64,10 +64,10 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public void AtFlereGodkjenningerKanLesesFraPerson()
         {
-            _currentUser.ErHprGodkjent.Returns(true);
+            _currentUser!.ErHprGodkjent.Returns(true);
             _currentUser.HprGodkjenninger.Returns(new List<OId9060> { Kodekonstanter.OId9060Lege, Kodekonstanter.OId9060Sykepleier, Kodekonstanter.OId9060Jordmor });
 
-            _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
+            _hprService!.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);
 
             bool result = _hprService.SjekkGodkjenning();
@@ -91,10 +91,10 @@ namespace Fhi.HelseId.Tests.Hpr
         [Test]
         public void AtViKanLeggeTilKategorierUtenDuplikater()
         {
-            _currentUser.ErHprGodkjent.Returns(true);
+            _currentUser!.ErHprGodkjent.Returns(true);
             _currentUser.HprGodkjenninger.Returns(new List<OId9060> { Kodekonstanter.OId9060Lege, Kodekonstanter.OId9060Sykepleier });
 
-            _hprService.LeggTilAlleKategorier();
+            _hprService!.LeggTilAlleKategorier();
             var godkjenninger1 = _hprService.HentGodkjenninger();
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Sykepleier);
             _hprService.LeggTilGodkjenteHelsepersonellkategori(Kodekonstanter.OId9060Lege);

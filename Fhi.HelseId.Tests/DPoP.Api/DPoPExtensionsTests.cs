@@ -8,7 +8,7 @@ namespace Fhi.HelseId.Tests.DPoP.Api;
 
 internal class DPoPExtensionsTests
 {
-    private HttpRequest? _httpRequestMock;
+    private HttpRequest _httpRequestMock;
     private const string DPoPToken = "dpop-token";
     private const string DPoPProof = "dpop-proof";
 
@@ -22,7 +22,7 @@ internal class DPoPExtensionsTests
     public void TryGetDPoPAccessToken_AuthorizationHeaderExists_ReturnsTrueAndToken()
     {
         // Arrange
-        _httpRequestMock.Headers.Authorization = $"DPoP {DPoPToken}";
+        _httpRequestMock!.Headers.Authorization = $"DPoP {DPoPToken}";
 
         // Act
         var result = DPoPExtensions.TryGetDPoPAccessToken(_httpRequestMock, out var token);
@@ -36,7 +36,7 @@ internal class DPoPExtensionsTests
     public void TryGetDPoPAccessToken_AuthorizationHeaderExists_ReturnsTrueAndToken_NotCaseSensitive()
     {
         // Arrange
-        _httpRequestMock.Headers.Authorization = $"DPOP {DPoPToken}";
+        _httpRequestMock!.Headers.Authorization = $"DPOP {DPoPToken}";
 
         // Act
         var result = DPoPExtensions.TryGetDPoPAccessToken(_httpRequestMock, out var token);
