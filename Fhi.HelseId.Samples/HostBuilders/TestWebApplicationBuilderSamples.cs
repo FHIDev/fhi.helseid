@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using Fhi.HelseId.Integration.Tests.TestFramework;
+using Fhi.TestFramework.Extensions;
 
 namespace Fhi.HelseId.Samples.TestFramework
 {
@@ -15,25 +16,22 @@ namespace Fhi.HelseId.Samples.TestFramework
     internal class TestWebApplicationBuildersamples
     {
         [Test]
-        public async Task UsingMinimalProgramBuilder()
+        public async Task UsingWebApplicationBuilderTestHost()
         {
             IConfigurationRoot appSettings = CreateConfig();
 
-            var builder = WebApplicationBuilderTestHost.CreateTestBuilder()
-            .WithConfiguration(appSettings)
-            .WithServices(services =>
-            {
-                services.AddHelseIdWebAuthentication(appSettings).Build();
-            });
+            var builder = WebApplicationBuilderTestHost
+                .CreateWebHostBuilder()
+                .WithConfiguration(appSettings)
+                .WithServices(services =>
+                {
+                    services.AddHelseIdWebAuthentication(appSettings).Build();
+                });
             
             var app = builder.BuildApp(app =>
             {
                 app.UseRouting();
-                app.MapGet("/api/test-endpoint", (context) =>
-                {
-                    var name = context.User.Identity?.Name;
-                    return Task.CompletedTask;
-                });
+                app.MapGet("/api/test-endpoint", () => "Hello world!");
             });
             app.Start();
 
@@ -49,8 +47,8 @@ namespace Fhi.HelseId.Samples.TestFramework
                 { "HelseIdWebKonfigurasjon:AuthUse", "false" },
                 { "HelseIdWebKonfigurasjon:Authority", "https://helseid-sts.test.nhn.no/" }
             };
-            var testConfiguration = appsettingsConfig.BuildInMemoryConfiguration();
-            return testConfiguration;
+            var config = appsettingsConfig.BuildInMemoryConfiguration();
+            return config;
         }
     }
 }

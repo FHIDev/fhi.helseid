@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,13 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Fhi.HelseId.Integration.Tests.TestFramework
 {
     /// <summary>
-    /// Simplified builder for creating web applications using the new minimal hosting model. 
-    /// Used to test variations in your programs entry point (top-level statement), 
+    /// Simplified builder for creating web applications using the new minimal hosting model.
+    /// Used to test variations in your programs entry point (top-level statement),
     /// such as using different middleware or configurations.
     /// </summary>
     internal static class WebApplicationBuilderTestHost
     {
-        public static WebApplicationBuilder CreateTestBuilder()
+        public static WebApplicationBuilder CreateWebHostBuilder()
         {
             var builder = WebApplication.CreateBuilder([]);
             builder.WebHost.UseTestServer();
@@ -27,12 +26,12 @@ namespace Fhi.HelseId.Integration.Tests.TestFramework
             return builder;
         }
 
-        internal static WebApplicationBuilder WithServices(this WebApplicationBuilder builder, Action<IServiceCollection> services) 
+        internal static WebApplicationBuilder WithServices(this WebApplicationBuilder builder, Action<IServiceCollection> services)
         {
             services.Invoke(builder.Services);
             return builder;
         }
-       
+
         internal static WebApplication BuildApp(this WebApplicationBuilder builder, Action<WebApplication> appBuilder)
         {
             var app = builder.Build();

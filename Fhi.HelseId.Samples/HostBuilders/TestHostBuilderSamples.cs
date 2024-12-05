@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
-using Fhi.HelseId.Integration.Tests.TestFramework;
+using Fhi.TestFramework.Extensions;
 
 namespace Fhi.Samples.TestServerSetup
 {
@@ -19,12 +19,7 @@ namespace Fhi.Samples.TestServerSetup
         [Test]
         public async Task UsingHostBuilder()
         {
-            var appsettingsConfig = new Dictionary<string, string?>
-            {
-                { "HelseIdWebKonfigurasjon:AuthUse", "false" },
-                { "HelseIdWebKonfigurasjon:Authority", "https://helseid-sts.test.nhn.no/" }
-            };
-            var inMemoryConfig = appsettingsConfig.BuildInMemoryConfiguration();
+            IConfigurationRoot inMemoryConfig = CreateConfig();
 
             var builder = new HostBuilder().ConfigureWebHost(builder =>
             {
@@ -38,12 +33,7 @@ namespace Fhi.Samples.TestServerSetup
                     app.UseRouting();
                     app.UseEndpoints(builder =>
                     {
-                        builder.MapGet("/api/test-endpoint", (context) =>
-                        {
-                            var name = context.User.Identity?.Name;
-                            return Task.CompletedTask;
-                        });
-
+                        builder.MapGet("/api/test-endpoint", () => "Hello world!");
                     });
                 });
                 webHostBuilder.ConfigureAppConfiguration((context, config) =>
@@ -62,5 +52,15 @@ namespace Fhi.Samples.TestServerSetup
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
+        private static IConfigurationRoot CreateConfig()
+        {
+            var appsettingsConfig = new Dictionary<string, string?>
+            {
+                { "HelseIdWebKonfigurasjon:AuthUse", "false" },
+                { "HelseIdWebKonfigurasjon:Authority", "https://helseid-sts.test.nhn.no/" }
+            };
+            var inMemoryConfig = appsettingsConfig.BuildInMemoryConfiguration();
+            return inMemoryConfig;
+        }
     }
 }
