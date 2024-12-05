@@ -11,8 +11,8 @@ namespace Fhi.HelseId.Tests.DPoP.Web;
 
 public class NonceStoreTests
 {
-    private IDistributedCache _cache;
-    private NonceStore _nonceStore;
+    private IDistributedCache? _cache;
+    private NonceStore? _nonceStore;
 
     [SetUp]
     public void SetUp()

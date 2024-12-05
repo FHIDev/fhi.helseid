@@ -15,9 +15,9 @@ namespace Fhi.HelseId.Tests.DPoP.Web;
 
 internal class DPoPTokenCreatorTests
 {
-    private INonceStore _nonceStore;
-    private DPoPTokenCreator _dPoPTokenCreator;
-    private IHelseIdSecretHandler _secretHandler;
+    private INonceStore? _nonceStore;
+    private DPoPTokenCreator? _dPoPTokenCreator;
+    private IHelseIdSecretHandler? _secretHandler;
 
     [SetUp]
     public void SetUp()

@@ -1,12 +1,10 @@
 ﻿using System.Net;
-using Fhi.HelseId.Web.ExtensionMethods;
-using Microsoft.AspNetCore.Builder;
-using NUnit.Framework;
-using Fhi.TestFramework.Extensions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using Fhi.HelseId.Common.Identity;
+using Fhi.HelseId.Web.ExtensionMethods;
+using Fhi.TestFramework.Extensions;
+using Microsoft.Extensions.Configuration;
+using NUnit.Framework;
 
 namespace Fhi.HelseId.Samples.TestFramework
 {

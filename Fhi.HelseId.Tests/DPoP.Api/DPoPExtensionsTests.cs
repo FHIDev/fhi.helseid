@@ -8,7 +8,7 @@ namespace Fhi.HelseId.Tests.DPoP.Api;
 
 internal class DPoPExtensionsTests
 {
-    private HttpRequest _httpRequestMock;
+    private HttpRequest? _httpRequestMock;
     private const string DPoPToken = "dpop-token";
     private const string DPoPProof = "dpop-proof";
 

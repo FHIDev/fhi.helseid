@@ -3,7 +3,6 @@ using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
 using Fhi.HelseId.Integration.Tests.HelseId.Api.Setup;
 using Fhi.HelseId.Integration.Tests.TestFramework;
-using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.TestFramework.Extensions;
 using Fhi.TestFramework.NHNTTT;
 using Microsoft.AspNetCore.Authorization;

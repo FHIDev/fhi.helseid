@@ -1,5 +1,6 @@
-﻿using Fhi.HelseId.Web.ExtensionMethods;
-using System.Net;
+﻿using System.Net;
+using Fhi.HelseId.Web.ExtensionMethods;
+using Fhi.TestFramework.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -7,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
-using Fhi.TestFramework.Extensions;
 
 namespace Fhi.Samples.TestServerSetup
 {

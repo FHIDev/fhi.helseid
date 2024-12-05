@@ -44,7 +44,7 @@ namespace Fhi.Samples.TestFramework.Authentication
                 app.UseRouting();
                 app.UseAuthentication();
                 app.UseAuthorization();
-                app.MapGet("/api/test-endpoint", [Authorize]  async (context) => 
+                app.MapGet("/api/test-endpoint", [Authorize] async (context) =>
                 {
                     var name = context.User.Name();
                     await context.Response.WriteAsync($"{name}");
@@ -115,7 +115,7 @@ namespace Fhi.Samples.TestFramework.Authentication
              .WithServices(services =>
              {
                  services.AddHelseIdWebAuthentication(appSettings).Build();
-              
+
                  //Create a new IConfigureNamedOptions to override OIDC authentication scheme options
                  services.AddSingleton<IConfigureOptions<OpenIdConnectOptions>, ConfigureOidcOptions>();
              });

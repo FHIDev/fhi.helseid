@@ -1,14 +1,11 @@
-﻿using System.Net;
+﻿using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.HelseId.Web.ExtensionMethods;
-using Fhi.Samples.TestServerSetup;
+using Fhi.TestFramework.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
-using Fhi.HelseId.Integration.Tests.TestFramework;
-using Fhi.TestFramework.Extensions;
 
 namespace Fhi.HelseId.Samples.TestFramework
 {
@@ -27,7 +24,7 @@ namespace Fhi.HelseId.Samples.TestFramework
                 {
                     services.AddHelseIdWebAuthentication(appSettings).Build();
                 });
-            
+
             var app = builder.BuildApp(app =>
             {
                 app.UseRouting();

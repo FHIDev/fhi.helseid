@@ -28,7 +28,7 @@ namespace Fhi.TestFramework.Extensions.DependencyInjection
         {
             return builder.AddFakeAuthenticationScheme(authenticationScheme, options =>
             {
-               options.UserClaims = claims;
+                options.UserClaims = claims;
             });
         }
 

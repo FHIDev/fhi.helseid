@@ -12,8 +12,8 @@ namespace Fhi.HelseId.Tests.Hpr
     {
         private const string Hprnummer = "123456789";
 
-        private ICurrentUser _currentUser;
-        private HprService _hprService;
+        private ICurrentUser? _currentUser;
+        private HprService? _hprService;
 
         [SetUp]
         public void Setup()

@@ -24,6 +24,7 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
         {
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues().WithSecurityLevel(["3"]);
             var (accessToken, idToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: null);
+
             var appSettings = config.CreateConfigurationRoot();
             var app = CreateApplicationBuilderWithConfiguration(appSettings)
                .WithServices(ConfigureHelseIdAuthenticationAndFakeAuthentication(accessToken, idToken, appSettings))
@@ -66,9 +67,9 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
         public async Task SecurityLevelConfigured_AuthenticatedUserCallingAPIWithSecurityLevelInTokenThatIsLowerThanConfigured_Return403()
         {
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues().WithSecurityLevel(["4"]);
-            var appSettings = config.CreateConfigurationRoot();
             var (accessToken, idToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: "2");
 
+            var appSettings = config.CreateConfigurationRoot();
             var app = CreateApplicationBuilderWithConfiguration(appSettings)
                 .WithServices(ConfigureHelseIdAuthenticationAndFakeAuthentication(accessToken, idToken, appSettings))
                 .BuildApp(UseEnpointAuthenticationAuthorization());

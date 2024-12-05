@@ -13,11 +13,11 @@ namespace Fhi.HelseId.Tests.DPoP.Web;
 
 internal class JwtThumbprintAttacherTests
 {
-    private JwtThumbprintAttacher _thumbprintAttacher;
-    private RedirectContext _redirectContext;
-    private IHelseIdSecretHandler _secretHandler;
+    private JwtThumbprintAttacher? _thumbprintAttacher;
+    private RedirectContext? _redirectContext;
+    private IHelseIdSecretHandler? _secretHandler;
 
-    private byte[] _expectedThumbprint;
+    private byte[]? _expectedThumbprint;
 
     [SetUp]
     public void SetUp()
