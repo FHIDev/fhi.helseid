@@ -19,7 +19,7 @@ namespace Fhi.HelseId.Samples.TestFramework
         {
             IConfigurationRoot appSettings = CreateConfig();
 
-            var builder = TestHostWebApplicationBuilder.CreateTestBuilder()
+            var builder = WebApplicationBuilderTestHost.CreateTestBuilder()
             .WithConfiguration(appSettings)
             .WithServices(services =>
             {

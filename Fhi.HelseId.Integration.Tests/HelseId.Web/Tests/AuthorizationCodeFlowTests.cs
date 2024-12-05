@@ -18,7 +18,7 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
             };
             var testConfiguration = appsettingsConfig.BuildInMemoryConfiguration();
 
-            var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
+            var appFactory = new WebApplicationFactoryTestHost(testConfiguration, services =>
             {
                 services.AddHelseIdWebAuthentication(testConfiguration)
                .UseJwkKeySecretHandler()

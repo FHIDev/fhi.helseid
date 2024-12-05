@@ -73,7 +73,7 @@ public class DPoPTests
         var config = JsonSerializer.Deserialize<ClientCredentialsConfiguration>(configString)
             ?? throw new Exception("No config found in Fhi.HelseId.Testing.Api.json");
 
-        var factory = new TestWebApplicationFactory(services =>
+        var factory = new WebApplicationFactoryTestHost(services =>
         {
             services.AddHelseIdApiAuthentication(apiConfig);
             services.AddHelseIdAuthorizationControllers(apiConfig);
