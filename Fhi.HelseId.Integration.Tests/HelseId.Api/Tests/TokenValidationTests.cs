@@ -20,7 +20,7 @@ public class TokenValidationTests
         RequireContextIdentity = true
     };
 
-    public readonly TestWebApplicationFactory Factory = new(services =>
+    public readonly WebApplicationFactoryTestHost Factory = new(services =>
     {
         services.AddHelseIdApiAuthentication(HelseIdConfig);
         services.AddHelseIdAuthorizationControllers(HelseIdConfig);

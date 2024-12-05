@@ -77,7 +77,7 @@ public class ScopeTests
 
     }
 
-    private static TestWebApplicationFactory CreateHelseApiTestFactory(HelseIdApiKonfigurasjon config)
+    private static WebApplicationFactoryTestHost CreateHelseApiTestFactory(HelseIdApiKonfigurasjon config)
     {
         return new(services =>
         {
