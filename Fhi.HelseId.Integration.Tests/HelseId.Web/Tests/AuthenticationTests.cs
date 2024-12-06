@@ -4,6 +4,10 @@ using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.TestFramework.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
 {
@@ -18,14 +22,19 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
             var config = HelseIdWebKonfigurasjonBuilder.Create
                 .AddDefaultValues()
                 .CreateConfigurationRoot();
-            var appFactory = new TestWebApplicationFactory(config, services =>
-            {
-                services.AddHelseIdWebAuthentication(config)
-               .Build();
-            });
 
-            var client = appFactory.CreateClient();
-            var response = await client.GetAsync("/api/test");
+            var app = WebApplicationBuilderTestHost.CreateWebHostBuilder()
+                .WithConfiguration(config)
+                .WithServices(services =>
+                {
+                    services.AddHelseIdWebAuthentication(config)
+                   .Build();
+                })
+                .BuildApp(UseEndpointAuthenticationAndAuthorization());
+
+            app.Start();
+            var client = app.GetTestClient();
+            var response = await client.GetAsync("/api/testauthentication");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
             var queryParams = HttpUtility.ParseQueryString(response.Headers.Location!.Query);
@@ -44,14 +53,31 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
         {
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues();
             var configRoot = config.CreateConfigurationRoot();
-            var appFactory = new TestWebApplicationFactory(configRoot, services =>
-            {
-                services.AddHelseIdWebAuthentication(configRoot)
-               .Build();
-            });
+            var app = WebApplicationBuilderTestHost.CreateWebHostBuilder()
+                .WithConfiguration(configRoot)
+                .WithServices(services =>
+                {
+                    services.AddHelseIdWebAuthentication(configRoot)
+                   .Build();
+                })
+                .BuildApp(UseEndpointAuthenticationAndAuthorization());
 
-            var client = appFactory.CreateClient();
+            app.Start();
+            var client = app.GetTestClient();
             var response = await client.PostAsync("/signin-callback", null);
+        }
+
+        private static Action<WebApplication> UseEndpointAuthenticationAndAuthorization()
+        {
+            return app =>
+            {
+                app.UseRouting();
+                app.MapGet("/api/testauthentication",
+                    [Authorize]
+                () => "Hello world!");
+                app.UseAuthentication();
+                app.UseAuthorization();
+            };
         }
     }
 }

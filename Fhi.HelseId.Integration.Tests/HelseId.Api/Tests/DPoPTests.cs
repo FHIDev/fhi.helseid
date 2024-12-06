@@ -4,7 +4,6 @@ using Fhi.ClientCredentialsKeypairs;
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
 using Fhi.HelseId.Integration.Tests.HelseId.Api.Setup;
-using Fhi.HelseId.Integration.Tests.TestFramework;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
@@ -66,7 +65,7 @@ public class DPoPTests
         var config = JsonSerializer.Deserialize<ClientCredentialsConfiguration>(configString)
             ?? throw new Exception("No config found in Fhi.HelseId.Testing.Api.json");
 
-        var factory = new TestWebApplicationFactory(services =>
+        var factory = new WebApplicationFactoryTestHost(services =>
         {
             services.AddHelseIdApiAuthentication(apiConfig);
             services.AddHelseIdAuthorizationControllers(apiConfig);

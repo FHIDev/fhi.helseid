@@ -1,7 +1,6 @@
 using System.Net;
 using Fhi.HelseId.Api;
 using Fhi.HelseId.Api.ExtensionMethods;
-using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.TestFramework.Extensions;
 using Fhi.TestFramework.NHNTTT;
 
@@ -19,7 +18,7 @@ public class TokenValidationTests
         RequireContextIdentity = true
     };
 
-    public readonly TestWebApplicationFactory Factory = new(services =>
+    public readonly WebApplicationFactoryTestHost Factory = new(services =>
     {
         services.AddHelseIdApiAuthentication(HelseIdConfig);
         services.AddHelseIdAuthorizationControllers(HelseIdConfig);

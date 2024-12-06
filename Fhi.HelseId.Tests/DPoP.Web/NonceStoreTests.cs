@@ -11,8 +11,8 @@ namespace Fhi.HelseId.Tests.DPoP.Web;
 
 public class NonceStoreTests
 {
-    private IDistributedCache _cache;
-    private NonceStore _nonceStore;
+    private IDistributedCache? _cache;
+    private NonceStore? _nonceStore;
 
     [SetUp]
     public void SetUp()
@@ -29,10 +29,10 @@ public class NonceStoreTests
         var method = "GET";
         var expectedNonce = "stored-nonce";
         var key = "DPoPNonce-" + url + method;
-        _cache.GetAsync(key).Returns(Task.FromResult<byte[]?>(Encoding.UTF8.GetBytes(expectedNonce)));
+        _cache!.GetAsync(key).Returns(Task.FromResult<byte[]?>(Encoding.UTF8.GetBytes(expectedNonce)));
 
         // Act
-        var result = await _nonceStore.GetNonce(url, method);
+        var result = await _nonceStore!.GetNonce(url, method);
 
         // Assert
         Assert.That(result, Is.EqualTo(expectedNonce));
@@ -45,10 +45,10 @@ public class NonceStoreTests
         var url = "https://example.com";
         var method = "GET";
         var key = "DPoPNonce-" + url + method;
-        _cache.GetAsync(key).Returns(Task.FromResult<byte[]?>(null));
+        _cache!.GetAsync(key).Returns(Task.FromResult<byte[]?>(null));
 
         // Act
-        var result = await _nonceStore.GetNonce(url, method);
+        var result = await _nonceStore!.GetNonce(url, method);
 
         // Assert
         Assert.That(result, Is.EqualTo(string.Empty));
@@ -65,10 +65,10 @@ public class NonceStoreTests
         var encodedNonce = Encoding.UTF8.GetBytes(nonce);
 
         // Act
-        await _nonceStore.SetNonce(url, method, nonce);
+        await _nonceStore!.SetNonce(url, method, nonce);
 
         // Assert
-        await _cache.Received(1).SetAsync(key, Arg.Is<byte[]>(data => data.SequenceEqual(encodedNonce)), Arg.Is<DistributedCacheEntryOptions>(options =>
+        await _cache!.Received(1).SetAsync(key, Arg.Is<byte[]>(data => data.SequenceEqual(encodedNonce)), Arg.Is<DistributedCacheEntryOptions>(options =>
             options.AbsoluteExpiration.HasValue &&
             options.AbsoluteExpiration.Value.Subtract(DateTimeOffset.UtcNow).Minutes > 50));
     }

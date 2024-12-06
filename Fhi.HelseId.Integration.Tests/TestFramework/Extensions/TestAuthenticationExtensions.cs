@@ -1,4 +1,5 @@
-﻿using Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme;
+﻿using System.Security.Claims;
+using Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,16 +15,24 @@ namespace Fhi.TestFramework.Extensions.DependencyInjection
         /// <param name="accessToken"></param>
         /// <param name="idToken"></param>
         /// <returns></returns>
-        internal static AuthenticationBuilder AddTestAuthentication(this AuthenticationBuilder builder, string authenticationScheme, string? accessToken = null, string? idToken = null)
+        internal static AuthenticationBuilder AddFakeAuthenticationScheme(this AuthenticationBuilder builder, string authenticationScheme, string? accessToken = null, string? idToken = null)
         {
-            return builder.AddTestAuthentication(authenticationScheme, options =>
+            return builder.AddFakeAuthenticationScheme(authenticationScheme, options =>
             {
                 options.AccessToken = accessToken;
                 options.IdToken = idToken;
             });
         }
 
-        internal static AuthenticationBuilder AddTestAuthentication(this AuthenticationBuilder builder, string authenticationScheme, Action<TestAuthenticationSchemeOptions>? options)
+        internal static AuthenticationBuilder AddFakeAuthenticationScheme(this AuthenticationBuilder builder, string authenticationScheme, IEnumerable<Claim> claims)
+        {
+            return builder.AddFakeAuthenticationScheme(authenticationScheme, options =>
+            {
+                options.UserClaims = claims;
+            });
+        }
+
+        internal static AuthenticationBuilder AddFakeAuthenticationScheme(this AuthenticationBuilder builder, string authenticationScheme, Action<TestAuthenticationSchemeOptions>? options)
         {
             builder.Services.AddOptions<TestAuthenticationSchemeOptions>(authenticationScheme);
             return builder.AddScheme<TestAuthenticationSchemeOptions, TestAuthenticationHandler>(authenticationScheme, authenticationScheme, options);

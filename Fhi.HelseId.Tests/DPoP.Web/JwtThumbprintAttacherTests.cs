@@ -13,11 +13,11 @@ namespace Fhi.HelseId.Tests.DPoP.Web;
 
 internal class JwtThumbprintAttacherTests
 {
-    private JwtThumbprintAttacher _thumbprintAttacher;
-    private RedirectContext _redirectContext;
-    private IHelseIdSecretHandler _secretHandler;
+    private JwtThumbprintAttacher? _thumbprintAttacher;
+    private RedirectContext? _redirectContext;
+    private IHelseIdSecretHandler? _secretHandler;
 
-    private byte[] _expectedThumbprint;
+    private byte[]? _expectedThumbprint;
 
     [SetUp]
     public void SetUp()
@@ -41,20 +41,20 @@ internal class JwtThumbprintAttacherTests
     public void AttachThumbprint_AddsJwkThumbprintToProtocolMessage()
     {
         // Act
-        _thumbprintAttacher.AttachThumbprint(_redirectContext);
+        _thumbprintAttacher!.AttachThumbprint(_redirectContext!);
 
         // Assert
         var expectedThumbprint = Base64UrlEncoder.Encode(_expectedThumbprint);
-        Assert.That(_redirectContext.ProtocolMessage.Parameters["dpop_jkt"], Is.EqualTo(expectedThumbprint));
+        Assert.That(_redirectContext!.ProtocolMessage.Parameters["dpop_jkt"], Is.EqualTo(expectedThumbprint));
     }
 
     [Test]
     public void AttachThumbprint_SetsContextKeyInProperties()
     {
         // Act
-        _thumbprintAttacher.AttachThumbprint(_redirectContext);
+        _thumbprintAttacher!.AttachThumbprint(_redirectContext!);
 
         // Assert
-        Assert.That(_redirectContext.Properties.Items[DPoPContext.ContextKey], Is.EqualTo("true"));
+        Assert.That(_redirectContext!.Properties.Items[DPoPContext.ContextKey], Is.EqualTo("true"));
     }
 }

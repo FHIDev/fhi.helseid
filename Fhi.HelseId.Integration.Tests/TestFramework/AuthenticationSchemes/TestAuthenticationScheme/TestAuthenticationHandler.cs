@@ -19,14 +19,14 @@ namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (Options.AccessToken is not null)
+            if (!string.IsNullOrEmpty(Options.AccessToken))
             {
                 var authProperties = new AuthenticationProperties();
                 authProperties.Items["id_token"] = Options.IdToken;
                 authProperties.Items["access_token"] = Options.AccessToken;
                 authProperties.IsPersistent = true;
 
-                IEnumerable<Claim> claims = CreateClaims();
+                IEnumerable<Claim> claims = CreateClaims(Options.AccessToken, Options.IdToken);
                 var claimsIdentity = new ClaimsIdentity(claims, Scheme.Name);
                 var ticket = claimsIdentity.CreateAuthenticationTicket(Scheme.Name, authProperties);
                 return Task.FromResult(AuthenticateResult.Success(ticket));
@@ -41,10 +41,10 @@ namespace Fhi.TestFramework.AuthenticationSchemes.TestAuthenticationScheme
             return Task.FromResult(AuthenticateResult.Fail("TestAuthenticationSchemeOptions has not set UserClaims or AccessToken not set"));
         }
 
-        private IEnumerable<Claim> CreateClaims()
+        private IEnumerable<Claim> CreateClaims(string accessToken, string? idToken)
         {
-            var accessTokenJwt = new JsonWebToken(Options.AccessToken);
-            var idTokenJwt = new JsonWebToken(Options.IdToken);
+            var accessTokenJwt = new JsonWebToken(accessToken);
+            var idTokenJwt = new JsonWebToken(idToken);
             return accessTokenJwt.Claims.Concat(idTokenJwt.Claims);
         }
 

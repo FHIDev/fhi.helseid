@@ -5,6 +5,10 @@ using Fhi.HelseId.Integration.Tests.HelseId.Api.Setup;
 using Fhi.HelseId.Integration.Tests.TestFramework;
 using Fhi.TestFramework.Extensions;
 using Fhi.TestFramework.NHNTTT;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Api.Tests;
 
@@ -19,7 +23,9 @@ public class ScopeTests
         var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: "fhi:helseid.testing.api").WithAllowedScopes("fhi:helseid.testing.api");
         var accessToken = await GetTestToken(["fhi:helseid.testing.api"], config.ApiName);
 
-        var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
+        var app = CreateWebApplication(config);
+        app.Start();
+        var client = app.GetTestClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -34,7 +40,9 @@ public class ScopeTests
         var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: audience).WithAllowedScopes($"{audience}/all,{audience}/person");
         var accessToken = await GetTestToken([$"{audience}/all"], config.ApiName);
 
-        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
+        var app = CreateWebApplication(config);
+        app.Start();
+        var client = app.GetTestClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -49,7 +57,9 @@ public class ScopeTests
         var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: audience).WithAllowedScopes($"{audience}/all,{audience}/person");
         var accessToken = await GetTestToken([$"{audience}/all", $"{audience}/person"], config.ApiName);
 
-        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
+        var app = CreateWebApplication(config);
+        app.Start();
+        var client = app.GetTestClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -68,19 +78,32 @@ public class ScopeTests
         var config = HelseIdApiKonfigurasjonBuilder.Create.DefaultValues(audience: audience).WithAllowedScopes($"{audience}/all,{audience}/person");
         var accessToken = await GetTestToken(["fhi:non-valid-scope"], audience);
 
-        using var client = CreateHelseApiTestFactory(config).CreateClient().AddBearerAuthorizationHeader(accessToken);
+        var app = CreateWebApplication(config);
+        app.Start();
+        var client = app.GetTestClient().AddBearerAuthorizationHeader(accessToken);
         var response = await client.GetAsync("api/test");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
 
-    private static TestWebApplicationFactory CreateHelseApiTestFactory(HelseIdApiKonfigurasjon config)
+    private static WebApplication CreateWebApplication(HelseIdApiKonfigurasjon config)
     {
-        return new(services =>
-        {
-            services.AddHelseIdApiAuthentication(config);
-            services.AddHelseIdAuthorizationControllers(config);
-        });
+        return WebApplicationBuilderTestHost.CreateWebHostBuilder()
+                .WithServices(services =>
+                {
+                    services.AddHelseIdApiAuthentication(config);
+                    services.AddHelseIdAuthorizationControllers(config);
+                })
+                .BuildApp(app =>
+                {
+                    app.MapGet("/api/test",
+                    [Authorize]
+                    () => "Hello world!");
+
+                    app.UseHttpsRedirection();
+                    app.UseAuthorization();
+                    app.MapControllers();
+                });
     }
 
     private static Task<string> GetTestToken(ICollection<string> scopes, string audience)

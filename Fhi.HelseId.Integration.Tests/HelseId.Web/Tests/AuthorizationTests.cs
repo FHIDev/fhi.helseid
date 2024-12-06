@@ -4,6 +4,12 @@ using Fhi.HelseId.Web;
 using Fhi.HelseId.Web.ExtensionMethods;
 using Fhi.TestFramework.Extensions;
 using Fhi.TestFramework.NHNTTT;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
 {
@@ -19,14 +25,14 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues().WithSecurityLevel(["3"]);
             var (accessToken, idToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: null);
 
-            var testConfiguration = config.CreateConfigurationRoot();
-            var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
-            {
-                services.AddFakeTestAuthenticationScheme(accessToken, idToken);
-                services.AddHelseIdWebAuthentication(testConfiguration).Build();
-            });
-            var client = appFactory.CreateClient();
-            var response = await client.GetAsync("/api/test");
+            var appSettings = config.CreateConfigurationRoot();
+            var app = CreateApplicationBuilderWithConfiguration(appSettings)
+               .WithServices(ConfigureHelseIdAuthenticationAndFakeAuthentication(accessToken, idToken, appSettings))
+               .BuildApp(UseEnpointAuthenticationAuthorization());
+
+            app.Start();
+            var client = app.GetTestClient();
+            var response = await client.GetAsync("/api/test-endpoint");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
         }
@@ -41,14 +47,14 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues().WithSecurityLevel(["3"]);
             var (accessToken, idToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: "4");
 
-            var testConfiguration = config.CreateConfigurationRoot();
-            var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
-            {
-                services.AddFakeTestAuthenticationScheme(accessToken, idToken);
-                services.AddHelseIdWebAuthentication(testConfiguration).Build();
-            });
-            var client = appFactory.CreateClient();
-            var response = await client.GetAsync("/api/test");
+            var appSettings = config.CreateConfigurationRoot();
+            var app = CreateApplicationBuilderWithConfiguration(appSettings)
+               .WithServices(ConfigureHelseIdAuthenticationAndFakeAuthentication(accessToken, idToken, appSettings))
+               .BuildApp(UseEnpointAuthenticationAuthorization());
+
+            app.Start();
+            var client = app.GetTestClient();
+            var response = await client.GetAsync("/api/test-endpoint");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
@@ -63,14 +69,14 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
             var config = HelseIdWebKonfigurasjonBuilder.Create.AddDefaultValues().WithSecurityLevel(["4"]);
             var (accessToken, idToken) = await CreateAccessAndIdToken(config.ClientId, config.AllScopes.ToList(), securityLevel: "2");
 
-            var testConfiguration = config.CreateConfigurationRoot();
-            var appFactory = new TestWebApplicationFactory(testConfiguration, services =>
-            {
-                services.AddFakeTestAuthenticationScheme(accessToken, idToken);
-                services.AddHelseIdWebAuthentication(testConfiguration).Build();
-            });
-            var client = appFactory.CreateClient();
-            var response = await client.GetAsync("/api/test");
+            var appSettings = config.CreateConfigurationRoot();
+            var app = CreateApplicationBuilderWithConfiguration(appSettings)
+                .WithServices(ConfigureHelseIdAuthenticationAndFakeAuthentication(accessToken, idToken, appSettings))
+                .BuildApp(UseEnpointAuthenticationAuthorization());
+
+            app.Start();
+            var client = app.GetTestClient();
+            var response = await client.GetAsync("/api/test-endpoint");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
         }
@@ -85,6 +91,33 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
             var idToken = await TTTService.GetHelseIdToken(TTTTokenRequests.IdToken(clientId, scopes.ToList(), securityLevel: securityLevel));
 
             return (accessToken, idToken);
+        }
+
+        private static Action<IServiceCollection> ConfigureHelseIdAuthenticationAndFakeAuthentication(string accessToken, string idToken, IConfigurationRoot appSettings)
+        {
+            return services =>
+            {
+                services.AddFakeTestAuthenticationScheme(accessToken, idToken);
+                services.AddHelseIdWebAuthentication(appSettings).Build();
+            };
+        }
+
+        private static WebApplicationBuilder CreateApplicationBuilderWithConfiguration(IConfigurationRoot appSettings)
+        {
+            return WebApplicationBuilderTestHost.CreateWebHostBuilder().WithConfiguration(appSettings);
+        }
+
+        private static Action<WebApplication> UseEnpointAuthenticationAuthorization()
+        {
+            return app =>
+            {
+                app.UseRouting();
+                app.MapGet("/api/test-endpoint",
+                    [Authorize]
+                () => "Hello world!");
+                app.UseAuthentication();
+                app.UseAuthorization();
+            };
         }
     }
 }
