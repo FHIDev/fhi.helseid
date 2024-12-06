@@ -30,7 +30,7 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
                     services.AddHelseIdWebAuthentication(config)
                    .Build();
                 })
-                .BuildApp(UseEnpointAuthenticationAuthorization());
+                .BuildApp(UseEndpointAuthenticationAndAuthorization());
 
             app.Start();
             var client = app.GetTestClient();
@@ -60,14 +60,14 @@ namespace Fhi.HelseId.Integration.Tests.HelseId.Web.Tests
                     services.AddHelseIdWebAuthentication(configRoot)
                    .Build();
                 })
-                .BuildApp(UseEnpointAuthenticationAuthorization());
+                .BuildApp(UseEndpointAuthenticationAndAuthorization());
 
             app.Start();
             var client = app.GetTestClient();
             var response = await client.PostAsync("/signin-callback", null);
         }
 
-        private static Action<WebApplication> UseEnpointAuthenticationAuthorization()
+        private static Action<WebApplication> UseEndpointAuthenticationAndAuthorization()
         {
             return app =>
             {

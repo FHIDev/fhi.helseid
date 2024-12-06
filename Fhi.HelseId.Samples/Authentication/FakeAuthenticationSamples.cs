@@ -32,10 +32,10 @@ namespace Fhi.Samples.TestFramework.Authentication
             var builder = WebApplicationBuilderTestHost.CreateWebHostBuilder()
              .WithServices(services =>
              {
-                 services.AddFakeTestAuthenticationScheme(new List<Claim>
-                 {
-                     new Claim(IdentityClaims.Name, "Line Danser")
-                 });
+                 services.AddFakeTestAuthenticationScheme(
+                 [
+                     new(IdentityClaims.Name, "Line Danser")
+                 ]);
                  services.AddAuthorization();
              });
 
@@ -51,7 +51,6 @@ namespace Fhi.Samples.TestFramework.Authentication
                 });
             });
             app.Start();
-
 
             var client = app.GetTestClient();
             var response = await client.GetAsync("/api/test-endpoint");
@@ -133,7 +132,6 @@ namespace Fhi.Samples.TestFramework.Authentication
             });
             app.Start();
 
-
             var client = app.GetTestClient();
             var response = await client.GetAsync("/api/test-endpoint");
 
@@ -199,6 +197,5 @@ namespace Fhi.Samples.TestFramework.Authentication
                 };
             }
         }
-
     }
 }

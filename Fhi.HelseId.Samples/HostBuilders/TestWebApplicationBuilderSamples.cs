@@ -15,7 +15,7 @@ namespace Fhi.HelseId.Samples.TestFramework
         [Test]
         public async Task UsingWebApplicationBuilderTestHost()
         {
-            IConfigurationRoot appSettings = CreateConfig();
+            var appSettings = CreateConfig();
 
             var builder = WebApplicationBuilderTestHost
                 .CreateWebHostBuilder()

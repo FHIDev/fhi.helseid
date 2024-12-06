@@ -19,7 +19,7 @@ namespace Fhi.Samples.TestServerSetup
         [Test]
         public async Task UsingHostBuilder()
         {
-            IConfigurationRoot inMemoryConfig = CreateConfig();
+            var inMemoryConfig = CreateConfig();
 
             var builder = new HostBuilder().ConfigureWebHost(builder =>
             {

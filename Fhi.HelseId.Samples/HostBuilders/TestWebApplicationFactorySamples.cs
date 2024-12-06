@@ -13,7 +13,7 @@ namespace Fhi.HelseId.Samples.TestFramework
         [Test]
         public async Task UsingWebTestWebApplicationFactory_ConfigureServices()
         {
-            IConfigurationRoot inMemoryConfig = CreateConfig();
+            var inMemoryConfig = CreateConfig();
 
             var appFactory = new WebApplicationFactoryTestHost(
                 inMemoryConfig,
